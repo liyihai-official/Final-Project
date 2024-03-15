@@ -5,6 +5,9 @@
 
 #define min(a, b) ((a) <= (b) ? (a) : (b))
 
+// #define KOL
+#define PIDNN
+
 double compute_next(Grid now, Region future, double coff_k)
 {  
     int i, j;
@@ -23,7 +26,18 @@ double compute_next(Grid now, Region future, double coff_k)
         for (j = 0; j < future.Nx_1; j++)
         {
             if (i==0||j==0||i==future.Nx_0-1||j==future.Nx_1-1)
-            {now.region.mat[i][j] += bc(now.dt);}
+            {
+                #ifdef KOL
+                now.region.mat[i][j] += bc(now.dt);
+                #endif
+                #ifdef PIDNN
+                if (j!=future.Nx_0-1) {
+                    now.region.mat[i][j] = 10.0;
+                } else {
+                    now.region.mat[i][j] = 0.0;
+                }
+                #endif
+            }
             else 
             {future.mat[i][j] = weight_0*(now.region.mat[i-1][j] + now.region.mat[i+1][j] + now.region.mat[i][j]*diag_0)
                               + weight_1*(now.region.mat[i][j-1] + now.region.mat[i][j+1] + now.region.mat[i][j]*diag_1);}
@@ -57,10 +71,10 @@ int main( )
     domain.domain_x0_e = 1;
     
     domain.domain_x1_s = 0;
-    domain.domain_x1_e = 1.2;
+    domain.domain_x1_e = 1;
 
-    int Nx_0 = 30;
-    int Nx_1 = 30;
+    int Nx_0 = 50;
+    int Nx_1 = 50;
     Region Now = alloc_region(Nx_0, Nx_1);
     Region Future = alloc_region(Nx_0, Nx_1);
 

@@ -15,9 +15,9 @@
 % animated(1,1,1,numFrames)=0;
 % Main loop on number of frames
 
-Nx_0 = 30;
-Nx_1 = 30;
-numFrames=36;
+Nx_0 = 50;
+Nx_1 = 50;
+numFrames=53;
 
 step = 0.1;
 animated(1,1,1,numFrames)=0;
@@ -34,7 +34,7 @@ for i=1:numFrames % Create meshgrid
     % Surf plot
     figure(1);
     % Set figure size (adjust these values as needed)
-    figure_size = [100, 100, 200, 150]; % [left, bottom, width, height]
+    figure_size = [100, 100, 100, 75]; % [left, bottom, width, height]
 
     set(gcf, 'Position', figure_size);
 
@@ -45,12 +45,19 @@ for i=1:numFrames % Create meshgrid
     view([0,0,1]);
     hc=colorbar;
     set(hc,'position',[0.932 0.3 0.02 0.6]);
-    caxis([0 4]);
+    caxis([0 10]);
     xlim([1 Nx_0]);
     ylim([1 Nx_1]);
     xlabel('x domain');
     ylabel('y domain');
     zlabel('temperature');
+
+    % xticks(linspace(0,Nx_0,4)); % 设置特定刻度位置
+    % xticklabels(linspace(0,Nx_0,4)/Nx_0);
+    % 
+    % yticks(linspace(0,Nx_1,4)); % 设置特定刻度位置
+    % yticklabels(linspace(0,Nx_1,4)/Nx_1);
+
     % Pause
     pause(step);
     % Get current frame from figure

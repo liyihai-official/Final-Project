@@ -1,0 +1,7 @@
+*.txt
+*.log
+*DS_Store
+*__py
+*.o
+demo*
+draft*

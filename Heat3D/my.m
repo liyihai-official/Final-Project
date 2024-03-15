@@ -16,7 +16,7 @@ end
 
 for i=1:num_Frame
     figure(1);
-    figure_size = [100, 100, 200, 150]; % [left, bottom, width, height]
+    figure_size = [100, 100, 400, 300]; % [left, bottom, width, height]
 
     fid=fopen(strcat('outputs/outputSeq',num2str(i),'.dat'),'r');
     
@@ -41,6 +41,15 @@ for i=1:num_Frame
     xlim([1 Nx_2]);
     ylim([1 Nx_1]);
     zlim([1 Nx_0]);
+
+    xticks(linspace(1,Nx_2,4)); % 设置特定刻度位置
+    xticklabels(linspace(1,Nx_2,4)/Nx_2);
+
+    yticks(linspace(1,Nx_1,4)); % 设置特定刻度位置
+    yticklabels(linspace(1,Nx_1,4)/Nx_1);
+
+    zticks(linspace(1,Nx_0,4)); % 设置特定刻度位置
+    zticklabels(linspace(1,Nx_0,4)/Nx_0);
     
     pause(step);
     
