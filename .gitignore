@@ -5,3 +5,5 @@
 *.o
 demo*
 draft*
+*.ipynb_checkpoints
+*__pycache__
