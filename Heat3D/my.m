@@ -1,13 +1,13 @@
-Nx_0 = 16;
-Nx_1 = 16;
-Nx_2 = 16;
+Nx_0 = 32;
+Nx_1 = 32;
+Nx_2 = 32;
 
 
 x0 = zeros(Nx_1, Nx_2, Nx_0);
 
-num_Frame = 20;
+num_Frame = 27;
 
-step = 0.001;
+step = 2/num_Frame;
 animated(1,1,1,num_Frame)=0;
 char_f = '%f';
 for m = 1:Nx_0+1
@@ -35,9 +35,11 @@ for i=1:num_Frame
     view([-42,22]);
     hc=colorbar;
     set(gcf, 'Position', figure_size);
+    set(gcf, 'Color', 'white'); % 或者可以使用 'w'
+    
     set(hc,'position',[0.932 0.3 0.02 0.6]);
-    caxis([0 9]);
-
+    caxis([0 10]);
+    title(i*100);
     xlim([1 Nx_2]);
     ylim([1 Nx_1]);
     zlim([1 Nx_0]);

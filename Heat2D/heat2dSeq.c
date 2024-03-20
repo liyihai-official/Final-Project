@@ -18,6 +18,7 @@ double compute_next(Grid now, Region future, double coff_k)
 
     diag_0 = -2.0 + now.h0 * now.h0 / (2*coff_k*now.dt);
     diag_1 = -2.0 + now.h1 * now.h1 / (2*coff_k*now.dt);
+
     weight_0 = coff_k*now.dt / (now.h0*now.h0);
     weight_1 = coff_k*now.dt / (now.h1*now.h1);
 
@@ -64,7 +65,9 @@ int main( )
     double coff_k = 1;
     int maxEpoch = 100000;
     double dt1 = 0.1;
-    double tol = 1e-10;
+    double tol = 1e-8;
+    double T = 1.0;
+    int dim = 2;
 
     Domain domain;
     domain.domain_x0_s = 0;
@@ -73,8 +76,8 @@ int main( )
     domain.domain_x1_s = 0;
     domain.domain_x1_e = 1;
 
-    int Nx_0 = 50;
-    int Nx_1 = 50;
+    int Nx_0 = 32;
+    int Nx_1 = 32;
     Region Now = alloc_region(Nx_0, Nx_1);
     Region Future = alloc_region(Nx_0, Nx_1);
 
@@ -92,31 +95,32 @@ int main( )
 
     init_region(&Grid_Now.region, domain);
 
-
+        
     
+
     int step = 0;
-    double t = 0.0;
+    double t = 0;
     double diff = 0;
 
     int convergence = 0;
     FILE * file;
 
-    char file_name[20];
+    char file_name[128];
+    FILE * DIFF = fopen("difference2D.dat", "w");
+    fprintf(DIFF, "step diff"); 
     while (!convergence)
     {
         step ++;
         t = t + Grid_Now.dt;
-
-        // printf("?\n");
         diff = compute_next(Grid_Now, Future, coff_k);
 
-        // printf("?\n");
-        if (step % 100 == 0){
-                
-            printf("%d\t%lf\n", step, t);
-            sprintf(file_name, "outputSeq%d.dat", step/100);
+        if (step % 100 == 0){            
+            sprintf(file_name, "outputs/outputSeq%d.dat", step/100);
             file=fopen(file_name, "w");
+
             fprintf(file, "\n");
+            fprintf(DIFF, "\n%d %12.11lf", step, diff);
+
             for (int i = 0; i < Grid_Now.region.Nx_0; i++)
             {
                 for (int j = 0; j < Grid_Now.region.Nx_1; j++)
@@ -125,12 +129,18 @@ int main( )
                 }
                 fprintf(file, "\n");
             }
+            fclose(file);
         }
 
-        if ((diff < tol) || (step >= maxEpoch)) break;
 
-        fclose(file);
+        if ((diff < tol) || (step >= maxEpoch)) 
+        {
+            printf("Converged: %.10lf\n", diff);
+            fprintf(DIFF, "\n%d %12.11lf", step, diff);
+            break;
+        }  
     }
+    fclose(DIFF);
 
     free_region(Grid_Now.region);
     free_region(Future);

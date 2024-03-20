@@ -56,11 +56,16 @@ void init_region(Region * r, Domain d)
         for (j = 0; j < Nx_1; j++) {
             for (k = 0; k < Nx_2; k++)
             {
-                r->mat[i][j][k] = phi(dx1*i, dx2*j, dx3*k);
+                if (i == 0) {
+                    r->mat[i][j][k] = 10;
+                } else {
+                    r->mat[i][j][k] = 0;
+                }
+                // r->mat[i][j][k] = phi(dx1*i, dx2*j, dx3*k);
                 // if (i == 0 || j == 0 || k == 0 || i+1 == Nx_0 || j+1 == Nx_1 || k+1 == Nx_2 ){
-                //     r->mat[i][j][k] = 10;
+                //     r->mat[i][j][k] = 0;
                 // } else {
-                //     r->mat[i][j][k] = -10;
+                //     r->mat[i][j][k] = 10;
                 // }
             }
                 
