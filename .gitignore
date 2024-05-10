@@ -1,3 +1,4 @@
+*.dat
 *.txt
 *.log
 *DS_Store
@@ -7,3 +8,4 @@ demo*
 draft*
 *.ipynb_checkpoints
 *__pycache__
+*.vscode*
