@@ -19,7 +19,7 @@ Nx_0 = 32;
 Nx_1 = 32;
 numFrames=17;
 
-step = 2/numFrames;
+step = 5/numFrames;
 animated(1,1,1,numFrames)=0;
 char_f = '%f';
 for m = 1:Nx_0+1

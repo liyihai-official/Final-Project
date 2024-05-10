@@ -5,9 +5,9 @@ Nx_2 = 32;
 
 x0 = zeros(Nx_1, Nx_2, Nx_0);
 
-num_Frame = 27;
+num_Frame = 30;
 
-step = 2/num_Frame;
+step = 5/num_Frame;
 animated(1,1,1,num_Frame)=0;
 char_f = '%f';
 for m = 1:Nx_0+1
@@ -28,7 +28,7 @@ for i=1:num_Frame
     fclose(fid);
     [x1 y1 z1] = meshgrid(1:Nx_2, 1:Nx_1, 1:Nx_0);
     
-    slice(x1,y1,z1,x0,[Nx_2/2, Nx_2], [Nx_1/2, Nx_1], [1, Nx_0/2+1]);
+    slice(x1,y1,z1,x0, [Nx_2/2, Nx_2], [Nx_1/2, Nx_1], [1, Nx_0/2+1]);
     
     colormap(jet);
     shading faceted;
@@ -38,7 +38,7 @@ for i=1:num_Frame
     set(gcf, 'Color', 'white'); % 或者可以使用 'w'
     
     set(hc,'position',[0.932 0.3 0.02 0.6]);
-    caxis([0 10]);
+    caxis([0 12]);
     title(i*100);
     xlim([1 Nx_2]);
     ylim([1 Nx_1]);

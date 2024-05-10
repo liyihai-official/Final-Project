@@ -7,7 +7,7 @@ x0 = zeros(Nx_1, Nx_2, Nx_0);
 
 num_Frame = 50;
 
-step = 2/num_Frame;
+step = 5/num_Frame;
 animated(1,1,1,num_Frame)=0;
 char_f = '%f';
 for m = 1:Nx_0+1

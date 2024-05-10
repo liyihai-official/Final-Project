@@ -32,7 +32,7 @@ double compute_next(Grid now, Region future, double coff_k)
                 #endif
 
                 #ifdef PINN
-                if (i != future.Nx_0-1) {
+                if (k != 0) {
                     now.region.mat[i][j][k] = 10.0;
                 } else {
                     now.region.mat[i][j][k] = 0;

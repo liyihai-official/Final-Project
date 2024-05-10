@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/michaellea/001 - M.Sc_HPC/55640-Project/Final-Project/Heat3D",
+      "program": "/Users/michaellea/001 - M.Sc_HPC/55640-Project/Final-Project/Heat3D/build/Debug/outDebug"
+    }
+  ]
+}
