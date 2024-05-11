@@ -95,9 +95,6 @@ int main( )
 
     init_region(&Grid_Now.region, domain);
 
-        
-    
-
     int step = 0;
     double t = 0;
     double diff = 0;
