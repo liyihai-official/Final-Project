@@ -83,7 +83,8 @@ int main( )
 
     int size_0 = Now.Nx_0 - 2;
     int size_1 = Now.Nx_1 - 2;
-
+    
+    
     Grid Grid_Now;
     Grid_Now.region = Now;
     Grid_Now.h0 = (double) (domain.domain_x0_e - domain.domain_x0_s) / (double) Now.Nx_0;
@@ -105,8 +106,10 @@ int main( )
     char file_name[128];
     FILE * DIFF = fopen("difference2D.dat", "w");
     fprintf(DIFF, "step diff"); 
+    
     while (!convergence)
     {
+        printf("? %d\n", step);
         step ++;
         t = t + Grid_Now.dt;
         diff = compute_next(Grid_Now, Future, coff_k);
@@ -136,6 +139,7 @@ int main( )
             fprintf(DIFF, "\n%d %12.11lf", step, diff);
             break;
         }  
+
     }
     fclose(DIFF);
 
