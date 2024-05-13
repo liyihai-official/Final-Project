@@ -8,7 +8,7 @@ EQ_FLAG := -DHEAT
 all: main
 
 main: main.cc
-	$(CXX) $(EQ_FLAG) -std=c++20 -W -Werror -o $@ $^ -O3
+	$(CXX) $(EQ_FLAG) -std=c++20 -W -Werror -o $@ $^ 
 
 .PHONY: clean
 

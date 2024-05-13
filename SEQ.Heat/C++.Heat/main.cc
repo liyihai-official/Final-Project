@@ -3,8 +3,8 @@
 
 #include "matrix.h"
 
-#define MAX_N 45+2
-#define MAX_it 5000
+#define MAX_N 100+2
+#define MAX_it 100000000
 
 
 template <typename T>
