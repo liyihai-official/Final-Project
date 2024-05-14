@@ -26,66 +26,10 @@
 template<typename T>
 MPI_Datatype get_mpi_type();
 
-template<>
-MPI_Datatype get_mpi_type<int>() { return MPI_INT; }
-
-template<>
-MPI_Datatype get_mpi_type<float>() { return MPI_FLOAT; }
-
-template<>
-MPI_Datatype get_mpi_type<double>() { return MPI_DOUBLE; }
-
-template <typename T>
-class Array_Distribute : public Array<T> {
-  Array_Distribute() = delete;
-
-  Array_Distribute(std::size_t const rows, std::size_t const cols, 
-                    int const dims[2], int const coords[2], MPI_Comm comm_cart)
-  {
-    Array<T>(rows, cols);
-
-    nx = rows - 2;
-    ny = cols - 2;
-
-    Decomp1d(nx, dims[0], coords[0], starts[0], ends[0]);
-    Decomp1d(ny, dims[1], coords[1], starts[1], ends[1]);
-
-    MPI_Cart_shift(comm_cart, 0, 1, &nbr_up,   &nbr_down );
-    MPI_Cart_shift(comm_cart, 1, 1, &nbr_left, &nbr_right);
-
-    MPI_Comm_rank(comm_cart, &rank);
-
-    /* Setup vector types of halo */
-    MPI_Type_contiguous(ends[1] - starts[1] + 1, get_mpi_type<T>(), &vecs[0]);
-    MPI_Type_commit(&vecs[0]);
-
-    MPI_Type_vector(ends[0] - starts[0] + 1, 1, MAX_N, get_mpi_type<T>(), &vecs[1]);
-    MPI_Type_commit(&vecs[1]);
-
-  }
-  
-
-  protected:
-  constexpr static int dimension {2};
-
-  private:
-  const int nx, ny;
-
-  const std::size_t starts[2], ends[2];
-
-  int rank;
-  int nbr_up, nbr_down, nbr_right, nbr_left;
-
-  MPI_Comm comm;
-
-  MPI_Datatype vecs[dimension];
-
-};
-
 template <typename T>
 void twoexchange(Array<T>& in, const int s[2], const int e[2], 
-  MPI_Datatype vecs[2], MPI_Win win, 
-  const int nbr_down, const int nbr_right);
+                          MPI_Datatype vecs[2], MPI_Win win, 
+                          const int nbr_down, const int nbr_right);
 
 template <typename T>
 int my_Gather2d_new(Array<T>& gather, Array<T> a, 
@@ -94,7 +38,6 @@ int my_Gather2d_new(Array<T>& gather, Array<T> a,
 
 int main(int argc, char ** argv)
 {
-
   Array<double> a(MAX_N, MAX_N), b(MAX_N, MAX_N), f(MAX_N, MAX_N), solution(MAX_N, MAX_N), gather(MAX_N, MAX_N);
 
   int nx, ny, it;
@@ -305,3 +248,13 @@ int my_Gather2d_new(Array<T>& gather, Array<T> a,
 
   return MPI_SUCCESS;
 }
+
+
+template<>
+MPI_Datatype get_mpi_type<int>() { return MPI_INT; }
+
+template<>
+MPI_Datatype get_mpi_type<float>() { return MPI_FLOAT; }
+
+template<>
+MPI_Datatype get_mpi_type<double>() { return MPI_DOUBLE; }

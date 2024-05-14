@@ -84,12 +84,12 @@ class Array {
     std::size_t ridx, cidx, rows = in.get_num_rows(), cols = in.get_num_cols();
 
     for (ridx = 0; ridx < in.rows; ++ridx) {
-      os << "";
+      os << " |";
       for (cidx = 0; cidx < in.cols; ++cidx) 
       {
         os << std::fixed << std::setprecision(5) << std::setw(9) << in(ridx, cidx);
       }
-      os << "" << std::endl;
+      os << " |" << std::endl;
     }
     return os;
   } 
