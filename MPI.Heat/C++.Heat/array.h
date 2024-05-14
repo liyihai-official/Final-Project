@@ -8,8 +8,8 @@
 
 template <typename T>
 class Array {
-
   public:
+  /* ----------------------- Con-Destructors --------------------- */
   Array() = delete;
   Array(std::size_t const rows, std::size_t const cols)
   : rows{rows}, cols{cols}, data {std::vector<T> (rows*cols)} {}
@@ -23,8 +23,6 @@ class Array {
         data[i * cols + j] = junk_val;
   }
 
-  ~Array() = default;
-
   Array(Array const& other) 
   : rows{other.rows}, cols{other.cols}, data{other.data} {}
 
@@ -35,6 +33,10 @@ class Array {
     other.cols = 0;
   }
 
+  ~Array() = default;
+
+  /* ------------------------- Operators ------------------------- */
+  /* Assignment Operator = */
   Array& operator=(const Array& other) {
     if (this != &other) {  
       Array tmp(other);  
@@ -57,6 +59,7 @@ class Array {
     return *this;
   }
 
+  /* Operator () */
   T  operator() (const std::size_t ridx, const std::size_t cidx) const  
   {
     if (ridx > rows || cidx > cols) {
@@ -75,6 +78,7 @@ class Array {
     return data[ridx * cols + cidx];
   }
 
+  /* output operator << */
   friend std::ostream& operator<< (std::ostream& os, Array<T> const & in)
   {
     std::size_t ridx, cidx, rows = in.get_num_rows(), cols = in.get_num_cols();
@@ -90,53 +94,18 @@ class Array {
     return os;
   } 
 
+  /* -------------------- Members Functions ---------------------- */
   std::size_t get_num_rows() const {return rows;}
   std::size_t get_num_cols() const {return cols;}
 
+  /* --------------------- Private Members ----------------------- */
   private:
   std::vector<T> data;
   std::size_t rows, cols;
 
 };
 
-template <typename T>
-void init_conditions(Array<T>& init, Array<T>& init_other, Array<T>& bias)
-{
-  auto NX = init.get_num_rows() - 1;
-  auto NY = init.get_num_cols() - 1;
 
-  std::size_t i, j;
-  for (i = 0; i <= NX; ++i)
-  {
-    for (j = 0; j <= NY; ++j)
-    {
-      bias(i, j) = 0;
-      if (i == 0)
-      {
-        init(i, j) = 10;
-        init_other(i, j) = 10;
-      }
-
-      if (i == NX)
-      {
-        init(i, j) = 10;
-        init_other(i, j) = 10;
-      }
-
-      if (j == 0) 
-      {
-        init(i, j) = 10;
-        init_other(i, j) = 10;
-      }
-
-      if (j == NY)
-      {
-        init(i, j) = 0;
-        init_other(i, j) = 0;
-      }
-    } 
-  }
-}
 
 template <typename T>
 inline void store_Array(Array<T> const in, std::string const fname)

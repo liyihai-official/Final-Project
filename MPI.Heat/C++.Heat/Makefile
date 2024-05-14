@@ -21,16 +21,20 @@ MPI_LPATH 	:= -L/opt/homebrew/Cellar/boost/1.85.0/lib \
 MPI_IPATH := -I/opt/homebrew/Cellar/boost/1.85.0/include 
 
 SRC_1 := main.cc
+SRC_2 := pro_main.cc
 
 EXEC_1 := $(SRC_1:.cc=)
+EXEC_2 := $(SRC_2:.cc=)
 
-EXECS := $(EXEC_1)
+EXECS := $(EXEC_1) $(EXEC_2)
 
 all: $(EXECS)
 
-$(EXECS): $(SRC_1)
+$(EXEC_1): $(SRC_1)
 	$(MPICXX) $(USE_DEBUG) $(EQ_FLAG) $(USE_MPI) $(MPI_STD) $(DFLAGS) $(MPI_IPATH) $(MPI_LPATH) $(MPI_LFLAGS) $^ -o $@ -O3
 
+$(EXEC_2): $(SRC_2)
+	$(MPICXX) $(USE_DEBUG) $(EQ_FLAG) $(USE_MPI) $(MPI_STD) $(DFLAGS) $(MPI_IPATH) $(MPI_LPATH) $(MPI_LFLAGS) $^ -o $@ -O3
 
 .PHONY: clean all
 clean:

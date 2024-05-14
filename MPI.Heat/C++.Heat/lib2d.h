@@ -7,9 +7,49 @@
 #include <fstream>
 #include "array.h"
 
-/* Heat */
+/* ---------------------- Initialize Conditions Functions ---------------------- */
 template <typename T>
-void twodinit_basic_Heat(Array<T>& init, Array<T>& init_other, Array<T>& bias, const int s[2], const int e[2])
+void init_conditions(Array<T>& init, Array<T>& init_other, Array<T>& bias)
+{
+  auto NX = init.get_num_rows() - 1;
+  auto NY = init.get_num_cols() - 1;
+
+  std::size_t i, j;
+  for (i = 0; i <= NX; ++i)
+  {
+    for (j = 0; j <= NY; ++j)
+    {
+      bias(i, j) = 0;
+      if (i == 0)
+      {
+        init(i, j) = 10;
+        init_other(i, j) = 10;
+      }
+
+      if (i == NX)
+      {
+        init(i, j) = 10;
+        init_other(i, j) = 10;
+      }
+
+      if (j == 0) 
+      {
+        init(i, j) = 10;
+        init_other(i, j) = 10;
+      }
+
+      if (j == NY)
+      {
+        init(i, j) = 0;
+        init_other(i, j) = 0;
+      }
+    } 
+  }
+}
+
+template <typename T>
+void twodinit_basic_Heat(Array<T>& init, Array<T>& init_other, Array<T>& bias, 
+                        const int s[2], const int e[2])
 {
   int i, j;
   int nx = init.get_num_rows() - 2;
@@ -61,7 +101,8 @@ void twodinit_basic_Heat(Array<T>& init, Array<T>& init_other, Array<T>& bias, c
 
 /* Possion */
 template <typename T>
-void twodinit_basic_Possion(Array<T>& init, Array<T>& init_other, Array<T>& bias, const int s[2], const int e[2])
+void twodinit_basic_Possion(Array<T>& init, Array<T>& init_other, Array<T>& bias, 
+                            const int s[2], const int e[2])
 {
   int i, j;
   int nx = init.get_num_rows() - 2;
@@ -111,9 +152,8 @@ void twodinit_basic_Possion(Array<T>& init, Array<T>& init_other, Array<T>& bias
   }
 }
 
-
-
-
+/* ------------------------------ Sweep Functions ------------------------------ */
+/* Heat Equation */
 template <typename T>
 void sweep_Heat(Array<T> const in, Array<T>& out)
 {
@@ -191,6 +231,7 @@ void sweep_Heat(Array<T> const in, Array<T>& out,
   }
 }
 
+/* Possion Equation */
 template <typename T>
 void sweep_Possion(Array<T> const in, Array<T> const bias, Array<T>& out)
 {
