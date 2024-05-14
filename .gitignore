@@ -9,3 +9,5 @@ draft*
 *.ipynb_checkpoints
 *__pycache__
 *.vscode*
+*.h5
+*best_model_2d/*

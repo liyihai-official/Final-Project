@@ -44,13 +44,10 @@ class Array_Distribute : public Array<T> {
                           int const dims[2], MPI_Comm comm_cart)
     : Array<T>( get_loc_dim(rows - 2, dims, 0, comm_cart), 
                 get_loc_dim(cols - 2, dims, 1, comm_cart)),
-      nx_glob {static_cast<int>(rows - 2)}, 
-      ny_glob {static_cast<int>(cols - 2)}, 
+      nx_glob {static_cast<int>(rows)}, 
+      ny_glob {static_cast<int>(cols)}, 
       comm {comm_cart}
   {
-
-    nx_loc = ends[0] - starts[0] + 1;
-    ny_loc = ends[1] - starts[1] + 1;
 
     MPI_Cart_shift(comm_cart, 0, 1, &nbr_up,   &nbr_down );
     MPI_Cart_shift(comm_cart, 1, 1, &nbr_left, &nbr_right);
@@ -62,13 +59,14 @@ class Array_Distribute : public Array<T> {
     MPI_Type_vector(ends[0] - starts[0] + 1, 1, MAX_N, get_mpi_type<T>(), &vecs[1]);
     MPI_Type_commit(&vecs[1]);
 
-    std::cout << "Process " << rank 
-    << " - (" << coordinates[0] << ", " << coordinates[1] << ")\t"
-    << starts[0] << ", " << ends[0] << " - " << starts[1] << ", " << ends[1] 
-    << std::endl;
-
   }
-  
+
+
+  void sweep(Array_Distribute<T>& out, Array_Distribute<T> const bias);   /* Possion Equation */
+  void sweep(Array_Distribute<T>& out);                                      /* Heat Equation */
+
+  void Iexchange();
+
 
   int get_start(const int idx) {
     if (idx == 0 || idx == 1) 
@@ -90,18 +88,15 @@ class Array_Distribute : public Array<T> {
     }
   }
 
+  int get_glob_num_rows() {return nx_glob;}
+  int get_glob_num_cols() {return ny_glob;}
+
   protected:
   constexpr static int dimension {2};
 
-
-
-
-
-
-
   private:
   int rank;
-  int nx_loc, ny_loc, nx_glob, ny_glob;
+  int nx_glob, ny_glob;
   int nbr_up, nbr_down, nbr_right, nbr_left;
 
   int starts[dimension], ends[dimension], coordinates[dimension];
@@ -115,69 +110,123 @@ class Array_Distribute : public Array<T> {
     MPI_Comm_rank(comm, &rank);
     MPI_Cart_coords(comm, rank, dimension, coordinates);
 
-    // std::cout << dims[coord_idx] << "\t" << coordinates[coord_idx] << std::endl;
     Decomp1d(glob_dim, dims[coord_idx], coordinates[coord_idx], starts[coord_idx], ends[coord_idx]);
     
-    return ends[coord_idx] - starts[coord_idx] + 1;
+    return ends[coord_idx] - starts[coord_idx] + 1 + 2;
   };
 
 };
 
 template <typename T>
+void Array_Distribute<T>::sweep(Array_Distribute<T>& out)
+{
+
+  int i, j;
+
+  int nx = this->get_num_rows() - 2;
+  int ny = this->get_num_cols() - 2;
+
+  double coff = 1;
+  double dt, hx, hy;
+  double diag_x, diag_y;
+  double weight_x, weight_y;
+
+  auto min = [](auto const a, auto const b){return (a <= b) ? a : b;};
+
+  hx = (double) 1 / (double) (nx_glob+1);
+  hy = (double) 1 / (double) (ny_glob+1);
+
+  dt = 0.25 * (double) (min(hx, hy) * min(hx, hy)) / coff;
+  dt = min(dt, 0.1);
+
+  weight_x = coff * dt / (hx * hx);
+  weight_y = coff * dt / (hy * hy);
+
+  diag_x = -2.0 + hx * hx / (2 * coff * dt);
+  diag_y = -2.0 + hy * hy / (2 * coff * dt);
+
+
+  for (i = 1; i <= nx; ++i)
+    for (j = 1; j <= ny; ++j)
+    {
+      out(i,j) = weight_x * ((*this)(i-1, j) + (*this)(i+1, j) + (*this)(i,j)*diag_x)
+               + weight_y * ((*this)(i, j-1) + (*this)(i, j+1) + (*this)(i,j)*diag_y);
+    }
+
+}
+
+template <typename T>
+void Array_Distribute<T>::Iexchange()
+{
+  int flag, scnt = 1;
+
+  flag = 0;
+  // MPI_Sendrecv()
+  // MPI_Request req[8];
+  // int req_cout = 0;
+
+  // MPI_Irecv()
+
+
+}
+
+
+template <typename T>
 void twodinit_basic_Heat(Array_Distribute<T>& init, Array_Distribute<T>& init_other, Array_Distribute<T> bias)
 {
+  
   int i, j;
-  int nx = init.get_num_rows() - 2;
-  int ny = init.get_num_cols() - 2;
+  double xx, yy;
+
+  int nx = init.get_glob_num_rows() - 2;
+  int ny = init.get_glob_num_cols() - 2;
+
+  int nx_loc = init.get_num_rows() - 2;
+  int ny_loc = init.get_num_cols() - 2;
 
   int s[] {init.get_start(0), init.get_start(1)};
-  int e[] {init.get_end(0),   init.get_end(1)};
+  int e[] {init.get_end(0),   init.get_end(1)  };
 
-  for (i = s[0]-1; i <= e[0]+1; ++i) 
-    for (j = s[1]-1; j <= e[1]+1; ++j)
+  for (i = 1; i <= nx_loc; ++i)
+    for (j = 1; j <= ny_loc; ++j)
     {
       init(i, j) = 0;
       init_other(i, j) = 0;
       bias(i, j) = 0;
     }
 
-  /* Left Side */
-  if (s[0] == 1) {
-    for (j = s[1]; j < e[1]+1; ++j) {
-      double yy = (double) j / (ny+1);
-      init(0,       j) = 10;
+  if (s[0] == 1)
+    for (j = 1; j <= ny_loc; ++j)
+    {
+      yy = (double) j / (ny+1);
+      init(0, j) = 10;
       init_other(0, j) = 10;
     }
-  }
 
-  /* Right Side */
-  if (e[0] == nx) {
-    for (j = s[1]; j < e[1]+1; ++j) {
-      double yy = (double) j / (ny+1);
-      init(nx+1,        j) = 10;
-      init_other(nx+1,  j) = 10;
+
+  if (e[0] == nx)
+    for (j = 0; j <= ny_loc; ++j)
+    {
+      yy = (double) j / (ny+1);
+      init(nx_loc+1,        j) = 9;
+      init_other(nx_loc+1,  j) = 9;
     }
-  }
 
-  /* Bottom side */
-  if (s[1] == 1) {
-    for (i = s[0]; i <= e[0]; ++i) {
+
+  if (s[1] == 1)
+    for (i = 1; i <= nx_loc; ++i) {
       init(i,       0) = 10;
       init_other(i, 0) = 10;
     }
-  }
-  
-  /* UP side */
-  if (e[1] == ny) {
-    for (i = s[0]; i <= e[0]; ++i) {
-      double xx = (double) i / (nx+1);
-      init(i,       ny+1) = 0;
-      init_other(i, ny+1) = 0;
+
+
+  if (e[1] == ny)
+    for (i = 1; i <= nx_loc; ++i) {
+       xx = (double) i / (nx+1);
+      init(i,       ny_loc+1) = 0;
+      init_other(i, ny_loc+1) = 0;
     }
-  }
-
 }
-
 
 
 template <typename T>
@@ -212,15 +261,19 @@ int main(int argc, char ** argv)
                             b (MAX_N, MAX_N, dims, comm_cart), 
                             f (MAX_N, MAX_N, dims, comm_cart);
 
-  if (world.rank() == 0)
-    std::cout << a << std::endl; 
-  std::cout << std::endl;   
-
   twodinit_basic_Heat(a, b, f);
 
-  std::cout << std::endl;   
-  if (world.rank() == 0)
-    std::cout << a << std::endl;   
+
+  for (int i = 0; i < 1000; ++i)
+  {
+    a.sweep(b);
+    b.sweep(a);
+  }
+
+  if (world.rank() == 0) std::cout << a<< std::endl;
+
+
+
 
 
 

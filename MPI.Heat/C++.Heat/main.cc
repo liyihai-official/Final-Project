@@ -91,11 +91,6 @@ int main(int argc, char ** argv)
           coords[0], coords[1], s[0], e[0], s[1], e[1]);
   #endif
 
-  MPI_Win_create(&a(s[0]-1, 0), (MAX_N)*(e[0]-s[0]+3) * sizeof(double), sizeof(double), 
-                                MPI_INFO_NULL, comm_cart, &win_a);
-  MPI_Win_create(&b(s[0]-1, 0), (MAX_N)*(e[0]-s[0]+3) * sizeof(double), sizeof(double),   
-                                MPI_INFO_NULL, comm_cart, &win_b);
-
   /* Setup vector types of halo */
   MPI_Type_contiguous(e[1] - s[1] + 1, MPI_DOUBLE, &vecs[0]);
   MPI_Type_commit(&vecs[0]);
@@ -103,6 +98,12 @@ int main(int argc, char ** argv)
   MPI_Type_vector(e[0] - s[0] + 1, 1, MAX_N, MPI_DOUBLE, &vecs[1]);
   MPI_Type_commit(&vecs[1]);
 
+  /* Open Window for RMA operations */
+  MPI_Win_create(&a(s[0]-1, 0), (MAX_N)*(e[0]-s[0]+3) * sizeof(double), sizeof(double), 
+                                MPI_INFO_NULL, comm_cart, &win_a);
+  MPI_Win_create(&b(s[0]-1, 0), (MAX_N)*(e[0]-s[0]+3) * sizeof(double), sizeof(double),   
+                                MPI_INFO_NULL, comm_cart, &win_b);
+                                
   auto t1 = MPI_Wtime();
   {
     for (it = 0; it < MAX_it; ++it) 
