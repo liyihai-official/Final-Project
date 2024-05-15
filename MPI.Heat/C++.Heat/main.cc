@@ -2,6 +2,7 @@
 
 #ifdef USE_MPI
 #include <mpi.h>
+#include <omp.h>
 #include <boost/mpi.hpp>
 #include <boost/regex.hpp>
 #include <boost/serialization/vector.hpp>
@@ -20,8 +21,8 @@
 #include "lib2d.h"
 #include "array_mpi.h"
 
-#define MAX_N 1000+2
-#define MAX_it 1000000000
+#define MAX_N 50+2
+#define MAX_it 10000
 
 template<typename T>
 MPI_Datatype get_mpi_type();

@@ -2,6 +2,7 @@
 
 #ifdef USE_MPI
 #include <mpi.h>
+#include <omp.h>
 #include <boost/mpi.hpp>
 #include <boost/regex.hpp>
 #include <boost/serialization/vector.hpp>
@@ -20,33 +21,25 @@
 #include "lib2d.h"
 #include "array_mpi.h"
 
-#define MAX_N 12+2
+#define MAX_N 20+2
 #define MAX_it 10000
 
 template<typename T>
 MPI_Datatype get_mpi_type();
-
-template<>
-MPI_Datatype get_mpi_type<int>() { return MPI_INT; }
-
-template<>
-MPI_Datatype get_mpi_type<float>() { return MPI_FLOAT; }
-
-template<>
-MPI_Datatype get_mpi_type<double>() { return MPI_DOUBLE; }
 
 template <typename T>
 class Array_Distribute : public Array<T> {
   public:
   Array_Distribute() = delete;
 
-  Array_Distribute(std::size_t const rows, std::size_t const cols, 
-                          int const dims[2], MPI_Comm comm_cart)
-    : Array<T>( get_loc_dim(rows - 2, dims, 0, comm_cart), 
-                get_loc_dim(cols - 2, dims, 1, comm_cart)),
-      nx_glob {static_cast<int>(rows)}, 
-      ny_glob {static_cast<int>(cols)}, 
-      comm {comm_cart}
+  Array_Distribute(
+    std::size_t const rows, std::size_t const cols, 
+    int const dims[2], MPI_Comm comm_cart)
+  : Array<T>( get_loc_dim(rows - 2, dims, 0, comm_cart), 
+              get_loc_dim(cols - 2, dims, 1, comm_cart)),
+    nx_glob {static_cast<int>(rows)}, 
+    ny_glob {static_cast<int>(cols)}, 
+    comm {comm_cart}
   {
 
     MPI_Cart_shift(comm_cart, 0, 1, &nbr_up,   &nbr_down );
@@ -102,6 +95,7 @@ class Array_Distribute : public Array<T> {
   int starts[dimension], ends[dimension], coordinates[dimension];
 
   MPI_Comm comm;
+
   MPI_Datatype vecs[dimension];
 
   std::size_t get_loc_dim(auto glob_dim, const int dims[], const int coord_idx, MPI_Comm comm)
@@ -161,11 +155,9 @@ void Array_Distribute<T>::Iexchange()
   int flag, scnt = 1;
 
   flag = 0;
-  // MPI_Sendrecv()
-  // MPI_Request req[8];
-  // int req_cout = 0;
 
-  // MPI_Irecv()
+  // MPI_Sendrecv()
+
 
 
 }
@@ -247,7 +239,7 @@ int main(int argc, char ** argv)
   boost::mpi::environment env(argc, argv);
   boost::mpi::communicator world;
 
-  constexpr int reorder {1}, dimension {2};
+  constexpr int reorder {1}, dimension {2}, root {0};
 
   int dims[dimension], coords[dimension], periods[dimension];
   for (short int i = 0; i < dimension; ++i) {dims[i] = 0; periods[i] = 0;}
@@ -263,23 +255,24 @@ int main(int argc, char ** argv)
 
   twodinit_basic_Heat(a, b, f);
 
-
+  auto t1 = MPI_Wtime();
   for (int i = 0; i < 1000; ++i)
   {
     a.sweep(b);
+
     b.sweep(a);
+    
   }
+  auto t2 = MPI_Wtime();
 
-  if (world.rank() == 0) std::cout << a<< std::endl;
+  std::cout << "RANK: " << world.rank() << "\n"
+  << "Parallel : " << (t2 - t1) * 1000 << " ms\n" << std::endl;
 
-
-
-
-
-
-
-
-
+  MPI_Barrier(comm_cart);
+  if (world.rank() == root)
+  {
+    std::cout << "RANK: " << root << "\n" << a;
+  }
 
 
 
@@ -400,3 +393,13 @@ int my_Gather2d_new(Array<T>& gather, Array<T> a,
 
   return MPI_SUCCESS;
 }
+
+
+template<>
+MPI_Datatype get_mpi_type<int>() { return MPI_INT; }
+
+template<>
+MPI_Datatype get_mpi_type<float>() { return MPI_FLOAT; }
+
+template<>
+MPI_Datatype get_mpi_type<double>() { return MPI_DOUBLE; }
