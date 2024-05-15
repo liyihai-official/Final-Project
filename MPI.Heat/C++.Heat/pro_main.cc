@@ -21,7 +21,7 @@
 #include "lib2d.h"
 #include "array_mpi.h"
 
-#define MAX_N 50+2
+#define MAX_N 10+2
 #define MAX_it 10000
 
 template<typename T>
@@ -61,7 +61,7 @@ class Array_Distribute : public Array<T> {
 
   void Iexchange();
 
-  void Array_Gather(Array_Distribute<T>& gather, const int root);
+  void Array_Gather(Array<T>& gather, const int root);
 
 
   int get_start(const int idx) {
@@ -144,13 +144,12 @@ void Array_Distribute<T>::sweep(Array_Distribute<T>& out)
   diag_y = -2.0 + hy * hy / (2 * coff * dt);
 
   for (i = 1; i <= nx; ++i)
-  {
     for (j = 1; j <= ny; ++j)
     {
       out(i,j) = weight_x * ((*this)(i-1, j) + (*this)(i+1, j) + (*this)(i,j) * diag_x)
                + weight_y * ((*this)(i, j-1) + (*this)(i, j+1) + (*this)(i,j) * diag_y);
     }
-  }
+
 }
 
 template <typename T>
@@ -179,9 +178,59 @@ void Array_Distribute<T>::Iexchange()
 }
 
 template <typename T>
-void Array_Distribute<T>::Array_Gather(Array_Distribute<T>& gather, const int root)
+void Array_Distribute<T>::Array_Gather(Array<T>& gather, const int root)
 {
   MPI_Datatype temp, Block, mpi_T {get_mpi_type<T>()};
+
+  int nx = this->get_num_rows() - 2;
+  int ny = this->get_num_cols() - 2;
+
+  int size, pid, i;
+  MPI_Comm_size(comm, &size);
+  int s0_list[size], s1_list[size], nx_list[size], ny_list[size];
+
+  MPI_Type_vector(nx, ny, ny+2, mpi_T, &Block);
+  MPI_Type_commit(&Block);
+
+  MPI_Gather(&starts[0], 1, MPI_INT, s0_list, 1, MPI_INT, root, comm);
+  MPI_Gather(&starts[1], 1, MPI_INT, s1_list, 1, MPI_INT, root, comm);
+  MPI_Gather(&nx       , 1, MPI_INT, nx_list, 1, MPI_INT, root, comm);
+  MPI_Gather(&ny       , 1, MPI_INT, ny_list, 1, MPI_INT, root, comm);
+
+
+  if (rank != root)
+  {
+    MPI_Send(&(*this)(1,1), 1, Block, root, rank, comm);
+  }
+  MPI_Type_free(&Block);
+
+  if (rank == root)
+  {
+    for (pid = 0; pid < size; ++pid)
+    {
+      if (pid == root)
+      {
+        for (i = 1; i <= ends[0]; ++i)
+        {
+          
+        }
+      }
+
+      if (pid != root)
+      {
+        MPI_Type_vector(nx_list[pid], ny_list[pid], gather.get_num_cols(), mpi_T, &temp);
+        MPI_Type_commit(&temp);
+
+        MPI_Recv(&gather(s0_list[pid], s1_list[pid]), 1,
+                          temp, pid, pid, comm, MPI_STATUS_IGNORE);
+
+        MPI_Type_free(&temp);  
+      }
+    }
+  }
+
+
+  
 }
 
 template <typename T>
@@ -253,8 +302,6 @@ int my_Gather2d_new(Array<T>& gather, Array<T> a,
                           const int s[2], const int e[2], const int root, 
                           MPI_Comm comm);
 
-
-
 int main(int argc, char ** argv)
 {
 
@@ -271,9 +318,11 @@ int main(int argc, char ** argv)
   MPI_Dims_create(world.size(), dimension, dims);
   MPI_Cart_create(MPI_COMM_WORLD, dimension, dims, periods, reorder, &comm_cart);
 
-  Array_Distribute<double>  a (MAX_N, MAX_N, dims, comm_cart), 
-                            b (MAX_N, MAX_N, dims, comm_cart), 
-                            f (MAX_N, MAX_N, dims, comm_cart);
+  Array_Distribute<double>  a (MAX_N, (MAX_N+10), dims, comm_cart), 
+                            b (MAX_N, (MAX_N+10), dims, comm_cart), 
+                            f (MAX_N, (MAX_N+10), dims, comm_cart);
+
+  Array<double> gather (MAX_N, (MAX_N+10), -5);
 
   twodinit_basic_Heat(a, b, f);
 
@@ -295,35 +344,42 @@ int main(int argc, char ** argv)
 
 
 
-  std::cout << "RANK: " << world.rank() << "\n"
-  << "Parallel : " << (t2 - t1) * 1000 << " ms\n" << std::endl;
+  std::cout 
+  << "RANK: " << world.rank() << "\n"
+  << "Parallel : " << (t2 - t1) * 1000 << " ms\n" 
+  << std::endl;
 
-  // MPI_Barrier(comm_cart);
-  // if (world.rank() == root)
-  // {
-  //   std::cout << "RANK: " << root << "\n" << a;
-  // }
-  // MPI_Barrier(comm_cart);
+  a.Array_Gather(gather, 0);
+
+  if (world.rank() == 0) std::cout << gather;
+
+  MPI_Barrier(comm_cart);
+  if (world.rank() == root)
+  {
+    std::cout << "RANK: " << root << "\n" 
+    << a;
+  }
+  MPI_Barrier(comm_cart);
 
   
 
-  // MPI_Barrier(comm_cart);
-  // if (world.rank() == 1)
-  // {
-  //   std::cout << "RANK: " << 1 << "\n" << a;
-  // }
+  MPI_Barrier(comm_cart);
+  if (world.rank() == 1)
+  {
+    std::cout << "RANK: " << 1 << "\n" << a;
+  }
 
-  // MPI_Barrier(comm_cart);
-  // if (world.rank() == 2)
-  // {
-  //   std::cout << "RANK: " << 2 << "\n" << a;
-  // }
+  MPI_Barrier(comm_cart);
+  if (world.rank() == 2)
+  {
+    std::cout << "RANK: " << 2 << "\n" << a;
+  }
 
-  // MPI_Barrier(comm_cart);
-  // if (world.rank() == 3)
-  // {
-  //   std::cout << "RANK: " << 3 << "\n" << a;
-  // }
+  MPI_Barrier(comm_cart);
+  if (world.rank() == 3)
+  {
+    std::cout << "RANK: " << 3 << "\n" << a;
+  }
 
 
 
