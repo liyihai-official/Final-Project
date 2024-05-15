@@ -14,6 +14,7 @@
 
 #include <iomanip>
 #include <memory>
+#include <cstring>
 #include <vector>
 #include <algorithm>
 
@@ -210,9 +211,9 @@ void Array_Distribute<T>::Array_Gather(Array<T>& gather, const int root)
     {
       if (pid == root)
       {
-        for (i = 1; i <= ends[0]; ++i)
+        for (i = starts[0]; i <= ends[0]; ++i)
         {
-          
+          memcpy(&gather(i, starts[1]), &(*this)(i, starts[1]), ny_list[pid]*sizeof(T));
         }
       }
 
@@ -232,6 +233,51 @@ void Array_Distribute<T>::Array_Gather(Array<T>& gather, const int root)
 
   
 }
+
+
+template <typename T>
+void twodinit_basic_Heat(Array<T>& init)
+{
+  
+  int i, j;
+  double xx, yy;
+
+  int nx = init.get_num_rows() - 2;
+  int ny = init.get_num_cols() - 2;
+
+
+  for (i = 1; i <= nx; ++i)
+    for (j = 1; j <= ny; ++j)
+    {
+      init(i, j) = 0;
+    }
+
+  for (j = 0; j <= ny; ++j)
+  {
+    yy = (double) j / (ny+1);
+    init(0, j) = 10;
+  }
+
+
+  for (j = 0; j <= ny; ++j)
+  {
+    yy = (double) j / (ny+1);
+    init(nx+1,        j) = 10;
+  }
+
+
+  for (i = 0; i <= nx; ++i) {
+    init(i,       0) = 10;
+  }
+
+
+  for (i = 0; i <= nx+1; ++i) 
+  {
+      xx = (double) i / (nx+1);
+    init(i,       ny+1) = 0;
+  }
+}
+
 
 template <typename T>
 void twodinit_basic_Heat(Array_Distribute<T>& init, Array_Distribute<T>& init_other, 
@@ -349,6 +395,7 @@ int main(int argc, char ** argv)
   << "Parallel : " << (t2 - t1) * 1000 << " ms\n" 
   << std::endl;
 
+  twodinit_basic_Heat(gather);
   a.Array_Gather(gather, 0);
 
   if (world.rank() == 0) std::cout << gather;
