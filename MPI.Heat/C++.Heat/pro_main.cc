@@ -21,7 +21,7 @@
 #include "lib2d.h"
 #include "array_mpi.h"
 
-#define MAX_N 20+2
+#define MAX_N 50+2
 #define MAX_it 10000
 
 template<typename T>
@@ -45,11 +45,12 @@ class Array_Distribute : public Array<T> {
     MPI_Cart_shift(comm_cart, 0, 1, &nbr_up,   &nbr_down );
     MPI_Cart_shift(comm_cart, 1, 1, &nbr_left, &nbr_right);
 
-    /* Setup vector types of halo */
-    MPI_Type_contiguous(ends[1] - starts[1] + 1, get_mpi_type<T>(), &vecs[0]);
+    /* Setup vector types of halo */ 
+    MPI_Type_contiguous(ends[1] - starts[1] + 1,         get_mpi_type<T>(), &vecs[0]);
     MPI_Type_commit(&vecs[0]);
 
-    MPI_Type_vector(ends[0] - starts[0] + 1, 1, MAX_N, get_mpi_type<T>(), &vecs[1]);
+    int ny = ends[1] - starts[1] + 1 + 2;
+    MPI_Type_vector(    ends[0] - starts[0] + 1, 1, ny , get_mpi_type<T>(), &vecs[1]);
     MPI_Type_commit(&vecs[1]);
 
   }
@@ -59,6 +60,8 @@ class Array_Distribute : public Array<T> {
   void sweep(Array_Distribute<T>& out);                                      /* Heat Equation */
 
   void Iexchange();
+
+  void Array_Gather(Array_Distribute<T>& gather, const int root);
 
 
   int get_start(const int idx) {
@@ -81,14 +84,14 @@ class Array_Distribute : public Array<T> {
     }
   }
 
-  int get_glob_num_rows() {return nx_glob;}
-  int get_glob_num_cols() {return ny_glob;}
+  int get_glob_num_rows() {return nx_glob; }
+  int get_glob_num_cols() {return ny_glob; }
 
   protected:
   constexpr static int dimension {2};
 
   private:
-  int rank;
+  int rank, num_proc;
   int nx_glob, ny_glob;
   int nbr_up, nbr_down, nbr_right, nbr_left;
 
@@ -102,6 +105,7 @@ class Array_Distribute : public Array<T> {
   {
     int start, end;
     MPI_Comm_rank(comm, &rank);
+    MPI_Comm_size(comm, &num_proc);
     MPI_Cart_coords(comm, rank, dimension, coordinates);
 
     Decomp1d(glob_dim, dims[coord_idx], coordinates[coord_idx], starts[coord_idx], ends[coord_idx]);
@@ -139,14 +143,14 @@ void Array_Distribute<T>::sweep(Array_Distribute<T>& out)
   diag_x = -2.0 + hx * hx / (2 * coff * dt);
   diag_y = -2.0 + hy * hy / (2 * coff * dt);
 
-
   for (i = 1; i <= nx; ++i)
+  {
     for (j = 1; j <= ny; ++j)
     {
-      out(i,j) = weight_x * ((*this)(i-1, j) + (*this)(i+1, j) + (*this)(i,j)*diag_x)
-               + weight_y * ((*this)(i, j-1) + (*this)(i, j+1) + (*this)(i,j)*diag_y);
+      out(i,j) = weight_x * ((*this)(i-1, j) + (*this)(i+1, j) + (*this)(i,j) * diag_x)
+               + weight_y * ((*this)(i, j-1) + (*this)(i, j+1) + (*this)(i,j) * diag_y);
     }
-
+  }
 }
 
 template <typename T>
@@ -154,17 +158,35 @@ void Array_Distribute<T>::Iexchange()
 {
   int flag, scnt = 1;
 
+  int nx = this->get_num_rows() - 2;
+  int ny = this->get_num_cols() - 2;
+
   flag = 0;
+  MPI_Sendrecv(&(*this)(1    , ny  ), 1, vecs[1], nbr_right, flag,
+               &(*this)(1    , 0   ), 1, vecs[1], nbr_left,  flag, comm, MPI_STATUS_IGNORE);
 
-  // MPI_Sendrecv()
+  MPI_Sendrecv(&(*this)(1    , 1   ), 1, vecs[1], nbr_left,  flag,
+               &(*this)(1    , ny+1), 1, vecs[1], nbr_right, flag, comm, MPI_STATUS_IGNORE);
 
 
+  flag = 1;
 
+  MPI_Sendrecv( &(*this)(1,    1   ), 1, vecs[0], nbr_up,    flag,
+                &(*this)(nx+1, 1   ), 1, vecs[0], nbr_down,  flag, comm, MPI_STATUS_IGNORE);
+
+  MPI_Sendrecv( &(*this)(nx,   1   ), 1, vecs[0], nbr_down,  flag,
+                &(*this)(0,    1   ), 1, vecs[0], nbr_up,    flag, comm, MPI_STATUS_IGNORE);
 }
 
+template <typename T>
+void Array_Distribute<T>::Array_Gather(Array_Distribute<T>& gather, const int root)
+{
+  MPI_Datatype temp, Block, mpi_T {get_mpi_type<T>()};
+}
 
 template <typename T>
-void twodinit_basic_Heat(Array_Distribute<T>& init, Array_Distribute<T>& init_other, Array_Distribute<T> bias)
+void twodinit_basic_Heat(Array_Distribute<T>& init, Array_Distribute<T>& init_other, 
+                          Array_Distribute<T> bias)
 {
   
   int i, j;
@@ -200,8 +222,8 @@ void twodinit_basic_Heat(Array_Distribute<T>& init, Array_Distribute<T>& init_ot
     for (j = 0; j <= ny_loc; ++j)
     {
       yy = (double) j / (ny+1);
-      init(nx_loc+1,        j) = 9;
-      init_other(nx_loc+1,  j) = 9;
+      init(nx_loc+1,        j) = 10;
+      init_other(nx_loc+1,  j) = 10;
     }
 
 
@@ -256,24 +278,52 @@ int main(int argc, char ** argv)
   twodinit_basic_Heat(a, b, f);
 
   auto t1 = MPI_Wtime();
-  for (int i = 0; i < 1000; ++i)
+  for (int i = 0; i < MAX_it; ++i)
   {
     a.sweep(b);
+    b.Iexchange();
 
     b.sweep(a);
-    
+    a.Iexchange();
+
   }
   auto t2 = MPI_Wtime();
+
+
+
+
+
+
 
   std::cout << "RANK: " << world.rank() << "\n"
   << "Parallel : " << (t2 - t1) * 1000 << " ms\n" << std::endl;
 
-  MPI_Barrier(comm_cart);
-  if (world.rank() == root)
-  {
-    std::cout << "RANK: " << root << "\n" << a;
-  }
+  // MPI_Barrier(comm_cart);
+  // if (world.rank() == root)
+  // {
+  //   std::cout << "RANK: " << root << "\n" << a;
+  // }
+  // MPI_Barrier(comm_cart);
 
+  
+
+  // MPI_Barrier(comm_cart);
+  // if (world.rank() == 1)
+  // {
+  //   std::cout << "RANK: " << 1 << "\n" << a;
+  // }
+
+  // MPI_Barrier(comm_cart);
+  // if (world.rank() == 2)
+  // {
+  //   std::cout << "RANK: " << 2 << "\n" << a;
+  // }
+
+  // MPI_Barrier(comm_cart);
+  // if (world.rank() == 3)
+  // {
+  //   std::cout << "RANK: " << 3 << "\n" << a;
+  // }
 
 
 
@@ -331,68 +381,6 @@ void twoexchange(Array<T>& in, const int s[2], const int e[2],
 
 }
 
-template <typename T>
-int my_Gather2d_new(Array<T>& gather, Array<T> a, 
-                          const int s[2], const int e[2], const int root, 
-                          MPI_Comm comm)
-{
-  int i, pid, tag;
-  int rank, size;
-  int count, block_length;
-  MPI_Datatype block, temp, mpi_T;
-
-  mpi_T = get_mpi_type<T>();
-
-  MPI_Comm_size(comm, &size);
-  MPI_Comm_rank(comm, &rank);
-  int s0_list[size], s1_list[size], counts[size], block_lengths[size];
-
-  count = e[0] - s[0] + 1;
-  block_length = e[1] - s[1] + 1;
-  MPI_Type_vector(count, block_length, MAX_N, mpi_T, &block);
-  MPI_Type_commit(&block);
-
-  MPI_Gather(&s[0],         1, MPI_INT, s0_list,        1, MPI_INT, root, comm);
-  MPI_Gather(&s[1],         1, MPI_INT, s1_list,        1, MPI_INT, root, comm);
-  MPI_Gather(&count,        1, MPI_INT, counts,         1, MPI_INT, root, comm);
-  MPI_Gather(&block_length, 1, MPI_INT, block_lengths,  1, MPI_INT, root, comm);
-
-  if (rank != root)
-  {
-    tag = rank;
-    MPI_Send(&a(s[0], s[1]), 1, block, root, tag, comm);
-  }
-  MPI_Type_free(&block);
-
-
-  if (rank == root)
-  {
-    for (pid = 0; pid < size; ++pid) 
-    {
-      if (pid == root)
-      {
-        for (i = s[0]; i < e[0]+1; ++i)
-        {
-          memcpy(&gather(i, s[1]), &a(i, s[1]), block_lengths[pid] * sizeof(T));
-        }
-      }
-
-      if (pid != root) 
-      {
-        tag = pid;
-        MPI_Type_vector(counts[pid], block_lengths[pid], MAX_N, mpi_T, &temp);
-        MPI_Type_commit(&temp);
-
-        MPI_Recv(&gather(s0_list[pid], s1_list[pid]), 1, 
-                  temp, pid, tag, comm, MPI_STATUS_IGNORE);
-
-        MPI_Type_free(&temp);  
-      }
-    }
-  }
-
-  return MPI_SUCCESS;
-}
 
 
 template<>

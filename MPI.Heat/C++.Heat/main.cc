@@ -21,7 +21,7 @@
 #include "lib2d.h"
 #include "array_mpi.h"
 
-#define MAX_N 50+2
+#define MAX_N 20+2
 #define MAX_it 10000
 
 template<typename T>
