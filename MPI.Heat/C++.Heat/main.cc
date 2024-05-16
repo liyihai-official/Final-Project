@@ -55,7 +55,7 @@ int main(int argc, char ** argv)
 
   twodinit_basic_Heat(a, b, f);
 
-  ProfilerStart("main.prof");
+  //ProfilerStart("main.prof");
   double t1 = MPI_Wtime();
   for (i = 0; i < MAX_it; ++i)
   {
@@ -72,7 +72,7 @@ int main(int argc, char ** argv)
     if (glob_diff <= tol) {break;}
   }
   double t2 = MPI_Wtime();
-  ProfilerStop();
+  //ProfilerStop();
   
   MPI_Barrier(comm_cart);
 
