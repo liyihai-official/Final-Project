@@ -7,7 +7,8 @@
 #SBATCH -e benchmark_first.e.%j
 #SBATCH --mail-user=liy35@tcd.ie
 #SBATCH --mail-type=ALL
-#SBATCH --account=liy35
+#SBATCH --account=callan_liy35
+#SBATCH --partition=compute
 
 # Load Enssential Module
 module load openmpi/4.1.6-gcc-13.1.0-kzjsbji
