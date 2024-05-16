@@ -24,8 +24,10 @@
 #endif
 
 #if !defined (MAX_it)
-#define MAX_it 10000
+#define MAX_it 1000000
 #endif
+
+#define tol 1E-13
 
 int main(int argc, char ** argv)
 {
@@ -33,6 +35,8 @@ int main(int argc, char ** argv)
   // boost::mpi::communicator world;
   auto world = mpi::env(argc, argv);
 
+  double loc_diff, glob_diff;
+  int i;
   constexpr int reorder {1}, dimension {2}, root {0};
 
   int dims[dimension], coords[dimension], periods[dimension];
@@ -50,8 +54,8 @@ int main(int argc, char ** argv)
 
   twodinit_basic_Heat(a, b, f);
 
-  auto t1 = MPI_Wtime();
-  for (int i = 0; i < MAX_it; ++i)
+  double t1 = MPI_Wtime();
+  for (i = 0; i < MAX_it; ++i)
   {
 
     a.sweep(b);
@@ -60,18 +64,50 @@ int main(int argc, char ** argv)
     b.sweep(a);
     a.Iexchange();
 
-  }
-  auto t2 = MPI_Wtime();
+    loc_diff = final_project::get_difference(a, b);
+    MPI_Allreduce(&loc_diff, &glob_diff, 1, MPI_DOUBLE, MPI_SUM,     comm_cart);
 
-  std::cout 
-  << "RANK: "      << world.rank()     << "\n"
-  << "Parallel : " << (t2 - t1) * 1000 << " ms\n" 
-  << std::endl;
+    // if (world.rank() == root) std::cout << glob_diff << std::endl;
+    if (glob_diff <= tol) {break;}
+  }
+  double t2 = MPI_Wtime();
+
+  // if (world.rank() == root) std::cout << "Convergence : " << i << std::endl;
+  MPI_Barrier(comm_cart);
+
+
+  double t_t {t2-t1};
+  double t_list[world.size()];
+  MPI_Gather(&t_t, 1, MPI_DOUBLE, t_list, 1, MPI_DOUBLE, 0, comm_cart);
+  
+  if (world.rank() == 0)
+  {
+    std::cout 
+      << "num_proc"     << " "
+      << "NX"          << " "
+      << "NY"          << " "
+      << "MAX_iteration"           << " "
+      << "Convergence"                << " "
+      << "Rank"                << " "
+      << "Time" << 
+    std::endl;
+
+    for (int j = 0; j < world.size(); ++j)
+      std::cout 
+        << world.size()     << " "
+        << MAX_N_X          << " "
+        << MAX_N_Y          << " "
+        << MAX_it           << " "
+        << i                << " "
+        << j                << " "
+        << t_list[j] * 1000 << 
+      std::endl;
+  }
 
   twodinit_basic_Heat(gather);
   a.Array_Gather(gather, 0);
 
-  if (world.rank() == root ) std::cout << gather;
+  // if (world.rank() == root ) std::cout << gather;
 
   return EXIT_SUCCESS;
 }

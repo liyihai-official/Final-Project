@@ -1,7 +1,6 @@
 #pragma once 
 #include "array.cpp"
 
-
 /* ---------------------- Initialize Conditions Functions ---------------------- */
 template <typename T>
 void init_conditions( final_project::Array<T>& init, 
@@ -48,7 +47,7 @@ template <typename T>
 void twodinit_basic_Heat( final_project::Array<T>& init, 
                           final_project::Array<T>& init_other, 
                           final_project::Array<T>& bias, 
-                        const int s[2], const int e[2])
+                          const int s[2], const int e[2])
 {
   int i, j;
   int nx = init.get_num_rows() - 2;

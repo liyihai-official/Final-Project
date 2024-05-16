@@ -5,6 +5,7 @@
 #include <vector>
 #include <algorithm>
 #include <fstream>
+#include <mpi.h>
 
 template<typename T>
 MPI_Datatype get_mpi_type();
@@ -166,17 +167,14 @@ namespace final_project {
       double temp, sum = 0.0;
 
       std::size_t i, j;
-      // std::cout << s[0] << "\t" << e[0] << std::endl;
       for (i = s[0]; i <= e[0]; ++i)
       {
         for (j = s[1]; j <= e[1]; ++j)
         {
           temp = (double) (ping(i, j) - pong(i, j));
-          // std::cout << i <<", "<< j << "\t" << ping(i, j) << "\t" << pong(i, j) << temp * temp << "\n";
           sum = sum + temp * temp;
         }
       }
-      
       return sum;
     }
 
@@ -427,4 +425,22 @@ namespace final_project {
         }
       }
     }
+
+  template <typename T>
+  double get_difference(Array_Distribute<T> const ping, Array_Distribute<T> const pong)
+    {
+      double temp, sum = 0.0;
+      
+      std::size_t i, j;
+      for (i = 1; i <= ping.get_num_rows() - 1; ++i)
+      {
+        for (j = 1; j <= ping.get_num_cols() - 1; ++j)
+        {
+          temp = ping(i, j) - pong(i, j);
+          sum += temp * temp;
+        }
+      }
+      return sum;
+    }
+    
 }; // _array

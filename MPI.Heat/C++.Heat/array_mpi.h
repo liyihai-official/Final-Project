@@ -13,6 +13,7 @@ MPI_Datatype get_mpi_type<float>() { return MPI_FLOAT; }
 
 template<>
 MPI_Datatype get_mpi_type<double>() { return MPI_DOUBLE; }
+
 template <typename T>
 class Array_Distribute : public Array<T> {
   public:
