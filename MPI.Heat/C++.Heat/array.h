@@ -151,8 +151,7 @@ double get_difference(Array<T> const ping, Array<T> const pong,
 {
   double temp, sum = 0.0;
 
-  std::size_t i, j;
-  // std::cout << s[0] << "\t" << e[0] << std::endl;
+  int i, j;
   for (i = s[0]; i <= e[0]; ++i)
   {
     for (j = s[1]; j <= e[1]; ++j)

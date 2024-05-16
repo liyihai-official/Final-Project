@@ -21,11 +21,8 @@
 #include "lib2d.h"
 #include "array_mpi.h"
 
-#define MAX_N 20+2
+#define MAX_N 10+2
 #define MAX_it 10000
-
-template<typename T>
-MPI_Datatype get_mpi_type();
 
 template <typename T>
 void twoexchange(Array<T>& in, const int s[2], const int e[2], 
@@ -39,11 +36,15 @@ int my_Gather2d_new(Array<T>& gather, Array<T> a,
 
 int main(int argc, char ** argv)
 {
-  Array<double> a(MAX_N, MAX_N), b(MAX_N, MAX_N), f(MAX_N, MAX_N), solution(MAX_N, MAX_N), gather(MAX_N, MAX_N);
+  Array<double> a(MAX_N, (MAX_N+10)), 
+                b(MAX_N, (MAX_N+10)), 
+                f(MAX_N, (MAX_N+10)), 
+                solution(MAX_N, (MAX_N+10)), 
+                gather(MAX_N, (MAX_N+10));
 
   int nx, ny, it;
   nx = (MAX_N) - 2; 
-  ny = (MAX_N) - 2; 
+  ny = (MAX_N+10) - 2; 
   double loc_diff = 0.0, glob_diff = 0.0, loc_err, glob_err, tol = 1E-15;
 
   /* ------------------------------------ Parallel Ver. ------------------------------------------ */
@@ -206,7 +207,7 @@ int my_Gather2d_new(Array<T>& gather, Array<T> a,
 
   count = e[0] - s[0] + 1;
   block_length = e[1] - s[1] + 1;
-  MPI_Type_vector(count, block_length, MAX_N, mpi_T, &block);
+  MPI_Type_vector(count, block_length, (MAX_N+10), mpi_T, &block);
   MPI_Type_commit(&block);
 
   MPI_Gather(&s[0],         1, MPI_INT, s0_list,        1, MPI_INT, root, comm);
@@ -237,7 +238,7 @@ int my_Gather2d_new(Array<T>& gather, Array<T> a,
       if (pid != root) 
       {
         tag = pid;
-        MPI_Type_vector(counts[pid], block_lengths[pid], MAX_N, mpi_T, &temp);
+        MPI_Type_vector(counts[pid], block_lengths[pid], (MAX_N+10), mpi_T, &temp);
         MPI_Type_commit(&temp);
 
         MPI_Recv(&gather(s0_list[pid], s1_list[pid]), 1, 
@@ -250,13 +251,3 @@ int my_Gather2d_new(Array<T>& gather, Array<T> a,
 
   return MPI_SUCCESS;
 }
-
-
-template<>
-MPI_Datatype get_mpi_type<int>() { return MPI_INT; }
-
-template<>
-MPI_Datatype get_mpi_type<float>() { return MPI_FLOAT; }
-
-template<>
-MPI_Datatype get_mpi_type<double>() { return MPI_DOUBLE; }
