@@ -31,7 +31,7 @@ EXECS := $(EXEC_1)
 all: $(EXECS)
 
 $(EXEC_1): $(SRC_1)
-	$(MPICXX)$(USE_DEBUG) $(MAX_N_X) $(MAX_N_Y) $(EQ_FLAG) -fopenmp $(USE_MPI) $(MPI_STD) $(DFLAGS) $(MPI_IPATH) $(MPI_LPATH) $(MPI_LFLAGS) $^ -o $@ -O2
+	$(MPICXX)$(USE_DEBUG) $(MAX_N_X) $(MAX_N_Y) $(EQ_FLAG) -fopenmp $(USE_MPI) $(MPI_STD) $(DFLAGS) $(MPI_IPATH) $(MPI_LPATH) $(MPI_LFLAGS) -g -lprofiler $^ -o $@ -O2
 
 .PHONY: clean all
 clean:
