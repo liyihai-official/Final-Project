@@ -42,7 +42,7 @@ $(EXEC_1): $(SRC_1)
 	$(MPICXX) $(USE_DEBUG) $(EQ_FLAG) -fopenmp $(USE_MPI) $(MPI_STD) $(DFLAGS) $(MPI_IPATH) $(MPI_LPATH) $(MPI_LFLAGS) $^ -o $@ -O3 
 
 $(EXEC_2): $(SRC_2)
-	$(MPICXX)$(USE_DEBUG) $(MAX_N_X) $(MAX_N_Y) $(EQ_FLAG) -fopenmp $(USE_MPI) $(MPI_STD) $(DFLAGS) $(MPI_IPATH) $(MPI_LPATH) $(MPI_LFLAGS) $^ -o $@ -O3
+	$(MPICXX)$(USE_DEBUG) $(MAX_N_X) $(MAX_N_Y) $(EQ_FLAG) -fopenmp $(USE_MPI) $(MPI_STD) $(DFLAGS) $(MPI_IPATH) $(MPI_LPATH) $(MPI_LFLAGS) $^ -o $@ -O2
 
 .PHONY: clean all
 clean:
