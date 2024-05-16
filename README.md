@@ -8,6 +8,8 @@ This is the final project of M.Sc
 
 ### Note 
 #### 16.May.2024
+Working Directory: ```MPI.Heat/C++Heat```.
+
 File Management. Create ```namespace final_project```.
 ```sweep.cpp```, ```environment.cpp```, ```final_project.cpp```, ```initialization.cpp``` and ```array.cpp```.
 
