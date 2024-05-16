@@ -22,7 +22,7 @@ for PROC in "${PROCS_WEAK[@]}"; do
     echo "Running with $((PROC*PROC)) processes and grid size ${SCALE_N_X}x${SCALE_N_Y}"
     make clean
     make MAX_N_X=-DMAX_N_X=${SCALE_N_X} MAX_N_Y=-DMAX_N_Y=${SCALE_N_Y}
-    mpirun -np $((PROC*PROC)) ./pro_main > benchmark.results/weak_pro_main_${PROC}_${SCALE_N_X}_${SCALE_N_Y}
+    mpirun -np $((PROC*PROC)) ./main > benchmark.results/weak_main_${PROC}_${SCALE_N_X}_${SCALE_N_Y}
 done
 
 # Strong Scaling Test
@@ -31,5 +31,5 @@ for PROC in "${PROCS_STRONG[@]}"; do
     echo "Running with ${PROC} processes and grid size ${SCALE_N_X}x${SCALE_N_Y}"
     make clean
     make MAX_N_X=-DMAX_N_X=${SCALE_N_X} MAX_N_Y=-DMAX_N_Y=${SCALE_N_Y}
-    mpirun -np $((PROC*PROC)) ./pro_main > benchmark.results/strong_pro_main_${PROC}_${SCALE_N_X}_${SCALE_N_Y}
+    mpirun -np $((PROC*PROC)) ./main > benchmark.results/strong_main_${PROC}_${SCALE_N_X}_${SCALE_N_Y}
 done
