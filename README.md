@@ -38,4 +38,4 @@ This is the final project of M.Sc in High Performance Computing program.
         - It runs on cluster ```callan``` by SLURM successfully.
     - [ ] OpenMP
         - OpenMP has poor performance when it is inited many times.
-        
+    - [ ] Report.pdf
