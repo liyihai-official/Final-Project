@@ -15,7 +15,7 @@
 #include <cstring>
 #include <vector>
 #include <algorithm>
-//#include <gperftools/profiler.h>
+#include <gperftools/profiler.h>
 
 #include "final_project.cpp"
 
@@ -36,7 +36,7 @@ int main(int argc, char ** argv)
   // boost::mpi::communicator world;
   auto world = mpi::env(argc, argv);
 
-  double loc_diff, glob_diff;
+  double loc_diff, glob_diff, t1, t2;
   int i;
   constexpr int reorder {1}, dimension {2}, root {0};
 
@@ -55,8 +55,8 @@ int main(int argc, char ** argv)
 
   twodinit_basic_Heat(a, b, f);
 
-  //ProfilerStart("main.prof");
-  double t1 = MPI_Wtime();
+  // ProfilerStart("main.prof");
+  t1 = MPI_Wtime();
   for (i = 0; i < MAX_it; ++i)
   {
 
@@ -71,11 +71,10 @@ int main(int argc, char ** argv)
 
     if (glob_diff <= tol) {break;}
   }
-  double t2 = MPI_Wtime();
-  //ProfilerStop();
+  t2 = MPI_Wtime();
+  // ProfilerStop();
   
   MPI_Barrier(comm_cart);
-
 
   double t_t {t2-t1};
   double t_list[world.size()];
