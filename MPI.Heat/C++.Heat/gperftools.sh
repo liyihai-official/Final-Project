@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # File: benchmark.sh
 # Create the benchmark.results directory if it doesn't exist
 if [ ! -d "gperftools.results" ]; then
