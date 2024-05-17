@@ -13,13 +13,17 @@ This is the final project of M.Sc in High Performance Computing program.
 ```MPI.Heat/C++Heat```.
 
 - File Management. 
-Create ```namespace final_project```.
-```sweep.cpp```, ```environment.cpp```, ```final_project.cpp```, ```initialization.cpp``` and ```array.cpp```.
+    - Create ```namespace final_project```.
+      ```sweep.cpp```, ```environment.cpp```, ```final_project.cpp```, ```initialization.cpp``` and ```array.cpp```.
 
-  Files ```array.h```, ```array_mpi.h```, ```lib2d.h``` are planning to deprecate.
+    - Files ```array.h```, ```array_mpi.h```, ```lib2d.h``` are planning to deprecate.
 
-- Add ```benchmark.sh```
-Add benchmark shell script of 'weak scaling' and 'strong scaling' tests. The basic grid size is `16x16`.
+- Add New Features
+    - [x] Add None Blocking Communications
+        - See ```void final_project::Array_Distribute<T>::Iexchange()```.
+    - [ ] Add ```benchmark.sh```
+        Add benchmark shell script of 'weak scaling' and 'strong scaling' tests. The basic grid size is `16x16`.
+
 
 ---
 #### May, 17, 2024
