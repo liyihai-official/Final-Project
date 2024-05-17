@@ -2,7 +2,7 @@
 
 <!-- ![Animated GIF](Heat3D/Heat_3D.gif) -->
 
-This is the final project of M.Sc
+This is the final project of M.Sc in High Performance Computing program.
 
 <img src="Heat3D/Heat_3D.gif" alt="Animated GIF" height="200">
 
