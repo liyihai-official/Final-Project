@@ -39,6 +39,3 @@ This is the final project of M.Sc in High Performance Computing program.
     - [ ] OpenMP
         - OpenMP has poor performance when it is inited many times.
         
-1
-    
-
