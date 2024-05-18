@@ -20,11 +20,14 @@ if [ ! -d "benchmark.results" ]; then
 fi
 
 # Set the base dimensions
-BASE_N_X=16
-BASE_N_Y=16
+BASE_N_X=256
+BASE_N_Y=256
 
 # Define the range of processor counts for scaling tests
-SCALE_=(0 1)
+SCALE_=(0 1  2   3)
+# PROC=(1 4 16 128 256)
+# SIZE=(1 2  4   8  16 32)*BASE
+
 
 # Weak Scaling Test
 echo "Weak Scaling"
@@ -35,7 +38,7 @@ for SCALE in "${SCALE_[@]}"; do
     echo "Running with ${PROC} process Grid size ${SIZE_N_X}*${SIZE_N_Y}"
     make clean
     make MAX_N_X=-DMAX_N_X=${SIZE_N_X} MAX_N_Y=-DMAX_N_Y=${SIZE_N_Y}
-    mpirun -np ${PROC} ./main > benchmark.results/weak_main_${PROC}_${SIZE_N_X}*${SIZE_N_Y}
+    mpirun --map-by ppr:64:node -np ${PROC} ./main > benchmark.results/weak_main_${PROC}_${SIZE_N_X}*${SIZE_N_Y}
     echo ""
 done    
 
@@ -46,12 +49,12 @@ for SCALE in "${SCALE_[@]}"; do
     echo "Running with ${PROC} process Grid size ${SIZE_N_X}*${SIZE_N_Y}"
     make clean
     make MAX_N_X=-DMAX_N_X=${SIZE_N_X} MAX_N_Y=-DMAX_N_Y=${SIZE_N_Y}
-    mpirun -np ${PROC} ./main > benchmark.results/strong_main_${PROC}_${SIZE_N_X}*${SIZE_N_Y}
+    mpirun --map-by ppr:64:node -np ${PROC} ./main > benchmark.results/strong_main_${PROC}_${SIZE_N_X}*${SIZE_N_Y}
     echo ""
 done
 
 
-# Weak Scaling Test
+Weak Scaling Test
 echo "Weak Scaling with OMP"
 for SCALE in "${SCALE_[@]}"; do
     PROC=$((2 ** (2*SCALE)))
@@ -60,7 +63,7 @@ for SCALE in "${SCALE_[@]}"; do
     echo "Running with ${PROC} process Grid size ${SIZE_N_X}*${SIZE_N_Y}"
     make clean
     make MAX_N_X=-DMAX_N_X=${SIZE_N_X} MAX_N_Y=-DMAX_N_Y=${SIZE_N_Y} USE_OMP=1
-    mpirun -np ${PROC} ./main > benchmark.results/weak_main_omp_${PROC}_${SIZE_N_X}*${SIZE_N_Y}
+    mpirun --map-by ppr:64:node -np ${PROC} ./main > benchmark.results/weak_main_omp_${PROC}_${SIZE_N_X}*${SIZE_N_Y}
     echo ""
 done    
 
@@ -71,6 +74,6 @@ for SCALE in "${SCALE_[@]}"; do
     echo "Running with ${PROC} process Grid size ${SIZE_N_X}*${SIZE_N_Y}"
     make clean
     make MAX_N_X=-DMAX_N_X=${SIZE_N_X} MAX_N_Y=-DMAX_N_Y=${SIZE_N_Y} USE_OMP=1
-    mpirun -np ${PROC} ./main > benchmark.results/strong_main_omp_${PROC}_${SIZE_N_X}*${SIZE_N_Y}
+    mpirun --map-by ppr:64:node -np ${PROC} ./main > benchmark.results/strong_main_omp_${PROC}_${SIZE_N_X}*${SIZE_N_Y}
     echo ""
 done
