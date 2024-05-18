@@ -5,8 +5,8 @@ EQ_FLAG := -DHEAT # -DPOSSION # -DHEAT
 # Debug mode 
 USE_DEBUG := # -DDEBUG
 
-MAX_N_X := -DMAX_N_X=202
-MAX_N_Y := -DMAX_N_Y=202
+MAX_N_X := -DMAX_N_X=12
+MAX_N_Y := -DMAX_N_Y=12
 
 MPICXX := mpic++
 
@@ -20,7 +20,7 @@ MPI_LPATH 	:= 	#-L/opt/homebrew/Cellar/boost/1.85.0/lib \
 								-L/opt/homebrew/Cellar/boost-mpi/1.85.0/lib 
 MPI_IPATH :=  	#-I/opt/homebrew/Cellar/boost/1.85.0/include 
 
-GL := -g -lprofiler
+# GL := -g -lprofiler
 
 
 SRC_1 := main.cc

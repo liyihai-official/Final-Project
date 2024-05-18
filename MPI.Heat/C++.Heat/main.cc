@@ -15,7 +15,7 @@
 #include <cstring>
 #include <vector>
 #include <algorithm>
-#include <gperftools/profiler.h>
+// #include <gperftools/profiler.h>
 
 #include "final_project.cpp"
 
@@ -34,9 +34,10 @@ int main(int argc, char ** argv)
 {
   // boost::mpi::environment env(argc, argv);
   // boost::mpi::communicator world;
+
   auto world = mpi::env(argc, argv);
 
-  double loc_diff, glob_diff, t1, t2;
+  double loc_diff, glob_diff {10}, t1, t2;
   int i;
   constexpr int reorder {1}, dimension {2}, root {0};
 
@@ -55,19 +56,51 @@ int main(int argc, char ** argv)
 
   twodinit_basic_Heat(a, b, f);
 
+  /* -------------------------------- No OMP version -------------------------------- */
+  // ProfilerStart("main.prof");
+  // t1 = MPI_Wtime();
+  // for (i = 0; i < MAX_it; ++i)
+  // { 
+  //   a.sweep(b);
+  //   b.Iexchange();
+
+  //   b.sweep(a);
+  //   a.Iexchange();
+
+  //   loc_diff = final_project::get_difference(a, b);
+  //   MPI_Allreduce(&loc_diff, &glob_diff, 1, MPI_DOUBLE, MPI_SUM,     comm_cart);
+
+  //   if (glob_diff <= tol) {break;}
+  // }
+  // t2 = MPI_Wtime();
+  // ProfilerStop();
+
+
+  /* ------------------------------- With OMP version ------------------------------- */
   // ProfilerStart("main.prof");
   t1 = MPI_Wtime();
+#pragma omp parallel private(i) num_threads(2)
   for (i = 0; i < MAX_it; ++i)
   {
+    int p_id = omp_get_thread_num();
+    
+    a.sweep(b, p_id);
+    #pragma omp barrier
 
-    a.sweep(b);
-    b.Iexchange();
+    #pragma omp single
+    {
+      b.Iexchange();
+    }
 
-    b.sweep(a);
-    a.Iexchange();
+    b.sweep(a, p_id);
+    #pragma omp barrier
 
-    loc_diff = final_project::get_difference(a, b);
-    MPI_Allreduce(&loc_diff, &glob_diff, 1, MPI_DOUBLE, MPI_SUM,     comm_cart);
+    #pragma omp single
+    {
+      a.Iexchange();
+      loc_diff = final_project::get_difference(a, b);
+      MPI_Allreduce(&loc_diff, &glob_diff, 1, MPI_DOUBLE, MPI_SUM,     comm_cart);
+    }
 
     if (glob_diff <= tol) {break;}
   }
@@ -107,7 +140,7 @@ int main(int argc, char ** argv)
   twodinit_basic_Heat(gather);
   a.Array_Gather(gather, 0);
 
-  // if (world.rank() == root ) std::cout << gather;
+  if (world.rank() == root ) std::cout << gather;
 
   return EXIT_SUCCESS;
 }

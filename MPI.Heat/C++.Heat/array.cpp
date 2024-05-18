@@ -1,25 +1,42 @@
 #pragma once
+#include <mpi.h>
+
 #include <iostream>
 #include <iomanip>
 #include <memory>
 #include <vector>
 #include <algorithm>
 #include <fstream>
-#include <mpi.h>
 
 template<typename T>
 MPI_Datatype get_mpi_type();
 
 template<>
-MPI_Datatype get_mpi_type<int>() { return MPI_INT; }
+MPI_Datatype get_mpi_type<int>()    { return MPI_INT; }
 
 template<>
-MPI_Datatype get_mpi_type<float>() { return MPI_FLOAT; }
+MPI_Datatype get_mpi_type<float>()  { return MPI_FLOAT; }
 
 template<>
 MPI_Datatype get_mpi_type<double>() { return MPI_DOUBLE; }
 
+int Decomp1d(const int n, const int problem_size, const int rank, int& s, int& e)
+  {
+    int nlocal, deficit;
+    nlocal  = n / problem_size;
+
+    s  = rank * nlocal + 1;
+    deficit = n % problem_size;
+    s  = s + ((rank < deficit) ? rank : deficit);
+    if (rank < deficit) nlocal++;
+    e      = s + nlocal - 1;
+    if (e > n || rank == problem_size-1) e = n;
+
+    return 0;
+  }
+  
 namespace final_project {
+
   template <typename T>
   class Array {
     public:
@@ -123,78 +140,6 @@ namespace final_project {
 
 
   template <typename T>
-  inline void store_Array(Array<T> const in, std::string const fname)
-    {
-      std::ofstream file(fname);
-      if (!file.is_open()) {
-          throw std::runtime_error("Unable to open file");
-      }
-
-      std::size_t i, j;
-      for (i = 0; i < in.get_num_rows(); ++i) {
-        for (j = 0; j < in.get_num_cols(); ++j) {
-          file << std::fixed << std::setprecision(11) << std::setw(14) << in(i, j);
-          if (j != in.get_num_cols() - 1) {
-            file << " ";
-          }
-        }
-        file << "\n";
-      }
-      file.close();
-    }
-
-  template <typename T>
-  double get_difference(Array<T> const ping, Array<T> const pong)
-    {
-      double temp, sum = 0.0;
-
-      std::size_t i, j;
-      for (i = 1; i <= ping.get_num_rows() - 1; ++i)
-      {
-        for (j = 1; j <= ping.get_num_cols() - 1; ++j)
-        {
-          temp = ping(i, j) - pong(i, j);
-          sum += temp * temp;
-        }
-      }
-      return sum;
-    }
-
-  template <typename T>
-  double get_difference(Array<T> const ping, Array<T> const pong, 
-                        const int s[2], const int e[2])
-    {
-      double temp, sum = 0.0;
-
-      std::size_t i, j;
-      for (i = s[0]; i <= e[0]; ++i)
-      {
-        for (j = s[1]; j <= e[1]; ++j)
-        {
-          temp = (double) (ping(i, j) - pong(i, j));
-          sum = sum + temp * temp;
-        }
-      }
-      return sum;
-    }
-
-  int Decomp1d(const int n, const int problem_size, const int rank, int& s, int& e)
-    {
-      int nlocal, deficit;
-      nlocal  = n / problem_size;
-
-      s  = rank * nlocal + 1;
-      deficit = n % problem_size;
-      s  = s + ((rank < deficit) ? rank : deficit);
-      if (rank < deficit) nlocal++;
-      e      = s + nlocal - 1;
-      if (e > n || rank == problem_size-1) e = n;
-
-      return 0;
-    }
-
-
-  template <typename T>
   class Array_Distribute : public Array<T> {
     public:
     Array_Distribute() = delete;
@@ -223,7 +168,9 @@ namespace final_project {
       }
 
     void sweep(Array_Distribute<T>& out, Array_Distribute<T> const bias);   /* Possion Equation */
+
     void sweep(Array_Distribute<T>& out);                                      /* Heat Equation */
+    void sweep(Array_Distribute<T>& out, const int p_id);
 
     void Iexchange();
     void SRexchange();
@@ -283,43 +230,6 @@ namespace final_project {
       };
 
   };
-
-  template <typename T>
-  void Array_Distribute<T>::sweep(Array_Distribute<T>& out)
-    {
-
-      int i, j;
-
-      int nx = this->get_num_rows() - 2;
-      int ny = this->get_num_cols() - 2;
-
-      double coff = 1;
-      double dt, hx, hy;
-      double diag_x, diag_y;
-      double weight_x, weight_y;
-
-      auto min = [](auto const a, auto const b){return (a <= b) ? a : b;};
-
-      hx = (double) 1 / (double) (nx_glob+1);
-      hy = (double) 1 / (double) (ny_glob+1);
-
-      dt = 0.25 * (double) (min(hx, hy) * min(hx, hy)) / coff;
-      dt = min(dt, 0.1);
-
-      weight_x = coff * dt / (hx * hx);
-      weight_y = coff * dt / (hy * hy);
-
-      diag_x = -2.0 + hx * hx / (2 * coff * dt);
-      diag_y = -2.0 + hy * hy / (2 * coff * dt);
-
-      for (i = 1; i <= nx; ++i)
-        for (j = 1; j <= ny; ++j)
-        {
-          out(i,j) = weight_x * ((*this)(i-1, j) + (*this)(i+1, j) + (*this)(i,j) * diag_x)
-                  + weight_y * ((*this)(i, j-1) + (*this)(i, j+1) + (*this)(i,j) * diag_y);
-        }
-        
-    }
 
   template <typename T>
   void Array_Distribute<T>::Iexchange()
@@ -425,6 +335,53 @@ namespace final_project {
         }
       }
     }
+    
+}; // _array
+
+
+
+
+
+
+
+
+
+
+namespace final_project {
+  template <typename T>
+  double get_difference(Array<T> const ping, Array<T> const pong)
+    {
+      double temp, sum = 0.0;
+
+      std::size_t i, j;
+      for (i = 1; i <= ping.get_num_rows() - 1; ++i)
+      {
+        for (j = 1; j <= ping.get_num_cols() - 1; ++j)
+        {
+          temp = ping(i, j) - pong(i, j);
+          sum += temp * temp;
+        }
+      }
+      return sum;
+    }
+
+  template <typename T>
+  double get_difference(Array<T> const ping, Array<T> const pong, 
+                        const int s[2], const int e[2])
+    {
+      double temp, sum = 0.0;
+
+      std::size_t i, j;
+      for (i = s[0]; i <= e[0]; ++i)
+      {
+        for (j = s[1]; j <= e[1]; ++j)
+        {
+          temp = (double) (ping(i, j) - pong(i, j));
+          sum = sum + temp * temp;
+        }
+      }
+      return sum;
+    }
 
   template <typename T>
   double get_difference(Array_Distribute<T> const ping, Array_Distribute<T> const pong)
@@ -442,5 +399,26 @@ namespace final_project {
       }
       return sum;
     }
-    
-}; // _array
+
+
+  template <typename T>
+  inline void store_Array(Array<T> const in, std::string const fname)
+    {
+      std::ofstream file(fname);
+      if (!file.is_open()) {
+          throw std::runtime_error("Unable to open file");
+      }
+
+      std::size_t i, j;
+      for (i = 0; i < in.get_num_rows(); ++i) {
+        for (j = 0; j < in.get_num_cols(); ++j) {
+          file << std::fixed << std::setprecision(11) << std::setw(14) << in(i, j);
+          if (j != in.get_num_cols() - 1) {
+            file << " ";
+          }
+        }
+        file << "\n";
+      }
+      file.close();
+    }
+};
