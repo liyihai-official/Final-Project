@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH -N 2
-#SBATCH -n 128
+#SBATCH -N 4
+#SBATCH -n 256
 #SBATCH -t 24:00:00
 #SBATCH -J gperftest
 #SBATCH -o benchmark_first.o.%j
@@ -26,10 +26,10 @@ export CPATH=/home/support/spack/0.21.1/opt/spack/linux-rocky8-sapphirerapids/gc
 export LD_LIBRARY_PATH=/home/support/spack/0.21.1/opt/spack/linux-rocky8-sapphirerapids/gcc-13.1.0/gperftools-2.13-542of25xw4qrr4nbzdrbxfdegsu7ryd2/lib:$LD_LIBRARY_PATH
 
 # Set the Dimensions (Large Enough to get samples)
-N_X=8192
-N_Y=8192
+N_X=4096
+N_Y=4096
 
-PROCS=256
+PROCS=128
 
 # Tests
 make clean
