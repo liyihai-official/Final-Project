@@ -1,12 +1,3 @@
-#if !defined(USE_MPI)
-#include <mpi.h>
-#include <omp.h>
-// #include <boost/mpi.hpp>
-// #include <boost/regex.hpp>
-// #include <boost/serialization/vector.hpp>
-// #include <boost/serialization/access.hpp>
-#endif
-
 #include <iostream>
 #include <chrono>
 
@@ -15,9 +6,20 @@
 #include <cstring>
 #include <vector>
 #include <algorithm>
-// #include <gperftools/profiler.h>
+#include <gperftools/profiler.h>
+
+#include <omp.h>
 
 #include "final_project.cpp"
+
+
+#if !defined(USE_MPI)
+#include <mpi.h>
+// #include <boost/mpi.hpp>
+// #include <boost/regex.hpp>
+// #include <boost/serialization/vector.hpp>
+// #include <boost/serialization/access.hpp>
+#endif
 
 #if !defined(MAX_N_X) || !defined(MAX_N_Y)
 #define MAX_N_X 100+2
@@ -56,30 +58,12 @@ int main(int argc, char ** argv)
 
   twodinit_basic_Heat(a, b, f);
 
-  /* -------------------------------- No OMP version -------------------------------- */
-  // ProfilerStart("main.prof");
-  // t1 = MPI_Wtime();
-  // for (i = 0; i < MAX_it; ++i)
-  // { 
-  //   a.sweep(b);
-  //   b.Iexchange();
+/* ------------------------------- With OMP version ------------------------------- */
+#ifdef USE_OMP
 
-  //   b.sweep(a);
-  //   a.Iexchange();
-
-  //   loc_diff = final_project::get_difference(a, b);
-  //   MPI_Allreduce(&loc_diff, &glob_diff, 1, MPI_DOUBLE, MPI_SUM,     comm_cart);
-
-  //   if (glob_diff <= tol) {break;}
-  // }
-  // t2 = MPI_Wtime();
-  // ProfilerStop();
-
-
-  /* ------------------------------- With OMP version ------------------------------- */
-  // ProfilerStart("main.prof");
+  ProfilerStart("main.prof");
   t1 = MPI_Wtime();
-#pragma omp parallel private(i) num_threads(2)
+  #pragma omp parallel private(i) num_threads(2)
   for (i = 0; i < MAX_it; ++i)
   {
     int p_id = omp_get_thread_num();
@@ -105,7 +89,30 @@ int main(int argc, char ** argv)
     if (glob_diff <= tol) {break;}
   }
   t2 = MPI_Wtime();
-  // ProfilerStop();
+  ProfilerStop();
+/* -------------------------------- No OMP version -------------------------------- */
+#else
+
+  ProfilerStart("main.prof");
+  t1 = MPI_Wtime();
+  for (i = 0; i < MAX_it; ++i)
+  { 
+    a.sweep(b);
+    b.Iexchange();
+
+    b.sweep(a);
+    a.Iexchange();
+
+    loc_diff = final_project::get_difference(a, b);
+    MPI_Allreduce(&loc_diff, &glob_diff, 1, MPI_DOUBLE, MPI_SUM,     comm_cart);
+
+    if (glob_diff <= tol) {break;}
+  }
+  t2 = MPI_Wtime();
+  ProfilerStop();
+  
+#endif
+
   
   MPI_Barrier(comm_cart);
 
@@ -140,7 +147,7 @@ int main(int argc, char ** argv)
   twodinit_basic_Heat(gather);
   a.Array_Gather(gather, 0);
 
-  if (world.rank() == root ) std::cout << gather;
+  // if (world.rank() == root ) std::cout << gather;
 
   return EXIT_SUCCESS;
 }
