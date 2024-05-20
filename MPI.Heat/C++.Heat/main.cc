@@ -6,7 +6,7 @@
 #include <cstring>
 #include <vector>
 #include <algorithm>
-#include <gperftools/profiler.h>
+// #include <gperftools/profiler.h>
 
 #include <omp.h>
 
@@ -27,7 +27,7 @@
 #endif
 
 #if !defined (MAX_it)
-#define MAX_it 1000000
+#define MAX_it 100'000'000
 #endif
 
 #define tol 1E-13
@@ -61,7 +61,7 @@ int main(int argc, char ** argv)
 /* ------------------------------- With OMP version ------------------------------- */
 #ifdef USE_OMP
 
-  ProfilerStart("main.prof");
+  // ProfilerStart("main.prof");
   t1 = MPI_Wtime();
   #pragma omp parallel private(i) num_threads(2)
   for (i = 0; i < MAX_it; ++i)
@@ -89,11 +89,11 @@ int main(int argc, char ** argv)
     if (glob_diff <= tol) {break;}
   }
   t2 = MPI_Wtime();
-  ProfilerStop();
+  // ProfilerStop();
 /* -------------------------------- No OMP version -------------------------------- */
 #else
 
-  ProfilerStart("main.prof");
+  // ProfilerStart("main.prof");
   t1 = MPI_Wtime();
   for (i = 0; i < MAX_it; ++i)
   { 
@@ -109,7 +109,7 @@ int main(int argc, char ** argv)
     if (glob_diff <= tol) {break;}
   }
   t2 = MPI_Wtime();
-  ProfilerStop();
+  // ProfilerStop();
   
 #endif
 
