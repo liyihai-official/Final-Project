@@ -65,3 +65,92 @@ mpic++  -DMAX_N_X=1024 -DMAX_N_Y=1024 -DHEAT  -DUSE_OMP -fopenmp -std=c++20   ma
 Running with 64 process Grid size 1024*1024
 rm -f main 
 mpic++  -DMAX_N_X=1024 -DMAX_N_Y=1024 -DHEAT  -DUSE_OMP -fopenmp -std=c++20   main.cc -o main -O2
+
+
+
+###############################################################################
+TCHPC Cluster: callan
+Job 6502 (scalingtest) for User 'liy35' in Account 'callan_liy35'
+Finished at: Tue May 21 21:01:12 IST 2024
+
+Job efficiency estimates:
+=========================
+
+Job ID: 6502
+Cluster: callan
+User/Group: liy35/liy35
+State: RUNNING
+Nodes: 2
+Cores per node: 64
+CPU Utilized: 39-16:01:40
+CPU Efficiency: 36.45% of 108-19:48:16 core-walltime
+Job Wall-clock time: 20:24:17
+Memory Utilized: 1020.10 MB
+Memory Efficiency: 0.20% of 500.00 GB
+WARNING: Efficiency statistics may be misleading for RUNNING jobs.
+
+Job completion status:
+======================
+
+JobID           JobName AllocCPUS NTasks NNodes     MaxRSS    MaxRSSNode  MaxDiskRead MaxDiskWrite    Elapsed      State ExitCode 
+------------ ---------- --------- ------ ------ ---------- ------------- ------------ ------------ ---------- ---------- -------- 
+6502         scalingte+       128             2                                                      20:24:17  COMPLETED      0:0 
+6502.batch        batch        64      1      1   1044584K    callan-n10     2668.86M       76.53M   20:24:17  COMPLETED      0:0 
+6502.extern      extern       128      2      2          0    callan-n10        0.00M        0.00M   20:24:17  COMPLETED      0:0 
+
+
+Job details:
+============
+
+JobId=6502 JobName=scalingtest
+   UserId=liy35(60743) GroupId=liy35(60747) MCS_label=N/A
+   Priority=237878 Nice=0 Account=callan_liy35 QOS=normal
+   JobState=COMPLETING Reason=None Dependency=(null)
+   Requeue=0 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   DerivedExitCode=0:0
+   RunTime=20:24:17 TimeLimit=1-00:00:00 TimeMin=N/A
+   SubmitTime=2024-05-21T00:36:37 EligibleTime=2024-05-21T00:36:37
+   AccrueTime=2024-05-21T00:36:37
+   StartTime=2024-05-21T00:36:55 EndTime=2024-05-21T21:01:12 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2024-05-21T00:36:55 Scheduler=Backfill
+   Partition=compute AllocNode:Sid=localhost:2088268
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=callan-n[10-11]
+   BatchHost=callan-n10
+   NumNodes=2 NumCPUs=128 NumTasks=128 CPUs/Task=1 ReqB:S:C:T=0:0:*:*
+   ReqTRES=cpu=128,mem=500G,node=2,billing=128
+   AllocTRES=cpu=128,mem=500G,node=2,billing=128
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   JOB_GRES=(null)
+     Nodes=callan-n[10-11] CPU_IDs=0-63 Mem=256000 GRES=
+   MinCPUsNode=1 MinMemoryCPU=4000M MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=/home/users/mschpc/2023/liy35/Final-Project/MPI.Heat/C++.Heat/benchmark.sh
+   WorkDir=/home/users/mschpc/2023/liy35/Final-Project/MPI.Heat/C++.Heat
+   StdErr=/home/users/mschpc/2023/liy35/Final-Project/MPI.Heat/C++.Heat/benchmark_first.e.6502
+   StdIn=/dev/null
+   StdOut=/home/users/mschpc/2023/liy35/Final-Project/MPI.Heat/C++.Heat/benchmark_first.o.6502
+   Power=
+   MailUser=liy35@tcd.ie MailType=INVALID_DEPEND,BEGIN,END,FAIL,REQUEUE,STAGE_OUT
+   
+
+
+SLURM Bank Statement:
+=====================
+
+User           Usage |        Account     Usage | Account Limit Available (CPU hrs)
+---------- --------- + -------------- --------- + ------------- ---------
+liy35          8,876 |   CALLAN_LIY35     8,876 |       300,000   291,124
+
+
+Acknowledgements:
+=================
+
+Note that usage of TCHPC Resources *must* be acknowledged in all publications.
+
+Please see this page for details relevant to this cluster:
+
+http://www.tchpc.tcd.ie/resources/acknowledgementpolicy
+
+################################################################################
