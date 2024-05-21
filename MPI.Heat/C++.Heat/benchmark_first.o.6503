@@ -1,0 +1,25 @@
+Weak Scaling
+Running with 1 process Grid size 128*128
+rm -f main 
+mpic++  -DMAX_N_X=128 -DMAX_N_Y=128 -DHEAT   -std=c++20   main.cc -o main -O2
+
+Running with 4 process Grid size 256*256
+rm -f main 
+mpic++  -DMAX_N_X=256 -DMAX_N_Y=256 -DHEAT   -std=c++20   main.cc -o main -O2
+
+Running with 16 process Grid size 512*512
+rm -f main 
+mpic++  -DMAX_N_X=512 -DMAX_N_Y=512 -DHEAT   -std=c++20   main.cc -o main -O2
+
+Running with 64 process Grid size 1024*1024
+rm -f main 
+mpic++  -DMAX_N_X=1024 -DMAX_N_Y=1024 -DHEAT   -std=c++20   main.cc -o main -O2
+
+Running with 256 process Grid size 2048*2048
+rm -f main 
+mpic++  -DMAX_N_X=2048 -DMAX_N_Y=2048 -DHEAT   -std=c++20   main.cc -o main -O2
+
+Strong Scaling
+Running with 1 process Grid size 2048*2048
+rm -f main 
+mpic++  -DMAX_N_X=2048 -DMAX_N_Y=2048 -DHEAT   -std=c++20   main.cc -o main -O2

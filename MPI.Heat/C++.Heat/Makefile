@@ -17,7 +17,7 @@ MPI_STD := -std=c++20
 DFLAGS := #-W -Werror -Wextra
 LFLAGS := 
 
-GL := -g -lprofiler
+# GL := -g -lprofiler
 
 
 SRC_1 := main.cc

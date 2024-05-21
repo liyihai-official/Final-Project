@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH -N 4
-#SBATCH -n 256
+#SBATCH -N 8
+#SBATCH -n 512
 #SBATCH -t 24:00:00
 #SBATCH -J scalingtest
 #SBATCH -o benchmark_first.o.%j
@@ -20,12 +20,12 @@ if [ ! -d "benchmark.results" ]; then
 fi
 
 # Set the base dimensions
-BASE_N_X=256
-BASE_N_Y=256
+BASE_N_X=128
+BASE_N_Y=128
 
 # Define the range of processor counts for scaling tests
-SCALE_=(0 1  2   3)
-# PROC=(1 4 16 128 256)
+SCALE_=(0 1  2   3   4)
+# PROC=(1 4 16  64 256)
 # SIZE=(1 2  4   8  16 32)*BASE
 
 

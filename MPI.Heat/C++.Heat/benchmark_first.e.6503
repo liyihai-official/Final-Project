@@ -1,0 +1,10 @@
+--------------------------------------------------------------------------
+Your job has requested more processes than the ppr for
+this topology can support:
+
+  App: ./main
+  Number of procs:  256
+  PPR: 64:node
+
+Please revise the conflict and try again.
+--------------------------------------------------------------------------
