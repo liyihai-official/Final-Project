@@ -60,15 +60,12 @@ int main(int argc, char ** argv)
 
 /* ------------------------------- With OMP version ------------------------------- */
 #ifdef USE_OMP
-
-  // ProfilerStart("main.prof");
   t1 = MPI_Wtime();
   #pragma omp parallel private(i) num_threads(2)
   for (i = 0; i < MAX_it; ++i)
   {
     int p_id = omp_get_thread_num();
-    
-    a.sweep(b, p_id);
+    a.sweep3(b, p_id);
     #pragma omp barrier
 
     #pragma omp single
@@ -76,7 +73,7 @@ int main(int argc, char ** argv)
       b.Iexchange();
     }
 
-    b.sweep(a, p_id);
+    b.sweep3(a, p_id);
     #pragma omp barrier
 
     #pragma omp single
@@ -89,7 +86,38 @@ int main(int argc, char ** argv)
     if (glob_diff <= tol) {break;}
   }
   t2 = MPI_Wtime();
-  // ProfilerStop();
+
+  /** OMP ver 1.0 */
+  // // ProfilerStart("main.prof");
+  // t1 = MPI_Wtime();
+  // #pragma omp parallel private(i) num_threads(2)
+  // for (i = 0; i < MAX_it; ++i)
+  // {
+  //   int p_id = omp_get_thread_num();
+    
+  //   a.sweep(b, p_id);
+  //   #pragma omp barrier
+
+  //   #pragma omp single
+  //   {
+  //     b.Iexchange();
+  //   }
+
+  //   b.sweep(a, p_id);
+  //   #pragma omp barrier
+
+  //   #pragma omp single
+  //   {
+  //     a.Iexchange();
+  //     loc_diff = final_project::get_difference(a, b);
+  //     MPI_Allreduce(&loc_diff, &glob_diff, 1, MPI_DOUBLE, MPI_SUM,     comm_cart);
+  //   }
+
+  //   if (glob_diff <= tol) {break;}
+  // }
+  // t2 = MPI_Wtime();
+  // // ProfilerStop();
+
 /* -------------------------------- No OMP version -------------------------------- */
 #else
 
@@ -119,6 +147,7 @@ int main(int argc, char ** argv)
   double t_t {t2-t1};
   double t_list[world.size()];
   MPI_Gather(&t_t, 1, MPI_DOUBLE, t_list, 1, MPI_DOUBLE, root, comm_cart);
+
   
   if (world.rank() == root)
   {

@@ -171,6 +171,7 @@ namespace final_project {
 
     void sweep(Array_Distribute<T>& out);                                      /* Heat Equation */
     void sweep(Array_Distribute<T>& out, const int p_id);
+    void sweep3(Array_Distribute<T>& out, const int p_id);
 
     void Iexchange();
     void SRexchange();

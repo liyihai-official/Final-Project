@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH -N 8
-#SBATCH -n 512
+#SBATCH -N 2
+#SBATCH -n 128
 #SBATCH -t 24:00:00
 #SBATCH -J scalingtest
 #SBATCH -o benchmark_first.o.%j
@@ -19,61 +19,37 @@ if [ ! -d "benchmark.results" ]; then
     mkdir benchmark.results
 fi
 
-# Set the base dimensions
-BASE_N_X=128
-BASE_N_Y=128
 
-# Define the range of processor counts for scaling tests
-SCALE_=(0 1  2   3   4)
-# PROC=(1 4 16  64 256)
-# SIZE=(1 2  4   8  16 32)*BASE
+PROCS=(      1   2   4   8  16  32    64)
+SIZE_N_XS=(128 128 256 256 512 512  1024)
+SIZE_N_YS=(128 256 256 512 512 1024 1024)
 
-
-# Weak Scaling Test
-echo "Weak Scaling"
-for SCALE in "${SCALE_[@]}"; do
-    PROC=$((2 ** (2*SCALE)))
-    SIZE_N_X=$((2 ** (SCALE) * BASE_N_X))
-    SIZE_N_Y=$((2 ** (SCALE) * BASE_N_X))
-    echo "Running with ${PROC} process Grid size ${SIZE_N_X}*${SIZE_N_Y}"
-    make clean
-    make MAX_N_X=-DMAX_N_X=${SIZE_N_X} MAX_N_Y=-DMAX_N_Y=${SIZE_N_Y}
-    mpirun --map-by ppr:64:node -np ${PROC} ./main > benchmark.results/weak_main_${PROC}_${SIZE_N_X}*${SIZE_N_Y}
-    echo ""
-done    
-
-# Strong Scaling Test
-echo "Strong Scaling"
-for SCALE in "${SCALE_[@]}"; do
-    PROC=$((2 ** (2*SCALE)))
-    echo "Running with ${PROC} process Grid size ${SIZE_N_X}*${SIZE_N_Y}"
-    make clean
-    make MAX_N_X=-DMAX_N_X=${SIZE_N_X} MAX_N_Y=-DMAX_N_Y=${SIZE_N_Y}
-    mpirun --map-by ppr:64:node -np ${PROC} ./main > benchmark.results/strong_main_${PROC}_${SIZE_N_X}*${SIZE_N_Y}
-    echo ""
+echo "Weak Scaling with OMP"
+echo ""
+for idx in 0 1 2 3 4 5 6; do
+  PROC=${PROCS[idx]}
+  SIZE_N_X=$((SIZE_N_XS[idx]))
+  SIZE_N_Y=$((SIZE_N_YS[idx]))
+  echo "Running with ${PROC} process Grid size ${SIZE_N_X}*${SIZE_N_Y}"
+  make clean
+  make MAX_N_X=-DMAX_N_X=${SIZE_N_X} MAX_N_Y=-DMAX_N_Y=${SIZE_N_Y} USE_OMP=1
+  mpirun --map-by ppr:64:node -np ${PROC} ./main > benchmark.results/weak_main_${PROC}_${SIZE_N_X}*${SIZE_N_Y}
+  echo ""
 done
 
 
-Weak Scaling Test
-echo "Weak Scaling with OMP"
-for SCALE in "${SCALE_[@]}"; do
-    PROC=$((2 ** (2*SCALE)))
-    SIZE_N_X=$((2 ** (SCALE) * BASE_N_X))
-    SIZE_N_Y=$((2 ** (SCALE) * BASE_N_X))
-    echo "Running with ${PROC} process Grid size ${SIZE_N_X}*${SIZE_N_Y}"
-    make clean
-    make MAX_N_X=-DMAX_N_X=${SIZE_N_X} MAX_N_Y=-DMAX_N_Y=${SIZE_N_Y} USE_OMP=1
-    mpirun --map-by ppr:64:node -np ${PROC} ./main > benchmark.results/weak_main_omp_${PROC}_${SIZE_N_X}*${SIZE_N_Y}
-    echo ""
-done    
+PROCS=(      1   2   4   8  16  32    64)
+SIZE_N_X=1024
+SIZE_N_Y=1024
 
-# Strong Scaling Test
+echo ""
 echo "Strong Scaling with OMP"
-for SCALE in "${SCALE_[@]}"; do
-    PROC=$((2 ** (2*SCALE)))
-    echo "Running with ${PROC} process Grid size ${SIZE_N_X}*${SIZE_N_Y}"
-    make clean
-    make MAX_N_X=-DMAX_N_X=${SIZE_N_X} MAX_N_Y=-DMAX_N_Y=${SIZE_N_Y} USE_OMP=1
-    mpirun --map-by ppr:64:node -np ${PROC} ./main > benchmark.results/strong_main_omp_${PROC}_${SIZE_N_X}*${SIZE_N_Y}
-    echo ""
+echo ""
+for idx in 0 1 2 3 4 5 6; do
+  PROC=${PROCS[idx]}
+  echo "Running with ${PROC} process Grid size ${SIZE_N_X}*${SIZE_N_Y}"
+  make clean
+  make MAX_N_X=-DMAX_N_X=${SIZE_N_X} MAX_N_Y=-DMAX_N_Y=${SIZE_N_Y}
+  mpirun --map-by ppr:64:node -np ${PROC} ./main > benchmark.results/strong_main_${PROC}_${SIZE_N_X}*${SIZE_N_Y}
+  echo ""
 done
