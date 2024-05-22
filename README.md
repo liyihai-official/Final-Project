@@ -39,3 +39,7 @@ This is the final project of M.Sc in High Performance Computing program.
     - [ ] OpenMP
         - OpenMP has poor performance when it is inited many times.
     - [ ] Report.pdf
+
+
+<img src="MPI.Heat/C++.Heat/Strong.fig" alt="Animated GIF" height="200">
+<img src="MPI.Heat/C++.Heat/Weak.fig" alt="Animated GIF" height="200">

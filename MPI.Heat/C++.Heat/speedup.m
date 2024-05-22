@@ -50,6 +50,7 @@ plot(proc, proc, '-o', 'MarkerSize', 10, 'LineWidth', 2, 'Color', 'k');
 legend(["Strong", "With Omp", "Idea"])
 title("Strong Scaling Speedup Ratio");
 hold off;
+savefig("Strong.fig")
 
 figure;
 hold on;
@@ -60,3 +61,4 @@ plot(proc, [1, 1, 1,1], '-o', 'MarkerSize', 10, 'LineWidth', 2, 'Color', 'k');
 legend(["Weak", "With Omp", "Idea"]);
 title("Efficiency of Weak Scaling");
 hold off;
+savefig("Weak.fig")
