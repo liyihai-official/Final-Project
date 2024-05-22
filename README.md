@@ -42,4 +42,4 @@ This is the final project of M.Sc in High Performance Computing program.
 
 
 <img src="MPI.Heat/C++.Heat/Strong.png" alt="Animated GIF" height="400">
-<img src="MPI.Heat/C++.Heat/Weak.png" alt="Animated GIF" height="$00">
+<img src="MPI.Heat/C++.Heat/Weak.png" alt="Animated GIF" height="400">
