@@ -41,5 +41,5 @@ This is the final project of M.Sc in High Performance Computing program.
     - [ ] Report.pdf
 
 
-<img src="MPI.Heat/C++.Heat/Strong.png" alt="Animated GIF" height="200">
-<img src="MPI.Heat/C++.Heat/Weak.png" alt="Animated GIF" height="200">
+<img src="MPI.Heat/C++.Heat/Strong.png" alt="Animated GIF" height="400">
+<img src="MPI.Heat/C++.Heat/Weak.png" alt="Animated GIF" height="$00">
