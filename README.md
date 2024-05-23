@@ -8,6 +8,38 @@ This is the final project of M.Sc in High Performance Computing program.
 
 ### Development Note
 ---
+#### May, 23, 2024
+- Working Directory: 
+```MPI.Heat/C++Heat```.
+- Results of Scaling Tests
+Add more tests,
+<img src="MPI.Heat/C++.Heat/Strong2.png" alt="Animated GIF" height="500">
+
+---
+#### May, 22, 2024
+- Working Directory: 
+```MPI.Heat/C++Heat```.
+
+- Results of Scaling Tests
+<img src="MPI.Heat/C++.Heat/Strong.png" alt="Animated GIF" height="500">
+<img src="MPI.Heat/C++.Heat/Weak.png" alt="Animated GIF" height="500">
+
+---
+#### May, 17, 2024
+- Working Directory: 
+```MPI.Heat/C++Heat```.
+
+- Add New Features
+    - [x] Performance Tests
+        - Including in```gperftools\profiler.h``` main file。
+        - run script ```gperftools.sh```.
+    - [x] ```benchmark.sh```
+        - It runs on cluster ```callan``` by SLURM successfully.
+    - [ ] OpenMP
+        - OpenMP has poor performance when it is inited many times.
+    - [ ] Report.pdf
+    
+---
 #### May, 16, 2024
 - Working Directory: 
 ```MPI.Heat/C++Heat```.
@@ -25,34 +57,6 @@ This is the final project of M.Sc in High Performance Computing program.
         Add benchmark shell script of 'weak scaling' and 'strong scaling' tests. The basic grid size is `16x16`.
 
 
----
-#### May, 17, 2024
-- Working Directory: 
-```MPI.Heat/C++Heat```.
 
-- Add New Features
-    - [x] Performance Tests
-        - Including in```gperftools\profiler.h``` main file。
-        - run script ```gperftools.sh```.
-    - [x] ```benchmark.sh```
-        - It runs on cluster ```callan``` by SLURM successfully.
-    - [ ] OpenMP
-        - OpenMP has poor performance when it is inited many times.
-    - [ ] Report.pdf
 
----
-#### May, 22, 2024
-- Working Directory: 
-```MPI.Heat/C++Heat```.
 
-- Results of Scaling Tests
-<img src="MPI.Heat/C++.Heat/Strong.png" alt="Animated GIF" height="500">
-<img src="MPI.Heat/C++.Heat/Weak.png" alt="Animated GIF" height="500">
-
----
-#### May, 22, 2024
-- Working Directory: 
-```MPI.Heat/C++Heat```.
-- Results of Scaling Tests
-Add more tests,
-<img src="MPI.Heat/C++.Heat/Strong2.png" alt="Animated GIF" height="500">
