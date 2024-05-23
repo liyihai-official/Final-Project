@@ -48,4 +48,11 @@ This is the final project of M.Sc in High Performance Computing program.
 - Results of Scaling Tests
 <img src="MPI.Heat/C++.Heat/Strong.png" alt="Animated GIF" height="500">
 <img src="MPI.Heat/C++.Heat/Weak.png" alt="Animated GIF" height="500">
+
+---
+#### May, 22, 2024
+- Working Directory: 
+```MPI.Heat/C++Heat```.
+- Results of Scaling Tests
+Add more tests,
 <img src="MPI.Heat/C++.Heat/Strong2.png" alt="Animated GIF" height="500">
