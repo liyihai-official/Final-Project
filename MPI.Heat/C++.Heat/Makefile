@@ -22,12 +22,21 @@ LFLAGS :=
 
 SRC_1 := main.cc
 EXEC_1 := $(SRC_1:.cc=)
-EXECS := $(EXEC_1) 
+
+SRC_2 := 3d.cc
+EXEC_2 := $(SRC_2:.cc=)
+
+EXECS := $(EXEC_1) $(EXEC_2)
 
 all: $(EXECS)
 
 $(EXEC_1): $(SRC_1)
 	$(MPICXX) $(USE_DEBUG) $(MAX_N_X) $(MAX_N_Y) $(EQ_FLAG) $(OMP) $(MPI_STD) $(DFLAGS) $(GL) $^ -o $@ -O2
+
+$(EXEC_2): $(SRC_2)
+	$(MPICXX) $(USE_DEBUG) $(MPI_STD) $(DFLAGS) $^ -o $@
+
+
 
 .PHONY: clean all
 clean:
