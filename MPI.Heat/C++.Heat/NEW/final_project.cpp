@@ -8,6 +8,7 @@
  * setup, array operations, sweeping operations, data exchange, data gathering, 
  * and initialization.
  * 
+ * @author Li Yihai
  * @version 3.0
  * @date May 25, 2024
  * 
