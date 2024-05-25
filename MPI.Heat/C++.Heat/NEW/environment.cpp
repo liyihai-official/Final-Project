@@ -1,3 +1,17 @@
+/**
+ * @file environment.cpp
+ * @brief This file contains the definition of the mpi::env class for 
+ *        managing MPI environment initialization and finalization.
+ * 
+ * This header file defines the mpi::env class, which is responsible for 
+ * initializing and finalizing the MPI environment, as well as providing 
+ * the rank and size of the MPI communicator.
+ * 
+ * @author LI Yihai
+ * @version 3.0
+ * @date May 25, 2024
+ */
+
 #pragma once
 #include <mpi.h>
 #include <iostream>

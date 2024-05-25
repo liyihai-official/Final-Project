@@ -1,21 +1,14 @@
 /**
+ * @file sweep.cpp
+ * 
+ * @brief This file contains the functions for updating values in 
+ *        parallel processing arrays used for solving Heat Equation.
+ *        
  * 
  * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * May 25, 2024
+ * @author LI Yihai
+ * @version 3.0
+ * @date May 25, 2024
  */
 
 #ifndef FINAL_PROJECT_SWEEP_HPP_LIYIHAI
@@ -24,6 +17,14 @@
 #include "array.cpp"
 
 namespace final_project {
+
+  /**
+   * @brief Setup for the heat2d sweep.
+   * 
+   * @tparam T The type of the elements stored in the array.
+   * @param coff Coefficient.
+   * @param time Time step.
+   */
   template <class T>
   void array2d_distribute<T>::sweep_setup_heat2d(double coff, double time)
   {
@@ -42,6 +43,13 @@ namespace final_project {
     diag_y = -2.0 + hy * hy / (2 * coff * dt);
   }
 
+  /**
+   * @brief Perform the heat2d sweep.
+   * 
+   * 
+   * @tparam T The type of the elements stored in the array.
+   * @param out Output array.
+   */
   template <class T>
   void array2d_distribute<T>::sweep_heat2d(array2d_distribute<T>& out)
   {

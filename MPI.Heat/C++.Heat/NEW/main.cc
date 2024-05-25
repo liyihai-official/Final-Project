@@ -1,3 +1,4 @@
+
 #include <mpi.h>
 #include "environment.cpp"
 
@@ -9,6 +10,7 @@
 #include "initialization.cpp"
 
 #define tol 1E-13
+
 
 int main (int argc, char ** argv)
 {
@@ -27,33 +29,34 @@ int main (int argc, char ** argv)
   MPI_Cart_create(MPI_COMM_WORLD, dimension, dims, periods, reorder, &comm_cart);
 
   /****************************************************************************************/
-  final_project::array2d<double> gather (302, 302);
+  final_project::array2d<double> gather (22, 22);
   final_project::array2d_distribute<double> a, b;
-  a.distribute(302, 302, dims, comm_cart);
-  b.distribute(302, 302, dims, comm_cart);
+  a.distribute(22, 22, dims, comm_cart);
+  b.distribute(22, 22, dims, comm_cart);
 
   init_conditions_heat2d(a, b);
   init_conditions_heat2d(gather);
 
-  // a.sweep_setup_heat2d(1, 1);
-  // b.sweep_setup_heat2d(1, 1);
+  a.sweep_setup_heat2d(1, 1);
+  b.sweep_setup_heat2d(1, 1);
 
-  // t1 = MPI_Wtime();
-  // for ( i = 0; i < 2; ++i )
-  // {
-  //   a.sweep_heat2d(b);
-  //   b.I_exchange2d();
+  t1 = MPI_Wtime();
+  for ( i = 0; i < 10000; ++i )
+  {
+    a.sweep_heat2d(b);
+    b.I_exchange2d();
 
-  //   b.sweep_heat2d(a);
-  //   a.I_exchange2d();
+    b.sweep_heat2d(a);
+    a.I_exchange2d();
 
-  //   loc_diff = final_project::get_difference(a, b);
-  //   MPI_Allreduce(&loc_diff, &glob_diff, 1, MPI_DOUBLE, MPI_SUM, comm_cart);
+    loc_diff = final_project::get_difference(a, b);
+    MPI_Allreduce(&loc_diff, &glob_diff, 1, MPI_DOUBLE, MPI_SUM, comm_cart);
 
-  //   if (glob_diff <= tol) {break;}
-  // }
-  // t2 = MPI_Wtime();
-
+    if (glob_diff <= tol) {break;}
+  }
+  t2 = MPI_Wtime();
+  
+  final_project::print_in_order(a);
   // MPI_Barrier(comm_cart);
 
   // double t_t {t2-t1};
@@ -88,7 +91,5 @@ int main (int argc, char ** argv)
     
     
     
-  
-
   return 0;
 }

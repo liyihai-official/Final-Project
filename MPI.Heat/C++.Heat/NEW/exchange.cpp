@@ -1,21 +1,16 @@
 /**
+ * @file exchange.cpp
+ * @brief This file contains the implementation of the exchange functions 
+ *        for exchanging halo regions in a distributed 2D array in an MPI 
+ *        environment.
  * 
+ * This header file defines the functions SR_exchange2d and I_exchange2d 
+ * for the array2d_distribute class, which are used to exchange halo 
+ * regions between neighboring MPI processes.
  * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * May 25, 2024
+ * @author LI Yihai
+ * @version 3.0
+ * @date May 25, 2024
  */
 
 #ifndef FINAL_PROJECT_EXCHANGE_HPP_LIYIHAI

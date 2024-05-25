@@ -1,21 +1,17 @@
 /**
+ * @file array.cpp
+ * @brief This file contains the definition of the array classes
+ *        and features for parallel processing.
+ * 
+ * The classes provided in this file are designed to set up basic 
+ * features of a skeleton 2D and 3D array. And enhanced them into
+ * distributed 2D and 3D array used in parallel processing 
+ * environments.
  * 
  * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * May 25, 2024
+ * @author LI Yihai
+ * @version 3.0
+ * @date May 25, 2024
  */
 
 #ifndef FINAL_PROJECT_ARRAY_HPP_LIYIHAI
@@ -27,13 +23,12 @@
 #include <memory>
 #include <algorithm>
 #include <iterator>
-#include <cassert>
+#include <unistd.h>
 
 #include <mpi.h>
 #include <fstream>
 
-
-#define FINAL_PROJECT_ASSERT_MSG(expr, msg) assert((expr) && (msg))
+#include "assert.cpp"
 
 template<typename T>
 MPI_Datatype get_mpi_type();
@@ -47,7 +42,17 @@ MPI_Datatype get_mpi_type<float>()  { return MPI_FLOAT; }
 template<>
 MPI_Datatype get_mpi_type<double>() { return MPI_DOUBLE; }
 
-
+/**
+ * @brief Decompose a 1D problem among processors.
+ * 
+ * @param n The total size of the problem.
+ * @param problem_size The number of processors.
+ * @param rank The rank of the current processor.
+ * @param s Reference to the starting index for the current processor.
+ * @param e Reference to the ending index for the current processor.
+ * 
+ * @return int Status code.
+ */
 int Decomp1d(const int n, const int problem_size, const int rank, int& s, int& e)
   {
     int nlocal, deficit;
@@ -63,8 +68,15 @@ int Decomp1d(const int n, const int problem_size, const int rank, int& s, int& e
     return 0;
   }
 
+
+
 namespace final_project {
 
+  /**
+   * @brief A 2D array class.
+   * 
+   * @tparam T The type of the elements stored in the array.
+   */
   template <class T>
   class array2d {
     public:
@@ -148,6 +160,12 @@ namespace final_project {
       }
 
       // Resize 
+      /**
+       * @brief Resize the array.
+       * 
+       * @param new_rows The new number of rows.
+       * @param new_cols The new number of columns.
+       */
       void resize(size_type new_rows, size_type new_cols) {
         Rows = new_rows;
         Cols = new_cols;
@@ -160,6 +178,12 @@ namespace final_project {
 
   }; /* class array2d */
 
+
+  /**
+   * @brief A distributed 2D array class.
+   * 
+   * @tparam T The type of the elements stored in the array.
+   */
   template <class T>
   class array2d_distribute : public array2d<T> {
     public:
@@ -181,10 +205,10 @@ namespace final_project {
       /**
        * @brief Generate the distributed array by inputting communicator and global sizes.
        * 
-       * @param gRows
-       * @param gCols
-       * @param dims
-       * @param comm 
+       * @param gRows Global number of rows.
+       * @param gCols Global number of columns.
+       * @param dims Array of dimensions.
+       * @param comm MPI communicator.
       */
       void distribute(std::size_t gRows, std::size_t gCols, const int dims[2], MPI_Comm comm)
       {
@@ -228,7 +252,7 @@ namespace final_project {
       // void sweep_setup_possion2d();
       // void sweep_possion2d(array2d_distribute<T>&out, array2d_distribute<T> const bias);
 
-    // exchange
+    // exchanges, communications
     public:
       void I_exchange2d();
       void SR_exchange2d();
@@ -236,8 +260,14 @@ namespace final_project {
       void Gather2d(array2d<T>& gather, const int root, MPI_Comm comm);
   }; /* class array2d_distribute */
 
+
   /**
-   * @brief I/O of array 2d
+   * @brief I/O of array 2d.
+   * 
+   * @tparam T The type of elements stored in the array.
+   * @param os The output stream.
+   * @param in The array to output.
+   * @return std::ostream& The output stream.
   */
   template <class T>
   std::ostream& operator<<(std::ostream& os, const array2d<T>& in) {
@@ -251,6 +281,14 @@ namespace final_project {
     return os;
   }
 
+  /**
+   * @brief Get the difference between two distributed arrays.
+   * 
+   * @tparam T The type of elements stored in the arrays.
+   * @param ping The first array.
+   * @param pong The second array.
+   * @return double The difference.
+   */
   template <class T>
   double get_difference(const array2d_distribute<T>& ping, const array2d_distribute<T>& pong)
   {
@@ -267,6 +305,11 @@ namespace final_project {
   }
 
 
+  /**
+   * @brief A 3D array class.
+   * 
+   * @tparam T The type of elements stored in the array.
+   */
   template <class T>
   class array3d {
     public:
@@ -347,6 +390,13 @@ namespace final_project {
       }
 
       // Resize 
+      /**
+       * @brief Resize the array.
+       * 
+       * @param new_rows The new number of rows.
+       * @param new_cols The new number of columns.
+       * @param new_Height The new height.
+       */
       void resize(size_type new_rows, size_type new_cols, size_type new_Height) {
         Rows = new_rows;
         Cols = new_cols;
@@ -360,9 +410,15 @@ namespace final_project {
     
   };
 
+
   /**
-   * @brief I/O of array 3d
-  */
+   * @brief I/O of array 3d.
+   * 
+   * @tparam T The type of elements stored in the array.
+   * @param os The output stream.
+   * @param in The array to output.
+   * @return std::ostream& The output stream.
+   */
   template <class T>
   std::ostream& operator<<(std::ostream& os, const array3d<T>& in) {
     for (std::size_t ridx = 0; ridx < in.Rows; ++ridx) {
@@ -379,6 +435,37 @@ namespace final_project {
   }
 
 
+  /**
+   * @brief Print the 2D array in order according to the rank of each processor.
+   * 
+   * This function ensures that each processor prints its portion of the 2D array in order,
+   * based on their rank. It uses MPI barriers to synchronize the printing process and 
+   * small sleeps to allow ordered output.
+   * 
+   * @tparam T The type of the elements in the array.
+   * @param in The distributed 2D array to be printed.
+   */
+  template <class T>
+  void print_in_order(final_project::array2d_distribute<T>& in)
+  {
+    MPI_Barrier(in.communicator);
+    std::cout << "Attempting to print 2d array in order" << std::endl;
+    sleep(0.01);
+    MPI_Barrier(in.communicator);
+
+    for ( int i = 0; i < in.num_proc; ++i)
+    {
+      if ( i == in.rank )
+      {
+        std::cout << "proc : " << in.rank << " at " 
+        << "( "<< in.coordinates[0] << ", "<< in.coordinates[1] << " )"
+        << "\n" << in << std::endl;
+      }
+      fflush(stdout);
+      sleep(0.01);
+      MPI_Barrier(in.communicator);
+    }
+  }
 
 } // namespace final_project
 

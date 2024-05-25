@@ -1,21 +1,15 @@
 /**
+ * @file gather.cpp
+ * @brief This file contains the implementation of the Gather2d function 
+ *        for gathering distributed 2D arrays in an MPI environment.
  * 
+ * This header file defines the function Gather2d for the array2d_distribute 
+ * class, which is used to gather distributed 2D arrays from all MPI 
+ * processes into a single array on the root process.
  * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * May 25, 2024
+ * @author LI Yihai
+ * @version 3.0
+ * @date May 25, 2024
  */
 
 #ifndef FINAL_PROJECT_GATHER_HPP_LIYIHAI
@@ -25,6 +19,19 @@
 
 namespace final_project
 {
+
+  /**
+   * @brief Gather the distributed 2D arrays from all processes to a single array on 
+   *        the root process.
+   * 
+   * This function gathers the distributed parts of a 2D array from all MPI processes
+   * and combines them into a single 2D array on the root process.
+   * 
+   * @tparam T The type of the elements in the array.
+   * @param gather The array to gather the data into (only relevant on the root process).
+   * @param root The rank of the root process.
+   * @param comm The MPI communicator.
+   */
   template <class T>
   void array2d_distribute<T>::Gather2d(array2d<T>& gather, const int root, MPI_Comm comm)
   {
@@ -79,19 +86,6 @@ namespace final_project
   
 
 } // namespace final_project
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #endif
