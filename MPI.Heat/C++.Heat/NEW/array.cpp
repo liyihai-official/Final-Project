@@ -129,6 +129,7 @@ namespace final_project {
       array2d<T>& operator= (const array2d<T2> & rhs)
       {
         std::copy(rhs.begin(), rhs.end(), begin());
+        return *this;
       }
       
 
@@ -147,7 +148,7 @@ namespace final_project {
       }
 
       // Resize 
-      void resize(std::size_t new_rows, std::size_t new_cols) {
+      void resize(size_type new_rows, size_type new_cols) {
         Rows = new_rows;
         Cols = new_cols;
         data = std::make_unique<T[]>(new_rows * new_cols);
@@ -233,7 +234,9 @@ namespace final_project {
       void Gather2d(array2d<T>& gather, const int root, MPI_Comm comm);
   }; /* class array2d_distribute */
 
-
+  /**
+   * @brief I/O of array 2d
+  */
   template <class T>
   std::ostream& operator<<(std::ostream& os, const array2d<T>& in) {
     for (std::size_t ridx = 0; ridx < in.Rows; ++ridx) {
@@ -260,6 +263,119 @@ namespace final_project {
 
     return diff;
   }
+
+
+  template <class T>
+  class array3d {
+    public:
+      std::size_t Rows, Cols, Height;
+      std::unique_ptr<T[]> data;
+
+    public:
+      typedef T               value_type;
+      typedef T&              reference;
+      typedef const T&        const_reference;
+      typedef T*              iterator;
+      typedef const T*        const_iterator;
+      typedef std::size_t     size_type;
+
+      // Sizes
+      const size_type rows()    { return Rows; }
+      const size_type cols()    { return Cols; }
+      const size_type height()  { return Height; }
+      const size_type size()    { return Rows * Cols * Height; }
+
+      const size_type rows()    const { return Rows; }
+      const size_type cols()    const { return Cols; }
+      const size_type height()  const { return Height; }
+      const size_type size()    const { return Rows * Cols * Height; }
+
+      // Iterators
+      iterator          begin()       { return data.get(); }
+      const_iterator    begin() const { return data.get(); }
+      const_iterator   cbegin() const { return data.get(); }
+
+      iterator            end()       { return data.get() + Rows * Cols * Height; }
+      const_iterator      end() const { return data.get() + Rows * Cols * Height; }
+      const_iterator     cend() const { return data.get() + Rows * Cols * Height; }
+
+    public:
+      // Operator ()
+      reference operator() (size_type i)
+      {
+        return FINAL_PROJECT_ASSERT_MSG( (i < Rows * Cols * Height), "out of range"), data[i];
+      }
+
+      reference operator() (size_type i) const
+      {
+        return FINAL_PROJECT_ASSERT_MSG( (i < Rows * Cols * Height), "out of range"), data[i];
+      }
+
+      reference operator() (size_type i, size_type j, size_type k)
+      {
+        return FINAL_PROJECT_ASSERT_MSG( (i < Rows && j < Cols && k < Height), "out of range"), data[i * (Cols * Height) + j * Height + k];
+      }
+
+      const_reference operator() (size_type i, size_type j, size_type k) const
+      {
+        return FINAL_PROJECT_ASSERT_MSG( (i < Rows && j < Cols && k < Height), "out of range"), data[i * (Cols * Height) + j * Height + k];
+      }
+
+      // assignment operator = 
+      template <typename T2>
+      array3d<T>& operator= (const array3d<T2> & rhs)
+      {
+        std::copy(rhs.begin(), rhs.end(), begin());
+        return *this;
+      }
+      
+
+      // assign one value to all data
+      void assign (const T& value) { fill (value); }
+      void fill (const T& value)
+      {
+        std::fill_n(begin(), size(), value);
+      }
+
+      // Swap
+      void swap (array3d<T>& other)
+      {
+        for (size_type i = 0; i < size(); ++i)
+          data.swap(other.data);
+      }
+
+      // Resize 
+      void resize(size_type new_rows, size_type new_cols, size_type new_Height) {
+        Rows = new_rows;
+        Cols = new_cols;
+        Height = new_Height;
+        data = std::make_unique<T[]>(Rows * Cols * Height);
+      }
+
+      // Friend function declarations
+      template <class U>
+      friend std::ostream& operator<<(std::ostream& os, const array3d<U>& in);
+    
+  };
+
+  /**
+   * @brief I/O of array 3d
+  */
+  template <class T>
+  std::ostream& operator<<(std::ostream& os, const array3d<T>& in) {
+    for (std::size_t ridx = 0; ridx < in.Rows; ++ridx) {
+      os << "";
+      for (std::size_t cidx = 0; cidx < in.Cols; ++cidx) {
+        for (std::size_t kidx = 0; kidx < in.Height; ++kidx) {
+          os << std::fixed << std::setprecision(5) << std::setw(9) << in(ridx, cidx, kidx);
+        }
+        os << "" << std::endl;
+      }
+      os << "" << std::endl;
+    }
+    return os;
+  }
+
 
 
 } // namespace final_project
