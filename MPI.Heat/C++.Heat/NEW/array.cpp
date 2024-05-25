@@ -88,6 +88,10 @@ namespace final_project {
       const size_type cols() { return Cols; }
       const size_type size() { return Rows * Cols; }
 
+      const size_type rows() const { return Rows; }
+      const size_type cols() const { return Cols; }
+      const size_type size() const { return Rows * Cols; }
+
       // Iterators
       iterator          begin()       { return data.get(); }
       const_iterator    begin() const { return data.get(); }
@@ -100,6 +104,16 @@ namespace final_project {
 
     public:
       // Operator ()
+      reference operator() (size_type i)
+      {
+        return FINAL_PROJECT_ASSERT_MSG( (i < Rows * Cols), "out of range"), data[i];
+      }
+
+      reference operator() (size_type i) const
+      {
+        return FINAL_PROJECT_ASSERT_MSG( (i < Rows * Cols), "out of range"), data[i];
+      }
+
       reference operator() (size_type i, size_type j)
       {
         return FINAL_PROJECT_ASSERT_MSG( (i < Rows && j < Cols), "out of range"), data[i * Cols + j];
@@ -216,7 +230,7 @@ namespace final_project {
       void I_exchange2d();
       void SR_exchange2d();
 
-      void Gather(array2d<T>& gather, const int root, MPI_Comm comm);
+      void Gather2d(array2d<T>& gather, const int root, MPI_Comm comm);
   }; /* class array2d_distribute */
 
 
@@ -232,9 +246,24 @@ namespace final_project {
     return os;
   }
 
+  template <class T>
+  double get_difference(const array2d_distribute<T>& ping, const array2d_distribute<T>& pong)
+  {
+    FINAL_PROJECT_ASSERT_MSG((ping.Rows == pong.Rows && ping.Cols == pong.Cols), "Different Shape!");
+
+    double temp, diff {0.0};
+    for (std::size_t i = 0; i < ping.size(); i++)
+    {
+      temp = ping(i) - pong(i);
+      diff += temp * temp;
+    }
+
+    return diff;
+  }
 
 
 } // namespace final_project
+
 
 
 #endif /* FINAL_PROJECT_ARRAY_HPP */

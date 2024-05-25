@@ -26,7 +26,7 @@
 namespace final_project
 {
   template <class T>
-  void array2d_distribute<T>::Gather(array2d<T>& gather, const int root, MPI_Comm comm)
+  void array2d_distribute<T>::Gather2d(array2d<T>& gather, const int root, MPI_Comm comm)
   {
     MPI_Datatype temp, Block, mpi_T {get_mpi_type<T>()};
 

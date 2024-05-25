@@ -3,6 +3,9 @@
 #include "array.cpp"
 #include "sweep.cpp"
 #include "exchange.cpp"
+#include "initialization.cpp"
+
+#define tol 1E-13
 
 int main (int argc, char ** argv)
 {
@@ -20,38 +23,40 @@ int main (int argc, char ** argv)
   MPI_Dims_create(world.size(), dimension, dims);
   MPI_Cart_create(MPI_COMM_WORLD, dimension, dims, periods, reorder, &comm_cart);
 
-
   /****************************************************************************************/
-
-  final_project::array2d<double> A(12, 12);
-  A.fill(-5);
-  // std::cout << A << std::endl;
-
+  final_project::array2d<double> gather (12, 12);
   final_project::array2d_distribute<double> a, b;
   a.distribute(10, 10, dims, comm_cart);
   b.distribute(10, 10, dims, comm_cart);
 
-  a.fill(world.rank()+1);
-  b.fill(world.rank()+2);
+  init_conditions_heat2d(a, b);
+  init_conditions_heat2d(gather);
 
   a.sweep_setup_heat2d(1, 1);
   b.sweep_setup_heat2d(1, 1);
-
-  // if (world.rank() == 1)
-  //   std::cout << a << " \n " << a.starts[0] << ", " << a.ends[0] << std::endl;
-
-  // std::cout << a.starts[0] << ", " << a.ends[0] << std::endl;    
 
   for ( int i = 0; i < 10; ++i )
   {
     a.sweep_heat2d(b);
     b.sweep_heat2d(a);
+
+    loc_diff = final_project::get_difference(a, b);
+    MPI_Allreduce(&loc_diff, &glob_diff, 1, MPI_DOUBLE, MPI_SUM, comm_cart);
+
+    if (glob_diff <= tol) {break;}
   }
 
-
-  a.Gather(A, 0, comm_cart);
+  a.Gather2d(gather, 0, comm_cart);
   if (world.rank() == 0)
-    std::cout << A;
+  {
+    std::cout << a;
+  //   std::cout << "a :" << a.rows() << ", "  << a.cols() << "\n" <<
+  //   "b :" << b.rows() << ", "  << b.cols() << "\n";
+  //   std::cout << final_project::get_difference(a, b) << std::endl;
+  }
+    
+    
+    
   
 
   return 0;

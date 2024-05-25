@@ -190,7 +190,7 @@ void twodinit_basic_Heat(final_project::Array<T>& init)
 
   for (i = 0; i <= nx+1; ++i) 
   {
-      xx = (double) i / (nx+1);
+    xx = (double) i / (nx+1);
     init(i,       ny+1) = 0;
   }
 }
