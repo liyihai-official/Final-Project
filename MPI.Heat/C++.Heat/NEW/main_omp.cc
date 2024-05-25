@@ -1,5 +1,5 @@
 /**
- * @file main.cc
+ * @file main_omp.cc
  * 
  * @brief Main file for the parallel Heat Equation solver using MPI.
  * 
@@ -20,6 +20,8 @@
  */
 
 #include <mpi.h>
+#include <omp.h>
+#include <stdio.h>
 
 #include "final_project.cpp"
 
@@ -38,7 +40,7 @@ int main (int argc, char ** argv)
 {
   auto world = mpi::env(argc, argv);
 
-  int i;
+  int iteration {0};
   double loc_diff, glob_diff {10}, t1, t2;
   constexpr int reorder {1}, dimension {2}, root {0};
 
@@ -63,18 +65,42 @@ int main (int argc, char ** argv)
   b.sweep_setup_heat2d(1, 1);
 
   t1 = MPI_Wtime();
-  for ( i = 0; i < MAX_it; ++i )
+#pragma omp parallel num_threads(2)
+  for (int i = 0; i < MAX_it; ++i )
   {
-    a.sweep_heat2d(b);
-    b.I_exchange2d();
+    int p_id = omp_get_thread_num();
+    
+    a.sweep_heat2d_omp1(b, p_id);
 
-    b.sweep_heat2d(a);
-    a.I_exchange2d();
+// #pragma omp barrier
 
-    loc_diff = final_project::get_difference(a, b);
-    MPI_Allreduce(&loc_diff, &glob_diff, 1, MPI_DOUBLE, MPI_SUM, comm_cart);
 
-    if (glob_diff <= tol) {break;}
+// #pragma omp single
+    {
+      b.I_exchange2d();
+    }
+// #pragma omp barrier
+
+    b.sweep_heat2d_omp1(a, p_id);
+// #pragma omp barrier
+
+// #pragma omp single
+    {
+      a.I_exchange2d();
+
+      loc_diff = final_project::get_difference(a, b);
+      MPI_Allreduce(&loc_diff, &glob_diff, 1, MPI_DOUBLE, MPI_SUM, comm_cart);
+    }
+
+#pragma omp barrier
+
+    if (glob_diff <= tol) {
+      iteration = i;
+      break;
+    }
+
+#pragma omp barrier
+
   }
   t2 = MPI_Wtime();
   
@@ -88,7 +114,7 @@ int main (int argc, char ** argv)
   if (world.rank() == root)
   {
     std::cout << "it" << " " << "t" << std::endl;
-    std::cout << i << " " << t1 * 1000 << std::endl;
+    std::cout <<  iteration << " " << t1 * 1000 << std::endl;
     std::cout << gather << std::endl;
   }
    

@@ -249,6 +249,7 @@ namespace final_project {
       // Heat Equation
       void sweep_setup_heat2d(double coff, double time);
       void sweep_heat2d(array2d_distribute<T>&out);
+      void sweep_heat2d_omp1(array2d_distribute<T>&out, const int p_id);
 
       // Possion Equation
       // void sweep_setup_possion2d();

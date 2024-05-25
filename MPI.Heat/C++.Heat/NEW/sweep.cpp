@@ -15,6 +15,7 @@
 #define FINAL_PROJECT_SWEEP_HPP_LIYIHAI
 
 #include "array.cpp"
+#include <omp.h>
 
 namespace final_project {
 
@@ -59,6 +60,31 @@ namespace final_project {
       for (j = 1; j <= Ny; ++j)
         out(i,j) = weight_x * ((*this)(i-1, j) + (*this)(i+1, j) + (*this)(i,j) * diag_x)
                  + weight_y * ((*this)(i, j-1) + (*this)(i, j+1) + (*this)(i,j) * diag_y);
+  }
+
+  /**
+   * @brief Perform the heat2d sweep, with OpenMP features.
+   * 
+   * 
+   * @tparam T The type of the elements stored in the array.
+   * @param out Output array.
+   */
+  template <class T>
+  void array2d_distribute<T>::sweep_heat2d_omp1(array2d_distribute<T>& out, const int p_id)
+  {
+    std::size_t i,j,off, Nx {this->rows() - 2}, Ny{this->cols() - 2};
+
+    #pragma omp private(i, j, off)
+    for (i = 1; i <= Nx; ++i)
+    {
+      off = 1 + (p_id + i + 1) % 2;
+      for (j = off; j <= Ny; j+=2)
+      {
+        // std::cout << "( " << i << ", "<< j << " )" << std::endl;
+        out(i,j) = weight_x * ((*this)(i-1, j) + (*this)(i+1, j) + (*this)(i,j) * diag_x)
+                 + weight_y * ((*this)(i, j-1) + (*this)(i, j+1) + (*this)(i,j) * diag_y);
+      }
+    }
   }
   
 } // namespace final_project
