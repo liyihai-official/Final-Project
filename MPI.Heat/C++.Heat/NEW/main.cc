@@ -87,7 +87,7 @@ int main (int argc, char ** argv)
   a.Gather2d(gather, root, comm_cart);
   if (world.rank() == root)
   {
-    std::cout << "it" << "t" << std::endl;
+    std::cout << "it" << " " << "t" << std::endl;
     std::cout << i << " " << t1 * 1000 << std::endl;
     // std::cout << gather << std::endl;
   }
