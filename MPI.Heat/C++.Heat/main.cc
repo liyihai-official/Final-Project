@@ -176,7 +176,7 @@ int main(int argc, char ** argv)
   twodinit_basic_Heat(gather);
   a.Array_Gather(gather, 0);
 
-  // if (world.rank() == root ) std::cout << gather;
+  if (world.rank() == root ) std::cout << gather;
 
   return EXIT_SUCCESS;
 }
