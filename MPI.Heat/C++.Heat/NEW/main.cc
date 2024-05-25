@@ -80,7 +80,7 @@ int main (int argc, char ** argv)
   if (world.rank() == root)
   {
     std::cout << i << " " << t1 * 1000 << std::endl;
-    std::cout << gather << std::endl;
+    // std::cout << gather << std::endl;
   }
    
     
