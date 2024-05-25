@@ -1,8 +1,11 @@
 #include <mpi.h>
 #include "environment.cpp"
+
 #include "array.cpp"
 #include "sweep.cpp"
 #include "exchange.cpp"
+#include "gather.cpp"
+
 #include "initialization.cpp"
 
 #define tol 1E-13
