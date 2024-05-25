@@ -32,7 +32,7 @@ for idx in 0 1 2 3 4 5 6 7 8 9; do
   echo "Running with ${PROC} process Grid size ${SIZE_N_X}*${SIZE_N_Y}"
   make clean
   make MAX_N_X=-DMAX_N_X=${SIZE_N_X} MAX_N_Y=-DMAX_N_Y=${SIZE_N_Y}
-  # mpirun --map-by ppr:64:node -np ${PROC} ./main > benchmark.results.25.5.first/strong_main_${PROC}_${SIZE_N_X}*${SIZE_N_Y}
+  mpirun --map-by ppr:64:node -np ${PROC} ./main > benchmark.results.25.5.first/strong_main_${PROC}_${SIZE_N_X}*${SIZE_N_Y}
   echo ""
 done
 
@@ -50,6 +50,6 @@ for idx in 0 1 2 3 4 5 6 7 8 9; do
   echo "Running with ${PROC} process Grid size ${SIZE_N_X}*${SIZE_N_Y}"
   make clean
   make MAX_N_X=-DMAX_N_X=${SIZE_N_X} MAX_N_Y=-DMAX_N_Y=${SIZE_N_Y}
-  # mpirun --map-by ppr:64:node -np ${PROC} ./main > benchmark.results.25.5.first/weak_main_${PROC}_${SIZE_N_X}*${SIZE_N_Y}
+  mpirun --map-by ppr:64:node -np ${PROC} ./main > benchmark.results.25.5.first/weak_main_${PROC}_${SIZE_N_X}*${SIZE_N_Y}
   echo ""
 done
