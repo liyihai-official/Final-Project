@@ -42,7 +42,8 @@ void init_conditions_heat2d(final_project::array2d_distribute<T>& ping,
 
   ping.fill(0);
   pong.fill(0);
-
+  
+  /* U */
   if (ping.starts[0] == 1)
     for (j = 1; j <= ping.cols()-2; ++j)
     {
@@ -50,9 +51,15 @@ void init_conditions_heat2d(final_project::array2d_distribute<T>& ping,
       ping(0, j) = 10;
       pong(0, j) = 10;
     }
+  /* L */
+  if (ping.starts[1] == 1)
+    for (i = 1; i <= ping.cols()-2; ++i) {
+      ping(i, 0) = 10;
+      pong(i, 0) = 10;
+    }
 
-
-  if (ping.ends[0] == nx)
+  /* D */
+  if (ping.ends[0] == nx - 2)
     for (j = 0; j <= ping.cols()-2; ++j)
     {
       yy = (double) j / (ny+1);
@@ -61,14 +68,8 @@ void init_conditions_heat2d(final_project::array2d_distribute<T>& ping,
     }
 
 
-  if (ping.starts[1] == 1)
-    for (i = 1; i <= ping.cols()-2; ++i) {
-      ping(i, 0) = 10;
-      pong(i, 0) = 10;
-    }
-
-
-  if (ping.ends[1] == ny)
+  /* R */
+  if (ping.ends[1] == ny - 2)
     for (i = 1; i <= ping.cols()-2; ++i) {
       xx = (double) i / (nx+1);
       ping(i, ping.cols()-1) = 0;

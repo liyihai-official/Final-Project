@@ -43,7 +43,7 @@ namespace final_project {
   }
 
   template <class T>
-  void array2d_distribute<T>::sweep_heat2d(array2d_distribute<T>&out)
+  void array2d_distribute<T>::sweep_heat2d(array2d_distribute<T>& out)
   {
     std::size_t i,j, Nx {this->rows() - 2}, Ny{this->cols() - 2};
 

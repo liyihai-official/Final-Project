@@ -173,6 +173,7 @@ namespace final_project {
       int starts[dimension], ends[dimension], coordinates[dimension];
 
       MPI_Datatype vecs[dimension];
+      MPI_Comm     communicator;
 
     public:
       array2d_distribute() : glob_Cols {0}, glob_Rows{0}, array2d<T>(0,0) {} ;
@@ -187,14 +188,15 @@ namespace final_project {
       */
       void distribute(std::size_t gRows, std::size_t gCols, const int dims[2], MPI_Comm comm)
       {
+        communicator = comm;
         glob_Rows = gRows; glob_Cols = gCols;
         
         MPI_Comm_rank(comm, &rank);
         MPI_Comm_size(comm, &num_proc);
         MPI_Cart_coords(comm, rank, dimension, coordinates);
 
-        Decomp1d(glob_Rows, dims[0], coordinates[0], starts[0], ends[0]);
-        Decomp1d(glob_Cols, dims[1], coordinates[1], starts[1], ends[1]);
+        Decomp1d(glob_Rows-2, dims[0], coordinates[0], starts[0], ends[0]);
+        Decomp1d(glob_Cols-2, dims[1], coordinates[1], starts[1], ends[1]);
         
         MPI_Cart_shift(comm, 0, 1, &nbr_up,   &nbr_down );
         MPI_Cart_shift(comm, 1, 1, &nbr_left, &nbr_right);
