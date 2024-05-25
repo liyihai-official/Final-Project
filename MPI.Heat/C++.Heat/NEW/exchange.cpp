@@ -56,7 +56,7 @@ namespace final_project
 
       MPI_Sendrecv( &(*this)(nx,   1   ), 1, vecs[0], nbr_down,  flag,
                     &(*this)(0,    1   ), 1, vecs[0], nbr_up,    flag, 
-                    ommunicator, MPI_STATUS_IGNORE);
+                    communicator, MPI_STATUS_IGNORE);
     }
 
   /**

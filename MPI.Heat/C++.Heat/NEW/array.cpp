@@ -246,9 +246,11 @@ namespace final_project {
       double dt, hx, hy;
 
     public:
+      // Heat Equation
       void sweep_setup_heat2d(double coff, double time);
       void sweep_heat2d(array2d_distribute<T>&out);
 
+      // Possion Equation
       // void sweep_setup_possion2d();
       // void sweep_possion2d(array2d_distribute<T>&out, array2d_distribute<T> const bias);
 

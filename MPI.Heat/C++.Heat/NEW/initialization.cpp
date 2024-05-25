@@ -102,7 +102,7 @@ void init_conditions_heat2d(final_project::array2d_distribute<T>& ping,
   /* Right */
   if (ping.ends[1] == ny)
     for (i = 0; i <= nx_loc; ++i) {
-      ping(i, ny_loc+1) = 1;
-      pong(i, ny_loc+1) = 1;
+      ping(i, ny_loc+1) = 0;
+      pong(i, ny_loc+1) = 0;
     }
 }
