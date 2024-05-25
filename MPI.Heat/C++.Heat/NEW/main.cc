@@ -23,8 +23,16 @@
 
 #include "final_project.cpp"
 
-#define tol 1E-13
+#if !defined(MAX_N_X) || !defined(MAX_N_Y)
+#define MAX_N_X 100+2
+#define MAX_N_Y 100+2
+#endif
 
+#if !defined (MAX_it)
+#define MAX_it 100'000'000
+#endif
+
+#define tol 1E-13
 
 int main (int argc, char ** argv)
 {
@@ -43,10 +51,10 @@ int main (int argc, char ** argv)
   MPI_Cart_create(MPI_COMM_WORLD, dimension, dims, periods, reorder, &comm_cart);
 
   final_project::array2d_distribute<double> a, b;
-  final_project::array2d<double> gather (12, 12);
+  final_project::array2d<double> gather (MAX_N_X, MAX_N_Y);
 
-  a.distribute(12, 12, dims, comm_cart);
-  b.distribute(12, 12, dims, comm_cart);
+  a.distribute(MAX_N_X, MAX_N_Y, dims, comm_cart);
+  b.distribute(MAX_N_X, MAX_N_Y, dims, comm_cart);
 
   init_conditions_heat2d(a, b);
   init_conditions_heat2d(gather);
@@ -55,7 +63,7 @@ int main (int argc, char ** argv)
   b.sweep_setup_heat2d(1, 1);
 
   t1 = MPI_Wtime();
-  for ( i = 0; i < 1000000; ++i )
+  for ( i = 0; i < MAX_it; ++i )
   {
     a.sweep_heat2d(b);
     b.I_exchange2d();
@@ -79,6 +87,7 @@ int main (int argc, char ** argv)
   a.Gather2d(gather, root, comm_cart);
   if (world.rank() == root)
   {
+    std::cout << "it" << "t" << std::endl;
     std::cout << i << " " << t1 * 1000 << std::endl;
     // std::cout << gather << std::endl;
   }
