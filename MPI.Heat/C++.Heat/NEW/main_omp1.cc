@@ -1,14 +1,17 @@
 /**
- * @file main_omp.cc
+ * @file main_omp1.cc
  * 
- * @brief Main file for the parallel Heat Equation solver using MPI.
+ * @brief 1 first try of Main file for the parallel Heat Equation solver 
+ * using MPI and OpenMP.
  * 
  * This file sets up the MPI environment, initializes the arrays, performs
  * the heat equation computation, exchanges data between processes, gathers
- * the final results, and outputs the results.
+ * the final results, and outputs the results. Moreover, this method calls 
+ * OpenMP functions while iterating, and doing even-odd sweeping strategy aiming
+ * for boosting up the updating processes.
  * 
  * @author Li Yihai
- * @version 3.0
+ * @version 3.1
  * @date May 25, 2024
  * 
  * @section DESCRIPTION
@@ -21,7 +24,6 @@
 
 #include <mpi.h>
 #include <omp.h>
-#include <stdio.h>
 
 #include "final_project.cpp"
 
@@ -71,20 +73,18 @@ int main (int argc, char ** argv)
     int p_id = omp_get_thread_num();
     
     a.sweep_heat2d_omp1(b, p_id);
+#pragma omp barrier
 
-// #pragma omp barrier
-
-
-// #pragma omp single
+#pragma omp single
     {
       b.I_exchange2d();
     }
-// #pragma omp barrier
 
+#pragma omp barrier
     b.sweep_heat2d_omp1(a, p_id);
-// #pragma omp barrier
+#pragma omp barrier
 
-// #pragma omp single
+#pragma omp single
     {
       a.I_exchange2d();
 
@@ -93,12 +93,10 @@ int main (int argc, char ** argv)
     }
 
 #pragma omp barrier
-
     if (glob_diff <= tol) {
       iteration = i;
       break;
     }
-
 #pragma omp barrier
 
   }
@@ -115,9 +113,8 @@ int main (int argc, char ** argv)
   {
     std::cout << "it" << " " << "t" << std::endl;
     std::cout <<  iteration << " " << t1 * 1000 << std::endl;
-    std::cout << gather << std::endl;
+    // std::cout << gather << std::endl;
   }
-   
     
   return 0;
 }

@@ -245,6 +245,7 @@ namespace final_project {
       double diag_x, diag_y, weight_x, weight_y;
       double dt, hx, hy;
 
+    // Finite Difference Method (FDM)
     public:
       // Heat Equation
       void sweep_setup_heat2d(double coff, double time);
