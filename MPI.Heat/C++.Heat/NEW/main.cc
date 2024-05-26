@@ -29,7 +29,7 @@
 #endif
 
 #if !defined (MAX_it)
-#define MAX_it 100'000'000
+#define MAX_it 2'000'000
 #endif
 
 #define tol 1E-13
@@ -89,7 +89,7 @@ int main (int argc, char ** argv)
   {
     std::cout << "it" << " " << "t" << std::endl;
     std::cout << i << " " << t1 * 1000 << std::endl;
-    std::cout << gather << std::endl;
+    // std::cout << gather << std::endl;
   }
    
     

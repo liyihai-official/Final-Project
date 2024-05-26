@@ -1,6 +1,0 @@
-
-Strong Scaling NO OMP
-
-Running with 1 process Grid size 1024*1024
-rm -f main
-mpic++ -DMAX_N_X=1024 -DMAX_N_Y=1024 -std=c++20  main.cc -o main 
