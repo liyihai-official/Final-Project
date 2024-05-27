@@ -2,8 +2,10 @@
 speed = @(v) [v(1)/v(1), v(1)/v(2), v(1)/v(3), v(1)/v(4), v(1)/v(5), v(1)/v(6), v(1)/v(7)];
 
 proc = [1, 2, 4, 8, 16, 32, 64];
-speed_weak = @(v) [v(1)/v(1)*proc(1), v(1)/v(2)*proc(2), v(1)/v(3)*proc(3), v(1)/v(4)*proc(4), ...
-    v(1)/v(5)*proc(5), v(1)/v(6)*proc(6), v(1)/v(7)*proc(7)];
+
+proc_weak = [1,   4,   9,  16,  25,  36,   49,   64];
+speed_weak = @(v) [v(1)/v(1)*proc_weak(1), v(1)/v(2)*proc_weak(2), v(1)/v(3)*proc_weak(3), v(1)/v(4)*proc_weak(4), ...
+    v(1)/v(5)*proc_weak(5), v(1)/v(6)*proc_weak(6), v(1)/v(7)*proc_weak(7), v(1)/v(8)*proc_weak(8)];
 
 strong_1024 = [
   4.5803e+06,
@@ -24,13 +26,14 @@ strong_1024 = [
 
 
 weak = [
-  1249.95,
-  4990.25,
-  5765.79,
-  21907.1,
-  24341.2,
-  91958.1,
-  140261
+  1266.88,
+  5747.55,
+  14105.2,
+  24398.3,
+  37348,
+  56610,
+  94910.5,
+  136904
 ];
 
 % weak_omp = [
@@ -67,24 +70,25 @@ ylim([1,256]);
 xticks([1,2,4,8,16,32,64,128,256,512,1024]);
 yticks([1,2,4,8,16,32,64,128,256,512,1024]);
 hold off;
-saveas(gcf, "StrongNew1.png");
+% saveas(gcf, "StrongNew1.png");
 
 figure;
-loglog(proc, weak, '--gs', 'MarkerSize', 10, 'LineWidth', 2, 'Color', 'r');
+plot(proc_weak, weak, '--gs', 'MarkerSize', 10, 'LineWidth', 2, 'Color', 'r');
 % loglog(proc, weak_omp, '--gs', 'MarkerSize', 10, 'LineWidth', 2, 'Color', 'b');
 
 hold on;
 grid();
 
-loglog(proc, [1, 1, 1, 1, 1, 1, 1], '-o', 'MarkerSize', 10, 'LineWidth', 2, 'Color', 'k');
+plot(proc_weak, [1, 1, 1, 1, 1, 1, 1, 1], '-o', 'MarkerSize', 10, 'LineWidth', 2, 'Color', 'k');
 % legend(["Weak", "With Omp", "Idea"]);
 
-xlim([1,256]);
-ylim([0,1]);
+set(gca, 'XScale', 'log');
+xlim([1,128]);
+ylim([0.5,1]);
 
 xticks([1,2,4,8,16,32,64,128,256,512,1024]);
-yticks([1,2,4,8,16,32,64,128,256,512,1024]);
+yticks([0, 0.1, 0.2, 0.3, 0.4 ,0.5, 0.6, 0.7, 0.8, 0.9, 1.0]);
 
 title("Efficiency of Weak Scaling");
 hold off;
-saveas(gcf, "WeakNew1.png");
+saveas(gcf, "WeakNew2.png");
