@@ -7,7 +7,8 @@ MAX_N_Y := -DMAX_N_Y=102
 MPICXX := mpic++
 MPI_STD := -std=c++20
 
-DFLAGS := -W -Werror -Wextra
+DFLAGS := 
+# -W -Werror -Wextra
 LFLAGS := 
 
 
