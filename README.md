@@ -21,6 +21,7 @@ This is the final project of M.Sc in High Performance Computing program.
 - Results of Scaling Tests
 <img src="MPI.Heat/C++.Heat/NEW/benchmark.results.25.5.first/StrongNew1.png" alt="Animated GIF" height="500">
 <img src="MPI.Heat/C++.Heat/NEW/benchmark.results.25.5.first/WeakNew1.png" alt="Animated GIF" height="500">
+<img src="MPI.Heat/C++.Heat/NEW/benchmark.results.25.5.first/WeakNew2.png" alt="Animated GIF" height="500">
 
 ---
 #### May, 23, 2024
