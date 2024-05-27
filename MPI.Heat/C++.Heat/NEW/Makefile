@@ -20,8 +20,7 @@ EXECS := $(EXEC_1)
 all: $(EXECS)
 
 $(EXEC_1): $(SRC_1)
-	$(MPICXX) $(MAX_N_X) $(MAX_N_Y) $(MPI_STD) $(DFLAGS) $^ -o $@ 
-# -O2
+	$(MPICXX) $(MAX_N_X) $(MAX_N_Y) $(MPI_STD) $(DFLAGS) $^ -o $@ -O2
 
 
 .PHONY: clean all
