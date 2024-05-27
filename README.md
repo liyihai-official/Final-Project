@@ -8,6 +8,21 @@ This is the final project of M.Sc in High Performance Computing program.
 
 ### Development Note
 ---
+#### May, 24-26, 2024
+- Working Directory: 
+```MPI.Heat/C++Heat/NEW```.
+- New Version
+    - [x] Improve file management.
+    - [x] Add Doxygen file and comments.
+    - [x] Improve generality of classes design.
+    - [x] Prepare 3D problem.
+    - [x] Run Strong-Weak Scaling tests on Cluster
+
+- Results of Scaling Tests
+<img src="MPI.Heat/C++.Heat/NEW/benchmark.results.25.5.first/StrongNew1.png" alt="Animated GIF" height="500">
+<img src="MPI.Heat/C++.Heat/NEW/benchmark.results.25.5.first/Weak.png" alt="Animated GIF" height="500">
+
+---
 #### May, 23, 2024
 - Working Directory: 
 ```MPI.Heat/C++Heat```.
