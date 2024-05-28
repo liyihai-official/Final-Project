@@ -535,11 +535,15 @@ namespace final_project {
    */
   template <class T>
   std::ostream& operator<<(std::ostream& os, const array3d<T>& in) {
-    for (std::size_t ridx = 0; ridx < in.Rows; ++ridx) {
+    for (std::size_t ridx = 0; ridx < in.Rows; ++ridx) 
+    {
       os << "";
-      for (std::size_t cidx = 0; cidx < in.Cols; ++cidx) {
-        for (std::size_t kidx = 0; kidx < in.Height; ++kidx) {
-          os << std::fixed << std::setprecision(5) << std::setw(20) << &in(ridx, cidx, kidx);
+      for (std::size_t cidx = 0; cidx < in.Cols; ++cidx) 
+      {
+        os << "";
+        for (std::size_t kidx = 0; kidx < in.Height; ++kidx) 
+        {
+          os << std::fixed << std::setprecision(5) << std::setw(9) << in(ridx, cidx, kidx);
         }
         os << "" << std::endl;
       }
@@ -587,21 +591,20 @@ namespace final_project {
         MPI_Comm_size(comm, &num_proc);
         MPI_Cart_coords(comm, rank, dimension, coordinates);
 
-        MPI_Cart_shift(comm, 0, 1, &nbr_up,   &nbr_down );
-        MPI_Cart_shift(comm, 1, 1, &nbr_left, &nbr_right);
-        MPI_Cart_shift(comm, 2, 1, &nbr_front, &nbr_back);
+        MPI_Cart_shift(comm, 0, 1, &nbr_back , &nbr_front);
+        MPI_Cart_shift(comm, 1, 1, &nbr_up   , &nbr_down );
+        MPI_Cart_shift(comm, 2, 1, &nbr_left , &nbr_right);
 
         Decomp1d(glob_Rows-2, dims[0], coordinates[0], starts[0], ends[0]);
         Decomp1d(glob_Cols-2, dims[1], coordinates[1], starts[1], ends[1]);
         Decomp1d(glob_Heights-2, dims[2], coordinates[2], starts[2], ends[2]);
 
-        /* Setup vector types of halo */ 
         const int nx {ends[0] - starts[0] + 1 + 2};
         const int ny {ends[1] - starts[1] + 1 + 2};
         const int nz {ends[2] - starts[2] + 1 + 2};
 
-
-
+        /* Setup vector types of halo */ 
+        MPI_Type_vector((ny-2)*(nz-2), nz-2, nz, get_mpi_type<T>(), &vecs[0]);
 
         this->resize(nx, ny, nz);
       }

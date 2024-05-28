@@ -184,3 +184,80 @@ void init_conditions_heat2d(final_project::array2d_distribute<T>& ping,
     }
 }
 
+/**
+ * @brief Initialize the boundary conditions for the Heat Equation 3D for distributed 
+ *        arrays. (ping-pong method)
+ * 
+ * @tparam T The type of the elements in the array.
+ * @param ping Reference to the first distributed 3D array.
+ * @param pong Reference to the second distributed 3D array.
+ */
+template <class T>
+void init_conditions_heat3d(final_project::array3d_distribute<T>& ping, 
+                            final_project::array3d_distribute<T>& pong)
+{ 
+  std::size_t i, j, k;
+  std::size_t nx  {ping.glob_Rows - 2}, ny  {ping.glob_Cols - 2}, nz {ping.glob_Heights - 2}, 
+              nx_loc {ping.rows() - 2}, ny_loc {ping.cols() - 2}, nz_loc {ping.height() - 2};
+
+  double xx { 1.0 / (nx+1) }, yy { 1.0 / (ny+1) }, zz { 1.0 / (nz+1)};
+
+  ping.fill(0);
+  pong.fill(0);
+
+  /* Back */
+  if (ping.starts[0] == 1) 
+    for (j = 1; j <= ny_loc; ++j) {
+      for (k = 1; k <= nz_loc; ++k) {
+        ping(0, j, k) = 10;
+        pong(0, j, k) = 10;
+      }
+    }
+
+  /* UP */
+  if (ping.starts[1] == 1) 
+    for (i = 1; i <= nx_loc; ++i) {
+      for (k = 1; k <= nz_loc; ++k) {
+        ping(i, 0, k) = 10;
+        pong(i, 0, k) = 10;
+      }
+    }
+  
+  /* Left */
+  if (ping.starts[2] == 1) 
+    for (i = 1; i <= nx_loc; ++i) {
+      for (j = 1; j <= ny_loc; ++j) {
+        ping(i, j, 0) = 10;
+        pong(i, j, 0) = 10;
+      }
+    }
+
+  /* Front */
+  if (ping.ends[0] == nx)
+    for (j = 1; j <= ny_loc; ++j) {
+      for (k = 1; k <= nz_loc; ++k) {
+        ping(nx_loc+1, j, k) = 10;
+        pong(nx_loc+1, j, k) = 10;
+      }
+    }
+
+  /* Down */
+  if (ping.ends[1] == ny)
+    for (i = 1; i <= nx_loc; ++i) {
+      for (k = 1; k <= nz_loc; ++k) {
+        ping(i, ny_loc+1, k) = 10;
+        pong(i, ny_loc+1, k) = 10;
+      }
+    }
+
+  /* Right */
+  if (ping.ends[2] == nz)
+    for (i = 1; i <= nx_loc; ++i) {
+      for (j = 1; j <= ny_loc; ++j) {
+        ping(i, j, nz_loc+1) = 1;
+        pong(i, j, nz_loc+1) = 1;
+      }
+    }
+
+
+}
