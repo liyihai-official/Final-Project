@@ -1,6 +1,6 @@
 % \documentclass[manuscript,screen,review]{acmart}
-% \documentclass[sigconf,screen, final]{acmart}
-\documentclass[manuscript, screen, review, language=english]{acmart}
+% \documentclass[sigconf, screen, final, language=english, natbib=false]{acmart}
+\documentclass[manuscript, screen, review, language=english, natbib=false]{acmart}
 
 \usepackage{algorithm, algorithmic}
 \usepackage{listings}
@@ -44,6 +44,23 @@
 
 \acmConference[MAP55640]{Final Project}{May 25, 2024}{Dublin, Ireland}
 
+% Bibliography style
+\RequirePackage[
+  datamodel=acmdatamodel,
+  style=acmnumeric,
+  ]{biblatex}
+
+% %% Declare bibliography sources (one \addbibresource command per source)
+\addbibresource{reference.bib}
+
+
+
+
+
+
+
+
+
 \begin{document}
 \title{MAP55640 Final Project}
 \author{Li Yihai}
@@ -76,8 +93,8 @@
 % ------------------------------------------------------------------------------------------------
 \section{Introduction}
 Numerical methods of solving partial differential equations (PDE) have 
-demonstrate far better performance than many other methods, such as finite 
-difference methods (FDM) \cite{}, 
+demonstrate far better performance than many other methods such as finite 
+difference methods (FDM) \cite{},
 finite element methods (FEM) \cite{}, 
 Lattice Boltzmann Method (LBM) \cite{}
 and Monte Carlo Method (MC) \cite{}.
@@ -87,7 +104,12 @@ as convolution neural networks (CNNs) \cite{},
 Transformers \cite{} 
 and Perceivers \cite{} .
 In addition, more researchers have tried to develop more powerful models specifically 
-for numerical simulations.
+for numerical simulations. 
+Despite of the relentless progress, modeling and predicting the evolution of nonlinear 
+multiscale systems which has inhomogeneous cascades-scales by using classical analytical 
+or computational tools inevitably encounts severe challanges and comes with prohibitive
+cost and multiple sources of uncertainty.
+
 
 \section{Related Work}
 \section{Problem Statement}
@@ -95,6 +117,11 @@ for numerical simulations.
 \section{Experiments}
 \section{Conclusion}
 \section{Acknowledgement}
+
+
+% \bibliographystyle{ACM-Reference-Format}
+% \bibliography{reference}
+\printbibliography
 
 \appendix
 
