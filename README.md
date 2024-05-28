@@ -8,6 +8,14 @@ This is the final project of M.Sc in High Performance Computing program.
 
 ### Development Note
 ---
+#### May, 28, 2024
+- Working Directory: 
+```MPI.Heat/C++Heat/NEW```.
+- New Version
+    - [ ] Run Strong-Weak Scaling test on multiple nodes.
+    - [x] Add basic class for 3d problem.
+
+---
 #### May, 24-26, 2024
 - Working Directory: 
 ```MPI.Heat/C++Heat/NEW```.
