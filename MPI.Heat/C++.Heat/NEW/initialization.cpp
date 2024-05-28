@@ -25,11 +25,14 @@
 template <class T>
 void init_conditions_heat2d(final_project::array2d<T> & init)
 {
+
   std::size_t i, j, nx {init.Rows - 2}, ny {init.Cols - 2};
   double xx { 1.0 / (nx+1) }, yy { 1.0 / (ny+1) };
 
-  init.fill(0);
+  // Initial Conditions
+  init.fill(0);  
 
+  // Boundary Conditions
   for (j = 0; j <= ny; ++j)
   {
     // yy = (double) j / (ny+1);
@@ -55,6 +58,80 @@ void init_conditions_heat2d(final_project::array2d<T> & init)
   }
 }
 
+/**
+ * @brief Initialize the boundary and initial conditions for the Heat Equation in 3D.
+ * 
+ * @tparam T The type of the elements in te array.
+ * @param init Reference to a 3D array where the initial conditions will be set.
+ */
+template <class T>
+void init_conditions_heat3d(final_project::array3d<T> & init)
+{
+  std::size_t i, j, k; // axis-0, 1, 2; x, y, z;
+  std::size_t nx {init.Rows - 2}, ny {init.Cols - 2}, nz {init.Height - 2};
+  
+  double xx { 1.0 / (nx+1) }, yy { 1.0 / (ny+1) }, zz { 1.0 / (nz+1)};
+
+  // Initial Conditions
+  init.fill(0);
+
+  // Boundary Conditions
+  // z = 0;
+  for (i = 1; i <= nx; ++i) 
+  {
+    for (j = 1; j <= ny; ++j)  
+    {
+      init(i, j, 0) = 10;
+    }
+  }
+
+  // z = max_z; 
+  for (i = 1; i <= nx; ++i) 
+  {
+    for (j = 1; j <= ny; ++j)  
+    {
+      init(i, j, nz+1) = 10;
+    }
+  }
+
+  // y = 0;
+  for (i = 1; i <= nx; ++i) 
+  {
+    for (k = 1; k <= nz; ++k)  
+    {
+      init(i, 0, k) = 10;
+    }
+  }
+
+  // y = max_y;
+  for (i = 1; i <= nx; ++i) 
+  {
+    for (k = 1; k <= nz; ++k)  
+    {
+      init(i, ny+1, k) = 10;
+    }
+  }
+
+  // x = 0;
+  for (j = 1; j <= ny; ++j) 
+  {
+    for (k = 1; k <= nz; ++k)  
+    {
+      init(0, j, k) = 10;
+    }
+  }
+
+  // x = max_x;
+  for (j = 1; j <= ny; ++j) 
+  {
+    for (k = 1; k <= nz; ++k)  
+    {
+      init(nx+1, j, k) = 0;
+    }
+  }
+  
+  // End of initialization
+}
 
 /**
  * @brief Initialize the boundary conditions for the Heat Equation 2D for distributed 
@@ -106,3 +183,4 @@ void init_conditions_heat2d(final_project::array2d_distribute<T>& ping,
       pong(i, ny_loc+1) = 0;
     }
 }
+
