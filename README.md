@@ -17,7 +17,7 @@ This is the final project of M.Sc in High Performance Computing program.
     - [x] Add Storing features for 2d and 3d problems which is compatible for ```MATLAB```.
 
 - A demo of Result
-<img src="MPI.Heat/C++.Heat/NEW/vis.png" alt="Animated GIF" height="400">
+<img src="MPI.Heat/C++.Heat/NEW/vis.png" alt="Animated GIF" height="300">
 
 ---
 #### May, 24-26, 2024
