@@ -604,54 +604,28 @@ namespace final_project {
         const int nz {ends[2] - starts[2] + 1 + 2};
 
         /* Setup vector types of halo */ 
+        int array_of_sizes[]    = {nx, ny, nz};
+        int array_of_starts[]   = {0, 0, 0};
+
         // Front & Back
         MPI_Type_vector(ny-2, nz-2, nz, get_mpi_type<T>(), &vecs[0]);
         MPI_Type_commit(&vecs[0]);
 
-
         // Left & Right
-        // MPI_Datatype temp_vec;
-        // MPI_Type_vector(nx-2, 1, ny*nz, get_mpi_type<T>(), &temp_vec);
-        // MPI_Type_commit(&temp_vec);
-
-        // MPI_Aint array_of_disps[ny-2];
-        // int array_of_blocklength[ny-2];
-        // MPI_Datatype array_of_datatypes[ny-2];
-
-        // for (int i = 0; i < ny-2; ++i)
-        // {
-        //   array_of_blocklength[i] = 1;
-        //   array_of_disps[i] = i * nz * sizeof(get_mpi_type<T>());
-        //   array_of_datatypes[i] = temp_vec;
-        // }
-
-        // MPI_Type_create_struct(ny-2,  array_of_blocklength, 
-        //                               array_of_disps, 
-        //                               array_of_datatypes, &vecs[2]);
-
-        int array_of_sizes[]    = {nx, ny, nz};
         int array_of_subsizes[] = {nx-2, ny-2, 1};
-        int array_of_starts[]   = {0, 0, 0};
-
         MPI_Type_create_subarray(dimension, array_of_sizes, array_of_subsizes, array_of_starts,
                                     MPI_ORDER_C, MPI_DOUBLE, &vecs[2]);
-
         MPI_Type_commit(&vecs[2]);
 
         // Up & Down
-        // array_of_sizes[]    = {nx, ny, nz};
-        // array_of_subsizes = {nx-2, 1, nz-2};
         array_of_subsizes[1] = 1;
         array_of_subsizes[2] = nz-2;
-        // array_of_starts[]   = {0, 0, 0};
         MPI_Type_create_subarray(dimension, array_of_sizes, array_of_subsizes, array_of_starts,
                                     MPI_ORDER_C, MPI_DOUBLE, &vecs[1]);
-
         MPI_Type_commit(&vecs[1]);  
 
         this->resize(nx, ny, nz);
       }
-
 
     // Update data
     private:
