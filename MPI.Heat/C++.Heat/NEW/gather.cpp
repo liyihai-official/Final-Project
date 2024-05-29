@@ -16,6 +16,7 @@
 #define FINAL_PROJECT_GATHER_HPP_LIYIHAI
 #include "array.cpp"
 #include <cstring>
+#include <limits>
 
 namespace final_project
 {
@@ -47,6 +48,8 @@ namespace final_project
 
     MPI_Gather(&starts[0], 1, MPI_INT, s0_list, 1, MPI_INT, root, comm);
     MPI_Gather(&starts[1], 1, MPI_INT, s1_list, 1, MPI_INT, root, comm);
+
+    // narrowing : std::size_t --->>  MPI_INT
     MPI_Gather(&Nx       , 1, MPI_INT, nx_list, 1, MPI_INT, root, comm);
     MPI_Gather(&Ny       , 1, MPI_INT, ny_list, 1, MPI_INT, root, comm);
 
@@ -81,9 +84,98 @@ namespace final_project
       }
     }
 
+  } // array2d_distribute<T>::Gather2d
+
+
+  /**
+   * @brief Gather the distributed 3D arrays from all processes to a single array on 
+   *        the root process.
+   * 
+   * This function gathers the distributed parts of a 3D array from all MPI processes
+   * and combines them into a single 3D array on the root process.
+   * 
+   * @tparam T The type of the elements in the array.
+   * @param gather The array to gather the data into (only relevant on the root process).
+   * @param root The rank of the root process.
+   * @param comm The MPI communicator.
+   */
+  template <class T>
+  void array3d_distribute<T>::Gather3d(array3d<T>& gather, const int root, MPI_Comm comm)
+  {
+    MPI_Datatype Block, mpi_T {get_mpi_type<T>()};
     
-  }
-  
+    const int Nx {ends[0] - starts[0] + 1};
+    const int Ny {ends[1] - starts[1] + 1};
+    const int Nz {ends[2] - starts[2] + 1};
+
+    int pid, i, j, k;
+    int s0_list[num_proc], s1_list[num_proc], s2_list[num_proc];
+    int nx_list[num_proc], ny_list[num_proc], nz_list[num_proc];
+
+    MPI_Gather(&starts[0], 1, MPI_INT, s0_list, 1, MPI_INT, root, comm);
+    MPI_Gather(&starts[1], 1, MPI_INT, s1_list, 1, MPI_INT, root, comm);
+    MPI_Gather(&starts[2], 1, MPI_INT, s2_list, 1, MPI_INT, root, comm);
+
+    // narrowing : std::size_t --->>  MPI_INT
+    MPI_Gather(&Nx       , 1, MPI_INT, nx_list, 1, MPI_INT, root, comm);
+    MPI_Gather(&Ny       , 1, MPI_INT, ny_list, 1, MPI_INT, root, comm);
+    MPI_Gather(&Nz       , 1, MPI_INT, nz_list, 1, MPI_INT, root, comm);
+
+    if (rank != root)
+    {
+      int array_of_sizes[]    = {Nx+2, Ny+2, Nz+2};
+      int array_of_subsizes[] = {Nx, Ny, Nz};
+      int array_of_starts[]   = {0, 0, 0};
+      MPI_Type_create_subarray(dimension, array_of_sizes, array_of_subsizes, array_of_starts,
+                                  MPI_ORDER_C, MPI_DOUBLE, &Block);
+      MPI_Type_commit(&Block);
+
+      MPI_Send(&(*this)(1,1,1), 1, Block, root, rank, comm);
+    }
+
+    if (rank == root)
+    {
+      for (pid = 0; pid < num_proc; ++pid)
+      {
+        if (pid == root)
+        {
+          for ( i = starts[0]; i <= ends[0]; ++i)
+          {
+            for ( j = starts[1]; j <= ends[1]; ++j)
+            {
+              memcpy( &gather( i, j, starts[2]), 
+                      &(*this)(i, j, starts[2]), nz_list[pid]*sizeof(T));
+            }
+          }
+        }
+
+        if (pid != root)
+        {
+          if (
+            gather.Rows > static_cast<std::size_t>(std::numeric_limits<int>::max()) ||
+            gather.Cols > static_cast<std::size_t>(std::numeric_limits<int>::max()) ||
+            gather.Height > static_cast<std::size_t>(std::numeric_limits<int>::max())) 
+          {
+            throw std::overflow_error("Size exceeds the range of int");
+          }
+
+          int array_of_sizes[] = {
+            static_cast<int>(gather.Rows),
+            static_cast<int>(gather.Cols),
+            static_cast<int>(gather.Height)
+          };
+          int array_of_subsizes[] = {nx_list[pid]  , ny_list[pid]  , nz_list[pid]  };
+          int array_of_starts[]   = {0, 0, 0};
+          MPI_Type_create_subarray(dimension, array_of_sizes, array_of_subsizes, array_of_starts,
+                                      MPI_ORDER_C, MPI_DOUBLE, &Block);
+          MPI_Type_commit(&Block);
+
+          MPI_Recv(&gather(s0_list[pid], s1_list[pid], s2_list[pid]), 1, Block, pid, pid, comm, MPI_STATUS_IGNORE);
+          MPI_Type_free(&Block);
+        }
+      }
+    }
+  } // array3d_distribute<T>::Gather3d
 
 } // namespace final_project
 
