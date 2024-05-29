@@ -23,9 +23,9 @@
 #include "final_project.cpp"
 
 #if !defined(MAX_N_X) || !defined(MAX_N_Y) || !defined(MAX_N_Z)
-#define MAX_N_X 100+2
-#define MAX_N_Y 100+2
-#define MAX_N_Z 100+2
+#define MAX_N_X 50+2
+#define MAX_N_Y 50+2
+#define MAX_N_Z 50+2
 #endif
 
 #if !defined (MAX_it)
@@ -66,10 +66,10 @@ int main ( int argc, char ** argv)
   for ( i = 0; i < MAX_it; ++i )
   {
     A.sweep_heat3d(B);
-    A.SR_exchange3d();
+    A.I_exchange3d();
 
     B.sweep_heat3d(A);
-    B.SR_exchange3d();
+    B.I_exchange3d();
 
     loc_diff = final_project::get_difference(A, B);
     MPI_Allreduce(&loc_diff, &glob_diff, 1, MPI_DOUBLE, MPI_SUM, comm_cart);
