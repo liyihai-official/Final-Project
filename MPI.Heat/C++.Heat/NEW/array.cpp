@@ -648,7 +648,28 @@ namespace final_project {
       
   }; // class array3d_distribute : public array3d<T>
 
+  /**
+   * @brief Get the difference between two distributed 3d arrays.
+   * 
+   * @tparam T The type of elements stored in the arrays.
+   * @param ping The first array.
+   * @param pong The second array.
+   * @return double The difference.
+   */
+  template <class T>
+  double get_difference(const array3d_distribute<T>& ping, const array3d_distribute<T>& pong)
+  {
+    FINAL_PROJECT_ASSERT_MSG((ping.Rows == pong.Rows && ping.Cols == pong.Cols && ping.Height == pong.Height), "Different Shape!");
 
+    double temp, diff {0.0};
+    for (std::size_t i = 0; i < ping.size(); i++)
+    {
+      temp = ping(i) - pong(i);
+      diff += temp * temp;
+    }
+
+    return diff;
+  }
 
   /**
    * @brief Print the 2D array in order according to the rank of each processor.

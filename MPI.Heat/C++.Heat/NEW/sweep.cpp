@@ -29,13 +29,12 @@ namespace final_project {
   template <class T>
   void array2d_distribute<T>::sweep_setup_heat2d(double coff, double time)
   {
-    auto min = [](auto const a, auto const b){return (a <= b) ? a : b;};
 
     hx = (double) (time - 0) / (double) (glob_Rows + 1);
     hy = (double) (time - 0) / (double) (glob_Cols + 1);
 
-    dt = 0.25 * (double) (min(hx, hy) * min(hx, hy)) / coff;
-    dt = min(dt, 0.1);
+    dt = 0.25 * std::min({hx, hy}) * std::min({hx, hy}) / coff;
+    dt = std::min(dt, 0.1);
 
     weight_x = coff * dt / (hx * hx);
     weight_y = coff * dt / (hy * hy);
@@ -57,13 +56,14 @@ namespace final_project {
     std::size_t i,j, Nx {this->rows() - 2}, Ny{this->cols() - 2};
 
     for (i = 1; i <= Nx; ++i)
-      for (j = 1; j <= Ny; ++j) {
-        // double current = (*this)(i, j);
-        // out(i,j) = weight_x * ((*this)(i-1, j) + (*this)(i+1, j))
-        //          + weight_y * ((*this)(i, j-1) + (*this)(i, j+1))
-        //          + current  * (diag_x*weight_x + diag_y*weight_y);
-        out(i,j) = weight_x * ((*this)(i-1, j) + (*this)(i+1, j) + (*this)(i,j) * diag_x)
-                 + weight_y * ((*this)(i, j-1) + (*this)(i, j+1) + (*this)(i,j) * diag_y);
+      for (j = 1; j <= Ny; ++j) 
+      {
+        double current = (*this)(i, j);
+        out(i,j) = weight_x * ((*this)(i-1, j) + (*this)(i+1, j))
+                 + weight_y * ((*this)(i, j-1) + (*this)(i, j+1))
+                 + current  * (diag_x*weight_x + diag_y*weight_y);
+        // out(i,j) = weight_x * ((*this)(i-1, j) + (*this)(i+1, j) + (*this)(i,j) * diag_x)
+        //          + weight_y * ((*this)(i, j-1) + (*this)(i, j+1) + (*this)(i,j) * diag_y);
       }
   }
 
@@ -136,7 +136,8 @@ namespace final_project {
 
     for (i = 1; i <= Nx; ++i) 
         for (j = 1; j <= Ny; ++j) 
-            for (k = 1; k <= Nz; ++k) {
+            for (k = 1; k <= Nz; ++k) 
+            {
                 double current = (*this)(i, j, k);
                 out(i, j, k) =  weight_x * ((*this)(i-1, j, k) + (*this)(i+1, j, k))
                               + weight_y * ((*this)(i, j-1, k) + (*this)(i, j+1, k))
