@@ -604,7 +604,50 @@ namespace final_project {
         const int nz {ends[2] - starts[2] + 1 + 2};
 
         /* Setup vector types of halo */ 
-        MPI_Type_vector((ny-2)*(nz-2), nz-2, nz, get_mpi_type<T>(), &vecs[0]);
+        // Front & Back
+        MPI_Type_vector(ny-2, nz-2, nz, get_mpi_type<T>(), &vecs[0]);
+        MPI_Type_commit(&vecs[0]);
+
+
+        // Left & Right
+        // MPI_Datatype temp_vec;
+        // MPI_Type_vector(nx-2, 1, ny*nz, get_mpi_type<T>(), &temp_vec);
+        // MPI_Type_commit(&temp_vec);
+
+        // MPI_Aint array_of_disps[ny-2];
+        // int array_of_blocklength[ny-2];
+        // MPI_Datatype array_of_datatypes[ny-2];
+
+        // for (int i = 0; i < ny-2; ++i)
+        // {
+        //   array_of_blocklength[i] = 1;
+        //   array_of_disps[i] = i * nz * sizeof(get_mpi_type<T>());
+        //   array_of_datatypes[i] = temp_vec;
+        // }
+
+        // MPI_Type_create_struct(ny-2,  array_of_blocklength, 
+        //                               array_of_disps, 
+        //                               array_of_datatypes, &vecs[2]);
+
+        int array_of_sizes[]    = {nx, ny, nz};
+        int array_of_subsizes[] = {nx-2, ny-2, 1};
+        int array_of_starts[]   = {0, 0, 0};
+
+        MPI_Type_create_subarray(dimension, array_of_sizes, array_of_subsizes, array_of_starts,
+                                    MPI_ORDER_C, MPI_DOUBLE, &vecs[2]);
+
+        MPI_Type_commit(&vecs[2]);
+
+        // Up & Down
+        // array_of_sizes[]    = {nx, ny, nz};
+        // array_of_subsizes = {nx-2, 1, nz-2};
+        array_of_subsizes[1] = 1;
+        array_of_subsizes[2] = nz-2;
+        // array_of_starts[]   = {0, 0, 0};
+        MPI_Type_create_subarray(dimension, array_of_sizes, array_of_subsizes, array_of_starts,
+                                    MPI_ORDER_C, MPI_DOUBLE, &vecs[1]);
+
+        MPI_Type_commit(&vecs[1]);  
 
         this->resize(nx, ny, nz);
       }
@@ -613,18 +656,23 @@ namespace final_project {
     // Update data
     private:
       double coff;
-      double diag_x, diag_y, weight_x, weight_y;
-      double dt, hx, hy;
+      double diag_x, diag_y, diag_z, weight_x, weight_y, weight_z;
+      double dt, hx, hy, hz;
 
     // Finite Difference Method (FDM)
     public:
       // Heat Equation
       void sweep_setup_heat3d(double coff, double time);
       void sweep_heat3d(array3d_distribute<T>&out);
+
+    // exchanges, communications
+    public:
+      void I_exchange3d();
+      void SR_exchange3d();
+
+      void Gather3d(array3d<T>& gather, const int root, MPI_Comm comm);
       
-
-
-  };
+  }; // class array3d_distribute : public array3d<T>
 
 
 
@@ -652,6 +700,39 @@ namespace final_project {
       {
         std::cout << "proc : " << in.rank << " at " 
         << "( "<< in.coordinates[0] << ", "<< in.coordinates[1] << " )"
+        << "\n" << in << std::endl;
+      }
+      fflush(stdout);
+      sleep(0.01);
+      MPI_Barrier(in.communicator);
+    }
+  }
+
+
+  /**
+   * @brief Print the 3D array in order according to the rank of each processor.
+   * 
+   * This function ensures that each processor prints its portion of the 3D array in order,
+   * based on their rank. It uses MPI barriers to synchronize the printing process and 
+   * small sleeps to allow ordered output.
+   * 
+   * @tparam T The type of the elements in the array.
+   * @param in The distributed 3D array to be printed.
+   */
+  template <class T>
+  void print_in_order(final_project::array3d_distribute<T>& in)
+  {
+    MPI_Barrier(in.communicator);
+    std::cout << "Attempting to print 3d array in order" << std::endl;
+    sleep(0.01);
+    MPI_Barrier(in.communicator);
+
+    for ( int i = 0; i < in.num_proc; ++i)
+    {
+      if ( i == in.rank )
+      {
+        std::cout << "proc : " << in.rank << " at " 
+        << "( "<< in.coordinates[0] << ", "<< in.coordinates[1] << ", " << in.coordinates[2] << " )"
         << "\n" << in << std::endl;
       }
       fflush(stdout);

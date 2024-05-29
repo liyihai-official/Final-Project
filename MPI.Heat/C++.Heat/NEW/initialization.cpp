@@ -218,8 +218,8 @@ void init_conditions_heat3d(final_project::array3d_distribute<T>& ping,
   if (ping.starts[1] == 1) 
     for (i = 1; i <= nx_loc; ++i) {
       for (k = 1; k <= nz_loc; ++k) {
-        ping(i, 0, k) = 10;
-        pong(i, 0, k) = 10;
+        ping(i, 0, k) = 8;
+        pong(i, 0, k) = 8;
       }
     }
   

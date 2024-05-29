@@ -40,8 +40,8 @@ namespace final_project {
     weight_x = coff * dt / (hx * hx);
     weight_y = coff * dt / (hy * hy);
 
-    diag_x = -2.0 + hx * hx / (2 * coff * dt);
-    diag_y = -2.0 + hy * hy / (2 * coff * dt);
+    diag_x = -2.0 + hx * hx / (dimension * coff * dt);
+    diag_y = -2.0 + hy * hy / (dimension * coff * dt);
   }
 
   /**
@@ -57,9 +57,14 @@ namespace final_project {
     std::size_t i,j, Nx {this->rows() - 2}, Ny{this->cols() - 2};
 
     for (i = 1; i <= Nx; ++i)
-      for (j = 1; j <= Ny; ++j)
+      for (j = 1; j <= Ny; ++j) {
+        // double current = (*this)(i, j);
+        // out(i,j) = weight_x * ((*this)(i-1, j) + (*this)(i+1, j))
+        //          + weight_y * ((*this)(i, j-1) + (*this)(i, j+1))
+        //          + current  * (diag_x*weight_x + diag_y*weight_y);
         out(i,j) = weight_x * ((*this)(i-1, j) + (*this)(i+1, j) + (*this)(i,j) * diag_x)
                  + weight_y * ((*this)(i, j-1) + (*this)(i, j+1) + (*this)(i,j) * diag_y);
+      }
   }
 
   /**
@@ -80,13 +85,67 @@ namespace final_project {
       off = 1 + (p_id + i + 1) % 2;
       for (j = off; j <= Ny; j+=2)
       {
-        // std::cout << "( " << i << ", "<< j << " )" << std::endl;
         out(i,j) = weight_x * ((*this)(i-1, j) + (*this)(i+1, j) + (*this)(i,j) * diag_x)
                  + weight_y * ((*this)(i, j-1) + (*this)(i, j+1) + (*this)(i,j) * diag_y);
       }
     }
   }
   
+
+  /**
+   * @brief Setup for the heat3d sweep.
+   * 
+   * @tparam T The type of the elements stored in the array.
+   * @param coff Coefficient.
+   * @param time Time step.
+   */
+  template <class T>
+  void array3d_distribute<T>::sweep_setup_heat3d(double coff, double time)
+  {
+
+    hx = (double) (time - 0) / (double) (glob_Rows + 1);
+    hy = (double) (time - 0) / (double) (glob_Cols + 1);
+    hz = (double) (time - 0) / (double) (glob_Heights + 1);
+
+    dt = 0.125 * std::min({hx, hy, hz}) * std::min({hx, hy, hz}) / coff;
+    dt = std::min(dt, 0.1);
+
+    weight_x = coff * dt / (hx * hx);
+    weight_y = coff * dt / (hy * hy);
+    weight_z = coff * dt / (hz * hz);
+
+    diag_x = -2.0 + hx * hx / (dimension * coff * dt);
+    diag_y = -2.0 + hy * hy / (dimension * coff * dt);
+    diag_z = -2.0 + hz * hz / (dimension * coff * dt);
+
+  }
+
+  /**
+   * @brief Perform the heat3d sweep.
+   * 
+   * 
+   * @tparam T The type of the elements stored in the array.
+   * @param out Output array.
+   */
+  template <class T>
+  void array3d_distribute<T>::sweep_heat3d(array3d_distribute<T>& out)
+  {
+    
+    std::size_t i,j,k;
+    std::size_t Nx {this->rows() - 2}, Ny{this->cols() - 2},  Nz{this->height() - 2};
+
+    for (i = 1; i <= Nx; ++i) 
+        for (j = 1; j <= Ny; ++j) 
+            for (k = 1; k <= Nz; ++k) {
+                double current = (*this)(i, j, k);
+                out(i, j, k) =  weight_x * ((*this)(i-1, j, k) + (*this)(i+1, j, k))
+                              + weight_y * ((*this)(i, j-1, k) + (*this)(i, j+1, k))
+                              + weight_z * ((*this)(i, j, k-1) + (*this)(i, j, k+1))
+                              + current  * (diag_x*weight_x + diag_y*weight_y + diag_z*weight_z);
+            }
+
+  }
+
 } // namespace final_project
 
 
