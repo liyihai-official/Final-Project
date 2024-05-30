@@ -8,16 +8,17 @@ This is the final project of M.Sc in High Performance Computing program.
 
 ### Development Note
 ---
-#### May, 27-28, 2024
+#### May, 29-30, 2024
 - Working Directory: 
 ```MPI.Heat/C++Heat/NEW```.
 
 - New Version
     - [x] Complete 3D main function.
     - [x] Add visualization of 3D version.
-    
+
 - A demo of 3D Result
 <img src="MPI.Heat/C++.Heat/NEW/vis3d.png" alt="Animated GIF" height="300">
+<img src="MPI.Heat/C++.Heat/Strong_3d.png" alt="Animated GIF" height="300">
 
 ---
 #### May, 27-28, 2024
