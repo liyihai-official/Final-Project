@@ -161,35 +161,35 @@ namespace final_project
 
       // Back / Front
       flag = 0;
-      MPI_Isend(&(*this)(1,    1, 1), 1, vecs[0], nbr_back,  flag, 
-                                      communicator, &requests[request_count++]);
       MPI_Irecv(&(*this)(nx+1, 1, 1), 1, vecs[0], nbr_front, flag, 
                                       communicator, &requests[request_count++]);
-      MPI_Isend(&(*this)(nx,   1, 1), 1, vecs[0], nbr_front, flag, 
+      MPI_Isend(&(*this)(1,    1, 1), 1, vecs[0], nbr_back,  flag, 
                                       communicator, &requests[request_count++]);
       MPI_Irecv(&(*this)(0,    1, 1), 1, vecs[0], nbr_back,  flag, 
+                                      communicator, &requests[request_count++]);
+      MPI_Isend(&(*this)(nx,   1, 1), 1, vecs[0], nbr_front, flag, 
                                       communicator, &requests[request_count++]);
 
       // Up / Down
       flag = 1;
-      MPI_Isend(&(*this)(1,    1, 1), 1, vecs[1], nbr_up,   flag, 
-                                      communicator, &requests[request_count++]);
       MPI_Irecv(&(*this)(1, ny+1, 1), 1, vecs[1], nbr_down, flag, 
                                       communicator, &requests[request_count++]);
-      MPI_Isend(&(*this)(1,   ny, 1), 1, vecs[1], nbr_down, flag, 
+      MPI_Isend(&(*this)(1,    1, 1), 1, vecs[1], nbr_up,   flag, 
                                       communicator, &requests[request_count++]);
       MPI_Irecv(&(*this)(1,    0, 1), 1, vecs[1], nbr_up,   flag, 
+                                      communicator, &requests[request_count++]);
+      MPI_Isend(&(*this)(1,   ny, 1), 1, vecs[1], nbr_down, flag, 
                                       communicator, &requests[request_count++]);
 
       // Left / Right
       flag = 2;
-      MPI_Isend(&(*this)(1, 1,    1), 1, vecs[2], nbr_left,  flag, 
-                                      communicator, &requests[request_count++]);
       MPI_Irecv(&(*this)(1, 1, nz+1), 1, vecs[2], nbr_right, flag, 
                                       communicator, &requests[request_count++]);
-      MPI_Isend(&(*this)(1, 1,   nz), 1, vecs[2], nbr_right, flag, 
+      MPI_Isend(&(*this)(1, 1,    1), 1, vecs[2], nbr_left,  flag, 
                                       communicator, &requests[request_count++]);
       MPI_Irecv(&(*this)(1, 1,    0), 1, vecs[2], nbr_left,  flag, 
+                                      communicator, &requests[request_count++]);
+      MPI_Isend(&(*this)(1, 1,   nz), 1, vecs[2], nbr_right, flag, 
                                       communicator, &requests[request_count++]);
 
       // Wait All
