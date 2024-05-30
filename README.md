@@ -17,8 +17,8 @@ This is the final project of M.Sc in High Performance Computing program.
     - [x] Add visualization of 3D version.
 
 - A demo of 3D Result
-<img src="MPI.Heat/C++.Heat/NEW/vis3d.png" alt="Animated GIF" height="300">
-<img src="MPI.Heat/C++.Heat/Strong_3d.png" alt="Animated GIF" height="300">
+<img src="MPI.Heat/C++.Heat/NEW/vis3d.png" alt="Animated GIF" height="500">
+<img src="MPI.Heat/C++.Heat/Strong_3d.png" alt="Animated GIF" height="500">
 
 ---
 #### May, 27-28, 2024
