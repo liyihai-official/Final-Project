@@ -63,7 +63,7 @@ int main ( int argc, char ** argv)
   B.sweep_setup_heat3d(1, 1);
 
   t1 = MPI_Wtime();
-  for ( i = 0; i < MAX_it; ++i )
+  for ( i = 0; i < 200; ++i )
   {
     A.sweep_heat3d(B);
     A.SR_exchange3d();
@@ -89,7 +89,7 @@ int main ( int argc, char ** argv)
   {
     std::cout << "it" << " " << "t" << std::endl;
     std::cout << i << " " << t1 * 1000 << std::endl;
-    std::cout << gather << std::endl;
+    // std::cout << gather << std::endl;
     gather.saveToBinaryFile("mat.bin");
   }
 
