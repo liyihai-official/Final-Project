@@ -1,7 +1,7 @@
 /**
  * @file main.cc
  * 
- * @brief Main file for the parallel Heat Equation solver using MPI.
+ * @brief Main file for the parallel Heat 2d Equation solver using MPI.
  * 
  * This file sets up the MPI environment, initializes the arrays, performs
  * the heat equation computation, exchanges data between processes, gathers

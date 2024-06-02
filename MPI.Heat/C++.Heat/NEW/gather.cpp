@@ -14,12 +14,60 @@
 
 #ifndef FINAL_PROJECT_GATHER_HPP_LIYIHAI
 #define FINAL_PROJECT_GATHER_HPP_LIYIHAI
-#include "array.cpp"
+#include "multi_array/array.cpp"
 #include <cstring>
 #include <limits>
 
 namespace final_project
 {
+
+  /**
+   * @brief Gather the distributed 1D arrays from all processes to a single array on 
+   *        the root process.
+   * 
+   * This function gathers the distributed parts of a 1D array from all MPI processes
+   * and combines them into a single 1D array on the root process.
+   * 
+   * @tparam T The type of the elements in the array.
+   * @param gather The array to gather the data into (only relevant on the root process).
+   * @param root The rank of the root process.
+   * @param comm The MPI communicator.
+   */
+  template <class T>
+  void array1d_distribute<T>::Gather1d(array1d<T>& gather, const int root, MPI_Comm comm)
+  {
+    MPI_Datatype mpi_T {get_mpi_type<T>()};
+
+    std::size_t N {this->size() - 2};
+
+    int pid, i;
+    int s_list[num_proc], N_list[num_proc];
+
+    MPI_Gather(starts, 1, MPI_INT, s_list, 1, MPI_INT, root, comm);
+
+    MPI_Gather(&N,     1, MPI_INT, N_list, 1, MPI_INT, root, comm);
+
+    if (rank != root)
+    {
+      MPI_Send(&(*this)(1), N, mpi_T, root, rank, comm);
+    }
+
+    if (rank == root)
+    {
+      for (pid = 0; pid < num_proc; ++pid)
+      {
+        if (pid == root)
+        {
+          memcpy(&gather(starts[0]), &(*this)(starts[0]), N_list[pid]*sizeof(T));
+        }
+
+        if (pid != root)
+        {
+          MPI_Recv(&gather(s_list[pid]), N_list[pid], mpi_T, pid, pid, comm, MPI_STATUS_IGNORE);
+        }
+      }
+    }
+  } // array1d_distribute<T>::Gather1d
 
   /**
    * @brief Gather the distributed 2D arrays from all processes to a single array on 

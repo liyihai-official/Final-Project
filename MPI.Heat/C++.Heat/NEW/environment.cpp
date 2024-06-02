@@ -27,6 +27,12 @@ namespace mpi
         MPI_Comm_rank(MPI_COMM_WORLD, &rank_);  
       }
 
+      // env(int argc, char ** argv, int required, int * provided){
+      //   MPI_Init_thread(&argc, &argv, required, provided);
+      //   MPI_Comm_size(MPI_COMM_WORLD, &size_);
+      //   MPI_Comm_rank(MPI_COMM_WORLD, &rank_);  
+      // }
+
       env(const env &)  = delete;
       env(env &&)       = delete;
 

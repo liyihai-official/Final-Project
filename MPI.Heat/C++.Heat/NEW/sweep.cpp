@@ -14,10 +14,46 @@
 #ifndef FINAL_PROJECT_SWEEP_HPP_LIYIHAI
 #define FINAL_PROJECT_SWEEP_HPP_LIYIHAI
 
-#include "array.cpp"
+#include "multi_array/array.cpp"
 #include <omp.h>
 
 namespace final_project {
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//          Heat 1D
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  template <class T>
+  void array1d_distribute<T>::sweep_setup_heat1d(double coff, double time)
+  {
+    FINAL_PROJECT_ASSERT_HPP_LIYIHAI((glob_N != 0), "Invalid Distribute array1d. Run distribute first.");
+
+    hx = (double) (time - 0) / (double) (glob_N + 1);
+
+    dt = 0.5 * hx * hx / coff;
+    dt = std::min(dt, 0.1);
+
+    weight = coff * dt / (hx * hx);
+
+    diag = -2.0 + hx * hx / (dimension * coff * dt);
+  }
+
+  template <class T>
+  void array1d_distribute<T>::sweep_heat1d(array1d_distribute<T> &out)
+  {
+    std::size_t i, N {this->size() - 2};
+
+    for (i = 1; i <= N; ++i)
+    {
+      double current = (*this)(i+1);
+      out(i) =  weight*((*this)(i-1) + (*this)(i+1)) 
+              + current * diag * weight;
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//          Heat 2D
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   /**
    * @brief Setup for the heat2d sweep.
@@ -29,6 +65,7 @@ namespace final_project {
   template <class T>
   void array2d_distribute<T>::sweep_setup_heat2d(double coff, double time)
   {
+    FINAL_PROJECT_ASSERT_MSG((glob_Rows != 0 && glob_Cols != 0), "Invalid Distribute array2d. Run distribute first.");
 
     hx = (double) (time - 0) / (double) (glob_Rows + 1);
     hy = (double) (time - 0) / (double) (glob_Cols + 1);
@@ -91,6 +128,9 @@ namespace final_project {
     }
   }
   
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//          Heat 3D
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   /**
    * @brief Setup for the heat3d sweep.
@@ -102,6 +142,7 @@ namespace final_project {
   template <class T>
   void array3d_distribute<T>::sweep_setup_heat3d(double coff, double time)
   {
+    FINAL_PROJECT_ASSERT_MSG((glob_Rows != 0 && glob_Cols != 0 && glob_Heights != 0), "Invalid Distribute array3d. Run distribute first.");
 
     hx = (double) (time - 0) / (double) (glob_Rows + 1);
     hy = (double) (time - 0) / (double) (glob_Cols + 1);
