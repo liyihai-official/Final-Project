@@ -23,7 +23,6 @@ template <class T>
 void init_conditions_heat1d(final_project::array1d<T> & init)
 {
   std::size_t i, N {init.N - 2};
-  double xx { 1.0 / (N+1)};
 
   init.fill(0);
 
@@ -37,8 +36,6 @@ void init_conditions_heat1d(final_project::array1d_distribute<T>& ping,
 {
   std::size_t i;
   std::size_t N {ping.glob_N - 2}, N_loc {ping.size() - 2};
-
-  double xx { 1.0 / (N+1) };
 
   ping.fill(0);
   pong.fill(0);
@@ -74,7 +71,6 @@ void init_conditions_heat2d(final_project::array2d<T> & init)
 {
 
   std::size_t i, j, nx {init.Rows - 2}, ny {init.Cols - 2};
-  double xx { 1.0 / (nx+1) }, yy { 1.0 / (ny+1) };
 
   // Initial Conditions
   init.fill(0);  
@@ -82,7 +78,6 @@ void init_conditions_heat2d(final_project::array2d<T> & init)
   // Boundary Conditions
   for (j = 0; j <= ny; ++j)
   {
-    // yy = (double) j / (ny+1);
     init(0, j) = 10;
   }
 
@@ -100,7 +95,6 @@ void init_conditions_heat2d(final_project::array2d<T> & init)
 
   for (i = 0; i <= nx+1; ++i) 
   {
-    // xx = (double) i / (nx+1);
     init(i,       ny+1) = 0;
   }
 }
@@ -172,8 +166,6 @@ void init_conditions_heat3d(final_project::array3d<T> & init)
 {
   std::size_t i, j, k; // axis-0, 1, 2; x, y, z;
   std::size_t nx {init.Rows - 2}, ny {init.Cols - 2}, nz {init.Height - 2};
-  
-  double xx { 1.0 / (nx+1) }, yy { 1.0 / (ny+1) }, zz { 1.0 / (nz+1)};
 
   // Initial Conditions
   init.fill(0);
@@ -251,8 +243,6 @@ void init_conditions_heat3d(final_project::array3d_distribute<T>& ping,
   std::size_t i, j, k;
   std::size_t nx  {ping.glob_Rows - 2}, ny  {ping.glob_Cols - 2}, nz {ping.glob_Heights - 2}, 
               nx_loc {ping.rows() - 2}, ny_loc {ping.cols() - 2}, nz_loc {ping.height() - 2};
-
-  double xx { 1.0 / (nx+1) }, yy { 1.0 / (ny+1) }, zz { 1.0 / (nz+1)};
 
   ping.fill(0);
   pong.fill(0);

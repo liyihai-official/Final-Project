@@ -23,12 +23,15 @@ namespace final_project {
 //          Heat 1D
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
   template <class T>
-  void array1d_distribute<T>::sweep_setup_heat1d(double coff, double time)
+  void array1d_distribute<T>::sweep_setup_heat1d(double coff, double max_x)
   {
     FINAL_PROJECT_ASSERT_HPP_LIYIHAI((glob_N != 0), "Invalid Distribute array1d. Run distribute first.");
 
-    hx = (double) (time - 0) / (double) (glob_N + 1);
+    max_X = max_x;
+
+    hx = (double) (max_X - 0) / (double) (glob_N + 1);
 
     dt = 0.5 * hx * hx / coff;
     dt = std::min(dt, 0.1);
@@ -43,9 +46,19 @@ namespace final_project {
   {
     std::size_t i, N {this->size() - 2};
 
+    // if (rank == 0)
+    // {
+    //   out(0) = (*this)(0) + hx * dt * 0 + 1 * dt;
+    // }
+
+    // if (rank == num_proc - 1)
+    // {
+    //   out(N+1) = (*this)(N+1) - hx * dt * 0 - 1 * dt;
+    // }
+
     for (i = 1; i <= N; ++i)
     {
-      double current = (*this)(i+1);
+      double current = (*this)(i);
       out(i) =  weight*((*this)(i-1) + (*this)(i+1)) 
               + current * diag * weight;
     }
@@ -60,15 +73,15 @@ namespace final_project {
    * 
    * @tparam T The type of the elements stored in the array.
    * @param coff Coefficient.
-   * @param time Time step.
+   * @param max_x max_x step.
    */
   template <class T>
-  void array2d_distribute<T>::sweep_setup_heat2d(double coff, double time)
+  void array2d_distribute<T>::sweep_setup_heat2d(double coff, double max_x)
   {
     FINAL_PROJECT_ASSERT_MSG((glob_Rows != 0 && glob_Cols != 0), "Invalid Distribute array2d. Run distribute first.");
 
-    hx = (double) (time - 0) / (double) (glob_Rows + 1);
-    hy = (double) (time - 0) / (double) (glob_Cols + 1);
+    hx = (double) (max_x - 0) / (double) (glob_Rows + 1);
+    hy = (double) (max_x - 0) / (double) (glob_Cols + 1);
 
     dt = 0.25 * std::min({hx, hy}) * std::min({hx, hy}) / coff;
     dt = std::min(dt, 0.1);
@@ -103,30 +116,6 @@ namespace final_project {
         //          + weight_y * ((*this)(i, j-1) + (*this)(i, j+1) + (*this)(i,j) * diag_y);
       }
   }
-
-  /**
-   * @brief Perform the heat2d sweep, with OpenMP features.
-   * 
-   * 
-   * @tparam T The type of the elements stored in the array.
-   * @param out Output array.
-   */
-  template <class T>
-  void array2d_distribute<T>::sweep_heat2d_omp1(array2d_distribute<T>& out, const int p_id)
-  {
-    std::size_t i,j,off, Nx {this->rows() - 2}, Ny{this->cols() - 2};
-
-    #pragma omp private(i, j, off)
-    for (i = 1; i <= Nx; ++i)
-    {
-      off = 1 + (p_id + i + 1) % 2;
-      for (j = off; j <= Ny; j+=2)
-      {
-        out(i,j) = weight_x * ((*this)(i-1, j) + (*this)(i+1, j) + (*this)(i,j) * diag_x)
-                 + weight_y * ((*this)(i, j-1) + (*this)(i, j+1) + (*this)(i,j) * diag_y);
-      }
-    }
-  }
   
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //          Heat 3D
@@ -137,16 +126,16 @@ namespace final_project {
    * 
    * @tparam T The type of the elements stored in the array.
    * @param coff Coefficient.
-   * @param time Time step.
+   * @param max_x max_x step.
    */
   template <class T>
-  void array3d_distribute<T>::sweep_setup_heat3d(double coff, double time)
+  void array3d_distribute<T>::sweep_setup_heat3d(double coff, double max_x)
   {
     FINAL_PROJECT_ASSERT_MSG((glob_Rows != 0 && glob_Cols != 0 && glob_Heights != 0), "Invalid Distribute array3d. Run distribute first.");
 
-    hx = (double) (time - 0) / (double) (glob_Rows + 1);
-    hy = (double) (time - 0) / (double) (glob_Cols + 1);
-    hz = (double) (time - 0) / (double) (glob_Heights + 1);
+    hx = (double) (max_x - 0) / (double) (glob_Rows + 1);
+    hy = (double) (max_x - 0) / (double) (glob_Cols + 1);
+    hz = (double) (max_x - 0) / (double) (glob_Heights + 1);
 
     dt = 0.125 * std::min({hx, hy, hz}) * std::min({hx, hy, hz}) / coff;
     dt = std::min(dt, 0.1);
