@@ -1,7 +1,11 @@
 # Final-Project
+<!--
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+-->
 
 <!-- ![Animated GIF](Heat3D/Heat_3D.gif) -->
-
 This is the final project of M.Sc in High Performance Computing program.
 Currently, research is focusing on finding numerical solutions of Partial
 Differential Equations (PDEs), including heat equations.
