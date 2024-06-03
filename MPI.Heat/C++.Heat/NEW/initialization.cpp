@@ -14,6 +14,8 @@
  * @date May 25, 2024
  */
 #include "multi_array/array.cpp"
+#include <cmath>
+#include <numbers>
 
 /////////////////////////////////////////////////////////////////////////
 //      Heat 1D
@@ -26,7 +28,7 @@ void init_conditions_heat1d(final_project::array1d<T> & init)
 
   init.fill(0);
 
-  init(0) = 10;  /* Left */
+  init(0) = 1;  /* Left */
   init(N+1) = 0; /* Right */
 }
 
@@ -43,8 +45,8 @@ void init_conditions_heat1d(final_project::array1d_distribute<T>& ping,
   /* Left */
   if (ping.starts[0] == 1)
   {
-    ping(0) = 10;
-    pong(0) = 10;
+    ping(0) = 1;
+    pong(0) = 1;
   }
   
   /* Right */
@@ -71,6 +73,7 @@ void init_conditions_heat2d(final_project::array2d<T> & init)
 {
 
   std::size_t i, j, nx {init.Rows - 2}, ny {init.Cols - 2};
+  double xx {std::numbers::pi / (double) (nx + 3) * 2};
 
   // Initial Conditions
   init.fill(0);  
@@ -78,24 +81,24 @@ void init_conditions_heat2d(final_project::array2d<T> & init)
   // Boundary Conditions
   for (j = 0; j <= ny; ++j)
   {
-    init(0, j) = 10;
+    init(0, j) = 0;
   }
 
 
   for (j = 0; j <= ny; ++j)
   {
-    // yy = (double) j / (ny+1);
-    init(nx+1, j) = 10;
+    init(nx+1, j) = 0;
   }
 
 
   for (i = 0; i <= nx; ++i)
-    init(i, 0) = 10;
+    init(i, 0) = 0;
 
 
   for (i = 0; i <= nx+1; ++i) 
   {
-    init(i,       ny+1) = 0;
+    //  init(i,       ny+1) = 10; 
+    init(i,       ny+1) = 10 * std::abs(std::sin(i*xx*2));
   }
 }
 
@@ -116,7 +119,7 @@ void init_conditions_heat2d(final_project::array2d_distribute<T>& ping,
   std::size_t nx   {ping.glob_Rows - 2}, ny {ping.glob_Cols - 2}, 
               nx_loc {ping.rows() - 2}, ny_loc {ping.cols() - 2};
 
-  double xx { 1.0 / (nx+1) }, yy { 1.0 / (ny+1) };
+  double xx { 2 * std::numbers::pi / (nx+3) }, yy { 1.0 / (ny+3) };
 
   ping.fill(0);
   pong.fill(0);
@@ -125,29 +128,35 @@ void init_conditions_heat2d(final_project::array2d_distribute<T>& ping,
   if (ping.starts[0] == 1)
     for (j = 1; j <= ny_loc; ++j)
     {
-      ping(0, j) = 10;
-      pong(0, j) = 10;
+      ping(0, j) = 0;
+      pong(0, j) = 0;
     }
   /* Left */
   if (ping.starts[1] == 1)
     for (i = 0; i <= nx_loc; ++i) {
-      ping(i, 0) = 10;
-      pong(i, 0) = 10;
+      ping(i, 0) = 0;
+      pong(i, 0) = 0;
     }
 
   /* Down */
   if (ping.ends[0] == nx)
     for (j = 0; j <= ny_loc; ++j)
     {
-      ping(nx_loc+1, j) = 10;
-      pong(nx_loc+1, j) = 10;
+      ping(nx_loc+1, j) = 0;
+      pong(nx_loc+1, j) = 0;
     }
 
   /* Right */
   if (ping.ends[1] == ny)
     for (i = 0; i <= nx_loc; ++i) {
-      ping(i, ny_loc+1) = 0;
-      pong(i, ny_loc+1) = 0;
+      // ping(i, ny_loc+1) = 10;
+      // pong(i, ny_loc+1) = 10;
+
+      // if (i > nx / 3 && i < (nx / 3 * 2)) 
+      {
+        ping(i, ny_loc+1) = 10 * std::abs(std::sin((i+ping.starts[0])*xx*2));
+        pong(i, ny_loc+1) = 10 * std::abs(std::sin((i+ping.starts[0])*xx*2));
+      }
     }
 }
 

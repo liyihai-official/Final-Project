@@ -32,7 +32,7 @@
 #define MAX_it 2'000'000
 #endif
 
-#define tol 1E-13
+#define tol 1E-10
 
 int main (int argc, char ** argv)
 {
@@ -59,8 +59,9 @@ int main (int argc, char ** argv)
   init_conditions_heat2d(a, b);
   init_conditions_heat2d(gather);
 
-  a.sweep_setup_heat2d(1, 1);
-  b.sweep_setup_heat2d(1, 1);
+  a.sweep_setup_heat2d(2, 2 * std::numbers::pi);
+  b.sweep_setup_heat2d(2, 2 * std::numbers::pi);
+
 
   t1 = MPI_Wtime();
   for ( i = 0; i < MAX_it; ++i )
@@ -75,6 +76,14 @@ int main (int argc, char ** argv)
     MPI_Allreduce(&loc_diff, &glob_diff, 1, MPI_DOUBLE, MPI_SUM, comm_cart);
 
     if (glob_diff <= tol) {break;}
+
+    if (i % 1000 == 0) {
+      char buffer[50];
+      std::sprintf(buffer, "visualize/mat_%d.bin", i);
+      a.Gather2d(gather, root, comm_cart);
+      if (world.rank() == 0) gather.saveToBinaryFile(buffer);
+    }
+
   }
   t2 = MPI_Wtime();
   

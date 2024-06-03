@@ -14,8 +14,10 @@
 #ifndef FINAL_PROJECT_SWEEP_HPP_LIYIHAI
 #define FINAL_PROJECT_SWEEP_HPP_LIYIHAI
 
-#include "multi_array/array.cpp"
+#include "multi_array/array_distribute.cpp"
 #include <omp.h>
+#include <cmath>
+#include <numbers>
 
 namespace final_project {
 
@@ -48,12 +50,12 @@ namespace final_project {
 
     // if (rank == 0)
     // {
-    //   out(0) = (*this)(0) + hx * dt * 0 + 1 * dt;
+    //   out(0) = (*this)(0) + hx * dt * 0; // + std::sin(1 * dt * hx) * 2;
     // }
 
     // if (rank == num_proc - 1)
     // {
-    //   out(N+1) = (*this)(N+1) - hx * dt * 0 - 1 * dt;
+    //   out(N+1) = (*this)(N+1) - hx * dt * 0; // - 1 * dt;
     // }
 
     for (i = 1; i <= N; ++i)
@@ -105,6 +107,24 @@ namespace final_project {
   {
     std::size_t i,j, Nx {this->rows() - 2}, Ny{this->cols() - 2};
 
+    // Neumann boundary condition
+    /* Up */
+    if (starts[0] == 1) 
+      for (j = 1; j <= Ny; ++j) out(0, j) = (*this)(0, j);
+
+    /* Left */
+    if (starts[1] == 1)
+      for (i = 1; i <= Nx; ++i) out(i, 0) = (*this)(i, 0); 
+      
+    /* Down */
+    if (ends[0] == glob_Rows - 2)
+      for (j = 1; j <= Ny; ++j) out(Nx+1, j) = (*this)(Nx+1, j);
+
+    /* Right */
+    if (ends[1] == glob_Cols - 2)
+      for (i = 1; i <= Nx; ++i) out(i, Ny+1) = (*this)(i, Ny+1);
+
+    /* Inside */
     for (i = 1; i <= Nx; ++i)
       for (j = 1; j <= Ny; ++j) 
       {
@@ -112,8 +132,6 @@ namespace final_project {
         out(i,j) = weight_x * ((*this)(i-1, j) + (*this)(i+1, j))
                  + weight_y * ((*this)(i, j-1) + (*this)(i, j+1))
                  + current  * (diag_x*weight_x + diag_y*weight_y);
-        // out(i,j) = weight_x * ((*this)(i-1, j) + (*this)(i+1, j) + (*this)(i,j) * diag_x)
-        //          + weight_y * ((*this)(i, j-1) + (*this)(i, j+1) + (*this)(i,j) * diag_y);
       }
   }
   

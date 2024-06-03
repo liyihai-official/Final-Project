@@ -1,7 +1,7 @@
 
-MAX_N_X := -DMAX_N_X=22
-MAX_N_Y := -DMAX_N_Y=22
-MAX_N_Z := -DMAX_N_Z=22
+MAX_N_X := -DMAX_N_X=202
+MAX_N_Y := -DMAX_N_Y=202
+MAX_N_Z := -DMAX_N_Z=202
 
 MPICXX := mpic++
 MPI_STD := -std=c++20
