@@ -30,6 +30,22 @@ $$ -->
 <img src="MPI.Heat/C++.Heat/ver3.0/Heat_2D.gif" alt="Animated GIF" height="500">
 
 ### Development Note
+
+---
+#### Jun, 1-3, 2024
+- Working Directory: 
+```MPI.Heat/C++Heat/ver3.0```.
+
+- Add 1 dimension version.
+- Optimizations
+    - Structure of array, arrays now are isolated from numerical methods' features.
+    - New namespace ```heat_equation``` includes objects aiming for solving heat equations in different vector space by various strategies.
+    - Gathering, now is capable of collecting boundary values.
+    - Sweep, now is capable of updating boundary values while iterating.
+
+- Visualization
+    - Add I/O features and visualization programs.
+
 ---
 #### May, 29-30, 2024
 - Working Directory: 
