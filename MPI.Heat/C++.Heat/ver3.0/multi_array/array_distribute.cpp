@@ -26,7 +26,7 @@
 #include <fstream>
 
 #include "../assert.cpp"
-#include "array.cpp"
+#include "base.cpp"
 
 namespace final_project 
 {
@@ -68,15 +68,15 @@ namespace final_project
         this->resize(nx);
       }
 
-      private:
-        double coff;
-        double diag, weight;
-        double dt, hx;
-        double max_X, min_X {0};
+      // private:
+      //   double coff;
+      //   double diag, weight;
+      //   double dt, hx;
+      //   double max_X, min_X {0};
       
-      public:
-        void sweep_setup_heat1d(double coff, double time);
-        void sweep_heat1d(array1d_distribute<T>& out);
+      // public:
+      //   void sweep_setup_heat1d(double coff, double time);
+      //   void sweep_heat1d(array1d_distribute<T>& out);
       
       public:
         void I_exchange1d();
@@ -149,70 +149,49 @@ namespace final_project
       }
 
 
-      void distribute(std::size_t gRows, std::size_t gCols, 
-                      const int dims[2], const int omp_pid, 
-                      MPI_Datatype vecs_omp[2], MPI_Comm comm)
-      {
+//       void distribute(std::size_t gRows, std::size_t gCols, 
+//                       const int dims[2], const int omp_pid, 
+//                       MPI_Datatype vecs_omp[2], MPI_Comm comm)
+//       {
 
-FINAL_PROJECT_ASSERT_MSG((omp_pid == 0 || omp_pid == 1), "Invalid OpenMP even-odd setting. Require exactly 2 threads.");
+// FINAL_PROJECT_ASSERT_MSG((omp_pid == 0 || omp_pid == 1), "Invalid OpenMP even-odd setting. Require exactly 2 threads.");
 
-        communicator = comm;
-        glob_Rows = gRows; glob_Cols = gCols;
+//         communicator = comm;
+//         glob_Rows = gRows; glob_Cols = gCols;
         
-        MPI_Comm_rank(comm, &rank);
-        MPI_Comm_size(comm, &num_proc);
-        MPI_Cart_coords(comm, rank, dimension, coordinates);
+//         MPI_Comm_rank(comm, &rank);
+//         MPI_Comm_size(comm, &num_proc);
+//         MPI_Cart_coords(comm, rank, dimension, coordinates);
 
-        Decomp1d(glob_Rows-2, dims[0], coordinates[0], starts[0], ends[0]);
-        Decomp1d(glob_Cols-2, dims[1], coordinates[1], starts[1], ends[1]);
+//         Decomp1d(glob_Rows-2, dims[0], coordinates[0], starts[0], ends[0]);
+//         Decomp1d(glob_Cols-2, dims[1], coordinates[1], starts[1], ends[1]);
         
-        MPI_Cart_shift(comm, 0, 1, &nbr_up,   &nbr_down );
-        MPI_Cart_shift(comm, 1, 1, &nbr_left, &nbr_right);
+//         MPI_Cart_shift(comm, 0, 1, &nbr_up,   &nbr_down );
+//         MPI_Cart_shift(comm, 1, 1, &nbr_left, &nbr_right);
 
-        /* Setup vector types of halo */ 
-        const int nx {ends[0] - starts[0] + 1};
-        const int ny {ends[1] - starts[1] + 1};
+//         /* Setup vector types of halo */ 
+//         const int nx {ends[0] - starts[0] + 1};
+//         const int ny {ends[1] - starts[1] + 1};
 
-        const int nx_cnt {(omp_pid == 0) ? (nx / 2 + 1) : (nx - nx / 2)};
-        const int ny_cnt {(omp_pid == 0) ? (ny / 2 + 1) : (ny - ny / 2)};
+//         const int nx_cnt {(omp_pid == 0) ? (nx / 2 + 1) : (nx - nx / 2)};
+//         const int ny_cnt {(omp_pid == 0) ? (ny / 2 + 1) : (ny - ny / 2)};
 
-    #pragma omp shared(glob_Rows, glob_Cols, rank, num_proc, nbr_up, nbr_down, nbr_right, nbr_left, communicator, starts, ends, coordinates) private(omp_pid)
-    {
-        MPI_Type_vector(ny_cnt, 1, 2, get_mpi_type<T>(), &vecs_omp[0]);
-        MPI_Type_commit(&vecs_omp[0]);
+//     #pragma omp shared(glob_Rows, glob_Cols, rank, num_proc, nbr_up, nbr_down, nbr_right, nbr_left, communicator, starts, ends, coordinates) private(omp_pid)
+//     {
+//         MPI_Type_vector(ny_cnt, 1, 2, get_mpi_type<T>(), &vecs_omp[0]);
+//         MPI_Type_commit(&vecs_omp[0]);
 
-        MPI_Type_vector(nx_cnt, 1, 2*(ny+2), get_mpi_type<T>(), &vecs_omp[1]);
-        MPI_Type_commit(&vecs_omp[1]);
-    }
+//         MPI_Type_vector(nx_cnt, 1, 2*(ny+2), get_mpi_type<T>(), &vecs_omp[1]);
+//         MPI_Type_commit(&vecs_omp[1]);
+//     }
 
-        this->resize(nx+2, ny+2);
-      }
+//         this->resize(nx+2, ny+2);
+//       }
     
-
-    // Update data
-    private:
-      double coff;
-      double diag_x, diag_y, weight_x, weight_y;
-      double dt, hx, hy;
-
-    // Finite Difference Method (FDM)
-    public:
-      // Heat Equation
-      void sweep_setup_heat2d(double coff, double time);
-      void sweep_heat2d(array2d_distribute<T>&out);
-      void sweep_heat2d_omp1(array2d_distribute<T>&out, const int p_id);
-
-      // Possion Equation
-      // void sweep_setup_possion2d();
-      // void sweep_possion2d(array2d_distribute<T>&out, array2d_distribute<T> const bias);
-
     // exchanges, communications
     public:
       void I_exchange2d();
       void SR_exchange2d();
-      
-      void I_OMP_exchange2d(const int & omp_pid,  const MPI_Datatype vecs_omp[2]);
-      void SR_OMP_exchange2d(const int & omp_pid, const MPI_Datatype vecs_omp[2]);
 
       void Gather2d(array2d<T>& gather, const int root, MPI_Comm comm);
   }; /* class array2d_distribute */
@@ -292,17 +271,17 @@ FINAL_PROJECT_ASSERT_MSG((omp_pid == 0 || omp_pid == 1), "Invalid OpenMP even-od
         this->resize(nx, ny, nz);
       }
 
-    // Update data
-    private:
-      double coff;
-      double diag_x, diag_y, diag_z, weight_x, weight_y, weight_z;
-      double dt, hx, hy, hz;
+    // // Update data
+    // private:
+    //   double coff;
+    //   double diag_x, diag_y, diag_z, weight_x, weight_y, weight_z;
+    //   double dt, hx, hy, hz;
 
-    // Finite Difference Method (FDM)
-    public:
-      // Heat Equation
-      void sweep_setup_heat3d(double coff, double time);
-      void sweep_heat3d(array3d_distribute<T>&out);
+    // // Finite Difference Method (FDM)
+    // public:
+    //   // Heat Equation
+    //   void sweep_setup_heat3d(double coff, double time);
+    //   void sweep_heat3d(array3d_distribute<T>&out);
 
     // exchanges, communications
     public:

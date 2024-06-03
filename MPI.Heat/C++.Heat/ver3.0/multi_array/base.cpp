@@ -1,5 +1,5 @@
 /**
- * @file array.cpp
+ * @file base.cpp
  * @brief This file contains the definition of the array classes
  *        and features for parallel processing.
  * 
@@ -14,8 +14,8 @@
  * @date May 25, 2024
  */
 
-#ifndef FINAL_PROJECT_ARRAY_HPP_LIYIHAI
-#define FINAL_PROJECT_ARRAY_HPP_LIYIHAI
+#ifndef FINAL_PROJECT_MULTI_BASE_HPP_LIYIHAI
+#define FINAL_PROJECT_MULTI_BASE_HPP_LIYIHAI
 
 #pragma once
 #include <iostream>

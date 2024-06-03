@@ -13,7 +13,8 @@
  * @version 3.0
  * @date May 25, 2024
  */
-#include "multi_array/array.cpp"
+#include "multi_array/array_distribute.cpp"
+#include "heat.cpp"
 #include <cmath>
 #include <numbers>
 
@@ -55,7 +56,6 @@ void init_conditions_heat1d(final_project::array1d_distribute<T>& ping,
     ping(N_loc+1) = 0;
     pong(N_loc+1) = 0;
   }
-
 }
 
 /////////////////////////////////////////////////////////////////////////

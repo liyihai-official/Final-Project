@@ -15,7 +15,7 @@
 
 #ifndef FINAL_PROJECT_EXCHANGE_HPP_LIYIHAI
 #define FINAL_PROJECT_EXCHANGE_HPP_LIYIHAI
-#include "multi_array/array.cpp"
+#include "multi_array/array_distribute.cpp"
 #include <cstring>
 
 namespace final_project

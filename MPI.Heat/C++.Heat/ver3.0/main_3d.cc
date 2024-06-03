@@ -21,6 +21,7 @@
 #include <mpi.h>
 
 #include "final_project.cpp"
+#include "heat.cpp"
 
 #if !defined(MAX_N_X) || !defined(MAX_N_Y) || !defined(MAX_N_Z)
 #define MAX_N_X 50+2
@@ -50,31 +51,34 @@ int main ( int argc, char ** argv)
   MPI_Dims_create(world.size(), dimension, dims);
   MPI_Cart_create(MPI_COMM_WORLD, dimension, dims, periods, reorder, &comm_cart);
 
-  final_project::array3d<double> gather(MAX_N_X, MAX_N_Y, MAX_N_Z);
-  final_project::array3d_distribute<double> A, B;
+  auto gather = final_project::array3d<double>(MAX_N_X, MAX_N_Y, MAX_N_Z);
+  gather.fill(0);
 
-  A.distribute(MAX_N_X, MAX_N_Y, MAX_N_Z, dims, comm_cart);
-  B.distribute(MAX_N_X, MAX_N_Y, MAX_N_Z, dims, comm_cart);
+  auto A = final_project::heat_equation::heat3d_pure_mpi<double>(MAX_N_X, MAX_N_Y, MAX_N_Z, dims, comm_cart);
+  auto B = final_project::heat_equation::heat3d_pure_mpi<double>(MAX_N_X, MAX_N_Y, MAX_N_Z, dims, comm_cart);
 
-  init_conditions_heat3d(A, B);
+  init_conditions_heat3d(A.body, B.body);
   init_conditions_heat3d(gather);
 
-  A.sweep_setup_heat3d(1, 1);
-  B.sweep_setup_heat3d(1, 1);
-
   t1 = MPI_Wtime();
-  for ( i = 0; i < 200; ++i )
+  for ( i = 0; i < MAX_it; ++i )
   {
     A.sweep_heat3d(B);
-    A.I_exchange3d();
+    A.body.I_exchange3d();
 
     B.sweep_heat3d(A);
-    B.I_exchange3d();
+    B.body.I_exchange3d();
 
-    loc_diff = final_project::get_difference(A, B);
+    loc_diff = final_project::get_difference(A.body, B.body);
     MPI_Allreduce(&loc_diff, &glob_diff, 1, MPI_DOUBLE, MPI_SUM, comm_cart);
 
     if (glob_diff <= tol) {break;}
+    if (i % 100 == 0) {
+      char buffer[50];
+      std::sprintf(buffer, "visualize/mat_%d.bin", i);
+      A.body.Gather3d(gather, root, comm_cart);
+      if (world.rank() == 0) gather.saveToBinaryFile(buffer);
+    }    
   }
   t2 = MPI_Wtime();
 
@@ -84,7 +88,7 @@ int main ( int argc, char ** argv)
   t1 = 0;
   MPI_Reduce(&t2, &t1, 1, MPI_DOUBLE, MPI_MAX, root, comm_cart);
 
-  A.Gather3d(gather, root, comm_cart);
+  A.body.Gather3d(gather, root, comm_cart);
   if (world.rank() == root ) 
   {
     std::cout << "it" << " " << "t" << std::endl;

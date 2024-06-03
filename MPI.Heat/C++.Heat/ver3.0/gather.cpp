@@ -14,7 +14,7 @@
 
 #ifndef FINAL_PROJECT_GATHER_HPP_LIYIHAI
 #define FINAL_PROJECT_GATHER_HPP_LIYIHAI
-#include "multi_array/array.cpp"
+#include "multi_array/array_distribute.cpp"
 #include <cstring>
 #include <limits>
 
@@ -42,6 +42,10 @@ namespace final_project
 
     int pid, i;
     int s_list[num_proc], N_list[num_proc];
+
+    // Add Boundary Conditions
+    if (rank == 0) --starts[0], ++N;
+    if (rank == num_proc -1) ++N;
 
     MPI_Gather(starts, 1, MPI_INT, s_list, 1, MPI_INT, root, comm);
 
