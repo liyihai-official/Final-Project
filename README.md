@@ -1,15 +1,10 @@
-
-<script type="text/javascript"
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
-
 # Final-Project
 
 <!-- ![Animated GIF](Heat3D/Heat_3D.gif) -->
 This is the final project of M.Sc in High Performance Computing program.
 Currently, research is focusing on finding numerical solutions of Partial
 Differential Equations (PDEs), including heat equations.
-$$
+<!-- $$
 \frac{\partial u}{\partial t} 
 (t,\textbf{x})
 = 
@@ -28,7 +23,7 @@ $$
 \frac{\partial u}{\partial \vec{n}} 
 (t,\textbf{x})
 = g(\textbf{x}), \:\:\:\: \textbf{x} \in \bar{\Omega}
-$$
+$$ -->
 
 
 <!-- <img src="Heat3D/Heat_3D.gif" alt="Animated GIF" height="200"> -->
