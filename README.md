@@ -3,6 +3,30 @@
 <!-- ![Animated GIF](Heat3D/Heat_3D.gif) -->
 
 This is the final project of M.Sc in High Performance Computing program.
+Currently, research is focusing on finding numerical solutions of Partial
+Differential Equations (PDEs), including heat equations.
+
+$$
+\frac{\partial u}{\partial t} 
+(t,\textbf{x})
+= 
+\kappa\nabla^2_{\textbf{x}}
+u(\textbf{x}, t)
+, \:\:\:\: \textbf{x} \in \Omega \sub \mathbb{R}^d, d\in \{1, 2, 3\}.
+$$
+
+Dirchlet Boundary Condition
+$$
+u(t,\textbf{x}) = f(\textbf{x}), , \:\:\:\: \textbf{x} \in \bar{\Omega}
+$$
+
+Neumann Boundary Condition
+$$
+\frac{\partial u}{\partial \vec{n}} 
+(t,\textbf{x})
+= g(\textbf{x}), \:\:\:\: \textbf{x} \in \bar{\Omega}
+$$
+
 
 <img src="Heat3D/Heat_3D.gif" alt="Animated GIF" height="200">
 <img src="MPI.Heat/C++.Heat/ver3.0/Heat_2D.gif" alt="Animated GIF" height="500">
