@@ -28,7 +28,7 @@ $$
 $$
 
 
-<img src="Heat3D/Heat_3D.gif" alt="Animated GIF" height="200">
+<!-- <img src="Heat3D/Heat_3D.gif" alt="Animated GIF" height="200"> -->
 <img src="MPI.Heat/C++.Heat/ver3.0/Heat_2D.gif" alt="Animated GIF" height="500">
 
 ### Development Note
