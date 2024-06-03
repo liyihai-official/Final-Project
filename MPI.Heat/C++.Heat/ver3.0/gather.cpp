@@ -177,6 +177,8 @@ namespace final_project
   template <class T>
   void array3d_distribute<T>::Gather3d(array3d<T>& gather, const int root, MPI_Comm comm)
   {
+    std::size_t i_idx {1}, j_idx{1}, k_idx{1};
+    
     MPI_Datatype Block, mpi_T {get_mpi_type<T>()};
     
     const int Nx {ends[0] - starts[0] + 1};
@@ -205,7 +207,7 @@ namespace final_project
                                   MPI_ORDER_C, MPI_DOUBLE, &Block);
       MPI_Type_commit(&Block);
 
-      MPI_Send(&(*this)(1,1,1), 1, Block, root, rank, comm);
+      MPI_Send(&(*this)(i_idx, j_idx, k_idx), 1, Block, root, rank, comm);
     }
 
     if (rank == root)
@@ -217,10 +219,8 @@ namespace final_project
           for ( i = starts[0]; i <= ends[0]; ++i)
           {
             for ( j = starts[1]; j <= ends[1]; ++j)
-            {
               memcpy( &gather( i, j, starts[2]), 
                       &(*this)(i, j, starts[2]), nz_list[pid]*sizeof(T));
-            }
           }
         }
 
