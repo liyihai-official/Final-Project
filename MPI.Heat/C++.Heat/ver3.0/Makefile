@@ -1,7 +1,7 @@
 
-MAX_N_X := -DMAX_N_X=52
-MAX_N_Y := -DMAX_N_Y=52
-MAX_N_Z := -DMAX_N_Z=52
+MAX_N_X := -DMAX_N_X=6
+MAX_N_Y := -DMAX_N_Y=6
+MAX_N_Z := -DMAX_N_Z=6
 
 MPICXX := mpic++
 MPI_STD := -std=c++20
@@ -28,7 +28,7 @@ all: $(EXECS)
 $(EXEC_1): $(SRC_1)
 	$(MPICXX) $(MAX_N_X) $(MPI_STD) $(DFLAGS) $^ -o $@ -O2
 
-$(EXEC_2): $(SRC_3)
+$(EXEC_2): $(SRC_2)
 	$(MPICXX) $(MAX_N_X) $(MAX_N_Y) $(MPI_STD) $(DFLAGS) $^ -o $@ -O2
 
 $(EXEC_3): $(SRC_3)

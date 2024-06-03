@@ -178,7 +178,7 @@ namespace final_project
               for (k = 1; k <= Nz; ++k) 
               {
                 double current = body(i, j, k);
-                out.body(i, j, k) =  weight_x * (body(i-1, j, k) + body(i+1, j, k))
+                out.body(i, j, k) = weight_x * (body(i-1, j, k) + body(i+1, j, k))
                                   + weight_y * (body(i, j-1, k) + body(i, j+1, k))
                                   + weight_z * (body(i, j, k-1) + body(i, j, k+1))
                                   + current  * (diag_x*weight_x + diag_y*weight_y + diag_z*weight_z);
@@ -193,6 +193,7 @@ namespace final_project
         double min_x {0}, max_x {1};
         double min_y {0}, max_y {1};
         double min_z {0}, max_z {1};
+        
     }; // class heat3d_pure_mpi
 
   } // namespace heat_equation

@@ -68,16 +68,6 @@ namespace final_project
         this->resize(nx);
       }
 
-      // private:
-      //   double coff;
-      //   double diag, weight;
-      //   double dt, hx;
-      //   double max_X, min_X {0};
-      
-      // public:
-      //   void sweep_setup_heat1d(double coff, double time);
-      //   void sweep_heat1d(array1d_distribute<T>& out);
-      
       public:
         void I_exchange1d();
         void SR_exchange1d();
@@ -270,18 +260,6 @@ namespace final_project
 
         this->resize(nx, ny, nz);
       }
-
-    // // Update data
-    // private:
-    //   double coff;
-    //   double diag_x, diag_y, diag_z, weight_x, weight_y, weight_z;
-    //   double dt, hx, hy, hz;
-
-    // // Finite Difference Method (FDM)
-    // public:
-    //   // Heat Equation
-    //   void sweep_setup_heat3d(double coff, double time);
-    //   void sweep_heat3d(array3d_distribute<T>&out);
 
     // exchanges, communications
     public:

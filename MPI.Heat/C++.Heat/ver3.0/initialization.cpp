@@ -81,18 +81,18 @@ void init_conditions_heat2d(final_project::array2d<T> & init)
   // Boundary Conditions
   for (j = 0; j <= ny; ++j)
   {
-    init(0, j) = 0;
+    init(0, j) = 1;
   }
 
 
   for (j = 0; j <= ny; ++j)
   {
-    init(nx+1, j) = 0;
+    init(nx+1, j) = 3;
   }
 
 
   for (i = 0; i <= nx; ++i)
-    init(i, 0) = 0;
+    init(i, 0) = 2;
 
 
   for (i = 0; i <= nx+1; ++i) 
@@ -128,22 +128,22 @@ void init_conditions_heat2d(final_project::array2d_distribute<T>& ping,
   if (ping.starts[0] == 1)
     for (j = 1; j <= ny_loc; ++j)
     {
-      ping(0, j) = 0;
-      pong(0, j) = 0;
+      ping(0, j) = 1;
+      pong(0, j) = 1;
     }
   /* Left */
   if (ping.starts[1] == 1)
     for (i = 0; i <= nx_loc; ++i) {
-      ping(i, 0) = 0;
-      pong(i, 0) = 0;
+      ping(i, 0) = 2;
+      pong(i, 0) = 2;
     }
 
   /* Down */
   if (ping.ends[0] == nx)
     for (j = 0; j <= ny_loc; ++j)
     {
-      ping(nx_loc+1, j) = 0;
-      pong(nx_loc+1, j) = 0;
+      ping(nx_loc+1, j) = 3;
+      pong(nx_loc+1, j) = 3;
     }
 
   /* Right */

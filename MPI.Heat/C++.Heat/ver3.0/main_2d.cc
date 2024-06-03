@@ -43,7 +43,7 @@ int main (int argc, char ** argv)
   double loc_diff, glob_diff {10}, t1, t2;
   constexpr int reorder {1}, dimension {2}, root {0};
 
-  int dims[dimension], coords[dimension], periods[dimension];
+  int dims[dimension], periods[dimension];
   for (short int i = 0; i < dimension; ++i) {dims[i] = 0; periods[i] = 0;}
 
   /* MPI Cartesian Inits */
@@ -58,7 +58,6 @@ int main (int argc, char ** argv)
   auto b = final_project::heat_equation::heat2d_pure_mpi<double>(MAX_N_X, MAX_N_Y, dims, comm_cart);  
 
   init_conditions_heat2d(a.body, b.body);
-  init_conditions_heat2d(gather);
 
 
   t1 = MPI_Wtime();
@@ -85,18 +84,19 @@ int main (int argc, char ** argv)
   }
   t2 = MPI_Wtime();
   
-  // final_project::print_in_order(a);
+  final_project::print_in_order(a.body);
 
   t2 -= t1;
   t1 = 0;
   MPI_Reduce(&t2, &t1, 1, MPI_DOUBLE, MPI_MAX, root, comm_cart);
 
+  
   a.body.Gather2d(gather, root, comm_cart);
   if (world.rank() == root)
   {
     std::cout << "it" << " " << "t" << std::endl;
     std::cout << i << " " << t1 * 1000 << std::endl;
-    // std::cout << gather << std::endl;
+    std::cout << gather << std::endl;
     // gather.saveToBinaryFile("mat.bin");
   }
    

@@ -24,7 +24,7 @@
 
 #include <mpi.h>
 
-#if !defined(MAX_N_X) || !defined(MAX_N_Y)
+#if !defined(MAX_N_X)
 #define MAX_N_X 100+2
 #endif
 

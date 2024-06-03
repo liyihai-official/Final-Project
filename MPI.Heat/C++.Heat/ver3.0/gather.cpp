@@ -92,10 +92,33 @@ namespace final_project
 
     std::size_t Nx {this->rows() - 2}, Ny {this->cols() - 2};
 
+    std::size_t i_idx {1}, j_idx{1};
+
     int pid, i;
     int s0_list[num_proc], s1_list[num_proc], nx_list[num_proc], ny_list[num_proc];
 
-    MPI_Type_vector(Nx, Ny, Ny+2, mpi_T, &Block);
+    // Add Boundaries
+    // Up
+    if (starts[0] == 1)
+    {
+      -- starts[0];
+      -- i_idx;
+      ++ Nx;
+    }
+
+    // Left
+    if (starts[1] == 1)
+    {
+      -- starts[1];
+      -- j_idx;
+      ++ Ny;
+    }
+
+    if (ends[0] == glob_Rows - 2) ++ Nx; // Down
+    if (ends[1] == glob_Cols - 2) ++ Ny; // Right
+
+
+    MPI_Type_vector(Nx, Ny, this->cols(), mpi_T, &Block);
     MPI_Type_commit(&Block);
 
     MPI_Gather(&starts[0], 1, MPI_INT, s0_list, 1, MPI_INT, root, comm);
@@ -107,7 +130,7 @@ namespace final_project
 
     if (rank != root)
     {
-      MPI_Send(&(*this)(1,1), 1, Block, root, rank, comm);
+      MPI_Send(&(*this)(i_idx,j_idx), 1, Block, root, rank, comm);
     }
     MPI_Type_free(&Block);
 
@@ -128,8 +151,8 @@ namespace final_project
           MPI_Type_vector(nx_list[pid], ny_list[pid], gather.cols(), mpi_T, &temp);
           MPI_Type_commit(&temp);
 
-          MPI_Recv(&gather(s0_list[pid], s1_list[pid]), 1,
-                            temp, pid, pid, comm, MPI_STATUS_IGNORE);
+          MPI_Recv( &gather(s0_list[pid], s1_list[pid]), 1,
+                    temp, pid, pid, comm, MPI_STATUS_IGNORE);
 
           MPI_Type_free(&temp);  
         }
@@ -222,7 +245,8 @@ namespace final_project
                                       MPI_ORDER_C, MPI_DOUBLE, &Block);
           MPI_Type_commit(&Block);
 
-          MPI_Recv(&gather(s0_list[pid], s1_list[pid], s2_list[pid]), 1, Block, pid, pid, comm, MPI_STATUS_IGNORE);
+          MPI_Recv(&gather( s0_list[pid], s1_list[pid], s2_list[pid]), 1, Block, pid, 
+                                          pid, comm, MPI_STATUS_IGNORE);
           MPI_Type_free(&Block);
         }
       }
