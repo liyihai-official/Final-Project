@@ -29,3 +29,5 @@ for i=0:n
         animated(:,:,1,i)=rgb2ind(frame.cdata,cmap,'nodither');
     end
 end
+
+imwrite(animated,cmap,'Heat_2D.gif','DelayTime',0.1,'LoopCount',inf);
