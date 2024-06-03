@@ -35,7 +35,7 @@ $$ -->
 - Working Directory: 
 ```MPI.Heat/C++Heat/ver3.0```.
 
-- Add 1 dimension version.
+- Add 1 dimension version ```main_1d.cc```.
 - Optimizations
     - Structure of array, arrays now are isolated from numerical methods' features.
     - New namespace ```heat_equation``` includes objects aiming for solving heat equations in different vector space by various strategies.
