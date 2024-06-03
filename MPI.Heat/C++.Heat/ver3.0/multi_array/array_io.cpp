@@ -26,7 +26,7 @@
 #include <mpi.h>
 #include <fstream>
 
-#include "assert.cpp"
+#include "../assert.cpp"
 #include "array.cpp"
 
 namespace final_project 

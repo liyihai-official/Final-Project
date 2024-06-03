@@ -309,6 +309,4 @@ void init_conditions_heat3d(final_project::array3d_distribute<T>& ping,
         pong(i, j, nz_loc+1) = 1;
       }
     }
-
-
 }

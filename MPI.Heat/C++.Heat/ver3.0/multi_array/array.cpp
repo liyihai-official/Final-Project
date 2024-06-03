@@ -28,7 +28,7 @@
 #include <mpi.h>
 #include <fstream>
 
-#include "assert.cpp"
+#include "../assert.cpp"
 
 template<typename T>
 MPI_Datatype get_mpi_type();
