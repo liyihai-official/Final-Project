@@ -1,3 +1,24 @@
+/**
+ * @file main_1d.cc
+ * 
+ * @brief Main file for the parallel Heat 1d Equation solver using MPI.
+ * 
+ * This file sets up the MPI environment, initializes the arrays, performs
+ * the heat equation computation, exchanges data between processes, gathers
+ * the final results, and outputs the results.
+ * 
+ * @author Li Yihai
+ * @version 3.0
+ * @date Jun 2, 2024
+ * 
+ * @section DESCRIPTION
+ * The main function initializes the MPI environment and sets up a Cartesian
+ * topology for process communication. It then initializes the arrays, sets
+ * initial conditions, and performs the heat equation computation using a
+ * distributed approach. The results are gathered and printed by the root
+ * process.
+ */
+
 #include "final_project.cpp"
 #include "heat.cpp"
 
