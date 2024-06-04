@@ -116,6 +116,7 @@ namespace final_project
 
     if (ends[0] == glob_Rows - 2) ++ Nx; // Down
     if (ends[1] == glob_Cols - 2) ++ Ny; // Right
+    // End of Add Boundaries
 
 
     MPI_Type_vector(Nx, Ny, this->cols(), mpi_T, &Block);
@@ -179,15 +180,46 @@ namespace final_project
   {
     std::size_t i_idx {1}, j_idx{1}, k_idx{1};
     
-    MPI_Datatype Block, mpi_T {get_mpi_type<T>()};
+    MPI_Datatype Block, temp, mpi_T {get_mpi_type<T>()};
     
-    const int Nx {ends[0] - starts[0] + 1};
-    const int Ny {ends[1] - starts[1] + 1};
-    const int Nz {ends[2] - starts[2] + 1};
+    int Nx {ends[0] - starts[0] + 1};
+    int Ny {ends[1] - starts[1] + 1};
+    int Nz {ends[2] - starts[2] + 1};
 
     int pid, i, j, k;
     int s0_list[num_proc], s1_list[num_proc], s2_list[num_proc];
     int nx_list[num_proc], ny_list[num_proc], nz_list[num_proc];
+
+    // Add Boundaries
+    // Back
+    if (starts[0] == 1)
+    {
+      -- starts[0];
+      -- i_idx;
+      ++ Nx;
+    }
+
+    // Up
+    if (starts[1] == 1)
+    {
+      -- starts[1];
+      -- j_idx;
+      ++ Ny;
+    }
+
+    // Left
+    if (starts[2] == 1)
+    {
+      -- starts[2];
+      -- k_idx;
+      ++ Nz;
+    }
+
+    if (ends[0] == glob_Rows - 2)     ++ Nx; // Front
+    if (ends[1] == glob_Cols - 2)     ++ Ny; // Down
+    if (ends[2] == glob_Heights - 2)  ++ Nz; // Right
+
+    // End of Add Boundaries
 
     MPI_Gather(&starts[0], 1, MPI_INT, s0_list, 1, MPI_INT, root, comm);
     MPI_Gather(&starts[1], 1, MPI_INT, s1_list, 1, MPI_INT, root, comm);
@@ -200,14 +232,34 @@ namespace final_project
 
     if (rank != root)
     {
-      int array_of_sizes[]    = {Nx+2, Ny+2, Nz+2};
+      if (
+        this->rows() > static_cast<std::size_t>(std::numeric_limits<int>::max()) ||
+        this->cols() > static_cast<std::size_t>(std::numeric_limits<int>::max()) ||
+        this->height() > static_cast<std::size_t>(std::numeric_limits<int>::max())
+      ) {
+        throw std::overflow_error("Size exceeds the range of int");
+      }
+      // int array_of_sizes[]    = {Nx+2, Ny+2, Nz+2};
+      int array_of_sizes[] = {
+        static_cast<int>(this->rows()),
+        static_cast<int>(this->cols()),
+        static_cast<int>(this->height())
+      };
+
       int array_of_subsizes[] = {Nx, Ny, Nz};
       int array_of_starts[]   = {0, 0, 0};
-      MPI_Type_create_subarray(dimension, array_of_sizes, array_of_subsizes, array_of_starts,
-                                  MPI_ORDER_C, MPI_DOUBLE, &Block);
+
+      MPI_Type_create_subarray( dimension, 
+                                array_of_sizes, 
+                                array_of_subsizes, 
+                                array_of_starts,
+                                MPI_ORDER_C, mpi_T, &Block);
+
       MPI_Type_commit(&Block);
 
       MPI_Send(&(*this)(i_idx, j_idx, k_idx), 1, Block, root, rank, comm);
+
+      MPI_Type_free(&Block);
     }
 
     if (rank == root)
@@ -234,20 +286,26 @@ namespace final_project
             throw std::overflow_error("Size exceeds the range of int");
           }
 
-          int array_of_sizes[] = {
+          int array_of_sizes[] = {  
             static_cast<int>(gather.Rows),
             static_cast<int>(gather.Cols),
             static_cast<int>(gather.Height)
           };
+
           int array_of_subsizes[] = {nx_list[pid]  , ny_list[pid]  , nz_list[pid]  };
           int array_of_starts[]   = {0, 0, 0};
-          MPI_Type_create_subarray(dimension, array_of_sizes, array_of_subsizes, array_of_starts,
-                                      MPI_ORDER_C, MPI_DOUBLE, &Block);
-          MPI_Type_commit(&Block);
 
-          MPI_Recv(&gather( s0_list[pid], s1_list[pid], s2_list[pid]), 1, Block, pid, 
-                                          pid, comm, MPI_STATUS_IGNORE);
-          MPI_Type_free(&Block);
+          MPI_Type_create_subarray( dimension, 
+                                    array_of_sizes, 
+                                    array_of_subsizes, 
+                                    array_of_starts,
+                                    MPI_ORDER_C, mpi_T, &temp);
+          MPI_Type_commit(&temp);
+
+          MPI_Recv( &gather( s0_list[pid], s1_list[pid], s2_list[pid]), 1, 
+                    temp, pid, pid, comm, MPI_STATUS_IGNORE);
+
+          MPI_Type_free(&temp);
         }
       }
     }
