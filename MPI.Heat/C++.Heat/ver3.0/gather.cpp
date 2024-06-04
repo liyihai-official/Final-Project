@@ -45,7 +45,7 @@ namespace final_project
 
     // Add Boundary Conditions
     if (rank == 0) --starts[0], ++N;
-    if (rank == num_proc -1) ++N;
+    if (rank == num_proc -1)    ++N;
 
     MPI_Gather(starts, 1, MPI_INT, s_list, 1, MPI_INT, root, comm);
 
@@ -225,7 +225,6 @@ namespace final_project
     MPI_Gather(&starts[1], 1, MPI_INT, s1_list, 1, MPI_INT, root, comm);
     MPI_Gather(&starts[2], 1, MPI_INT, s2_list, 1, MPI_INT, root, comm);
 
-    // narrowing : std::size_t --->>  MPI_INT
     MPI_Gather(&Nx       , 1, MPI_INT, nx_list, 1, MPI_INT, root, comm);
     MPI_Gather(&Ny       , 1, MPI_INT, ny_list, 1, MPI_INT, root, comm);
     MPI_Gather(&Nz       , 1, MPI_INT, nz_list, 1, MPI_INT, root, comm);
@@ -239,7 +238,7 @@ namespace final_project
       ) {
         throw std::overflow_error("Size exceeds the range of int");
       }
-      // int array_of_sizes[]    = {Nx+2, Ny+2, Nz+2};
+
       int array_of_sizes[] = {
         static_cast<int>(this->rows()),
         static_cast<int>(this->cols()),
@@ -292,7 +291,7 @@ namespace final_project
             static_cast<int>(gather.Height)
           };
 
-          int array_of_subsizes[] = {nx_list[pid]  , ny_list[pid]  , nz_list[pid]  };
+          int array_of_subsizes[] = {nx_list[pid], ny_list[pid], nz_list[pid]};
           int array_of_starts[]   = {0, 0, 0};
 
           MPI_Type_create_subarray( dimension, 
