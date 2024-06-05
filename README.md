@@ -88,9 +88,9 @@ $$ -->
     - [x] Run Strong-Weak Scaling tests on Cluster
 
 - Results of Scaling Tests
-<img src="MPI.Heat/C++.Heat/ver3.0/benchmark.results.25.5.first/StrongNew1.png" alt="Animated GIF" height="500">
-<img src="MPI.Heat/C++.Heat/ver3.0/benchmark.results.25.5.first/WeakNew1.png" alt="Animated GIF" height="500">
-<img src="MPI.Heat/C++.Heat/ver3.0/benchmark.results.25.5.first/WeakNew2.png" alt="Animated GIF" height="500">
+<img src="MPI.Heat/C++.Heat/ver3.0/benckmarks/benchmark.results.25.5.first/StrongNew1.png" alt="Animated GIF" height="500">
+<img src="MPI.Heat/C++.Heat/ver3.0/benckmarks/benchmark.results.25.5.first/WeakNew1.png" alt="Animated GIF" height="500">
+<img src="MPI.Heat/C++.Heat/ver3.0/benckmarks/benchmark.results.25.5.first/WeakNew2.png" alt="Animated GIF" height="500">
 
 ---
 #### May, 23, 2024
