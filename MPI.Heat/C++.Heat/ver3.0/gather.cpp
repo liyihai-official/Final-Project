@@ -40,7 +40,7 @@ namespace final_project
 
     std::size_t N {this->size() - 2};
 
-    int pid, i;
+    int pid;
     int s_list[num_proc], N_list[num_proc];
 
     // Add Boundary Conditions
@@ -48,7 +48,6 @@ namespace final_project
     if (rank == num_proc -1)    ++N;
 
     MPI_Gather(starts, 1, MPI_INT, s_list, 1, MPI_INT, root, comm);
-
     MPI_Gather(&N,     1, MPI_INT, N_list, 1, MPI_INT, root, comm);
 
     if (rank != root)
@@ -71,6 +70,9 @@ namespace final_project
         }
       }
     }
+
+    if (rank == 0) ++starts[0];
+
   } // array1d_distribute<T>::Gather1d
 
   /**
@@ -99,9 +101,10 @@ namespace final_project
 
     // Add Boundaries
     // Up
+    int starts_cpy[2] {starts[0], starts[1]};
     if (starts[0] == 1)
     {
-      -- starts[0];
+      -- starts_cpy[0];
       -- i_idx;
       ++ Nx;
     }
@@ -109,7 +112,7 @@ namespace final_project
     // Left
     if (starts[1] == 1)
     {
-      -- starts[1];
+      -- starts_cpy[1];
       -- j_idx;
       ++ Ny;
     }
@@ -122,8 +125,8 @@ namespace final_project
     MPI_Type_vector(Nx, Ny, this->cols(), mpi_T, &Block);
     MPI_Type_commit(&Block);
 
-    MPI_Gather(&starts[0], 1, MPI_INT, s0_list, 1, MPI_INT, root, comm);
-    MPI_Gather(&starts[1], 1, MPI_INT, s1_list, 1, MPI_INT, root, comm);
+    MPI_Gather(&starts_cpy[0], 1, MPI_INT, s0_list, 1, MPI_INT, root, comm);
+    MPI_Gather(&starts_cpy[1], 1, MPI_INT, s1_list, 1, MPI_INT, root, comm);
 
     // narrowing : std::size_t --->>  MPI_INT
     MPI_Gather(&Nx       , 1, MPI_INT, nx_list, 1, MPI_INT, root, comm);
@@ -141,9 +144,9 @@ namespace final_project
       {
         if (pid == root)
         {
-          for (i = starts[0]; i <= ends[0]; ++i)
+          for (i = starts_cpy[0]; i <= ends[0]; ++i)
           {
-            memcpy(&gather(i, starts[1]), &(*this)(i, starts[1]), ny_list[pid]*sizeof(T));
+            memcpy(&gather(i, starts_cpy[1]), &(*this)(i, starts_cpy[1]), ny_list[pid]*sizeof(T));
           }
         }
 
@@ -191,10 +194,11 @@ namespace final_project
     int nx_list[num_proc], ny_list[num_proc], nz_list[num_proc];
 
     // Add Boundaries
+    int starts_cpy[3] {starts[0], starts[1], starts[2]};
     // Back
     if (starts[0] == 1)
     {
-      -- starts[0];
+      -- starts_cpy[0];
       -- i_idx;
       ++ Nx;
     }
@@ -202,7 +206,7 @@ namespace final_project
     // Up
     if (starts[1] == 1)
     {
-      -- starts[1];
+      -- starts_cpy[1];
       -- j_idx;
       ++ Ny;
     }
@@ -210,7 +214,7 @@ namespace final_project
     // Left
     if (starts[2] == 1)
     {
-      -- starts[2];
+      -- starts_cpy[2];
       -- k_idx;
       ++ Nz;
     }
@@ -221,9 +225,9 @@ namespace final_project
 
     // End of Add Boundaries
 
-    MPI_Gather(&starts[0], 1, MPI_INT, s0_list, 1, MPI_INT, root, comm);
-    MPI_Gather(&starts[1], 1, MPI_INT, s1_list, 1, MPI_INT, root, comm);
-    MPI_Gather(&starts[2], 1, MPI_INT, s2_list, 1, MPI_INT, root, comm);
+    MPI_Gather(&starts_cpy[0], 1, MPI_INT, s0_list, 1, MPI_INT, root, comm);
+    MPI_Gather(&starts_cpy[1], 1, MPI_INT, s1_list, 1, MPI_INT, root, comm);
+    MPI_Gather(&starts_cpy[2], 1, MPI_INT, s2_list, 1, MPI_INT, root, comm);
 
     MPI_Gather(&Nx       , 1, MPI_INT, nx_list, 1, MPI_INT, root, comm);
     MPI_Gather(&Ny       , 1, MPI_INT, ny_list, 1, MPI_INT, root, comm);
@@ -267,11 +271,11 @@ namespace final_project
       {
         if (pid == root)
         {
-          for ( i = starts[0]; i <= ends[0]; ++i)
+          for ( i = starts_cpy[0]; i <= ends[0]; ++i)
           {
-            for ( j = starts[1]; j <= ends[1]; ++j)
-              memcpy( &gather( i, j, starts[2]), 
-                      &(*this)(i, j, starts[2]), nz_list[pid]*sizeof(T));
+            for ( j = starts_cpy[1]; j <= ends[1]; ++j)
+              memcpy( &gather( i, j, starts_cpy[2]), 
+                      &(*this)(i, j, starts_cpy[2]), nz_list[pid]*sizeof(T));
           }
         }
 

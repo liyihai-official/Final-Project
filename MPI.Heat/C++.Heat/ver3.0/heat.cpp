@@ -44,23 +44,34 @@ namespace final_project
       public:
         void sweep_heat1d(heat1d_pure_mpi<T>& out)
         {
-          for (std::size_t i = 1; i <= body.size() - 2; ++i)
+          std::size_t i;
+
+          for (i = 1; i <= body.size() - 2; ++i)
           {
             double current = body(i);
-
-            if (body.rank == 0)
-            {
-
-            }
-
-            if (body.rank == body.num_proc - 1)
-            {
-              
-            }
 
             out.body(i) =  weight * (body(i-1) + body(i+1)) 
                         + current * diag * weight;
           }
+
+          // Left
+          if (body.rank == 0)
+          {
+            i = 0;
+
+            body(i) = body(i+1) + 2 * hx;  // Neumann Boundary Updates
+            // body(i) = body(i+1) + beta * hx - alpha * g;  // Bobin Boundary Updates
+          }
+
+          // Right
+          if (body.rank == body.num_proc - 1)
+          {
+            i = body.size() - 1;
+            
+            body(i) = body(i-1) - 2 * hx; // Neumann Boundary Updates
+            // body(i) = body(i+1) - beta * hx + alpha * g;  // Bobin Boundary Updates
+          }
+
         }
 
       private:
@@ -82,6 +93,7 @@ namespace final_project
       public:
         heat2d_pure_mpi(std::size_t gRows, std::size_t gCols, const int dims[2], MPI_Comm comm)
         {
+
           body.distribute(gRows, gCols, dims, comm);
 
           hx = (double) (max_x - min_x) / (double) (gRows+1);
@@ -106,19 +118,19 @@ namespace final_project
           // Neumann boundary condition
           /* Up */
           if (body.starts[0] == 1) 
-            for (j = 1; j <= Ny; ++j) out.body(0, j) = body(0, j);
+            for (j = 1; j <= Ny; ++j) body(0, j) = body(1, j) + 1 * hy;
 
           /* Left */
           if (body.starts[1] == 1)
-            for (i = 1; i <= Nx; ++i) out.body(i, 0) = body(i, 0); 
-            
+            for (i = 1; i <= Nx; ++i) body(i, 0) = body(i, 1) - 2 * hx; 
+             
           /* Down */
           if (body.ends[0] == body.glob_Rows - 2)
-            for (j = 1; j <= Ny; ++j) out.body(Nx+1, j) = body(Nx+1, j);
+            for (j = 1; j <= Ny; ++j) body(Nx+1, j) = body(Nx, j ) + 1 * hy;
 
           /* Right */
           if (body.ends[1] == body.glob_Cols - 2)
-            for (i = 1; i <= Nx; ++i) out.body(i, Ny+1) = body(i, Ny+1);
+            for (i = 1; i <= Nx; ++i) body(i, Ny+1) = body(i, Ny+1);
 
           /* Inside */
           for (i = 1; i <= Nx; ++i)
@@ -150,6 +162,7 @@ namespace final_project
         heat3d_pure_mpi(std::size_t gRows, std::size_t gCols, std::size_t gHeights, 
                         const int dims[3], MPI_Comm comm)
         {
+
            body.distribute(gRows, gCols, gHeights, dims, comm);
 
             hx = (double) (max_x - min_x) / (double) (gRows+1);
@@ -166,6 +179,7 @@ namespace final_project
             diag_x = -2.0 + hx * hx / (body.dimension * coff * dt);
             diag_y = -2.0 + hy * hy / (body.dimension * coff * dt);
             diag_z = -2.0 + hz * hz / (body.dimension * coff * dt);
+
         }
       
       public:
@@ -193,7 +207,7 @@ namespace final_project
         double min_x {0}, max_x {1};
         double min_y {0}, max_y {1};
         double min_z {0}, max_z {1};
-        
+
     }; // class heat3d_pure_mpi
 
   } // namespace heat_equation

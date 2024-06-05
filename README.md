@@ -30,6 +30,9 @@ $$ -->
 
 ### Development Note
 
+<img src="MPI.Heat/C++.Heat/ver3.0/visualize/Heat_1D.gif" alt="Animated GIF" height="300">
+<img src="MPI.Heat/C++.Heat/ver3.0/visualize/Heat_2D.gif" alt="Animated GIF" height="300">
+
 ---
 #### Jun, 1-3, 2024
 - Working Directory: 
@@ -45,7 +48,7 @@ $$ -->
 - Visualization
     - Add I/O features and visualization programs.
 
-<img src="MPI.Heat/C++.Heat/ver3.0/Heat_2D.gif" alt="Animated GIF" height="300">
+<!-- <img src="MPI.Heat/C++.Heat/ver3.0/Heat_2D.gif" alt="Animated GIF" height="300"> -->
 
 ---
 #### May, 29-30, 2024

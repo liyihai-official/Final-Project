@@ -1,11 +1,11 @@
 /**
  * @file initialization.cpp
- * @brief This file contains functions to initialize the boundary conditions
- *        for a 2D heat equation simulation. 
+ * @brief This file contains functions to initialize the initial conditions
+ *        for heat equations simulation. 
  *        
  * 
  * The functions provided in this file are designed to set up the initial
- * conditions for both regular and distributed 2D arrays used in parallel
+ * conditions for both regular and distributed arrays used in parallel
  * processing environments.
  * 
  * 
@@ -46,8 +46,8 @@ void init_conditions_heat1d(final_project::array1d_distribute<T>& ping,
   /* Left */
   if (ping.starts[0] == 1)
   {
-    ping(0) = 1;
-    pong(0) = 1;
+    ping(0) = 10;
+    pong(0) = 10;
   }
   
   /* Right */
@@ -83,7 +83,6 @@ void init_conditions_heat2d(final_project::array2d<T> & init)
   {
     init(0, j) = 1;
   }
-
 
   for (j = 0; j <= ny; ++j)
   {

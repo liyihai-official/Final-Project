@@ -32,7 +32,8 @@ namespace final_project
 {
 
   template <class T>
-  class array1d_distribute : public array1d<T> {
+  class array1d_distribute : public array1d<T> 
+  {
     public:
       std::size_t glob_N;
 
@@ -83,7 +84,8 @@ namespace final_project
    * @tparam T The type of the elements stored in the array.
    */
   template <class T>
-  class array2d_distribute : public array2d<T> {
+  class array2d_distribute : public array2d<T> 
+  {
     public:
       std::size_t glob_Rows, glob_Cols;
 

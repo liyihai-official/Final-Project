@@ -59,10 +59,10 @@ int main (int argc, char ** argv)
 
   init_conditions_heat2d(a.body, b.body);
 
-
   t1 = MPI_Wtime();
   for ( i = 0; i < MAX_it; ++i )
   {
+    
     a.sweep_heat2d(b);
     b.body.I_exchange2d();
 
@@ -74,17 +74,17 @@ int main (int argc, char ** argv)
 
     if (glob_diff <= tol) {break;}
 
-    // if (i % 1000 == 0) {
-    //   char buffer[50];
-    //   std::sprintf(buffer, "visualize/mat_%d.bin", i);
-    //   a.Gather2d(gather, root, comm_cart);
-    //   if (world.rank() == 0) gather.saveToBinaryFile(buffer);
-    // }
+    if (i % 100 == 0) {
+      char buffer[50];
+      std::sprintf(buffer, "visualize/mat_%d.bin", i);
+      a.body.Gather2d(gather, root, comm_cart);
+      if (world.rank() == 0) gather.saveToBinaryFile(buffer);
+    }
 
   }
   t2 = MPI_Wtime();
   
-  final_project::print_in_order(a.body);
+  // final_project::print_in_order(a.body);
 
   t2 -= t1;
   t1 = 0;
@@ -96,7 +96,7 @@ int main (int argc, char ** argv)
   {
     std::cout << "it" << " " << "t" << std::endl;
     std::cout << i << " " << t1 * 1000 << std::endl;
-    std::cout << gather << std::endl;
+    // std::cout << gather << std::endl;
     // gather.saveToBinaryFile("mat.bin");
   }
    

@@ -279,15 +279,7 @@ namespace final_project {
        * @param std::string& filename The filename
       */
       void saveToBinaryFile(const std::string& filename) const;
-      // {
-      //     std::ofstream ofs(filename, std::ios::binary);
-      //     if (!ofs) {
-      //         throw std::runtime_error("Cannot open file");
-      //     }
-      //     ofs.write(reinterpret_cast<const char*>(&Rows), sizeof(Rows));
-      //     ofs.write(reinterpret_cast<const char*>(&Cols), sizeof(Cols));
-      //     ofs.write(reinterpret_cast<const char*>(this->data.get()), this->size() * sizeof(T));
-      // }
+
   }; /* class array2d */
 
 
@@ -410,16 +402,7 @@ namespace final_project {
        * @param std::string& filename The filename
       */
       void saveToBinaryFile(const std::string& filename) const;
-      // {
-      //     std::ofstream ofs(filename, std::ios::binary);
-      //     if (!ofs) {
-      //         throw std::runtime_error("Cannot open file");
-      //     }
-      //     ofs.write(reinterpret_cast<const char*>(&Rows), sizeof(Rows));
-      //     ofs.write(reinterpret_cast<const char*>(&Cols), sizeof(Cols));
-      //     ofs.write(reinterpret_cast<const char*>(&Height), sizeof(Height));
-      //     ofs.write(reinterpret_cast<const char*>(this->data.get()), this->size() * sizeof(T));
-      // }
+ 
   };  /* class array3d */
 
 } // namespace final_project

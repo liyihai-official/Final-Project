@@ -71,12 +71,12 @@ int main (int argc, char ** argv)
 
     if (glob_diff <= tol) {break;}
 
-    // if (i % 100 == 0) {
-    //   char buffer[50];
-    //   std::sprintf(buffer, "visualize/mat_%d.bin", i);
-    //   a.body.Gather1d(gather, root, comm_cart);
-    //   if (world.rank() == 0) gather.saveToBinaryFile(buffer);
-    // }
+    if (i % 100 == 0) {
+      char buffer[50];
+      std::sprintf(buffer, "visualize/mat_%d.bin", i);
+      a.body.Gather1d(gather, root, comm_cart);
+      if (world.rank() == 0) gather.saveToBinaryFile(buffer);
+    }
   }
   t2 = MPI_Wtime();
 

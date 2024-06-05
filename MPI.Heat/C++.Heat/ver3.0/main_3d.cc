@@ -58,7 +58,7 @@ int main ( int argc, char ** argv)
   auto B = final_project::heat_equation::heat3d_pure_mpi<double>(MAX_N_X, MAX_N_Y, MAX_N_Z, dims, comm_cart);
 
   init_conditions_heat3d(A.body, B.body);
-  init_conditions_heat3d(gather);
+  // init_conditions_heat3d(gather);
 
   t1 = MPI_Wtime();
   for ( i = 0; i < MAX_it; ++i )
@@ -73,12 +73,12 @@ int main ( int argc, char ** argv)
     MPI_Allreduce(&loc_diff, &glob_diff, 1, MPI_DOUBLE, MPI_SUM, comm_cart);
 
     if (glob_diff <= tol) {break;}
-    if (i % 100 == 0) {
-      char buffer[50];
-      std::sprintf(buffer, "visualize/mat_%d.bin", i);
-      A.body.Gather3d(gather, root, comm_cart);
-      if (world.rank() == 0) gather.saveToBinaryFile(buffer);
-    }    
+    // if (i % 100 == 0) {
+    //   char buffer[50];
+    //   std::sprintf(buffer, "visualize/mat_%d.bin", i);
+    //   A.body.Gather3d(gather, root, comm_cart);
+    //   if (world.rank() == 0) gather.saveToBinaryFile(buffer);
+    // }    
   }
   t2 = MPI_Wtime();
 
@@ -87,6 +87,10 @@ int main ( int argc, char ** argv)
   t2 -= t1;
   t1 = 0;
   MPI_Reduce(&t2, &t1, 1, MPI_DOUBLE, MPI_MAX, root, comm_cart);
+
+  MPI_Barrier(comm_cart);
+  final_project::print_in_order(A.body);
+  MPI_Barrier(comm_cart);
 
   A.body.Gather3d(gather, root, comm_cart);
   if (world.rank() == root ) 

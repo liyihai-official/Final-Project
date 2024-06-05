@@ -10,6 +10,7 @@ draft*
 *__pycache__
 *.vscode*
 *.h5
+*.bin
 *best_model_2d/*
 *strong_pro_main*
 *weak_pro_main*
