@@ -255,12 +255,14 @@ void init_conditions_heat3d(final_project::array3d_distribute<T>& ping,
   ping.fill(0);
   pong.fill(0);
 
+  double xx { 2 * std::numbers::pi / (nx+3) }, yy { 2 * std::numbers::pi / (ny+3) };
+
   /* Back */
   if (ping.starts[0] == 1) 
     for (j = 1; j <= ny_loc; ++j) {
       for (k = 1; k <= nz_loc; ++k) {
-        ping(0, j, k) = 10;
-        pong(0, j, k) = 10;
+        ping(0, j, k) = 0;
+        pong(0, j, k) = 0;
       }
     }
 
@@ -268,8 +270,8 @@ void init_conditions_heat3d(final_project::array3d_distribute<T>& ping,
   if (ping.starts[1] == 1) 
     for (i = 1; i <= nx_loc; ++i) {
       for (k = 1; k <= nz_loc; ++k) {
-        ping(i, 0, k) = 8;
-        pong(i, 0, k) = 8;
+        ping(i, 0, k) = 0;
+        pong(i, 0, k) = 0;
       }
     }
   
@@ -277,8 +279,8 @@ void init_conditions_heat3d(final_project::array3d_distribute<T>& ping,
   if (ping.starts[2] == 1) 
     for (i = 1; i <= nx_loc; ++i) {
       for (j = 1; j <= ny_loc; ++j) {
-        ping(i, j, 0) = 10;
-        pong(i, j, 0) = 10;
+        ping(i, j, 0) = 0;
+        pong(i, j, 0) = 0;
       }
     }
 
@@ -286,8 +288,8 @@ void init_conditions_heat3d(final_project::array3d_distribute<T>& ping,
   if (ping.ends[0] == nx)
     for (j = 1; j <= ny_loc; ++j) {
       for (k = 1; k <= nz_loc; ++k) {
-        ping(nx_loc+1, j, k) = 10;
-        pong(nx_loc+1, j, k) = 10;
+        ping(nx_loc+1, j, k) = 0;
+        pong(nx_loc+1, j, k) = 0;
       }
     }
 
@@ -295,8 +297,8 @@ void init_conditions_heat3d(final_project::array3d_distribute<T>& ping,
   if (ping.ends[1] == ny)
     for (i = 1; i <= nx_loc; ++i) {
       for (k = 1; k <= nz_loc; ++k) {
-        ping(i, ny_loc+1, k) = 10;
-        pong(i, ny_loc+1, k) = 10;
+        ping(i, ny_loc+1, k) = 0;
+        pong(i, ny_loc+1, k) = 0;
       }
     }
 
@@ -304,8 +306,8 @@ void init_conditions_heat3d(final_project::array3d_distribute<T>& ping,
   if (ping.ends[2] == nz)
     for (i = 1; i <= nx_loc; ++i) {
       for (j = 1; j <= ny_loc; ++j) {
-        ping(i, j, nz_loc+1) = 1;
-        pong(i, j, nz_loc+1) = 1;
+        ping(i, j, nz_loc+1) = 10 * std::abs(std::sin((i+ping.starts[0])*xx * (j+ping.starts[1])*yy / 4));
+        pong(i, j, nz_loc+1) = 10 * std::abs(std::sin((i+ping.starts[0])*xx * (j+ping.starts[1])*yy / 4));
       }
     }
 }

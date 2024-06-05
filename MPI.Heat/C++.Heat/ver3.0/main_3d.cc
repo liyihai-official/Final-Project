@@ -33,7 +33,7 @@
 #define MAX_it 2'000'000
 #endif
 
-#define tol 1E-13
+#define tol 1E-10
 
 int main ( int argc, char ** argv)
 {  
@@ -43,7 +43,7 @@ int main ( int argc, char ** argv)
   double loc_diff, glob_diff {10}, t1, t2;
   constexpr int reorder {1}, dimension {3}, root {0};
 
-  int dims[dimension], coords[dimension], periods[dimension];
+  int dims[dimension], periods[dimension];
   for (short int i = 0; i < dimension; ++i) {dims[i] = 0; periods[i] = 0;}
 
   /* MPI Cartesian Inits */
@@ -63,6 +63,7 @@ int main ( int argc, char ** argv)
   t1 = MPI_Wtime();
   for ( i = 0; i < MAX_it; ++i )
   {
+
     A.sweep_heat3d(B);
     A.body.I_exchange3d();
 
@@ -73,12 +74,14 @@ int main ( int argc, char ** argv)
     MPI_Allreduce(&loc_diff, &glob_diff, 1, MPI_DOUBLE, MPI_SUM, comm_cart);
 
     if (glob_diff <= tol) {break;}
-    // if (i % 100 == 0) {
-    //   char buffer[50];
-    //   std::sprintf(buffer, "visualize/mat_%d.bin", i);
-    //   A.body.Gather3d(gather, root, comm_cart);
-    //   if (world.rank() == 0) gather.saveToBinaryFile(buffer);
-    // }    
+
+    if (i % 500 == 0) {
+      char buffer[50];
+      std::sprintf(buffer, "visualize/mat_%d.bin", i);
+      A.body.Gather3d(gather, root, comm_cart);
+      if (world.rank() == 0) gather.saveToBinaryFile(buffer);
+    }    
+
   }
   t2 = MPI_Wtime();
 
@@ -88,16 +91,16 @@ int main ( int argc, char ** argv)
   t1 = 0;
   MPI_Reduce(&t2, &t1, 1, MPI_DOUBLE, MPI_MAX, root, comm_cart);
 
-  MPI_Barrier(comm_cart);
-  final_project::print_in_order(A.body);
-  MPI_Barrier(comm_cart);
+  // MPI_Barrier(comm_cart);
+  // final_project::print_in_order(A.body);
+  // MPI_Barrier(comm_cart);
 
   A.body.Gather3d(gather, root, comm_cart);
   if (world.rank() == root ) 
   {
     std::cout << "it" << " " << "t" << std::endl;
     std::cout << i << " " << t1 * 1000 << std::endl;
-    std::cout << gather << std::endl;
+    // std::cout << gather << std::endl;
     // gather.saveToBinaryFile("mat.bin");
   }
 

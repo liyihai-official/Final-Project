@@ -35,7 +35,7 @@
 
 #define tol 1E-10
 
-int main (int argc, char ** argv)
+int main ( int argc, char ** argv)
 {
   auto world = mpi::env(argc, argv);
 
@@ -59,10 +59,11 @@ int main (int argc, char ** argv)
 
   init_conditions_heat2d(a.body, b.body);
 
+
   t1 = MPI_Wtime();
   for ( i = 0; i < MAX_it; ++i )
   {
-    
+
     a.sweep_heat2d(b);
     b.body.I_exchange2d();
 
@@ -74,7 +75,7 @@ int main (int argc, char ** argv)
 
     if (glob_diff <= tol) {break;}
 
-    if (i % 100 == 0) {
+    if (i % 1000 == 0) {
       char buffer[50];
       std::sprintf(buffer, "visualize/mat_%d.bin", i);
       a.body.Gather2d(gather, root, comm_cart);

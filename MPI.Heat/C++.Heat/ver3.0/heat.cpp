@@ -185,7 +185,45 @@ namespace final_project
       public:
         void sweep_heat3d(heat3d_pure_mpi<T>& out)
         {
-          std::size_t i,j,k, Nx {body.rows() - 2}, Ny{body.cols() - 2}, Nz{body.height() - 2};
+          std::size_t i,j,k, Nx {body.rows() - 2}, Ny {body.cols() - 2}, Nz {body.height() - 2};
+
+          // // Neumann boundary condition
+          // Back
+          if (body.starts[0] == 1) 
+            for (j = 1; j <= Ny; ++j)
+              for (k = 1; k <= Nz; ++k) 
+                body(0, j, k) = body(1, j, k) - 2 * hx;
+          
+          // Up
+          if (body.starts[1] == 1)
+            for (i = 1; i <= Nx; ++i)
+              for (k = 1; k <= Nz; ++k)
+                body(i, 0, k) = body(i, 1, k) + 4 * hy;
+          
+          // Left
+          if (body.starts[2] == 1)
+            for (i = 1; i <= Nx; ++i)
+              for (j = 1; j <= Ny; ++j)
+                body(i, j, 0) = body(i, j, 1) - 4 * hz;
+
+          // Front
+          if (body.ends[0] == body.glob_Rows - 2)
+            for (j = 1; j <= Ny; ++j)
+              for (k = 1; k <= Nz; ++k) 
+                body(Nx+1, j, k) = body(Nx, j, k) - 2 * hx;
+
+          // Down
+          if (body.ends[1] == body.glob_Cols - 2)
+            for (i = 1; i <= Nx; ++i)
+              for (k = 1; k <= Nz; ++k)
+                body(i, Ny+1, k) = body(i, Ny, k) + 4 * hy;
+          
+          // Right
+          if (body.ends[2] == body.glob_Heights - 2)
+            for (i = 1; i <= Nx; ++i)
+              for (j = 1; j <= Ny; ++j)
+                body(i, j, Nz+1) = body(i, j, Nz+1); // - 1 * hz;
+
 
           for (i = 1; i <= Nx; ++i) 
             for (j = 1; j <= Ny; ++j) 

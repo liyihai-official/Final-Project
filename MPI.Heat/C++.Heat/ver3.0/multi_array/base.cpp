@@ -341,6 +341,14 @@ namespace final_project {
 
       reference operator() (size_type i, size_type j, size_type k)
       {
+        if (i < Rows && j < Cols && k < Height)
+        {
+
+        } else 
+        {
+          std::cout << i << " " << j << " " << k << std::endl;
+        }
+        
         return FINAL_PROJECT_ASSERT_MSG( (i < Rows && j < Cols && k < Height), "out of range"), this->data[i * (Cols * Height) + j * Height + k];
       }
 
