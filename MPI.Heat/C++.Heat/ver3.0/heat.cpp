@@ -155,6 +155,7 @@ namespace final_project
 
     template <class T>
     class heat3d_pure_mpi {
+
       public:
         array3d_distribute<T> body;
       
@@ -165,9 +166,9 @@ namespace final_project
 
            body.distribute(gRows, gCols, gHeights, dims, comm);
 
-            hx = (double) (max_x - min_x) / (double) (gRows+1);
-            hy = (double) (max_y - min_y) / (double) (gCols+1);
-            hz = (double) (max_z - min_z) / (double) (gHeights+1);
+            hx = (T) (max_x - min_x) / (T) (gRows+1);
+            hy = (T) (max_y - min_y) / (T) (gCols+1);
+            hz = (T) (max_z - min_z) / (T) (gHeights+1);
 
             dt = 0.125 * std::min({hx, hy, hz}) * std::min({hx, hy, hz}) / coff;
             dt = std::min(dt, 0.1);

@@ -181,7 +181,7 @@ namespace final_project
   template <class T>
   void array3d_distribute<T>::Gather3d(array3d<T>& gather, const int root, MPI_Comm comm)
   {
-    std::size_t i_idx {1}, j_idx{1}, k_idx{1};
+    size_type i_idx {1}, j_idx{1}, k_idx{1};
     
     MPI_Datatype Block, temp, mpi_T {get_mpi_type<T>()};
     

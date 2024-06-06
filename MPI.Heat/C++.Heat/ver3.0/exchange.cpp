@@ -203,7 +203,7 @@ namespace final_project
     {
       int flag;
 
-      std::size_t nx {this->rows() - 2}, ny {this->cols() - 2}, nz{this->height() - 2};
+      size_type nx {this->rows() - 2}, ny {this->cols() - 2}, nz{this->height() - 2};
 
       // Back / Front 
       flag = 0;
@@ -252,7 +252,7 @@ namespace final_project
       MPI_Request requests[12];
       int flag, request_count {0};
       
-      std::size_t nx {this->rows() - 2}, ny {this->cols() - 2}, nz {this->height() - 2};
+      size_type nx {this->rows() - 2}, ny {this->cols() - 2}, nz {this->height() - 2};
 
       // Back / Front
       flag = 0;
