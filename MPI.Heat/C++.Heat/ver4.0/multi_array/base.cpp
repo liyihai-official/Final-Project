@@ -26,7 +26,7 @@ namespace final_project {
 namespace _detail {
 namespace _multi_array {
 
-template <class _T, _size_type _NumDim>
+template <class _T, _detail::_types::_size_type _NumDim>
 class _array {
   public:
     typedef _T         value_type;
@@ -35,11 +35,11 @@ class _array {
     typedef _T*        iterator;
     typedef const _T*  const_iterator;
 
-    typedef final_project::_detail::_size_type            _size_type;
-    typedef final_project::_detail::_multi_array_shape<_NumDim> _shape_type;
+    typedef final_project::_detail::_types::_size_type                  _size_type;
+    typedef final_project::_detail::_types::_multi_array_shape<_NumDim> _shape_type;
   
   public:
-    _shape_type           _shape;
+    _shape_type            _shape;
     std::unique_ptr<_T[]>  _data;
   
   public:
@@ -48,8 +48,8 @@ class _array {
 
   public:
     // Sizes
-    const _size_type size()       { return _shape.size(); }
-    const _size_type size() const { return _shape.size(); }
+    _size_type size()       { return _shape.size(); }
+    _size_type size() const { return _shape.size(); }
 
     // Iterators
     iterator          begin()       { return _data.get(); }

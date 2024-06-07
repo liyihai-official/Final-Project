@@ -1,0 +1,49 @@
+#include "multi_array/base.cpp"
+#include "assert"
+#include "types"
+
+
+
+
+
+namespace final_project
+{
+
+typedef final_project::_detail::_types::_size_type          size_type;
+
+  template <class T, size_type NumDims>
+  class array 
+  {
+    public:
+      typedef T   value_type;
+      typedef T&  reference;
+      
+      typedef _detail::_multi_array::_array<T, NumDims>          super_type;
+      typedef _detail::_types::_multi_array_shape<NumDims>       super_shape_type;
+
+    public:
+      template <typename ... Args>
+      array(Args ... args)
+      : _shape (std::make_unique<super_shape_type>(super_shape_type(args...))) ,
+        _mat(std::make_unique<super_type>(super_shape_type(args...))) {}
+    
+
+    public:
+      void fill(const T& value)                     { _mat->fill(value); }
+
+      size_type size()                        { return _shape->size();   }
+      size_type size()                 const  { return _shape->size();   }
+      size_type shape(size_type index) const  { return (*_shape)[index]; }
+      
+      template <typename ... Args>
+      reference operator()(Args ... args)     { return (*_mat)(args...); }
+      reference operator[] (size_type index)  { return (*_mat)[index];   }
+
+
+    private:
+      std::unique_ptr<super_shape_type> _shape;
+      std::unique_ptr<super_type> _mat;
+  };
+
+
+}
