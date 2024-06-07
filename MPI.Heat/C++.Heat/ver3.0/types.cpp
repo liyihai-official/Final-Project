@@ -5,6 +5,8 @@
 
 #include <mpi.h>
 #include <memory>
+#include <iostream>
+#include "assert.cpp"
 
 template<typename T>
 MPI_Datatype get_mpi_type();
@@ -23,42 +25,78 @@ namespace final_project
   namespace _detail 
   {
 
+// General size types
     typedef std::size_t _size_type;
 
+
+// Multi-dimension Array shape Types
+template <_size_type NumDims>
+struct _multi_array_shape 
+{
+  typedef final_project::_detail::_size_type _size_type;
+
+  std::unique_ptr<_size_type[]> sizes;
+
+  // _multi_array_shape() : sizes(std::make_unique<_size_type[]>(NumDims)) {}
+
+  template <typename ... Args>
+  _multi_array_shape(Args ... args) 
+    : sizes(std::make_unique<_size_type[]>(NumDims))
+  {
+
+FINAL_PROJECT_ASSERT_MSG((sizeof...(args) == NumDims), "Number of arguments must match the number of dimensions.");
+
+    _size_type temp[] = { static_cast<_size_type>(args)... };
+    std::copy(temp, temp + NumDims, sizes.get());
     
+  }
 
-    template <typename T>
-    struct _mpi_topology
-    {
-      int rank, num_proc, dimension;
-      std::unique_ptr<int[]> neighbors, starts, ends, coordinates;
+  _multi_array_shape(const _multi_array_shape& other)
+    : sizes (std::make_unique<_size_type[]>(NumDims))
+  {
+    std::copy(other.sizes.get(), other.sizes.get() + NumDims, sizes.get());
+  }
 
-      MPI_Comm comm;
-      MPI_Datatype type{get_mpi_type<T>()};
-    };
+//   _multi_array_shape& operator= (const _multi_array_shape& other)
+//   {
+//     if (this != &other)
+//     {
+// FINAL_PROJECT_ASSERT_MSG((NumDims == other.dim()), "Dimension mismatch in assignment. ");
 
+// sizes = std::make_unique<_size_type[]>(NumDims);
+// std::copy(other.sizes.get(), other.sizes.get()+ NumDims, sizes.get());
+//     }
 
-    template <std::size_t NumDims>
-    struct _multi_array_shape 
-    {
-      typedef final_project::_detail::_size_type _size_type;
+//     return *this;
+//   }
 
-      std::unique_ptr<_size_type[]> sizes;
+  _size_type& operator[] (_size_type index) { return sizes[index]; }
 
-      _multi_array_shape() : sizes(std::make_unique<_size_type[]>(NumDims)) {}
+  const _size_type& operator[] (_size_type index) const { return sizes[index]; }
 
-      _size_type& operator[] (_size_type index) { return sizes[index]; }
+  const _size_type dim() const { return NumDims; }
 
-      const _size_type& operator[] (_size_type index) const { return sizes[index]; }
+  const _size_type size() const {
+    _size_type total {1} ;
+    for (_size_type i = 0; i < NumDims; ++i) total *= sizes[i];
+    return total;
+  }
 
-      const _size_type dim() const { return NumDims; }
+  bool is_in(_size_type index) const { return index < this->size(); }  
+  
+};
 
-      const _size_type size() const {
-        _size_type total {1} ;
-        for (_size_type i = 0; i < NumDims; ++i) total *= sizes[i];
-        return total;
-      }
-    };
+// MPI_TOPOLOGY Types
+template <typename T>
+struct _mpi_topology
+{
+  int rank, num_proc, dimension;
+  std::unique_ptr<int[]> neighbors, starts, ends, coordinates;
+
+  MPI_Comm comm;
+  MPI_Datatype type{get_mpi_type<T>()};
+};
+
 
 
 

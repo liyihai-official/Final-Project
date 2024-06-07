@@ -59,7 +59,6 @@ int main ( int argc, char ** argv)
 
   init_conditions_heat2d(a.body, b.body);
 
-
   t1 = MPI_Wtime();
   for ( i = 0; i < MAX_it; ++i )
   {
@@ -97,7 +96,7 @@ int main ( int argc, char ** argv)
   {
     std::cout << "it" << " " << "t" << std::endl;
     std::cout << i << " " << t1 * 1000 << std::endl;
-    // std::cout << gather << std::endl;
+    std::cout << gather << std::endl;
     // gather.saveToBinaryFile("mat.bin");
   }
    

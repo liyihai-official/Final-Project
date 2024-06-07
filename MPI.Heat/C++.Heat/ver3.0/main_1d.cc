@@ -22,6 +22,8 @@
 #include "final_project.cpp"
 #include "heat.cpp"
 
+#include "types.cpp"
+
 #include <mpi.h>
 
 #if !defined(MAX_N_X)
@@ -44,7 +46,9 @@ int main (int argc, char ** argv)
 
   int dims[dimension], periods[dimension], corrds[dimension];
   for (short int i = 0; i < dimension; ++i) {dims[i] = 0; periods[i] = 0;}
-
+  
+  // final_project::_detail::_multi_array_shape<1> A (1,2);
+  
   /* MPI Cartesian Inits */
   MPI_Comm comm_cart;
   MPI_Dims_create(world.size(), dimension, dims);

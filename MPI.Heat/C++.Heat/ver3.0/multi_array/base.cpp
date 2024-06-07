@@ -25,22 +25,10 @@
 #include <iterator>
 #include <unistd.h>
 
-#include <mpi.h>
 #include <fstream>
 
+#include "types.cpp"
 #include "../assert.cpp"
-
-template<typename T>
-MPI_Datatype get_mpi_type();
-
-template<>
-MPI_Datatype get_mpi_type<int>()    { return MPI_INT; }
-
-template<>
-MPI_Datatype get_mpi_type<float>()  { return MPI_FLOAT; }
-
-template<>
-MPI_Datatype get_mpi_type<double>() { return MPI_DOUBLE; }
 
 /**
  * @brief Decompose a 1D problem among processors.
@@ -75,6 +63,7 @@ namespace final_project {
 //          1D array
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
   /**
    * @brief A 1D array class.
    * 
@@ -83,22 +72,32 @@ namespace final_project {
   template <class T>
   class array1d {
     public:
-      std::size_t N;
-      std::unique_ptr<T[]> data;
-
-    public:
-      array1d(std::size_t Num) 
-        : N {Num}, data{std::make_unique<T[]>(Num)} {}
-    
-    public:
       typedef T               value_type;
       typedef T&              reference;
       typedef const T&        const_reference;
       typedef T*              iterator;
       typedef const T*        const_iterator;
+
+
       typedef std::size_t     size_type;
+      typedef final_project::_detail::_size_type             _size_type;
+      typedef final_project::_detail::_multi_array_shape<1>  _shape_type;
+
+    public:
+      array1d(size_type Num) 
+        : N {Num}, data{std::make_unique<T[]>(Num)} {}
+      // array1d(_size_type Num) 
+      //   : _shape({Num}), data{std::make_unique<T[]>(Num)} {}
+
+  
+    public:
+      size_type N;
+      // _shape_type _shape;
+      std::unique_ptr<T[]> data;
 
       // Sizes
+      // const _size_type size()       { return _shape.size(); }
+      // const _size_type size() const { return _shape.size(); }
       const size_type size() { return N; }
       const size_type size() const { return N; }
 
@@ -107,22 +106,43 @@ namespace final_project {
       const_iterator    begin() const { return data.get(); }
       const_iterator   cbegin() const { return data.get(); }
 
+      // iterator            end()       { return data.get() + this->size(); }
+      // const_iterator      end() const { return data.get() + this->size(); }
+      // const_iterator     cend() const { return data.get() + this->size(); }
+
       iterator            end()       { return data.get() + N; }
       const_iterator      end() const { return data.get() + N; }
       const_iterator     cend() const { return data.get() + N; }
 
       // Operator ()
+      // reference operator() (size_type i)
+      // {
+      //   return FINAL_PROJECT_ASSERT_MSG( _shape.is_in(i) , "out of range"), data[i];
+      // }
       reference operator() (size_type i)
       {
         return FINAL_PROJECT_ASSERT_MSG( (i < N), "out of range"), data[i];
       }
 
+      // reference operator() (size_type i) const
+      // {
+      //   return FINAL_PROJECT_ASSERT_MSG( _shape.is_in(i) , "out of range"), data[i];
+      // }
       reference operator() (size_type i) const
       {
         return FINAL_PROJECT_ASSERT_MSG( (i < N), "out of range"), data[i];
       }
 
       // assignment operator = 
+  // template <typename T2>
+  // array1d<T>& operator= (const array1d<T2> & rhs)
+  // {
+  //   _shape = rhs._shape;
+  //   data = std::make_unique<T[]>(rhs.size());
+  //   std::copy(rhs.begin(), rhs.end(), begin());
+  //   return *this;
+  // }
+
       template <typename T2>
       array1d<T>& operator= (const array1d<T2> & rhs)
       {
@@ -172,14 +192,6 @@ namespace final_project {
    */
   template <class T>
   class array2d : public array1d<T> {
-    public:
-      std::size_t Rows, Cols;
-      // array1d<T> data;
-      // std::unique_ptr<T[]> data;
-      
-    public:
-      array2d(std::size_t Rows, std::size_t Cols) 
-        : Rows{Rows}, Cols{Cols}, array1d<T>(Rows * Cols) {}
 
     public:
       using typename array1d<T>::value_type;
@@ -204,6 +216,12 @@ namespace final_project {
       using array1d<T>::cbegin; // Inherit cbegin from array1d
       using array1d<T>::cend; // Inherit cend from array1d
 
+    public:
+      size_type Rows, Cols;
+      
+    public:
+      array2d(size_type Rows, size_type Cols) 
+        : Rows{Rows}, Cols{Cols}, array1d<T>(Rows * Cols) {}
 
     public:
 
@@ -283,7 +301,6 @@ namespace final_project {
   }; /* class array2d */
 
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //          3D array
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -340,15 +357,7 @@ namespace final_project {
       }
 
       reference operator() (size_type i, size_type j, size_type k)
-      {
-        if (i < Rows && j < Cols && k < Height)
-        {
-
-        } else 
-        {
-          std::cout << i << " " << j << " " << k << std::endl;
-        }
-        
+      {        
         return FINAL_PROJECT_ASSERT_MSG( (i < Rows && j < Cols && k < Height), "out of range"), this->data[i * (Cols * Height) + j * Height + k];
       }
 
@@ -414,6 +423,8 @@ namespace final_project {
   };  /* class array3d */
 
 } // namespace final_project
+
+
 
 
 

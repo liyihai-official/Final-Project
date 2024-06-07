@@ -26,16 +26,24 @@
 #include <fstream>
 
 #include "../assert.cpp"
+#include "../types.cpp"
 #include "base.cpp"
 
 namespace final_project 
 {
-
   template <class T>
   class array1d_distribute : public array1d<T> 
   {
     public:
-      std::size_t glob_N;
+      using typename array1d<T>::value_type;
+      using typename array1d<T>::reference;
+      using typename array1d<T>::const_reference;
+      using typename array1d<T>::iterator;
+      using typename array1d<T>::const_iterator;
+      using typename array1d<T>::size_type;
+
+    public:
+      size_type glob_N;
 
       /* MPI Topology Features */
       int rank, num_proc;
@@ -46,12 +54,12 @@ namespace final_project
 
       MPI_Comm communicator;
       MPI_Datatype type {get_mpi_type<T>()};
-    
+        
     public:
       array1d_distribute() : glob_N {0}, array1d<T> (0) {};
 
     public:
-      void distribute(std::size_t gN, const int dims[1], MPI_Comm comm)
+      void distribute(size_type gN, const int dims[1], MPI_Comm comm)
       {
         communicator = comm;
         glob_N = gN;
@@ -87,7 +95,15 @@ namespace final_project
   class array2d_distribute : public array2d<T> 
   {
     public:
-      std::size_t glob_Rows, glob_Cols;
+      using typename array2d<T>::value_type;
+      using typename array2d<T>::reference;
+      using typename array2d<T>::const_reference;
+      using typename array2d<T>::iterator;
+      using typename array2d<T>::const_iterator;
+      using typename array2d<T>::size_type;
+
+    public:
+      size_type glob_Rows, glob_Cols;
 
       /* MPI Topology Features */
       int rank, num_proc;
@@ -112,7 +128,7 @@ namespace final_project
        * @param dims Array of dimensions.
        * @param comm MPI communicator.
       */
-      void distribute(std::size_t gRows, std::size_t gCols, const int dims[2], MPI_Comm comm)
+      void distribute(size_type gRows, size_type gCols, const int dims[2], MPI_Comm comm)
       {
         communicator = comm;
         glob_Rows = gRows; glob_Cols = gCols;
@@ -192,7 +208,15 @@ namespace final_project
   template <class T>
   class array3d_distribute : public array3d<T> {
     public:
-      std::size_t glob_Rows, glob_Cols, glob_Heights;
+      using typename array3d<T>::value_type;
+      using typename array3d<T>::reference;
+      using typename array3d<T>::const_reference;
+      using typename array3d<T>::iterator;
+      using typename array3d<T>::const_iterator;
+      using typename array3d<T>::size_type;
+
+    public:
+      size_type glob_Rows, glob_Cols, glob_Heights;
 
       /* MPI Topology Features */
       int rank, num_proc;
@@ -217,7 +241,7 @@ namespace final_project
        * @param dims Array of dimensions.
        * @param comm MPI communicator.
       */
-      void distribute(std::size_t gRows, std::size_t gCols, std::size_t gHeights, 
+      void distribute(size_type gRows, size_type gCols, size_type gHeights, 
                         const int dims[3], MPI_Comm comm)
       {
         communicator = comm;
@@ -250,14 +274,14 @@ namespace final_project
         // Left & Right
         int array_of_subsizes[] = {nx-2, ny-2, 1};
         MPI_Type_create_subarray(dimension, array_of_sizes, array_of_subsizes, array_of_starts,
-                                    MPI_ORDER_C, MPI_DOUBLE, &vecs[2]);
+                                    MPI_ORDER_C, get_mpi_type<T>(), &vecs[2]);
         MPI_Type_commit(&vecs[2]);
 
         // Up & Down
         array_of_subsizes[1] = 1;
         array_of_subsizes[2] = nz-2;
         MPI_Type_create_subarray(dimension, array_of_sizes, array_of_subsizes, array_of_starts,
-                                    MPI_ORDER_C, MPI_DOUBLE, &vecs[1]);
+                                    MPI_ORDER_C, get_mpi_type<T>(), &vecs[1]);
         MPI_Type_commit(&vecs[1]);  
 
         this->resize(nx, ny, nz);
@@ -286,14 +310,18 @@ namespace final_project
   {
     FINAL_PROJECT_ASSERT_MSG((ping.N == pong.N), "Different Shape!");
 
-    double temp, diff {0.0};
+    double diff {0.0};
     for (std::size_t i = 0; i < ping.size(); i++)
     {
-      temp = ping(i) - pong(i);
+      double temp = ping(i) - pong(i);
       diff += temp * temp;
     }
 
     return diff;
+
+#if __cplusplus <= 201103L
+  std::cout << " Hello \n";
+#endif
   }
   
   /**
@@ -309,12 +337,13 @@ namespace final_project
   {
     FINAL_PROJECT_ASSERT_MSG((ping.Rows == pong.Rows && ping.Cols == pong.Cols), "Different Shape!");
 
-    double temp, diff {0.0};
+    double diff {0.0};
     for (std::size_t i = 0; i < ping.size(); i++)
     {
-      temp = ping(i) - pong(i);
+      double temp = ping(i) - pong(i);
       diff += temp * temp;
     }
+
 
     return diff;
   }  
@@ -333,10 +362,10 @@ namespace final_project
   {
     FINAL_PROJECT_ASSERT_MSG((ping.Rows == pong.Rows && ping.Cols == pong.Cols && ping.Height == pong.Height), "Different Shape!");
 
-    double temp, diff {0.0};
+    double diff {0.0};
     for (std::size_t i = 0; i < ping.size(); i++)
     {
-      temp = ping(i) - pong(i);
+      double temp = ping(i) - pong(i);
       diff += temp * temp;
     }
 

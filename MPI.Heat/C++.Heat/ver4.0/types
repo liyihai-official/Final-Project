@@ -1,0 +1,45 @@
+#ifndef FINAL_PROJECT_TYPES_HPP_LIYIHAI
+#define FINAL_PROJECT_TYPES_HPP_LIYIHAI
+
+#include <mpi.h>
+#include <memory>
+#include <iostream>
+#include "assert"
+
+template<typename T>
+MPI_Datatype get_mpi_type();
+
+template<>
+MPI_Datatype get_mpi_type<int>()    { return MPI_INT; }
+
+template<>
+MPI_Datatype get_mpi_type<float>()  { return MPI_FLOAT; }
+
+template<>
+MPI_Datatype get_mpi_type<double>() { return MPI_DOUBLE; }
+
+namespace final_project
+{
+  namespace _detail 
+  {
+
+// General size types
+    typedef std::size_t _size_type;
+
+// MPI_TOPOLOGY Types
+template <typename T>
+struct _mpi_topology
+{
+  int rank, num_proc, dimension;
+  std::unique_ptr<int[]> neighbors, starts, ends, coordinates;
+
+  MPI_Comm comm;
+  MPI_Datatype type{get_mpi_type<T>()};
+};
+
+
+
+
+  }
+}
+#endif
