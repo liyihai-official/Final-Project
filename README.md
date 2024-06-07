@@ -30,6 +30,15 @@ $$ -->
 
 ### Development Note
 
+---
+#### Jun, 5-6, 2024
+- Working Directory: 
+```MPI.Heat/C++Heat/ver3.0```,  and ```ver4.0```.
+
+More features are planning to add on version 4.0, including Hybrid MPI/OpenMP parallelizing, Matrix Operations, higher dimension Matrices objects and higher level encapsulation of Matrices object.  
+
+---
+
 <img src="MPI.Heat/C++.Heat/ver3.0/visualize/Heat_1D.gif" alt="Animated GIF" height="300">
 <img src="MPI.Heat/C++.Heat/ver3.0/visualize/Heat_2D.gif" alt="Animated GIF" height="300">
 <img src="MPI.Heat/C++.Heat/ver3.0/visualize/Heat_3D.gif" alt="Animated GIF" height="300">
