@@ -2,7 +2,7 @@
   * @file array
   */
 #include "multi_array/base.cpp"
-#include "multi_array/array_distribute.cpp"
+#include "multi_array/distribute.cpp"
 
 #include "assert"
 #include "types"
