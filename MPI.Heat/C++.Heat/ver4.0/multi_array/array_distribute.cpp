@@ -1,3 +1,4 @@
+#pragma once 
 #include "base.cpp"
 #include "environment.cpp"
 
@@ -9,17 +10,32 @@ namespace _multi_array {
   class _array_distribute
   {
     public:
+      typedef _T          _value_type;
+      typedef const _T    _const_value_type;
+
+      typedef _T&         _reference;
+      typedef const _T&   _const_reference;
+
+      typedef _T*         _iterator;
+      typedef const _T*   _const_iterator;
+
       typedef _detail::_types::_size_type                   _size_type;
       typedef _detail::_types::_multi_array_shape<_NumDims> _super_array_shape;
+
+      typedef final_project::mpi::env                       _mpi_env;
+      typedef MPI_Datatype                                  _mpi_value_type;
       typedef _detail::_types::_mpi_topology<_T, _NumDims>  _topology;
 
-      typedef MPI_Datatype              _mpi_value_type;
-      typedef final_project::mpi::env   _mpi_env;
+    public:
+      std::unique_ptr<_array<_T, _NumDims>> _distr_array;
+
+      _topology _mpi_topo;
 
     public:
-      
-      std::unique_ptr<_array<_T, _NumDims>> _distr_array;
-      _topology _mpi_topo;
+      // sizes 
+      _size_type size()       {return _mpi_topo._loc_shape.size(); }
+      _size_type size() const {return _mpi_topo._loc_shape.size(); }
+
 
     public:
       _array_distribute(_super_array_shape _glob_shape, _mpi_env& _env)
@@ -27,7 +43,16 @@ namespace _multi_array {
       { 
         _distr_array = std::make_unique<_array<_T, _NumDims>>(_mpi_topo._loc_shape);
       }
-    
+      
+    public:
+      void fill (_const_reference value) { _distr_array->fill(value); }
+
+      template <class _U, _size_type _Dims>
+      friend std::ostream& operator<<(std::ostream& os, const _array_distribute<_U, _Dims>& in)
+      {
+        os << *(in._distr_array);
+        return os;
+      }
 
   };
 

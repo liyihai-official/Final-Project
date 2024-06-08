@@ -88,7 +88,7 @@ struct _mpi_topology
     
     MPI_Comm _comm_cart;
     MPI_Datatype  _type;
-    MPI_Datatype  vecs[_NumDims];
+    MPI_Datatype  _vecs[_NumDims];
     
   public:
     _mpi_topology( _super_array_shape _glob_shape, _mpi_env& _env )
@@ -100,8 +100,8 @@ struct _mpi_topology
       _periods = std::make_unique<int[]>(_dimension);
       _starts  = std::make_unique<int[]>(_dimension);
       _ends    = std::make_unique<int[]>(_dimension);
-      _coordinates = std::make_unique<int[]>(_dimension);
-      _neighbors   = std::make_unique<int[]>(_dimension * 2);
+      _coordinates = std::make_unique<int[]>(    _dimension);
+      _neighbors   = std::make_unique<int[]>(2 * _dimension);
 
       MPI_Dims_create(_env.size(), _dimension, _dims.get());
       MPI_Cart_create(_env.comm(), _dimension, _dims.get(), _periods.get(), 1, &_comm_cart);
@@ -144,9 +144,9 @@ struct _mpi_topology
       {
         _array_of_sub_sizes[i] = 1;
         MPI_Type_create_subarray(_dimension, _array_of_sizes, _array_of_sub_sizes, _array_of_starts, 
-                                MPI_ORDER_C, _type, &vecs[i]);
+                                MPI_ORDER_C, _type, &_vecs[i]);
 
-        MPI_Type_commit(&vecs[i]);
+        MPI_Type_commit(&_vecs[i]);
       }
 
     }

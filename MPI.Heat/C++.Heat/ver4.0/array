@@ -1,10 +1,11 @@
+/**
+  * @file array
+  */
 #include "multi_array/base.cpp"
+#include "multi_array/array_distribute.cpp"
+
 #include "assert"
 #include "types"
-
-
-
-
 
 namespace final_project
 {
@@ -18,14 +19,14 @@ typedef final_project::_detail::_types::_size_type          size_type;
       typedef T   value_type;
       typedef T&  reference;
       
-      typedef _detail::_multi_array::_array<T, NumDims>          super_type;
+      typedef _detail::_multi_array::_array<T, NumDims>          array_type;
       typedef _detail::_types::_multi_array_shape<NumDims>       super_shape_type;
 
     public:
       template <typename ... Args>
       array(Args ... args)
       : _shape (std::make_unique<super_shape_type>(super_shape_type(args...))) ,
-        _mat(std::make_unique<super_type>(super_shape_type(args...))) {}
+        _mat(std::make_unique<array_type>(super_shape_type(args...))) {}
     
 
     public:
@@ -47,10 +48,45 @@ typedef final_project::_detail::_types::_size_type          size_type;
         return os;
       }
 
-
     private:
       std::unique_ptr<super_shape_type> _shape;
-      std::unique_ptr<super_type> _mat;
+      std::unique_ptr<array_type> _mat;
+  };
+
+
+  template <class T, size_type NumDims>
+  class array_distribute
+  {
+    public:
+      typedef T value_type;
+      typedef T& reference;
+      typedef const T& const_reference;
+
+      typedef _detail::_multi_array::_array_distribute<T, NumDims>  array_type;
+      typedef _detail::_types::_multi_array_shape<NumDims>          super_array_shape;
+      
+      typedef mpi::env  mpi_env;
+    
+    public:
+      template <typename ... Args>
+      array_distribute(mpi_env& env, Args ... args) 
+      : _mat(std::make_unique<array_type>(super_array_shape(args ...), env)) 
+      { }
+
+    public:
+      void fill(const_reference value) { _mat->fill(value); }
+
+    private:
+      std::unique_ptr<array_type>      _mat;
+
+    public:
+      template <class U, size_type Dims>
+      friend std::ostream& operator<<(std::ostream& os, const array_distribute<U, Dims>& in)
+      {
+        os << *(in._mat);
+        return os;
+      }
+
   };
 
 
