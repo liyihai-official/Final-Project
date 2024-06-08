@@ -1,5 +1,5 @@
 /**
- * @file base.cpp
+ * @file multi_array/base.cpp
  * @brief This file contains the definition of the array classes
  *        and features for parallel processing.
  * 
@@ -7,7 +7,6 @@
  * features of a skeleton 1D, 2D and 3D array. And enhanced them into
  * distributed 1D, 2D and 3D array used in parallel processing 
  * environments.
- * 
  * 
  * @author LI Yihai
  * @version 4.0
@@ -27,10 +26,11 @@ namespace final_project {
 namespace _detail {
 namespace _multi_array {
 
-template <class _T, _detail::_types::_size_type _NumDim>
+template <class _T, _types::_size_type _NumDim>
 class _array {
   public:
     typedef _T         value_type;
+    typedef const _T   const_value_type;
     typedef _T&        reference;
     typedef const _T&  const_reference;
     typedef _T*        iterator;
@@ -44,7 +44,6 @@ class _array {
     std::unique_ptr<_T[]>  _data;
   
   public:
-    _array() = default;
     _array(_shape_type _shape) 
       : _shape {_shape}, _data {std::make_unique<_T[]>(_shape.size())} { }
 

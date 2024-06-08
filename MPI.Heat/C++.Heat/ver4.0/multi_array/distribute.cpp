@@ -6,7 +6,7 @@ namespace final_project {
 namespace _detail {
 namespace _multi_array {
 
-  template <class _T, _detail::_types::_size_type _NumDims>
+template <class _T, _detail::_types::_size_type _NumDims>
   class _array_distribute
   {
     public:

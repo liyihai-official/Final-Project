@@ -19,8 +19,8 @@ typedef final_project::_detail::_types::_size_type          size_type;
       typedef T   value_type;
       typedef T&  reference;
       
-      typedef _detail::_multi_array::_array<T, NumDims>          array_type;
-      typedef _detail::_types::_multi_array_shape<NumDims>       super_shape_type;
+      typedef _detail::_multi_array::_array<T, NumDims>     array_type;
+      typedef _detail::_types::_multi_array_shape<NumDims>  super_shape_type;
 
     public:
       template <typename ... Args>
