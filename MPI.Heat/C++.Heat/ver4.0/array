@@ -39,6 +39,14 @@ typedef final_project::_detail::_types::_size_type          size_type;
       reference operator()(Args ... args)     { return (*_mat)(args...); }
       reference operator[] (size_type index)  { return (*_mat)[index];   }
 
+    public:
+      template <class U, size_type Dims>
+      friend std::ostream& operator<<(std::ostream& os, const array<U, Dims>& in)
+      { 
+        os << *(in._mat);
+        return os;
+      }
+
 
     private:
       std::unique_ptr<super_shape_type> _shape;

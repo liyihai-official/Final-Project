@@ -19,6 +19,7 @@
 
 #include "types"
 #include "multi_types.cpp"
+#include <iomanip>
 #include <memory>
 
 
@@ -43,6 +44,7 @@ class _array {
     std::unique_ptr<_T[]>  _data;
   
   public:
+    _array() = default;
     _array(_shape_type _shape) 
       : _shape {_shape}, _data {std::make_unique<_T[]>(_shape.size())} { }
 
@@ -86,7 +88,47 @@ FINAL_PROJECT_ASSERT_MSG((index < _shape.size()), "Index out of range.");
     void fill (const_reference value)   { std::fill_n(begin(), size(), value); }
     void assign (const_reference value) { fill (value); }
 
-}; // class array 1d
+  public:
+template <class _U, _detail::_types::_size_type _Dims>
+friend std::ostream& operator<<(std::ostream& os, const _array<_U, _Dims>& in)
+{
+  // Helper function to print multi-dimensional array
+  auto print_recursive = [&](
+    auto&& self, const _array<_U, _Dims>& arr, 
+    _detail::_types::_size_type current_dim, 
+    _detail::_types::_size_type offset) -> void 
+  {
+    if (current_dim == _Dims - 1) 
+    {
+      os << "|";
+      for (_detail::_types::_size_type i = 0; i < arr._shape[current_dim]; ++i) 
+      {
+        os << std::fixed << std::setprecision(5) << std::setw(9) << arr._data[offset + i];
+      }
+      os << "|\n";
+    } 
+    else 
+    {
+      for (_detail::_types::_size_type i = 0; i < arr._shape[current_dim]; ++i) 
+      {
+        _detail::_types::_size_type next_offset = offset;
+        for (_detail::_types::_size_type j = current_dim + 1; j < _Dims; ++j) {
+          next_offset *= arr._shape[j];
+        }
+        next_offset += i * arr._shape[current_dim + 1];
+
+        self(self, arr, current_dim + 1, next_offset);
+      }
+      os << "\n";
+    }
+  };
+
+  print_recursive(print_recursive, in, 0, 0);
+
+  return os;
+}
+
+}; // class _array<_T, _NumDim>
 
 
 

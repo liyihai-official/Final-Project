@@ -40,7 +40,6 @@ struct _multi_array_shape
   _multi_array_shape(Args ... args) 
     : sizes(std::make_unique<_size_type[]>(_NumDims))
   {
-
 FINAL_PROJECT_ASSERT_MSG((sizeof...(args) == _NumDims), "Number of arguments must match the number of dimensions.");
 
     _size_type temp[] = { static_cast<_size_type>(args)... };
@@ -79,16 +78,17 @@ struct _mpi_topology
     typedef final_project::mpi::env      _mpi_env;
 
   public:
+    _super_array_shape  _glob_shape;
+    _super_array_shape  _loc_shape {_glob_shape};
+
     int _dimension {_NumDims};
     int _rank, _size;
     std::unique_ptr<int[]> _starts, _ends;
     std::unique_ptr<int[]> _dims, _periods, _neighbors, _coordinates;
     
-
     MPI_Comm _comm_cart;
-
-    _super_array_shape  _glob_shape;
-    MPI_Datatype        _type;
+    MPI_Datatype  _type;
+    MPI_Datatype  vecs[_NumDims];
     
   public:
     _mpi_topology( _super_array_shape _glob_shape, _mpi_env& _env )
@@ -125,12 +125,30 @@ struct _mpi_topology
         return 0;
       };
 
+      int _array_of_sizes[_dimension], _array_of_sub_sizes[_dimension], _array_of_starts[_dimension];
+
       for (int i = 0; i < _NumDims; ++i)
       {
         MPI_Cart_shift(_comm_cart, i, 1, &(_neighbors[2*i]), &(_neighbors[2*i+1]));
+
         decomp(_glob_shape[i]-2, _dims[i], _coordinates[i], _starts[i], _ends[i]);
+        _loc_shape[i] = _ends[i] - _starts[i] + 1 + 2; 
+
+        _array_of_sizes[i]  = _loc_shape[i];
+        _array_of_starts[i] = 0;
+
+        _array_of_sub_sizes[i] = _array_of_sizes[i] - 2;
       }
-      
+
+      for (int i = 0; i < _NumDims; ++i)
+      {
+        _array_of_sub_sizes[i] = 1;
+        MPI_Type_create_subarray(_dimension, _array_of_sizes, _array_of_sub_sizes, _array_of_starts, 
+                                MPI_ORDER_C, _type, &vecs[i]);
+
+        MPI_Type_commit(&vecs[i]);
+      }
+
     }
 
 };
