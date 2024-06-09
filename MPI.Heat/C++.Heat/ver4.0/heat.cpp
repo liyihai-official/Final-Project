@@ -21,6 +21,7 @@ namespace final_project {
 namespace heat_equation {
 
 typedef _detail::_types::_size_type _size_type;
+
 template <class _T, _size_type _NumDim>
 class _heat_pure_mpi {
   public:
@@ -34,8 +35,27 @@ class _heat_pure_mpi {
 
   template <typename ... Args>
   _heat_pure_mpi(mpi_env& env, Args ... args);
-
   void _sweep(_heat_pure_mpi<_T, _NumDim> & out);
+
+  public:
+    _T _coff {1}, _dt {0.1};
+    std::unique_ptr<_T[]> _hx, _min_x, _max_x, _weight, _diag;
+
+};
+
+template <class _T>
+class _heat_pure_mpi<_T, 2> {
+  public:
+  typedef array_distribute<_T, 2> _grid_type;
+  typedef mpi::env    mpi_env;
+
+  public:
+  array_distribute<_T, 2> _grid_world;
+
+  public:
+  template <typename ... Args>
+  _heat_pure_mpi(mpi_env& env, Args ... args);
+  void _sweep(_heat_pure_mpi<_T, 2> & out);
 
   public:
     _T _coff {1}, _dt {0.1};
@@ -84,13 +104,15 @@ template <typename ... Args>
     }
   }
 
-template <class _T, _size_type _NumDim>
-void _heat_pure_mpi<_T, _NumDim>::_sweep(_heat_pure_mpi<_T, _NumDim> & out)
-{
-  // std::cout << _grid_world[11] << std::endl;
+template <class _T>
+template <typename ... Args>
+  _heat_pure_mpi<_T, 2>::_heat_pure_mpi(mpi_env& env, Args ... args)
+  : _heat_pure_mpi<_T, _size_type(2)>(env, args ...) { }
 
-  /* Inside */
-  // for _size_type i = 1; i <
+template <class _T>
+void _heat_pure_mpi<_T, 2>::_sweep(_heat_pure_mpi<_T, 2> & out)
+{
+  std::cout << "HAHA\n";
 }
 
 } // namespace heat_equation

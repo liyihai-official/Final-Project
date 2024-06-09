@@ -33,8 +33,15 @@ template <class _T, _detail::_types::_size_type _NumDims>
 
     public:
       // sizes 
-      _size_type size()       {return _mpi_topo._loc_shape.size(); }
-      _size_type size() const {return _mpi_topo._loc_shape.size(); }
+      _size_type size()       { return _mpi_topo._loc_shape.size(); }
+      _size_type size() const { return _mpi_topo._loc_shape.size(); }
+      _super_array_shape shape()      const { return _mpi_topo._loc_shape;  } 
+      _super_array_shape glob_shape() const { return _mpi_topo._glob_shape; }
+
+
+      template <typename ... Args>
+      _reference operator()(Args ... args)     { return (*_distr_array)(args...); }
+      _reference operator[](_size_type index)  { return (*_distr_array)[index];   }
 
 
     public:
