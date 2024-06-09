@@ -36,9 +36,9 @@ typedef final_project::_detail::_types::_size_type          size_type;
       size_type size()                 const  { return _shape->size();   }
       size_type shape(size_type index) const  { return (*_shape)[index]; }
       
-      template <typename ... Args>
-      reference operator()(Args ... args)     { return (*_mat)(args...); }
-      reference operator[] (size_type index)  { return (*_mat)[index];   }
+      // template <typename ... Args>
+      // reference operator() (Args ... args)    { return (*_mat)(args...); }
+      // reference operator[] (size_type index)  { return (*_mat)[index];   }
 
     public:
       template <class U, size_type Dims>
@@ -72,6 +72,10 @@ typedef final_project::_detail::_types::_size_type          size_type;
       array_distribute(mpi_env& env, Args ... args) 
       : _mat(std::make_unique<array_type>(super_array_shape(args ...), env)) 
       { }
+
+      // template <typename ... Args>
+      // reference operator()(Args ... args)     { return (*_mat)(args...); }
+      // reference operator[] (size_type index)  { return (*_mat)[index];   }
 
     public:
       void fill(const_reference value) { _mat->fill(value); }

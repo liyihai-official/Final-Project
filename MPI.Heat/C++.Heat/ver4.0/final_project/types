@@ -24,26 +24,24 @@ namespace _detail {
 namespace _types {
 
   // Multi-dimension Array shape Types
-  template <_size_type _NumDims>
+template <_size_type _NumDims>
   struct _multi_array_shape 
   {
+  std::unique_ptr<_size_type[]> sizes;
 
-    std::unique_ptr<_size_type[]> sizes;
+  template <typename ... Args>
+  _multi_array_shape(Args ... args);
 
-    template <typename ... Args>
-    _multi_array_shape(Args ... args);
+  _multi_array_shape(const _multi_array_shape& other);
 
-    _multi_array_shape(const _multi_array_shape& other);
-
-    _size_type& operator[] (_size_type index);
-    const _size_type& operator[] (_size_type index) const;
+  _size_type& operator[] (_size_type index);
+  const _size_type& operator[] (_size_type index) const;
 
 
-    _size_type dim() const;
-    _size_type size() const;
+  _size_type dim() const;
+  _size_type size() const;
 
-    bool is_in(_size_type index) const;
-    
+  bool is_in(_size_type index) const; 
   };
 }
 }
