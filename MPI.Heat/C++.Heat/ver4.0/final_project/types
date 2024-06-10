@@ -1,6 +1,5 @@
-/** @file types 
- * 
-*/
+/// @file types
+/// 
 #ifndef FINAL_PROJECT_TYPES_HPP_LIYIHAI
 #define FINAL_PROJECT_TYPES_HPP_LIYIHAI
 
@@ -23,7 +22,8 @@ namespace final_project {
 namespace _detail {
 namespace _types {
 
-  // Multi-dimension Array shape Types
+/// @brief Multi-dimension Array shape Types
+/// @tparam _NumDims The number of dimensions.
 template <_size_type _NumDims>
   struct _multi_array_shape 
   {
@@ -37,9 +37,18 @@ template <_size_type _NumDims>
   _size_type& operator[] (_size_type index);
   const _size_type& operator[] (_size_type index) const;
 
-
+  /// @brief Give the dimension of the array
+  /// @return A _size_type number.
   _size_type dim() const;
+
+  /// @brief Give the total number of elements in array.
+  /// @return A _size_type number.
   _size_type size() const;
+
+  /// @brief 
+  /// @param idx 
+  /// @return 
+  _size_type size(_size_type idx) const;
 
   bool is_in(_size_type index) const; 
   };
@@ -96,6 +105,11 @@ template <_size_type _NumDims>
 for (_size_type i = 0; i < _NumDims; ++i) total *= sizes[i];
     return total;
   }
+
+template <_size_type _NumDims>
+  inline
+  _size_type _multi_array_shape<_NumDims>::size(_size_type index) const 
+  { return sizes[index]; }
 
 template <_size_type _NumDims>
   inline

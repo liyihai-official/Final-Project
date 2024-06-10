@@ -1,17 +1,32 @@
+///
+/// @file topology.cpp
+/// @brief This file contains the details of types design, specifically 
+/// for MPI Topology structure.
+///
+/// @version 4.1 Jun 7
+
+
 namespace final_project {
 namespace _detail {
 namespace _types {
 
-// General size types
+/// @brief Retrieve the MPI datatype for a given template type.
+///
+/// @tparam T the data type.
+/// @return MPI_Datatype The MPI type correspond for T data type.
 template<typename T>
 MPI_Datatype _get_mpi_type();
 
-// MPI_TOPOLOGY Types
+
+/// @brief Represents the topology information for MPI Cartesian 
+/// Topology structure which is aiming for Array distributing.
+/// @tparam _T The data type of elements.
+/// @tparam _NumDims The type used for dimensions and sizes.
 template <typename _T, _size_type _NumDims>
 struct _mpi_topology
 {
   public:
-  typedef _multi_array_shape<_NumDims> _super_array_shape;
+  typedef _multi_array_shape<_NumDims> _super_array_shape; 
   typedef final_project::mpi::env      _mpi_env;
 
   public:
@@ -28,6 +43,9 @@ struct _mpi_topology
   MPI_Datatype  _vecs[_NumDims];
     
   public:
+  /// @brief Constructor of _mpi_topology
+  /// @param _glob_shape The global of the array
+  /// @param _env  The MPI environment of distributed arrays.
   _mpi_topology( _super_array_shape _glob_shape, _mpi_env& _env );
 
 };
@@ -45,13 +63,12 @@ namespace _types {
 
 template<>
 MPI_Datatype _get_mpi_type<int>()    { return MPI_INT; }
-
+ 
 template<>
 MPI_Datatype _get_mpi_type<float>()  { return MPI_FLOAT; }
 
 template<>
 MPI_Datatype _get_mpi_type<double>() { return MPI_DOUBLE; }
-
 
 template <typename _T, _size_type _NumDims>
   inline

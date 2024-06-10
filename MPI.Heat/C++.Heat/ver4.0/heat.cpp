@@ -25,52 +25,38 @@ typedef _detail::_types::_size_type _size_type;
 template <class _T, _size_type _NumDim>
 class _heat_pure_mpi {
   public:
-  typedef array_distribute<_T, _NumDim> _grid_type;
+  typedef array::array_distribute<_T, _NumDim> _grid_type;
   typedef mpi::env    mpi_env;
 
   public:
-  array_distribute<_T, _NumDim> _grid_world;
+  _grid_type _grid_world;
 
   public:
-
   template <typename ... Args>
   _heat_pure_mpi(mpi_env& env, Args ... args);
-  void _sweep(_heat_pure_mpi<_T, _NumDim> & out);
+  virtual void _sweep(_heat_pure_mpi<_T, _NumDim> & out) {}
 
   public:
     _T _coff {1}, _dt {0.1};
     std::unique_ptr<_T[]> _hx, _min_x, _max_x, _weight, _diag;
-
 };
 
 template <class _T>
-class _heat_pure_mpi<_T, 2> {
-  public:
-  typedef array_distribute<_T, 2> _grid_type;
-  typedef mpi::env    mpi_env;
+  class _heat_2d 
+  : public _heat_pure_mpi<_T, 2> 
+  {
+    public:
+    using _heat_pure_mpi<_T, 2>::_heat_pure_mpi;
+    void _sweep(_heat_pure_mpi<_T, 2> & out) override;
 
-  public:
-  array_distribute<_T, 2> _grid_world;
+  };
 
-  public:
-  template <typename ... Args>
-  _heat_pure_mpi(mpi_env& env, Args ... args);
-  void _sweep(_heat_pure_mpi<_T, 2> & out);
-
-  public:
-    _T _coff {1}, _dt {0.1};
-    std::unique_ptr<_T[]> _hx, _min_x, _max_x, _weight, _diag;
-
-};
 
 
 } // namespace heat_equation
 } // namespace final_project
 
-
-
 namespace final_project {
-// namespace _detail {
 namespace heat_equation {
 
 template <class _T, _size_type _NumDim>
@@ -105,18 +91,20 @@ template <typename ... Args>
   }
 
 template <class _T>
-template <typename ... Args>
-  _heat_pure_mpi<_T, 2>::_heat_pure_mpi(mpi_env& env, Args ... args)
-  : _heat_pure_mpi<_T, _size_type(2)>(env, args ...) { }
+  void _heat_2d<_T>::_sweep(_heat_pure_mpi<_T, 2> & out)
+  {
+    auto shape {out._grid_world.shape()};
+    for (_size_type i = 1; i < shape.size(0)-1; ++i)
+    {
+      for (_size_type j = 1; j < shape.size(1)-1; ++j)
+      {
+        out._grid_world(i,j) = -1;
+      }
+    }
+  }
 
-template <class _T>
-void _heat_pure_mpi<_T, 2>::_sweep(_heat_pure_mpi<_T, 2> & out)
-{
-  std::cout << "HAHA\n";
-}
-
+  
 } // namespace heat_equation
-// } // namespace _detail
 } // namespace final_project
 
 

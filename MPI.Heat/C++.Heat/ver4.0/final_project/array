@@ -7,11 +7,14 @@
 #include "assert"
 #include "types"
 
-namespace final_project
-{
-
+namespace final_project {
+namespace array {
+  
 typedef final_project::_detail::_types::_size_type          size_type;
 
+  /// @brief The interface of array, can be accessed by users.
+  /// @tparam T The datatype of elements in array.
+  /// @tparam NumDims The number of dimensions.
   template <class T, size_type NumDims>
   class array 
   {
@@ -53,7 +56,9 @@ typedef final_project::_detail::_types::_size_type          size_type;
       std::unique_ptr<array_type> _mat;
   };
 
-
+  /// @brief The interface of distributed array, can be accessed by users.
+  /// @tparam T The datatype of elements in array.
+  /// @tparam NumDims The number of dimensions.
   template <class T, size_type NumDims>
   class array_distribute
   {
@@ -95,5 +100,5 @@ typedef final_project::_detail::_types::_size_type          size_type;
 
   };
 
-
+}
 }
