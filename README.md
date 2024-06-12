@@ -29,6 +29,13 @@ $$ -->
 <!-- <img src="Heat3D/Heat_3D.gif" alt="Animated GIF" height="200"> -->
 
 ### Development Note
+#### Jun, 7-10, 2024
+- Working Directory: 
+```MPI.Heat/C++Heat/ver3.0```,  and ```ver4.0```.
+
+Working on the Neuron Network features based on version 3.0 structure.
+Continuing developing version 4.0 which includes many enhancement on program Security, 
+Robustness, the more universal objects for matrices objects built in version 3.0.
 
 ---
 #### Jun, 5-6, 2024
