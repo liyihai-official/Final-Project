@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
-#include <fstream>
 
 #include <Eigen/Dense>
 
@@ -23,7 +22,7 @@ double relu(double x)            { return std::max(0.0, x); }
 double relu_derivative(double x) { return x > 0 ? 1.0 : 0.0; }
 
 double mytanh(double x)             { return std::tanh(x); }
-double mytanh_derivative(double x)  { return 1 - std::tanh(x) * std::tanh(x); }
+double mytanh_derivative(double x)  { return 1.0 / ( 1.0 + std::tanh(x) * std::tanh(x)); }
 
 double sigmoid(double x)              { return 1.0 / (1.0 + std::exp(-x)); }           
 double sigmoid_derivate(double x)     { return x * ( 1 - x ); }
@@ -54,12 +53,6 @@ class DenseLayer
   Eigen::VectorXd & get_ref_Bias()   { return b; }
 
   Eigen::VectorXd & get_ref_a() { return a; }
-  Eigen::VectorXd & get_ref_z() { return z; }
-
-  Eigen::MatrixXd get_derivative(std::string activate_function) { return     z.unaryExpr(
-      activate_function == "relu" ? [](double x){ return mytanh_derivative(x); } : 
-                                    [](double x) { return 1.0; } // Here is the Temporary Activation Function
-    ).asDiagonal() * W; }
 };
 
 /// @brief Initialize the Weights and Bias matrices and vectors By Xavier Strategy
@@ -73,6 +66,8 @@ DenseLayer::DenseLayer(int inSize, int outSize)
   W = Eigen::MatrixXd::Random(outSize, inSize) * std::sqrt(1.0 / inSize);
   b = Eigen::VectorXd::Random(outSize);
 
+  // z = Eigen::VectorXd::Zero(outSize);
+  // a = Eigen::VectorXd::Zero(outSize);
 }
 
 
@@ -83,7 +78,7 @@ Eigen::VectorXd DenseLayer::feedforward( const Eigen::VectorXd & input, std::str
 {
   z = W * input + b;
   a = z.unaryExpr( 
-    activate_function == "relu" ? [](double x) { return mytanh(x); } : 
+    activate_function == "relu" ? [](double x) { return relu(x); } : 
                                   [](double x) { return x; } // Here is the Temporary Activation Function
   );
   return a;
@@ -94,18 +89,20 @@ Eigen::VectorXd DenseLayer::feedforward( const Eigen::VectorXd & input, std::str
 /// @return Return the Delta_Out, of this Layer.
 Eigen::VectorXd DenseLayer::backward_propagation( const Eigen::VectorXd & Delta, std::string activate_function)
 {
+  
   Eigen::VectorXd Delta_Out = Delta.cwiseProduct(
     z.unaryExpr(
-      activate_function == "relu" ? [](double x){ return mytanh_derivative(x); } : 
+      activate_function == "relu" ? [](double x){ return relu_derivative(x); } : 
                                     [](double x) { return 1.0; } // Here is the Temporary Activation Function
     )
   );
+
   return Delta_Out;
 }
 
 void DenseLayer::update_trainable_weights(const Eigen::VectorXd & delta, const Eigen::VectorXd & a_prev, const double learning_rate)
 {
-  std::cout << "Hello FUCK \n";
+  
   W += learning_rate * delta * a_prev.transpose();
   b += learning_rate * delta;
 }
@@ -116,7 +113,9 @@ void DenseLayer::update_trainable_weights(const Eigen::VectorXd & delta, const E
 class NeuralNetwork
 {
   private:
-  Eigen::VectorXd a1, a2;
+  Eigen::MatrixXd W1,     W2;
+  Eigen::VectorXd b1,     b2;
+  Eigen::VectorXd z1, a1, z2, a2;
   
   DenseLayer HiddenLayer_1;
   DenseLayer OutputLayer;
@@ -130,6 +129,11 @@ class NeuralNetwork
               const std::vector<Eigen::VectorXd>& , 
               double, int);
 
+  // Gets
+  public:
+  // Eigen::MatrixXd get_Weight1() { return W1; }
+  // Eigen::MatrixXd get_Weight2() { return W2; }
+
 };
 
 
@@ -139,7 +143,14 @@ class NeuralNetwork
 /// @param outSize Output shape (1, outSize)
 NeuralNetwork::NeuralNetwork(int inSize, int hidSize, int outSize)
 {
-  // Inits of Weights and Bias With Layers Objects
+  // Inits of Weights and Bias
+  // W1 = Eigen::MatrixXd::Random(hidSize, inSize) * std::sqrt(1.0 / inSize);
+  // b1 = Eigen::VectorXd::Random(hidSize);
+  
+  // W2 = Eigen::MatrixXd::Random(outSize, hidSize) * std::sqrt(1.0 / hidSize);
+  // b2 = Eigen::VectorXd::Random(outSize);
+
+  // With Layers Objects
   HiddenLayer_1 = DenseLayer(inSize, hidSize);
   OutputLayer   = DenseLayer(hidSize, outSize);
 
@@ -149,6 +160,17 @@ NeuralNetwork::NeuralNetwork(int inSize, int hidSize, int outSize)
 /// @param input_data The input sample data.
 Eigen::VectorXd NeuralNetwork::feedforward( const Eigen::VectorXd & input_data )
 {
+  // z1 = W1 * input_data + b1;
+  // a1 = z1.unaryExpr(
+  //   [](double x) { return relu(x); }
+  // );
+
+  // z2 = W2 * a1 + b2;
+  // a2 = z2.unaryExpr(
+  //   [](double x) { return x; }
+  // );
+
+  // return a2;
 
   // With Layer Objects 
   a1 = HiddenLayer_1.feedforward(input_data, "relu");
@@ -158,57 +180,67 @@ Eigen::VectorXd NeuralNetwork::feedforward( const Eigen::VectorXd & input_data )
   return a2;
 }
 
+
 /// @brief 
-/// @param inputS_Boundary 
-/// @param labelS_Boundary 
+/// @param inputS 
+/// @param labelS 
 /// @param learning_rate 
 /// @param epochS 
-void NeuralNetwork::train(const std::vector<Eigen::VectorXd>& inputS_Boundary, 
-                          const std::vector<Eigen::VectorXd>& labelS_Boundary, 
-                          // const std::vector<Eigen::VectorXd>& inputS_Central,  
+void NeuralNetwork::train(const std::vector<Eigen::VectorXd>& inputS, 
+                          const std::vector<Eigen::VectorXd>& labelS, 
                           double learning_rate, int epochS)
 {
   for (int epoch = 0; epoch < epochS; ++epoch)
   {
     double total_Err {0.0};
-    // 累积梯度
-    Eigen::MatrixXd total_Delta2 = Eigen::MatrixXd::Zero(OutputLayer.get_ref_Weight().rows(), OutputLayer.get_ref_Weight().cols());
-    Eigen::MatrixXd total_Delta1 = Eigen::MatrixXd::Zero(HiddenLayer_1.get_ref_Weight().rows(), HiddenLayer_1.get_ref_Weight().cols());
-
-    for (std::size_t i = 0; i < inputS_Boundary.size(); ++i) // Feed the Network Sample by Sample
+    for (std::size_t i = 0; i < inputS.size(); ++i) // Feed the Network Sample by Sample
     {
       // Front Propagation
-      Eigen::VectorXd input  {inputS_Boundary[i]}, label {labelS_Boundary[i]};
+      Eigen::VectorXd input  {inputS[i]}, label {labelS[i]};
+
+      
       Eigen::VectorXd output {feedforward(input)};
 
+  
+      
       // Calculate Error
       Eigen::VectorXd Err = label - output;
       total_Err += Err.norm(); //                        Temporary Loss Function, L2 Norm.
 
-      // auto Delta_NN = HiddenLayer_1.get_derivative("relu");
-      // auto Hessian = 0.5 * (Delta_NN.transpose() * OutputLayer.get_ref_Weight().transpose() * OutputLayer.get_ref_Weight() * Delta_NN);
-
-      // total_Err += Hessian.trace() * Hessian.trace();
-      
       // Backward Propagation
-      Eigen::VectorXd Delta2 = OutputLayer.backward_propagation(Err, "none");
-      Eigen::VectorXd Delta1 = HiddenLayer_1.backward_propagation(OutputLayer.get_ref_Weight().transpose() * Delta2, "relu");
+      // Eigen::VectorXd Delta2 = Err.cwiseProduct(
+      //   z2.unaryExpr(
+      //     [](double x){ return 1.0; }
+      //   )
+      // );
 
-      // 累积梯度
-      std::cout << "----------------------------\n" << Delta2 << std::endl;
-      total_Delta2 += Delta2 * HiddenLayer_1.get_ref_a().transpose();
-      total_Delta1 += Delta1 * input.transpose();
+      // Eigen::VectorXd Delta1 = (W2.transpose() * Delta2).cwiseProduct(
+      //   z1.unaryExpr(
+      //     [](double x){ return relu_derivative(x); }
+      //   )
+      // );
 
+      // ----- 
+      
+
+      Eigen::VectorXd Delta3 = OutputLayer.backward_propagation(Err, "none");
+      Eigen::VectorXd Delta4 = HiddenLayer_1.backward_propagation(OutputLayer.get_ref_Weight().transpose() * Delta3, "relu");
+      
+      // std::cout << "\n ------------------ \n"  <<  Err << "\n" << Delta3 << std::endl;
       // Update Weights and Biases
-      // OutputLayer.update_trainable_weights(   Delta2,   HiddenLayer_1.get_ref_a(),  learning_rate);
-      // HiddenLayer_1.update_trainable_weights( Delta1,   input,                      learning_rate);
+      // W2 += learning_rate * Delta2 * a1.transpose();
+      // b2 += learning_rate * Delta2;
+
+      // W1 += learning_rate * Delta1 * input.transpose();
+      // b1 += learning_rate * Delta1;
+
+      // -----
+      OutputLayer.update_trainable_weights(Delta3,  HiddenLayer_1.get_ref_a(), learning_rate);
+      
+
+      HiddenLayer_1.update_trainable_weights(Delta4, input, learning_rate);
 
     }
-
-    
-    // 在处理完所有样本后更新权重和偏置
-    OutputLayer.update_trainable_weights(total_Delta2 / inputS_Boundary.size(), HiddenLayer_1.get_ref_a(), learning_rate);
-    HiddenLayer_1.update_trainable_weights(total_Delta1 / inputS_Boundary.size(), inputS_Boundary[0], learning_rate);
 
     // Verbose for showing details during Training.
     if (epoch % 100 == 0) std::cout << "Epoch " << epoch << " Total Error: " << total_Err << std::endl;
@@ -218,92 +250,38 @@ void NeuralNetwork::train(const std::vector<Eigen::VectorXd>& inputS_Boundary,
 
 int main ()
 {
+  
 
-  int inputS_Boundaryhape {2}, hiddenShape {5}, outputShape {1};
+  int inputShape {2}, hiddenShape {5}, outputShape {1};
 
   std::cout 
-  << inputS_Boundaryhape  << " "
+  << inputShape  << " "
   << hiddenShape << " "
   << outputShape << " "
   << std::endl;
 
-  NeuralNetwork nn(inputS_Boundaryhape, hiddenShape, outputShape);
+  NeuralNetwork nn(inputShape, hiddenShape, outputShape);
   // std::cout << "Before Train: \n" << nn.get_Weight1() << std::endl;
 
-  std::vector<Eigen::VectorXd> inputS_Boundary;
-  //  = {
-  //   Eigen::VectorXd::Zero(2),
-  //   Eigen::VectorXd::Ones(2)
-  // };
+  
+
+  std::vector<Eigen::VectorXd> inputS = {
+    Eigen::VectorXd::Zero(2),
+    Eigen::VectorXd::Ones(2)
+  };
+
+  std::vector<Eigen::VectorXd> labelS = {
+    Eigen::VectorXd::Ones(1),
+    Eigen::VectorXd::Zero(1)
+  };
 
 
-  std::vector<Eigen::VectorXd> labelS_Boundary;
-  //  = {
-  //   Eigen::VectorXd::Ones(1),
-  //   Eigen::VectorXd::Zero(1)
-  // };
+  nn.train(inputS, labelS, 0.01, 4000);
 
-  for (int i = 0; i < 100; ++i) {
-    // Generate a random 2D vector
-    Eigen::VectorXd temp = Eigen::VectorXd::Random(2);
-    inputS_Boundary.push_back(temp);
-
-    // Generate a label based on the first element of the vector
-    if (temp(0) * temp(0) + temp(1) * temp(1) <= 0.3) 
-    {
-      labelS_Boundary.push_back(Eigen::VectorXd::Ones(1)); // Label 1
-    } else {
-      labelS_Boundary.push_back(Eigen::VectorXd::Zero(1)); // Label 0
-    }
-  }
-
-  nn.train(inputS_Boundary, labelS_Boundary, 0.01, 30000);
-
-  std::cout << " ---------------------------------------------------- \n";
   std::cout << nn.feedforward(Eigen::VectorXd::Zero(2)) << std::endl; // A test for Forward Propagation
   std::cout << nn.feedforward(Eigen::VectorXd::Ones(2)) << std::endl; // A test for Forward Propagation
 
   // std::cout << "After Train: \n" << nn.get_Weight1() << std::endl;
-
-  std::ofstream op("result.txt");
-
-  std::vector<Eigen::VectorXd> Test, labelS_Test;
-  for (int i = 0; i < 500; ++i) {
-    // 生成一个二维随机向量
-    Eigen::VectorXd temp = Eigen::VectorXd::Random(2);
-
-    // 将该随机向量添加到 Test 向量中
-    Test.push_back(temp);
-
-    // 根据向量的第一个元素决定标签
-    if (temp(0) * temp(0) + temp(1) * temp(1) <= 0.3) {
-      // 若第一个元素小于或等于 0，标签为 1
-      labelS_Test.push_back(Eigen::VectorXd::Ones(1));
-    } else {
-      // 若第一个元素大于 0，标签为 0
-      labelS_Test.push_back(Eigen::VectorXd::Zero(1));
-    }
-  }
-
-  // 打印生成的数据和标签
-  // std::cout << "\nGenerated Data and Labels:" << std::endl;
-  // for (int i = 0; i < 50; ++i) {
-  //   std::cout << "Test[" << i << "]: " << Test[i].transpose()
-  //             << "\tlabelS_Test[" << i << "]: " << labelS_Test[i] << std::endl;
-  // }
-
-  for (int i = 0; i < 500; ++i)
-  {
-    for (int k = 0; k < Test[i].size(); ++k)
-    {
-      op << Test[i][k];
-      op << " ";
-    }
-
-    op << labelS_Test[i] << " ";
-    op << nn.feedforward(Test[i]);
-    op << "\n";
-  }
 
   return 0;
 }
