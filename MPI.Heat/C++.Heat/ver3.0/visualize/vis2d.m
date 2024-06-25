@@ -1,5 +1,5 @@
 
-n=33;
+n=93;
 animated(1,1,1,n)=0;
 
 for i=0:n
@@ -15,12 +15,15 @@ for i=0:n
     [X, Y] = meshgrid(1:rows, 1:cols);
     
     figure(1);
+    h = gcf;
     title('2D Scatter Plot');
     imagesc(A');
     colormap(jet);
-    colorbar;
+    shading interp;
+    hc=colorbar;
     caxis([0 10]);
-    pause(0.01);
+    pause(0.005);
+    % set(h, 'Position', [100, 100, 200, 160]);
 
     frame=getframe(figure(1));
     if (i==0)

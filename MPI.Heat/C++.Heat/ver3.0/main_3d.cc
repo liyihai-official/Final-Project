@@ -38,7 +38,7 @@
 int main ( int argc, char ** argv)
 {  
   auto world = mpi::env(argc, argv);
-
+  
   int i;
   double loc_diff, glob_diff {10}, t1, t2;
   constexpr int reorder {1}, dimension {3}, root {0};

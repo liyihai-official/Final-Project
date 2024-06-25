@@ -49,11 +49,11 @@
 % % zlabel('Z轴');
 
 
-n=58;
+n=84;
 animated(1,1,1,n)=0;
 
 for i=0:n
-    fid = fopen(strcat('mat_', num2str(i*100), '.bin'), 'rb');
+    fid = fopen(strcat('mat_', num2str(i*500), '.bin'), 'rb');
     
     rows = fread(fid, 1, 'uint64');
     cols = fread(fid, 1, 'uint64');
@@ -66,13 +66,12 @@ for i=0:n
     [X, Y, Z] = meshgrid(1:rows, 1:cols, 1:height);
     
     figure(1);
-    title('2D Scatter Plot');
-    % imagesc(A');
-    slice(X, Y, Z, A, [ (rows+1)/2 rows-1], [cols-1], [1+1 height/2 ]);
+    title('3D Plot');
+    slice(X, Y, Z, A, [ (rows+1)/4 (rows+1)/4*3 rows-1], [cols-1], [1+1 height/2 ]);
 
-    xlim([2, rows-1]);
-    ylim([2, cols-1]);
-    zlim([2, height-1]);
+    xlim([1, rows]);
+    ylim([1, cols]);
+    zlim([1, height]);
     
     xlabel('X-axis');
     ylabel('Y-axis');

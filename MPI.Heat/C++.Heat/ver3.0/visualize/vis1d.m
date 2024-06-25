@@ -16,7 +16,7 @@
 
 animated(1,1,1,9)=0;
 
-for i=0:94
+for i=0:40
     fid = fopen(strcat('mat_', num2str(i*100), '.bin'), 'rb');
 
     N = fread(fid, 1, 'uint64');
@@ -31,8 +31,8 @@ for i=0:94
     imagesc(A');
     colormap(jet)
     colorbar;
-    caxis([0 1]);
-    pause(0.01);
+    caxis([-1 1]);
+    pause(0.1);
 
     frame=getframe(figure(1));
     if (i==0)

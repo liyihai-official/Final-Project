@@ -19,17 +19,17 @@
 
 #define FINAL_PROJECT_ASSERT_MSG(expr, msg) assert((expr) && (msg))
 
-std::string sourceline(const std::source_location location)
-{
-    auto line {location.line()};
-    auto column {location.column()};
-    std::string result {"file: "};
-    result += location.file_name();
-    result += "(" + std::to_string(line) + ":" + std::to_string(column) + ")";
-    result += " '";
-    result += location.function_name();
-    return result;   
-}
+// std::string sourceline(const std::source_location location)
+// {
+//     auto line {location.line()};
+//     auto column {location.column()};
+//     std::string result {"file: "};
+//     result += location.file_name();
+//     result += "(" + std::to_string(line) + ":" + std::to_string(column) + ")";
+//     result += " '";
+//     result += location.function_name();
+//     return result;   
+// }
 
 
 

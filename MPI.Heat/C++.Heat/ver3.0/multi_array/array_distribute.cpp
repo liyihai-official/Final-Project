@@ -120,6 +120,7 @@ namespace final_project
       array2d_distribute() : glob_Cols {0}, glob_Rows{0}, array2d<T>(0,0) {} ;
 
     public:
+
       /**
        * @brief Generate the distributed array by inputting communicator and global sizes.
        * 
@@ -155,6 +156,8 @@ namespace final_project
         
         this->resize(nx, ny);
       }
+
+
 
 
 //       void distribute(std::size_t gRows, std::size_t gCols, 

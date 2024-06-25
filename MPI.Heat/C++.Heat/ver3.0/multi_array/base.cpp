@@ -25,9 +25,14 @@
 #include <iterator>
 #include <unistd.h>
 
+
+/// For random number generator
+#include <functional>
+#include <random>
+
 #include <fstream>
 
-#include "types.cpp"
+#include "../types.cpp"
 #include "../assert.cpp"
 
 /**
@@ -92,12 +97,10 @@ namespace final_project {
   
     public:
       size_type N;
-      // _shape_type _shape;
       std::unique_ptr<T[]> data;
 
       // Sizes
-      // const _size_type size()       { return _shape.size(); }
-      // const _size_type size() const { return _shape.size(); }
+
       const size_type size() { return N; }
       const size_type size() const { return N; }
 
@@ -106,43 +109,21 @@ namespace final_project {
       const_iterator    begin() const { return data.get(); }
       const_iterator   cbegin() const { return data.get(); }
 
-      // iterator            end()       { return data.get() + this->size(); }
-      // const_iterator      end() const { return data.get() + this->size(); }
-      // const_iterator     cend() const { return data.get() + this->size(); }
-
       iterator            end()       { return data.get() + N; }
       const_iterator      end() const { return data.get() + N; }
       const_iterator     cend() const { return data.get() + N; }
 
       // Operator ()
-      // reference operator() (size_type i)
-      // {
-      //   return FINAL_PROJECT_ASSERT_MSG( _shape.is_in(i) , "out of range"), data[i];
-      // }
       reference operator() (size_type i)
       {
         return FINAL_PROJECT_ASSERT_MSG( (i < N), "out of range"), data[i];
       }
-
-      // reference operator() (size_type i) const
-      // {
-      //   return FINAL_PROJECT_ASSERT_MSG( _shape.is_in(i) , "out of range"), data[i];
-      // }
       reference operator() (size_type i) const
       {
         return FINAL_PROJECT_ASSERT_MSG( (i < N), "out of range"), data[i];
       }
 
       // assignment operator = 
-  // template <typename T2>
-  // array1d<T>& operator= (const array1d<T2> & rhs)
-  // {
-  //   _shape = rhs._shape;
-  //   data = std::make_unique<T[]>(rhs.size());
-  //   std::copy(rhs.begin(), rhs.end(), begin());
-  //   return *this;
-  // }
-
       template <typename T2>
       array1d<T>& operator= (const array1d<T2> & rhs)
       {
@@ -220,6 +201,9 @@ namespace final_project {
       size_type Rows, Cols;
       
     public:
+      array2d()
+        : Rows{0}, Cols{0}, array1d<T>(0) {}
+
       array2d(size_type Rows, size_type Cols) 
         : Rows{Rows}, Cols{Cols}, array1d<T>(Rows * Cols) {}
 
@@ -246,6 +230,31 @@ namespace final_project {
         return FINAL_PROJECT_ASSERT_MSG( (i < Rows && j < Cols), "out of range"), this->data[i * Cols + j];
       }
 
+      template <typename T2>
+      array2d<T> operator* (const array2d<T2> &rhs) const
+      {
+FINAL_PROJECT_ASSERT_MSG( (Cols == rhs.Rows), "Invalid Size of Multiplication.");
+        auto result {array2d<T>(Rows, rhs.Cols)};
+
+        for (size_type i = 0; i < Rows; ++i) 
+          for (size_type j = 0; j < rhs.Cols; ++j)
+          {
+            result(i, j) = 0;
+            for (size_type k = 0; k < Cols; ++k)
+              result(i, j) += (*this)(i, k) * rhs(k, j);
+          }
+        return result;
+      }
+
+      template <typename T2>
+      array2d<T> operator+ (const array2d<T2> & rhs) const 
+      {
+FINAL_PROJECT_ASSERT_MSG( (Rows == rhs.Rows && Cols == rhs.Cols), "Invalid Size of Multiplication.");
+        auto result {array2d<T>(Rows, Cols)};
+        for (size_type i = 0; i < this->size(); ++i) result(i) = rhs(i) + (*this)(i);
+      }
+
+
       // assignment operator = 
       template <typename T2>
       array2d<T>& operator= (const array2d<T2> & rhs)
@@ -253,6 +262,20 @@ namespace final_project {
         std::copy(rhs.begin(), rhs.end(), begin());
         return *this;
       }
+
+      template <typename T2>
+      array2d<T>& operator=(array2d<T2>&& other) noexcept 
+      {
+        if (this != &other) {
+          Rows = other.Rows;
+          Cols = other.Cols;
+          this->data = std::move(other.data);
+
+          other.Rows = 0;
+          other.Cols = 0;
+        }
+        return *this;
+    }
       
 
       // assign one value to all data
@@ -262,25 +285,53 @@ namespace final_project {
         std::fill_n(begin(), size(), value);
       }
 
-      // Swap
+      /// @brief  Fill the matrix by random values
+      /// @attention The distribution of R.V is default as Uniform Distribution.
+      void fill_random()
+      {
+        std::random_device rd{};
+        std::default_random_engine eng{rd()};
+
+        auto ui = std::bind( std::normal_distribution<>{}, std::ref(eng) );
+
+        std::generate(begin(), end(), ui);
+      }
+
+      /// @brief Swap, Swap the input 2d matrix in to this matrix, which should have
+      ///         identical shape.
+      /// @param other The reference of matrix that will be Swapped.
       void swap (array2d<T>& other)
       {
         for (size_type i = 0; i < size(); ++i)
           this->data.swap(other.data);
       }
 
-      // Resize 
-      /**
-       * @brief Resize the array.
-       * 
-       * @param new_rows The new number of rows.
-       * @param new_cols The new number of columns.
-       */
+
+      /// @brief Resize the array.
+      /// @param new_rows The new number of rows.
+      /// @param new_cols The new number of columns.
       void resize(size_type new_rows, size_type new_cols) {
         Rows = new_rows;
         Cols = new_cols;
         this->data = std::make_unique<T[]>(new_rows * new_cols);
         this->N = new_rows * new_cols;
+      }
+
+      /// @brief Transpose the 2d array.
+      /// @attention This method is unavoidable memory unfriendly. 
+      ///           Here is the naive way for doing this, more advanced algorithms 
+      ///           are needed when the matrices getting larger enough.
+      void transpose()
+      {
+        auto other {array2d<T>(Cols, Rows)};
+
+        for (size_type i = 0; i < Rows; ++i)
+          for (size_type j = 0; j < Cols; ++j)
+            other(j, i) = (*this)(i, j);
+        
+        swap(other);
+        this->Rows = other.Cols;
+        this->Cols = other.Rows;
       }
 
       // Friend function declarations
