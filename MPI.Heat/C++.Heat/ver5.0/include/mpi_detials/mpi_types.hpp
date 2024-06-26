@@ -22,7 +22,7 @@ namespace __mpi_types {
 /// @tparam T the data type.
 /// @return MPI_Datatype The MPI type correspond for T data type.
 template<typename T>
-MPI_Datatype _get_mpi_type();
+MPI_Datatype __get_mpi_type();
 
 } // namespace __mpi_types
 } // namespace __detail
@@ -37,13 +37,13 @@ namespace __detail {
 namespace __mpi_types {
 
 template<>
-MPI_Datatype _get_mpi_type<int>()    { return MPI_INT; }
+MPI_Datatype __get_mpi_type<int>()    { return MPI_INT; }
  
 template<>
-MPI_Datatype _get_mpi_type<float>()  { return MPI_FLOAT; }
+MPI_Datatype __get_mpi_type<float>()  { return MPI_FLOAT; }
 
 template<>
-MPI_Datatype _get_mpi_type<double>() { return MPI_DOUBLE; }
+MPI_Datatype __get_mpi_type<double>() { return MPI_DOUBLE; }
 
 
 } // namespace __mpi_types

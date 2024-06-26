@@ -1,3 +1,4 @@
+///
 /// @file types.hpp
 /// @brief This file is the header file of customized datatypes for 
 ///         multi-dimension arrays.
@@ -5,6 +6,7 @@
 /// @author LI Yihai
 /// @version 5.0 
 /// @date Jun 26, 2024
+///
 
 #ifndef FINAL_PROJECT_TYPES_HPP_LIYIHAI
 #define FINAL_PROJECT_TYPES_HPP_LIYIHAI
@@ -17,31 +19,31 @@ namespace final_project {
 namespace __detail {
 namespace __types {
 
-typedef std::size_t _size_type;
+typedef std::size_t __size_type;
 
 /// 
 ///
-template <_size_type _NumD>
-  struct _multi_array_shape {
+template <__size_type _NumD>
+  struct __multi_array_shape {
 
-  _size_type sizes[_NumD];
+  __size_type sizes[_NumD];
 
   // Operators
-        _size_type& operator[] (_size_type index);
-  const _size_type& operator[] (_size_type index) const;
+        __size_type& operator[] (__size_type index);
+  const __size_type& operator[] (__size_type index) const;
 
   // Member Functions
-  _size_type num_dim()                    const;
-  _size_type num_size()                   const;
-  _size_type num_size( _size_type index ) const;
+  __size_type num_dim()                     const;
+  __size_type num_size()                    const;
+  __size_type num_size( __size_type index ) const;
 
-  bool is_in(_size_type index)            const;
+  bool is_in(__size_type index)            const;
 
   // Constructors
   template <typename ... Args>
-  _multi_array_shape( Args ... args );
+  __multi_array_shape( Args ... args );
 
-  _multi_array_shape(const _multi_array_shape& other);  
+  __multi_array_shape(const __multi_array_shape& other);  
 
 }; // struct _multi_array_shape
   
@@ -61,55 +63,55 @@ namespace __detail {
 namespace __types {
 
 
-template <_size_type _NumD>
+template <__size_type __NumD>
 template <typename ... Args>
   inline 
-  _multi_array_shape<_NumD>::_multi_array_shape(Args ... args) 
+  __multi_array_shape<__NumD>::__multi_array_shape(Args ... args) 
   {
-FINAL_PROJECT_ASSERT_MSG((sizeof...(args) == _NumD), "Number of arguments must match the number of dimensions.");
-_size_type temp[] = { static_cast<_size_type>(args)... };
-std::copy(temp, temp + _NumD, sizes);
+FINAL_PROJECT_ASSERT_MSG((sizeof...(args) == __NumD), "Number of arguments must match the number of dimensions.");
+__size_type temp[] = { static_cast<__size_type>(args)... };
+std::copy(temp, temp + __NumD, sizes);
   }
 
-template <_size_type _NumD>
+template <__size_type __NumD>
   inline 
-  _multi_array_shape<_NumD>::_multi_array_shape(const _multi_array_shape& other)
+  __multi_array_shape<__NumD>::__multi_array_shape(const __multi_array_shape& other)
   {
-std::copy(other.sizes, other.sizes + _NumD, sizes);
+std::copy(other.sizes, other.sizes + __NumD, sizes);
   }
 
-template <_size_type _NumD>
+template <__size_type __NumD>
   inline 
-  _size_type& _multi_array_shape<_NumD>::operator[] (_size_type index) 
+  __size_type& __multi_array_shape<__NumD>::operator[] (__size_type index) 
   { return sizes[index]; }
 
-template <_size_type _NumD>
+template <__size_type __NumD>
   inline 
-  const _size_type& _multi_array_shape<_NumD>::operator[] (_size_type index) const
+  const __size_type& __multi_array_shape<__NumD>::operator[] (__size_type index) const
   { return sizes[index]; }
 
-template <_size_type _NumD>
+template <__size_type __NumD>
   inline 
-  _size_type _multi_array_shape<_NumD>::num_dim() const 
-  { return _NumD; }
+  __size_type __multi_array_shape<__NumD>::num_dim() const 
+  { return __NumD; }
 
-template <_size_type _NumD>
+template <__size_type __NumD>
   inline 
-  _size_type _multi_array_shape<_NumD>::num_size() const
+  __size_type __multi_array_shape<__NumD>::num_size() const
   {
-_size_type total {1};
-for (_size_type i = 0; i < _NumD; ++i) total *= sizes[i];
+__size_type total {1};
+for (__size_type i = 0; i < __NumD; ++i) total *= sizes[i];
 return total;
   }
 
-template <_size_type _NumD>
+template <__size_type __NumD>
   inline
-  _size_type _multi_array_shape<_NumD>::num_size(_size_type index) const 
+  __size_type __multi_array_shape<__NumD>::num_size(__size_type index) const 
   { return sizes[index]; }
 
-template <_size_type _NumD>
+template <__size_type __NumD>
   inline 
-  bool _multi_array_shape<_NumD>::is_in( _size_type index ) const 
+  bool __multi_array_shape<__NumD>::is_in( __size_type index ) const 
   {  return index < this->num_size(); }
 
 

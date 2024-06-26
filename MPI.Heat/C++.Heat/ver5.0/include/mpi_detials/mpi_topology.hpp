@@ -6,6 +6,7 @@
 /// @author LI Yihai
 /// @version 5.0 
 /// @date Jun 26, 2024
+///
 
 #pragma once 
 #include <memory>
@@ -20,42 +21,42 @@ namespace final_project {
 namespace __detail {
 namespace __mpi_types {
 
-typedef std::size_t _size_type;
+typedef std::size_t __size_type;
 
 /// @brief Represents the topology information for MPI Cartesian 
 /// Topology structure which is aiming for Array distributing.
 /// @tparam _T The data type of elements.
 /// @tparam _NumDims The type used for dimensions and sizes.
-template <typename _T, _size_type _NumD>
+template <typename __T, __size_type __NumD>
   struct __mpi_topology {
 
   // Using Datatypes
   public:
-  typedef __types::_multi_array_shape<_NumD> _super_array_shape;
-  typedef final_project::mpi::env            _mpi_env;
+  typedef __types::__multi_array_shape<__NumD> __super_array_shape;
+  typedef final_project::mpi::env              __mpi_env;
 
   // Global Features
   public:
-  int _dimension {_NumD}, _num_procs;
-  _super_array_shape _global_shape;
+  int __dimension {__NumD}, __num_procs;
+  __super_array_shape __global_shape;
 
-  MPI_Datatype _mpi_value_type;
-  MPI_Comm _comm_cart;
+  MPI_Datatype __mpi_value_type;
+  MPI_Comm __comm_cart;
 
   // Local Features
   public:
-  _super_array_shape _local_shape {_global_shape};
+  __super_array_shape __local_shape {__global_shape};
 
-  int _rank;
-  int _starts[_NumD], _ends[_NumD];
-  int _dims[_NumD], _periods[_NumD], _neighbors[_NumD * 2], _coordinates[_NumD];
-  MPI_Datatype _halo_vectors[_NumD];
+  int __rank;
+  int __starts[__NumD], __ends[__NumD];
+  int __dims[__NumD], __periods[__NumD], __neighbors[__NumD * 2], __coordinates[__NumD];
+  MPI_Datatype __halo_vectors[__NumD];
 
   public:
   /// @brief Constructor of _mpi_topology
-  /// @param _glob_shape The global of the array
-  /// @param _env  The MPI environment of distributed arrays.
-  __mpi_topology( _super_array_shape _glob_shape, _mpi_env& _env );
+  /// @param __glob_shape The global of the array
+  /// @param __env  The MPI environment of distributed arrays.
+  __mpi_topology( __super_array_shape __glob_shape, __mpi_env& __env );
 
 }; // struct __mpi_topology
 
@@ -73,23 +74,23 @@ namespace __detail {
 namespace __mpi_types {
 
 
-template <typename _T, _size_type _NumD>
+template <typename __T, __size_type __NumD>
   inline 
-  __mpi_topology<_T, _NumD>::__mpi_topology( _super_array_shape _global_shape, _mpi_env& _env)
-  : _global_shape {_global_shape}
+  __mpi_topology<__T, __NumD>::__mpi_topology( __super_array_shape __global_shape, __mpi_env& __env)
+  : __global_shape {__global_shape}
   {
     // Global Features
-    _mpi_value_type = _get_mpi_type<_T>();
+    __mpi_value_type = __get_mpi_type<__T>();
 
-    for (_size_type i = 0; i < _NumD; ++i) { _dims[i] = 0; }
-    MPI_Dims_create(_env.size(), _dimension, _dims);
+    for (__size_type i = 0; i < __NumD; ++i) { __dims[i] = 0; }
+    MPI_Dims_create(__env.size(), __dimension, __dims);
     
-    MPI_Cart_create(_env.comm(), _dimension, _dims, _periods, 1, &_comm_cart);
-    MPI_Comm_size(_comm_cart, &_num_procs);
+    MPI_Cart_create(__env.comm(), __dimension, __dims, __periods, 1, &__comm_cart);
+    MPI_Comm_size(__comm_cart, &__num_procs);
 
     // Local Features 
-    MPI_Comm_rank(_comm_cart, &_rank);
-    MPI_Cart_coords(_comm_cart, _rank, _dimension, _coordinates);
+    MPI_Comm_rank(__comm_cart, &__rank);
+    MPI_Cart_coords(__comm_cart, __rank, __dimension, __coordinates);
 
 
 auto decomp = [](const int n, const int prob_size, const int rank, int& s, int& e)
@@ -108,25 +109,25 @@ auto decomp = [](const int n, const int prob_size, const int rank, int& s, int& 
 };
 
 
-    int _array_sizes[_dimension], _array_sub_sizes[_dimension], _array_starts[_dimension];
-    for (_size_type i = 0; i < _NumD; ++i)
+    int __array_sizes[__dimension], __array_sub_sizes[__dimension], __array_starts[__dimension];
+    for (__size_type i = 0; i < __NumD; ++i)
     {
-MPI_Cart_shift(_comm_cart, i, 1, &(_neighbors[2*i]), &(_neighbors[2*i+1]));
+MPI_Cart_shift(__comm_cart, i, 1, &(__neighbors[2*i]), &(__neighbors[2*i+1]));
 
-decomp(_global_shape[i]-2, _dims[i], _coordinates[i], _starts[i], _ends[i]);
-_local_shape[i] = _ends[i] - _starts[i] + 1 + 2;
+decomp(__global_shape[i]-2, __dims[i], __coordinates[i], __starts[i], __ends[i]);
+__local_shape[i] = __ends[i] - __starts[i] + 1 + 2;
 
-_array_starts[i]    = 0;
-_array_sizes[i]     = _local_shape[i];
-_array_sub_sizes[i] = _array_sizes[i] - 2;
+__array_starts[i]    = 0;
+__array_sizes[i]     = __local_shape[i];
+__array_sub_sizes[i] = __array_sizes[i] - 2;
     }
 
-    for (_size_type i = 0; i < _NumD; ++i)
+    for (__size_type i = 0; i < __NumD; ++i)
     {
-_array_sub_sizes[i] = 1;
-MPI_Type_create_subarray(_dimension, _array_sizes, _array_sub_sizes, _array_starts, 
-                          MPI_ORDER_C, _mpi_value_type, &_halo_vectors[i]);
-MPI_Type_commit(&_halo_vectors[i]);
+__array_sub_sizes[i] = 1;
+MPI_Type_create_subarray(__dimension, __array_sizes, __array_sub_sizes, __array_starts, 
+                          MPI_ORDER_C, __mpi_value_type, &__halo_vectors[i]);
+MPI_Type_commit(&__halo_vectors[i]);
     }
 
 

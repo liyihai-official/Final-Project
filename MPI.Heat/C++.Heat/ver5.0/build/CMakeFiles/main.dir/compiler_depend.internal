@@ -116,6 +116,8 @@ CMakeFiles/main.dir/main.cc.o
  /Users/michaellea/001 - M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_detials/mpi_environment.hpp
  /Users/michaellea/001 - M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_detials/mpi_topology.hpp
  /Users/michaellea/001 - M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_detials/mpi_types.hpp
+ /Users/michaellea/001 - M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_distribute_array.hpp
+ /Users/michaellea/001 - M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/multi_array/array.hpp
  /Users/michaellea/001 - M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/multi_array/types.hpp
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/aarch64-apple-darwin23/bits/atomic_word.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/aarch64-apple-darwin23/bits/c++allocator.h
@@ -127,7 +129,9 @@ CMakeFiles/main.dir/main.cc.o
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/aarch64-apple-darwin23/bits/error_constants.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/aarch64-apple-darwin23/bits/gthr-default.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/aarch64-apple-darwin23/bits/gthr.h
+ /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/aarch64-apple-darwin23/bits/messages_members.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/aarch64-apple-darwin23/bits/os_defines.h
+ /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/aarch64-apple-darwin23/bits/time_members.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/backward/auto_ptr.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/backward/binders.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bit
@@ -144,6 +148,7 @@ CMakeFiles/main.dir/main.cc.o
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/basic_string.tcc
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/char_traits.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/charconv.h
+ /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/codecvt.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/concept_check.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/cpp_type_traits.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/cxxabi_forced.h
@@ -160,8 +165,11 @@ CMakeFiles/main.dir/main.cc.o
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/iterator_concepts.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/locale_classes.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/locale_classes.tcc
+ /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/locale_conv.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/locale_facets.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/locale_facets.tcc
+ /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/locale_facets_nonio.h
+ /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/locale_facets_nonio.tcc
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/localefwd.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/max_size_type.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/memory_resource.h
@@ -174,6 +182,7 @@ CMakeFiles/main.dir/main.cc.o
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/postypes.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/predefined_ops.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/ptr_traits.h
+ /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/quoted_string.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/range_access.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/ranges_algobase.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/ranges_base.h
@@ -185,6 +194,7 @@ CMakeFiles/main.dir/main.cc.o
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/shared_ptr.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/shared_ptr_atomic.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/shared_ptr_base.h
+ /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/sstream.tcc
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/std_abs.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/std_mutex.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/stl_algobase.h
@@ -216,6 +226,7 @@ CMakeFiles/main.dir/main.cc.o
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/cstdint
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/cstdio
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/cstdlib
+ /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/ctime
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/cwchar
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/cwctype
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/debug/assertions.h
@@ -229,10 +240,12 @@ CMakeFiles/main.dir/main.cc.o
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/ext/string_conversions.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/ext/type_traits.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/initializer_list
+ /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/iomanip
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/ios
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/iosfwd
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/iostream
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/istream
+ /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/locale
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/memory
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/new
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/numbers
@@ -241,6 +254,7 @@ CMakeFiles/main.dir/main.cc.o
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/pstl/glue_memory_defs.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/pstl/pstl_config.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/source_location
+ /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/sstream
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/stdexcept
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/stdlib.h
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/streambuf
