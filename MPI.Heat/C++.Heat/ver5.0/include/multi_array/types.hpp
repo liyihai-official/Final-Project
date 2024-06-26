@@ -39,7 +39,7 @@ template <_size_type _NumD>
 
   // Constructors
   template <typename ... Args>
-  _multi_array_shape( Args ... args );                  
+  _multi_array_shape( Args ... args );
 
   _multi_array_shape(const _multi_array_shape& other);  
 
@@ -54,18 +54,17 @@ template <_size_type _NumD>
 
 
 // ------------------------------- Source File ------------------------------- // 
-
+#include "assert.hpp"
 
 namespace final_project {
 namespace __detail {
 namespace __types {
 
 
-
 template <_size_type _NumD>
 template <typename ... Args>
   inline 
-  _multi_array_shape<_NumD>::_multi_array_shape(Args ... args) : 
+  _multi_array_shape<_NumD>::_multi_array_shape(Args ... args) 
   {
 FINAL_PROJECT_ASSERT_MSG((sizeof...(args) == _NumD), "Number of arguments must match the number of dimensions.");
 _size_type temp[] = { static_cast<_size_type>(args)... };
@@ -74,7 +73,7 @@ std::copy(temp, temp + _NumD, sizes);
 
 template <_size_type _NumD>
   inline 
-  _multi_array_shape<_NumD>::_multi_array_shape(const _multi_array_shape& other) : 
+  _multi_array_shape<_NumD>::_multi_array_shape(const _multi_array_shape& other)
   {
 std::copy(other.sizes, other.sizes + _NumD, sizes);
   }

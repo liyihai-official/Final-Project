@@ -6,6 +6,7 @@
 /// @version 5.0 
 /// @date Jun 26, 2024
 
+#pragma once 
 #include <mpi.h>
 
 

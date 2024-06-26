@@ -28,6 +28,7 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/arm/endian.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/arm/signal.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/arm/types.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/assert.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/ctype.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/errno.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/libkern/_OSByteOrder.h \
@@ -110,8 +111,11 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/wchar.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/wctype.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk/usr/include/pthread.h \
-  /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_environment.hpp \
-  /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_types.hpp \
+  /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/assert.hpp \
+  /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_detials/mpi_environment.hpp \
+  /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_detials/mpi_topology.hpp \
+  /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_detials/mpi_types.hpp \
+  /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/multi_array/types.hpp \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/aarch64-apple-darwin23/bits/atomic_word.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/aarch64-apple-darwin23/bits/c++allocator.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/aarch64-apple-darwin23/bits/c++config.h \
@@ -123,10 +127,16 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/aarch64-apple-darwin23/bits/gthr-default.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/aarch64-apple-darwin23/bits/gthr.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/aarch64-apple-darwin23/bits/os_defines.h \
+  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/backward/auto_ptr.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/backward/binders.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bit \
+  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/align.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/alloc_traits.h \
+  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/allocated_ptr.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/allocator.h \
+  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/atomic_base.h \
+  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/atomic_lockfree_defines.h \
+  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/atomic_wait.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/basic_ios.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/basic_ios.tcc \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/basic_string.h \
@@ -164,12 +174,18 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/predefined_ops.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/ptr_traits.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/range_access.h \
+  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/ranges_algobase.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/ranges_base.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/ranges_cmp.h \
+  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/ranges_uninitialized.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/ranges_util.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/refwrap.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/requires_hosted.h \
+  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/shared_ptr.h \
+  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/shared_ptr_atomic.h \
+  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/shared_ptr_base.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/std_abs.h \
+  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/std_mutex.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/stl_algobase.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/stl_construct.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/stl_function.h \
@@ -177,20 +193,26 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/stl_iterator_base_funcs.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/stl_iterator_base_types.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/stl_pair.h \
+  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/stl_raw_storage_iter.h \
+  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/stl_tempbuf.h \
+  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/stl_uninitialized.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/streambuf.tcc \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/streambuf_iterator.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/string_view.tcc \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/stringfwd.h \
+  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/unique_ptr.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/uses_allocator.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/uses_allocator_args.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/utility.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/version.h \
+  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/cassert \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/cctype \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/cerrno \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/clocale \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/compare \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/concepts \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/cstddef \
+  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/cstdint \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/cstdio \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/cstdlib \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/cwchar \
@@ -198,8 +220,10 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/debug/assertions.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/debug/debug.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/exception \
+  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/ext/aligned_buffer.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/ext/alloc_traits.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/ext/atomicity.h \
+  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/ext/concurrence.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/ext/numeric_traits.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/ext/string_conversions.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/ext/type_traits.h \
@@ -208,11 +232,16 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/iosfwd \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/iostream \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/istream \
+  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/memory \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/new \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/numbers \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/ostream \
+  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/pstl/execution_defs.h \
+  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/pstl/glue_memory_defs.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/pstl/pstl_config.h \
+  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/source_location \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/stdexcept \
+  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/stdlib.h \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/streambuf \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/string \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/string_view \
@@ -245,11 +274,11 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/streambuf:
 
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/stdlib.h:
+
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/stdexcept:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/ostream:
-
-/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/new:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/istream:
 
@@ -261,63 +290,77 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/ext/string_conversions.h:
 
-/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/ext/numeric_traits.h:
-
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/ext/alloc_traits.h:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/exception:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/debug/assertions.h:
 
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/cwctype:
+
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/cstdlib:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/cstdio:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/cstddef:
 
-/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/locale_facets.h:
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/system_error:
 
-/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/cerrno:
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/compare:
 
-/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/debug/debug.h:
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/clocale:
 
-/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_pthread/_pthread_types.h:
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/cassert:
 
-/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_types/_u_int64_t.h:
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/version.h:
 
-/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/cctype:
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/new:
 
-/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/nested_exception.h:
-
-/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/stringfwd.h:
-
-/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/streambuf_iterator.h:
-
-/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/pthread/sched.h:
-
-/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/utility.h:
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/unique_ptr.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_types/_timespec.h:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/streambuf.tcc:
 
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityInternal.h:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/stl_uninitialized.h:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/ext/numeric_traits.h:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/stl_tempbuf.h:
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/machine/endian.h:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/stl_raw_storage_iter.h:
+
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/stl_iterator_base_types.h:
-
-/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/string_view:
-
-/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_pthread/_pthread_condattr_t.h:
-
-/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/stl_iterator_base_funcs.h:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/postypes.h:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/stl_pair.h:
 
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/atomic_lockfree_defines.h:
+
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/stl_function.h:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/stl_construct.h:
 
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/shared_ptr_base.h:
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_pthread/_pthread_attr_t.h:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/ranges_uninitialized.h:
+
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/ranges_cmp.h:
 
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/ctype.h:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/ranges_algobase.h:
+
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/typeinfo:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/ext/concurrence.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/malloc/_malloc_type.h:
 
@@ -326,6 +369,8 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/requires_hosted.h:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/predefined_ops.h:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/shared_ptr_atomic.h:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/ostream.tcc:
 
@@ -337,9 +382,13 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/aarch64-apple-darwin23/bits/c++locale.h:
 
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/locale_classes.h:
+
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/std_abs.h:
 
-/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/locale_classes.h:
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/cerrno:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/locale_facets.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/_types/_uint8_t.h:
 
@@ -347,17 +396,11 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/exception.h:
 
-/Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_types.hpp:
-
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/cxxabi_init_exception.h:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/cpp_type_traits.h:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/concept_check.h:
-
-/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/wchar.h:
-
-/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/uses_allocator_args.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/_wctype.h:
 
@@ -365,15 +408,23 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/charconv.h:
 
-/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/system_error:
-
-/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/compare:
-
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/hash_bytes.h:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/allocated_ptr.h:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/char_traits.h:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/basic_ios.h:
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/_stdio.h:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/atomic_wait.h:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/atomic_base.h:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/streambuf_iterator.h:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/align.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_types/_wint_t.h:
 
@@ -383,11 +434,11 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/aarch64-apple-darwin23/bits/os_defines.h:
 
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/source_location:
+
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/aarch64-apple-darwin23/bits/gthr.h:
 
-/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/machine/_types.h:
-
-/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/string_view.tcc:
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/std_mutex.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/_types/_uint32_t.h:
 
@@ -405,9 +456,29 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/aarch64-apple-darwin23/bits/c++config.h:
 
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/cstdint:
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_types/_clock_t.h:
+
+/Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/multi_array/types.hpp:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/string_view:
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_pthread/_pthread_condattr_t.h:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/stl_iterator_base_funcs.h:
+
+/Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_detials/mpi_types.hpp:
+
+/Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_detials/mpi_environment.hpp:
+
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/runetype.h:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/istream.tcc:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/uses_allocator_args.h:
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/wchar.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/time.h:
 
@@ -431,6 +502,10 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/qos.h:
 
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_types/_mode_t.h:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/exception_defines.h:
+
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_types/_uintptr_t.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/wctype.h:
@@ -441,9 +516,19 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_types/_u_int8_t.h:
 
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/memory:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/shared_ptr.h:
+
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/errno.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_types/_sigaltstack.h:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/cctype:
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_pthread/_pthread_types.h:
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_types/_u_int64_t.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/_types/_wctrans_t.h:
 
@@ -459,15 +544,15 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_types/_timeval.h:
 
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/utility.h:
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/pthread/sched.h:
+
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_types/_sigset_t.h:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/aarch64-apple-darwin23/bits/cpu_defines.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_types/_seek_set.h:
-
-/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/exception_defines.h:
-
-/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_types/_mode_t.h:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/locale_classes.tcc:
 
@@ -479,8 +564,6 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_types/_int8_t.h:
 
-/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/machine/endian.h:
-
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_types/_int16_t.h:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/functexcept.h:
@@ -488,6 +571,8 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/tuple:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_types/_id_t.h:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/pstl/execution_defs.h:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/ext/atomicity.h:
 
@@ -502,8 +587,6 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/memoryfwd.h:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/iterator_concepts.h:
-
-/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_types/_clock_t.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_types/_rune_t.h:
 
@@ -522,8 +605,6 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/cwchar:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/basic_string.h:
-
-/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_pthread/_pthread_attr_t.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_pthread/_pthread_rwlockattr_t.h:
 
@@ -563,6 +644,16 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_types/_va_list.h:
 
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/_types.h:
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/machine/types.h:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/pstl/glue_memory_defs.h:
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/mach/arm/_structs.h:
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/assert.h:
+
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/pthread/qos.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_types/_ucontext.h:
@@ -573,11 +664,9 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/malloc/_malloc.h:
 
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/ext/aligned_buffer.h:
+
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_pthread/_pthread_once_t.h:
-
-/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/_types.h:
-
-/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/machine/types.h:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/aarch64-apple-darwin23/bits/c++allocator.h:
 
@@ -589,15 +678,19 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/arm/types.h:
 
-/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/cwctype:
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/string_view.tcc:
 
-/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/mach/arm/_structs.h:
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/machine/_types.h:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/stringfwd.h:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/nested_exception.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/arm/_mcontext.h:
 
-/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/version.h:
-
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/locale.h:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/backward/auto_ptr.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/libkern/arm/OSByteOrder.h:
 
@@ -617,29 +710,29 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/libkern/_OSByteOrder.h:
 
-/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/clocale:
-
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/arm/arch.h:
-
-/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/ctype.h:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/initializer_list:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/_ctype.h:
 
-/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/cstdio:
-
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/stl_algobase.h:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/refwrap.h:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/debug/debug.h:
+
+/Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_detials/mpi_topology.hpp:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_types/_uid_t.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/arm/signal.h:
 
-/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/_types/_wctype_t.h:
-
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/uses_allocator.h:
+
+/Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/assert.hpp:
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/_types/_wctype_t.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/_types/_uintmax_t.h:
 
@@ -663,19 +756,13 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/basic_ios.tcc:
 
-/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityInternal.h:
-
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_types/_time_t.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/_ctermid.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/arm/endian.h:
 
-/Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_environment.hpp:
-
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityInternalLegacy.h:
-
-/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/_stdio.h:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/numbers:
 
