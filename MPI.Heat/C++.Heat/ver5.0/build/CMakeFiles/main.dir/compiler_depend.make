@@ -115,7 +115,7 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
   /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_detials/mpi_environment.hpp \
   /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_detials/mpi_topology.hpp \
   /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_detials/mpi_types.hpp \
-  /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_distribute_array.hpp \
+  /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_distribute/mpi_distribute_array.hpp \
   /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/multi_array/array.hpp \
   /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/multi_array/types.hpp \
   /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/aarch64-apple-darwin23/bits/atomic_word.h \
@@ -428,8 +428,6 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/char_traits.h:
 
-/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/basic_ios.h:
-
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/_stdio.h:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/atomic_wait.h:
@@ -460,6 +458,10 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/aarch64-apple-darwin23/bits/messages_members.h:
 
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/source_location:
+
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/aarch64-apple-darwin23/bits/gthr.h:
+
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/std_mutex.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/_types/_uint32_t.h:
@@ -488,13 +490,9 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
 
 /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/multi_array/array.hpp:
 
-/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/source_location:
+/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/basic_ios.h:
 
-/opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/aarch64-apple-darwin23/bits/gthr.h:
-
-/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_types/_int16_t.h:
-
-/Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_distribute_array.hpp:
+/Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_distribute/mpi_distribute_array.hpp:
 
 /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_detials/mpi_types.hpp:
 
@@ -599,6 +597,8 @@ CMakeFiles/main.dir/main.cc.o: /Users/michaellea/001\ -\ M.Sc_HPC/55640-Project/
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/bits/stl_raw_storage_iter.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/machine/endian.h:
+
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/_types/_int16_t.h:
 
 /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/tuple:
 

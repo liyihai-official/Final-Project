@@ -116,7 +116,7 @@ CMakeFiles/main.dir/main.cc.o
  /Users/michaellea/001 - M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_detials/mpi_environment.hpp
  /Users/michaellea/001 - M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_detials/mpi_topology.hpp
  /Users/michaellea/001 - M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_detials/mpi_types.hpp
- /Users/michaellea/001 - M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_distribute_array.hpp
+ /Users/michaellea/001 - M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/mpi_distribute/mpi_distribute_array.hpp
  /Users/michaellea/001 - M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/multi_array/array.hpp
  /Users/michaellea/001 - M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include/multi_array/types.hpp
  /opt/homebrew/Cellar/gcc/14.1.0_1/include/c++/14/aarch64-apple-darwin23/bits/atomic_word.h

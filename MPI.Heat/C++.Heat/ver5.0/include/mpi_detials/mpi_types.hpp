@@ -29,7 +29,6 @@ MPI_Datatype __get_mpi_type();
 } // namespace final_project
 
 
-
 // ------------------------------- Source File ------------------------------- // 
 
 namespace final_project {

@@ -35,14 +35,19 @@ template <class __T, __size_type __NumD>
     typedef __T*        iterator;
     typedef const __T*  const_iterator;
 
-    typedef final_project::__detail::__types::__multi_array_shape<__NumD> __array_shape_type;
+    typedef __types::__multi_array_shape<__NumD> __super_array_shape;
 
     public:
-    __array_shape_type     __shape;
+    __super_array_shape     __shape;
     std::unique_ptr<__T[]> __data;
 
     public:
-    __array(__array_shape_type __shape);
+    /// @brief Default constructor of __array
+    __array( );
+    __array(__super_array_shape __shape);
+
+    /// @brief Destructor of __array
+    ~__array() = default;
 
     public:
     // Sizes
@@ -68,8 +73,8 @@ template <class __T, __size_type __NumD>
     void assign (const_reference value); 
 
   public:
-template <class __U, __size_type __Dims>
-friend std::ostream& operator<<(std::ostream& os, const __array<__U, __Dims>& in);
+  template <class __U, __size_type __Dims>
+  friend std::ostream& operator<<(std::ostream& os, const __array<__U, __Dims>& in);
 
 
   }; // class _array<_T, _NumD>
@@ -88,11 +93,18 @@ namespace final_project {
 namespace __detail {
 namespace __multi_array {
 
+template <class __T, __size_type __NumD>
+  inline
+  __array<__T, __NumD>::__array( )
+  : __shape(), __data(nullptr) 
+  { }
+
 
 template <class __T, __size_type __NumD>
   inline
-  __array<__T, __NumD>::__array(__array_shape_type __shape)
-    : __shape {__shape}, __data {std::make_unique<__T[]>(__shape.num_size())} { }
+  __array<__T, __NumD>::__array(__super_array_shape __shape)
+    : __shape {__shape}, __data {std::make_unique<__T[]>(__shape.num_size())} 
+  { }
 
 
 template <class __T, __size_type __NumD>
@@ -120,8 +132,6 @@ template <class __T, __size_type __NumD>
 FINAL_PROJECT_ASSERT_MSG((index < __shape.size()), "Index out of range.");
 return __data[index]; 
   }
-
-
 
 template <class __T, __size_type __NumD>
   inline 

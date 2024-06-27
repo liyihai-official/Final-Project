@@ -22,11 +22,11 @@ namespace __types {
 typedef std::size_t __size_type;
 
 /// 
-///
-template <__size_type _NumD>
+/// 
+template <__size_type __NumD>
   struct __multi_array_shape {
 
-  __size_type sizes[_NumD];
+  __size_type sizes[__NumD];
 
   // Operators
         __size_type& operator[] (__size_type index);

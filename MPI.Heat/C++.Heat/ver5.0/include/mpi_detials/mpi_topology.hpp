@@ -53,11 +53,16 @@ template <typename __T, __size_type __NumD>
   MPI_Datatype __halo_vectors[__NumD];
 
   public:
+  /// @brief Default constructor of __mpi_topology
+  __mpi_topology( );
+
   /// @brief Constructor of _mpi_topology
   /// @param __glob_shape The global of the array
   /// @param __env  The MPI environment of distributed arrays.
   __mpi_topology( __super_array_shape __glob_shape, __mpi_env& __env );
 
+  /// @brief Destructor of __mpi_topology
+  ~__mpi_topology();
 }; // struct __mpi_topology
 
 
@@ -73,6 +78,40 @@ namespace final_project {
 namespace __detail {
 namespace __mpi_types {
 
+template <typename __T, __size_type __NumD>
+  inline 
+  __mpi_topology<__T, __NumD>::~__mpi_topology()
+  {
+    std::cout << " PROC " << __rank << " Calling destructor \n";
+    // Free halo vector data types if they were created
+    for (int i = 0; i < __NumD; ++i) {
+      if (__halo_vectors[i] != MPI_DATATYPE_NULL) {
+        MPI_Type_free(&__halo_vectors[i]);
+      }
+    }
+
+      // Free the cartesian communicator if it was created
+      if (__comm_cart != MPI_COMM_NULL) {
+        MPI_Comm_free(&__comm_cart);
+      }
+    }
+
+
+template <typename __T, __size_type __NumD>
+  inline 
+  __mpi_topology<__T, __NumD>::__mpi_topology()
+  : __dimension(__NumD), __num_procs(0), __global_shape(),
+    __mpi_value_type(MPI_DATATYPE_NULL), __comm_cart(MPI_COMM_NULL), 
+    __local_shape(__global_shape), __rank(0)
+  {
+    std::fill(      std::begin(__starts), std::end(__starts),       0);
+    std::fill(        std::begin(__ends), std::end(__ends),         0);
+    std::fill(        std::begin(__dims), std::end(__dims),         0);
+    std::fill(     std::begin(__periods), std::end(__periods),      0);
+    std::fill(   std::begin(__neighbors), std::end(__neighbors),    0);
+    std::fill( std::begin(__coordinates), std::end(__coordinates),  0);
+    std::fill(std::begin(__halo_vectors), std::end(__halo_vectors), MPI_DATATYPE_NULL);
+  }
 
 template <typename __T, __size_type __NumD>
   inline 
