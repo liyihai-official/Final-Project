@@ -16,6 +16,8 @@
 
 #include "assert.hpp"
 
+#include <unistd.h>
+
 #ifndef FINAL_PROJECT_MPI_DISTRIBUTE_ARRAY_HPP_LIYIHAI
 #define FINAL_PROJECT_MPI_DISTRIBUTE_ARRAY_HPP_LIYIHAI
 
@@ -37,34 +39,42 @@ template <class __T, __size_type __NumD>
 
 
     public:
-    __array     __local_array;
     __topology  __local_topology;
+    __array     __local_array;
 
     public:    
     __mpi_distribute_array( __super_array_shape  __global_shape , __mpi_env& __env ) 
     : __local_topology(__global_shape, __env),
       __local_array(__local_topology.__local_shape)
     {
+
       std::cout 
       << "PROCS " << __local_topology.__rank 
       << " constructs distributed " << __local_topology.__dimension << "D Array:"
       << " Global Shape [" 
-      << __global_shape[0] << ", " 
-      << __global_shape[1] << ", " 
-      << __global_shape[2] << "]" 
+      << __global_shape[0] 
+      << ", " << __global_shape[1] 
+      // << ", "  << __global_shape[2] 
+      << "]" 
       << " | Local Shape ["
       << __local_topology.__local_shape[0] << ", "
       << __local_topology.__local_shape[1] << ", "
-      << __local_topology.__local_shape[2] << "]" 
+      // << __local_topology.__local_shape[2] 
+      << "]" 
       << " | Coords " << "[("
       << __local_topology.__starts[0] << ", " << __local_topology.__ends[0] << "), ("
-      << __local_topology.__starts[1] << ", " << __local_topology.__ends[1] << "), ("
-      << __local_topology.__starts[2] << ", " << __local_topology.__ends[2] << ")] "
+      << __local_topology.__starts[1] << ", " << __local_topology.__ends[1] << ")" 
+      // << ", (" << __local_topology.__starts[2] << ", " << __local_topology.__ends[2] 
+      << ")] "
       << std::endl;
     }
+    
+    void __fill_boundary(const __T value);
 
 
-
+    /// @brief Print Distribute arrays in order of Rank
+    template <class __U, __size_type __Dims>
+    friend std::ostream& operator<<(std::ostream& os, const __mpi_distribute_array<__U, __Dims>& in);
 
   }; // __mpi_distribute_array
   
@@ -73,11 +83,50 @@ template <class __T, __size_type __NumD>
 
 
 
+// ------------------------------- Source File ------------------------------- // 
+namespace final_project {
+namespace __detail {
+
+template <class __U, __size_type __Dims>
+std::ostream& operator<<(std::ostream& os, const __mpi_distribute_array<__U, __Dims>& in)
+{
+  MPI_Barrier(in.__local_topology.__comm_cart);
+  os << "Attempting to print array in order \n";
+
+  sleep(0.01);
+  MPI_Barrier(in.__local_topology.__comm_cart);
+
+  for (int i = 0; i < in.__local_topology.__num_procs; ++i)
+  {
+    if ( i == in.__local_topology.__rank )
+    {
+      os
+      << "PROC : " << in.__local_topology.__rank << " of " 
+      << in.__local_topology.__num_procs <<  "\n" 
+      << in.__local_array;
+    }
+    fflush(stdout);
+    sleep(0.01);
+    MPI_Barrier(in.__local_topology.__comm_cart);
+  }
+
+  return os;
+}
+
+template <class __T, __size_type __NumD>
+  inline 
+  void __mpi_distribute_array<__T, __NumD>::__fill_boundary(const __T value)
+  {
+    // if (__local_topology.__starts[0] == 1)
+    // {
+
+    // }
+  } 
 
 
 
-
-
+} // namespace __detail
+} // namespace final_project
 
 
 #endif // FINAL_PROJECT_MPI_DISTRIBUTE_ARRAY_HPP_LIYIHAI

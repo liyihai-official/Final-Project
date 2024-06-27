@@ -12,8 +12,8 @@ int main( int argc, char ** argv)
   auto world {final_project::mpi::env(argc, argv)};
 
 
-  auto shape {final_project::__detail::__types::__multi_array_shape<3>(10, 9 , 8)};
-  // auto an_topology {final_project::__detail::__mpi_types::__mpi_topology<double, 3>(shape, world)};
+  auto shape {final_project::__detail::__types::__multi_array_shape<2>(6, 5)};
+  // auto an_topology {final_project::__detail::__mpi_types::__mpi_topology<double, 2>(shape, world)};
   // std::cout 
   // << " PROCESS " << an_topology.__rank 
   // << " Has Coordinate : \t ["
@@ -32,16 +32,21 @@ int main( int argc, char ** argv)
   // << std::endl;
 
 
-  // auto Array {final_project::__detail::__multi_array::__array<float, 3>(shape)};
+  // auto Array {final_project::__detail::__multi_array::__array<float, 2>(shape)};
   // Array.fill(0);
 
-  // if (world.rank() == 1 )
-  // {
-  //   // std::cout << Array << std::endl;
+  // if (world.rank() == 0 )
+  //   std::cout << Array << std::endl;
   // }
 
 
-  auto DA {final_project::__detail::__mpi_distribute_array<double, 3>(shape, world)};
+  auto DA {final_project::__detail::__mpi_distribute_array<double, 2>(shape, world)};
+  DA.__local_array.fill(0);
+
+  // if (world.rank() == 0) 
+  // {
+    std::cout << DA << std::endl;
+  // }
 
 
   return 0;

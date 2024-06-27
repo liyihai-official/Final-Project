@@ -104,7 +104,9 @@ template <class __T, __size_type __NumD>
   inline
   __array<__T, __NumD>::__array(__super_array_shape __shape)
     : __shape {__shape}, __data {std::make_unique<__T[]>(__shape.num_size())} 
-  { }
+  { 
+    std::cout << "Constructing Array with shape " << __shape.num_size() << "\n";
+  }
 
 
 template <class __T, __size_type __NumD>

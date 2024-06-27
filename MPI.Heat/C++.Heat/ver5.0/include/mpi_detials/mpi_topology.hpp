@@ -82,7 +82,7 @@ template <typename __T, __size_type __NumD>
   inline 
   __mpi_topology<__T, __NumD>::~__mpi_topology()
   {
-    std::cout << " PROC " << __rank << " Calling destructor \n";
+    std::cout << " PROC " << __rank << " Calling MPI TOPOLOGY destructor. \n";
     // Free halo vector data types if they were created
     for (int i = 0; i < __NumD; ++i) {
       if (__halo_vectors[i] != MPI_DATATYPE_NULL) {

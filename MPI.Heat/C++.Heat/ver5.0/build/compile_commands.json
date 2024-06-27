@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/Users/michaellea/001 - M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/build",
+  "command": "/opt/homebrew/bin/mpicxx  -I\"/Users/michaellea/001 - M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/include\" -g -std=gnu++20 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.3 -o CMakeFiles/main.dir/main.cc.o -c \"/Users/michaellea/001 - M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/main.cc\"",
+  "file": "/Users/michaellea/001 - M.Sc_HPC/55640-Project/Final-Project/MPI.Heat/C++.Heat/ver5.0/main.cc",
+  "output": "CMakeFiles/main.dir/main.cc.o"
+}
+]

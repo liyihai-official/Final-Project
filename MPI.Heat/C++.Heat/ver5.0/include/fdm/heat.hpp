@@ -5,8 +5,14 @@
 
 namespace final_project {
 namespace __detail {
-namespace __heat_equation {
+namespace __fdm {
 
-} // __heat_equation
+
+
+
+
+
+
+} // namespace __fdm
 } // __detail
 } // namespace final_project
