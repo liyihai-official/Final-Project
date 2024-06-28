@@ -1,5 +1,5 @@
 ///
-/// @file array.hpp
+/// @file base.hpp
 /// @brief This file define a skeleton of X ( > 0) Dimension array with basic operators.
 /// 
 ///
@@ -105,7 +105,7 @@ template <class __T, __size_type __NumD>
   __array<__T, __NumD>::__array(__super_array_shape __shape)
     : __shape {__shape}, __data {std::make_unique<__T[]>(__shape.num_size())} 
   { 
-    std::cout << "Constructing Array with shape " << __shape.num_size() << "\n";
+    std::cout << "Constructing Array with number of elements " << __shape.num_size() << "\n";
   }
 
 

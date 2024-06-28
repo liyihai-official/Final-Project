@@ -45,7 +45,7 @@ template <typename __T, __size_type __NumD>
 
   // Local Features
   public:
-  __super_array_shape __local_shape {__global_shape};
+  __super_array_shape __local_shape;
 
   int __rank;
   int __starts[__NumD], __ends[__NumD];
@@ -59,7 +59,7 @@ template <typename __T, __size_type __NumD>
   /// @brief Constructor of _mpi_topology
   /// @param __glob_shape The global of the array
   /// @param __env  The MPI environment of distributed arrays.
-  __mpi_topology( __super_array_shape __glob_shape, __mpi_env& __env );
+  __mpi_topology( __super_array_shape & __glob_shape, __mpi_env& __env );
 
   /// @brief Destructor of __mpi_topology
   ~__mpi_topology();
@@ -115,8 +115,8 @@ template <typename __T, __size_type __NumD>
 
 template <typename __T, __size_type __NumD>
   inline 
-  __mpi_topology<__T, __NumD>::__mpi_topology( __super_array_shape __global_shape, __mpi_env& __env)
-  : __global_shape {__global_shape}
+  __mpi_topology<__T, __NumD>::__mpi_topology( __super_array_shape & __global_shape, __mpi_env& __env)
+  : __global_shape {__global_shape}, __local_shape {__global_shape}
   {
     // Global Features
     __mpi_value_type = __get_mpi_type<__T>();

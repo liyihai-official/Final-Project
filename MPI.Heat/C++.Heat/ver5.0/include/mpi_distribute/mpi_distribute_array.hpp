@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "multi_array/array.hpp"
+#include "multi_array/base.hpp"
 
 #include "mpi_detials/mpi_topology.hpp"
 
@@ -43,7 +43,7 @@ template <class __T, __size_type __NumD>
     __array     __local_array;
 
     public:    
-    __mpi_distribute_array( __super_array_shape  __global_shape , __mpi_env& __env ) 
+    __mpi_distribute_array( __super_array_shape & __global_shape , __mpi_env& __env ) 
     : __local_topology(__global_shape, __env),
       __local_array(__local_topology.__local_shape)
     {
@@ -100,10 +100,10 @@ std::ostream& operator<<(std::ostream& os, const __mpi_distribute_array<__U, __D
   {
     if ( i == in.__local_topology.__rank )
     {
-      os
-      << "PROC : " << in.__local_topology.__rank << " of " 
-      << in.__local_topology.__num_procs <<  "\n" 
-      << in.__local_array;
+  os
+  << "\nPROC : " << in.__local_topology.__rank << " of " 
+  << in.__local_topology.__num_procs <<  " is Printing \n" 
+  << in.__local_array;
     }
     fflush(stdout);
     sleep(0.01);
@@ -113,14 +113,41 @@ std::ostream& operator<<(std::ostream& os, const __mpi_distribute_array<__U, __D
   return os;
 }
 
+
 template <class __T, __size_type __NumD>
   inline 
   void __mpi_distribute_array<__T, __NumD>::__fill_boundary(const __T value)
   {
-    // if (__local_topology.__starts[0] == 1)
-    // {
+    
+    if (__local_topology.__starts[0] == 1)
+    {
+      for (__size_type j = 0; j < __local_array.__shape[1]; ++j)
+      {
+        __local_array(0, j) = value;
+      }
+    }
 
-    // }
+    if (__local_topology.__starts[1] == 1)
+    {
+      for (__size_type j = 0; j < __local_array.__shape[0];++j)
+      {
+        __local_array(j, 0) = value;
+      }
+    }
+
+    if (__local_topology.__ends[0] == __local_topology.__global_shape[0] - 2)
+    {
+      for (__size_type j = 0; j < __local_array.__shape[1]; ++j)
+        __local_array(__local_array.__shape[0]-1, j) = value;
+    }
+
+    if (__local_topology.__ends[1] == __local_topology.__global_shape[1] - 2)
+    {
+      for (__size_type j = 0; j < __local_array.__shape[0]; ++j)
+      {
+        __local_array(j, __local_array.__shape[1] - 1) = value; 
+      }
+    }
   } 
 
 
