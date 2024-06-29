@@ -38,14 +38,14 @@ template <typename __T, __size_type __NumD>
   // Global Features
   public:
   int __dimension {__NumD}, __num_procs;
-  __super_array_shape __global_shape;
+  __super_array_shape       __global_shape;
 
-  MPI_Datatype __mpi_value_type;
-  MPI_Comm __comm_cart;
+  MPI_Datatype  __mpi_value_type;
+  MPI_Comm      __comm_cart;
 
   // Local Features
   public:
-  __super_array_shape __local_shape;
+  __super_array_shape       __local_shape;
 
   int __rank;
   int __starts[__NumD], __ends[__NumD];

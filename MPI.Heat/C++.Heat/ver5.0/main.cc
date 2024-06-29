@@ -9,7 +9,7 @@
 #include <cmath>
 #include <omp.h>
 
-
+#include <cstring>
 // template <typename T, std::size_t NumDims>
 // struct heat_equation {
 
@@ -40,14 +40,14 @@ template <typename T, std::size_t NumDim>
 void Gather(final_project::array::array_base<T, NumDim>       & gather,   
             final_project::array::array_distribute<T, NumDim> & array)
 {
-  int root {0};
-  int pid, i, j, k;
-
-  std::size_t indexs[NumDim];
-
   MPI_Datatype sbuf_block, temp, mpi_T {final_project::__detail::__mpi_types::__get_mpi_type<T>()};
 
+  int root {0};
+
+  std::size_t indexs[NumDim];
+  
   int num_procs {array.get_topology().__num_procs};
+  int pid, i, j, k;
 
   int Ns[NumDim], starts_cpy[NumDim];
 
@@ -56,8 +56,8 @@ void Gather(final_project::array::array_base<T, NumDim>       & gather,
   for (std::size_t dim = 0; dim < NumDim; ++dim)
   {
     indexs[dim] = 1;
-    Ns[dim] = array.get_topology().__ends[0] - array.get_topology().__starts[0] + 1;
-    starts_cpy[dim] = array.get_topology().__starts[0];
+    Ns[dim] = array.get_topology().__ends[dim] - array.get_topology().__starts[dim] + 1; 
+    starts_cpy[dim] = array.get_topology().__starts[dim];
 
     if (starts_cpy[dim] == 1) 
     {
@@ -68,25 +68,34 @@ void Gather(final_project::array::array_base<T, NumDim>       & gather,
 
     if (array.get_topology().__ends[0] == array.get_topology().__global_shape[dim] - 2) 
       ++ Ns[dim];
-
-
+    
     MPI_Gather(&starts_cpy[dim], 1, MPI_INT, s_list[dim], 1, MPI_INT, root, array.get_topology().__comm_cart);
     MPI_Gather(&Ns[dim], 1, MPI_INT, n_list[dim], 1, MPI_INT, root, array.get_topology().__comm_cart);
   }
 
 
-  if (array.get_topology().__rank == root);
+
+  if (array.get_topology().__rank == root)
   {
-
-
     for (pid = 0; pid < num_procs; ++pid)
     {
       if (pid == root)
       {
-        for ( i = starts_cpy[pid]; i <= array.get_topology().__ends[0]; ++i)
+        for ( i=starts_cpy[0]; i <= array.get_topology().__ends[0]; ++i) 
         {
-          // for (j = starts)
+          if (NumDim == 2) 
+            memcpy( &gather.get_array()(i, starts_cpy[1]), 
+                    &array.get_array().__local_array(i, starts_cpy[1]), n_list[1][pid]*sizeof(T));
+
+          if (NumDim == 3) {
+            for ( j=starts_cpy[1]; j <= array.get_topology().__ends[1]; ++j)
+              memcpy( &gather.get_array()(i, j, starts_cpy[2]), 
+                      &array.get_array().__local_array(i, j, starts_cpy[2]), n_list[2][pid]*sizeof(T));
+          }
+
         }
+
+        
       }
     }
   }
@@ -99,7 +108,7 @@ int main( int argc, char ** argv)
   auto world {final_project::mpi::env(argc, argv)};
 
 
-  auto shape {final_project::__detail::__types::__multi_array_shape<2>(9, 13)};
+  auto shape {final_project::__detail::__types::__multi_array_shape<3>(7, 9, 13)};
   // auto an_topology {final_project::__detail::__mpi_types::__mpi_topology<double, 2>(shape, world)};
   // std::cout 
   // << " PROCESS " << an_topology.__rank 
@@ -140,7 +149,7 @@ int main( int argc, char ** argv)
   { }
 
   // 
-  auto DD {final_project::array::array_distribute<double, 2>(shape, world)};
+  auto DD {final_project::array::array_distribute<double, 3>(shape, world)};
   DD.fill_boundary(1);
 
   // std::cout << DD.get_array() << std::endl;
@@ -151,16 +160,18 @@ int main( int argc, char ** argv)
   {
     diff = DD.update();
     MPI_Reduce(&diff, &gdiff, 1, MPI_DOUBLE, MPI_SUM, 0, world.comm());
-    if (world.rank() == 0 && i % 10 == 0) std::cout << std::fixed << std::setprecision(15) << std::setw(15) << gdiff << std::endl;
+    // if (world.rank() == 0 && i % 10 == 0) std::cout << std::fixed << std::setprecision(15) << std::setw(15) << gdiff << std::endl;
   }
   auto t2 = MPI_Wtime();
   std::cout << DD.get_array() << std::endl;
 
-  MPI_Barrier(world.comm());
-  auto G {final_project::array::array_base<double, 2>(shape)};
-  if (world.rank() == 0) std::cout << G.get_array() << std::endl;
+  // MPI_Barrier(world.comm());
+  auto G {final_project::array::array_base<double, 3>(shape)};
 
-  // std::cout << t2 - t1 << std::endl;
+  Gather(G, DD);
+  // if (world.rank() == 0) std::cout << G.get_array() << std::endl;
+
+  std::cout << t2 - t1 << std::endl;
 
 
 
