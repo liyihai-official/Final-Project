@@ -21,8 +21,8 @@ namespace __types {
 
 typedef std::size_t __size_type;
 
-/// 
-/// 
+/// @brief 
+/// @tparam __NumD 
 template <__size_type __NumD>
   struct __multi_array_shape {
 

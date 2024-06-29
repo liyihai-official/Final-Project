@@ -68,9 +68,6 @@ template <class __T, __size_type __NumD>
       << ")] "
       << std::endl;
     }
-    
-    void __fill_boundary(const __T value);
-
 
     /// @brief Print Distribute arrays in order of Rank
     template <class __U, __size_type __Dims>
@@ -90,10 +87,11 @@ namespace __detail {
 template <class __U, __size_type __Dims>
 std::ostream& operator<<(std::ostream& os, const __mpi_distribute_array<__U, __Dims>& in)
 {
+  
   MPI_Barrier(in.__local_topology.__comm_cart);
   os << "Attempting to print array in order \n";
+  sleep(0.1);
 
-  sleep(0.01);
   MPI_Barrier(in.__local_topology.__comm_cart);
 
   for (int i = 0; i < in.__local_topology.__num_procs; ++i)
@@ -106,49 +104,13 @@ std::ostream& operator<<(std::ostream& os, const __mpi_distribute_array<__U, __D
   << in.__local_array;
     }
     fflush(stdout);
-    sleep(0.01);
+    sleep(0.1);
     MPI_Barrier(in.__local_topology.__comm_cart);
   }
 
   return os;
 }
 
-
-template <class __T, __size_type __NumD>
-  inline 
-  void __mpi_distribute_array<__T, __NumD>::__fill_boundary(const __T value)
-  {
-    
-    if (__local_topology.__starts[0] == 1)
-    {
-      for (__size_type j = 0; j < __local_array.__shape[1]; ++j)
-      {
-        __local_array(0, j) = value;
-      }
-    }
-
-    if (__local_topology.__starts[1] == 1)
-    {
-      for (__size_type j = 0; j < __local_array.__shape[0];++j)
-      {
-        __local_array(j, 0) = value;
-      }
-    }
-
-    if (__local_topology.__ends[0] == __local_topology.__global_shape[0] - 2)
-    {
-      for (__size_type j = 0; j < __local_array.__shape[1]; ++j)
-        __local_array(__local_array.__shape[0]-1, j) = value;
-    }
-
-    if (__local_topology.__ends[1] == __local_topology.__global_shape[1] - 2)
-    {
-      for (__size_type j = 0; j < __local_array.__shape[0]; ++j)
-      {
-        __local_array(j, __local_array.__shape[1] - 1) = value; 
-      }
-    }
-  } 
 
 
 

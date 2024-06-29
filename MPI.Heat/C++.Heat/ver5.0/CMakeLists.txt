@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-# Project Infomation
+# Project Information
 project(FinalProject VERSION 5.0)
 
 # Set MPI as the compiler
@@ -15,6 +15,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Include Directory
 include_directories(${PROJECT_SOURCE_DIR}/include)
+
+# Add OpenMP flag
+set(OpenMP_CXX_FLAGS "-fopenmp")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 
 # Executable Files
 add_executable(main main.cc)

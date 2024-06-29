@@ -25,6 +25,9 @@ namespace __multi_array {
 typedef __types::__size_type __size_type;
 
 
+/// @brief 
+/// @tparam __T 
+/// @tparam __NumD 
 template <class __T, __size_type __NumD>
   class __array {
     public:
@@ -105,7 +108,7 @@ template <class __T, __size_type __NumD>
   __array<__T, __NumD>::__array(__super_array_shape __shape)
     : __shape {__shape}, __data {std::make_unique<__T[]>(__shape.num_size())} 
   { 
-    std::cout << "Constructing Array with number of elements " << __shape.num_size() << "\n";
+    // std::cout << "Constructing Array with number of elements " << __shape.num_size() << "\n";
   }
 
 
@@ -161,7 +164,7 @@ if (current_dim == __Dims - 1)
   os << "|";
   for (__size_type i = 0; i < arr.__shape[current_dim]; ++i) 
 {
-os << std::fixed << std::setprecision(5) << std::setw(9) << arr.__data[offset + i];
+os << std::fixed << std::setprecision(5) << std::setw(9) << (arr.__data[offset + i]);
   }
   os << " |\n";
 } 

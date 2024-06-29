@@ -7,6 +7,7 @@
 #include "array.hpp"
 
 #include <cmath>
+#include <omp.h>
 
 
 // template <typename T, std::size_t NumDims>
@@ -35,12 +36,23 @@
 
 // };
 
+template <typename T, std::size_t NumDim>
+void Gather(final_project::array::array_base<T, NumDim>       & gather,   
+            final_project::array::array_distribute<T, NumDim> & array)
+{
+  std::size_t i {1}, j {1}, k {1};
+
+  MPI_Datatype sbuf_block, temp, mpi_T {final_project::__detail::__mpi_types::__get_mpi_type<T>()};
+
+
+}
+
 int main( int argc, char ** argv)
 {
   auto world {final_project::mpi::env(argc, argv)};
 
 
-  auto shape {final_project::__detail::__types::__multi_array_shape<2>(15, 17)};
+  auto shape {final_project::__detail::__types::__multi_array_shape<2>(9, 13)};
   // auto an_topology {final_project::__detail::__mpi_types::__mpi_topology<double, 2>(shape, world)};
   // std::cout 
   // << " PROCESS " << an_topology.__rank 
@@ -68,8 +80,8 @@ int main( int argc, char ** argv)
   // }
 
 
-  auto DA {final_project::__detail::__mpi_distribute_array<double, 2>(shape, world)};
-  DA.__fill_boundary(1);
+  // auto DA {final_project::__detail::__mpi_distribute_array<double, 2>(shape, world)};
+  // DA.__fill_boundary(1);
 
   // if (world.rank() == 0) 
   // {
@@ -82,10 +94,26 @@ int main( int argc, char ** argv)
 
   // 
   auto DD {final_project::array::array_distribute<double, 2>(shape, world)};
+  DD.fill_boundary(1);
 
+  // std::cout << DD.get_array() << std::endl;
+  double diff {0}, gdiff {0};
 
+  auto t1 = MPI_Wtime();
+  for (std::size_t i = 0; i < 100; ++i)
+  {
+    diff = DD.update();
+    MPI_Reduce(&diff, &gdiff, 1, MPI_DOUBLE, MPI_SUM, 0, world.comm());
+    if (world.rank() == 0 && i % 10 == 0) std::cout << std::fixed << std::setprecision(15) << std::setw(15) << gdiff << std::endl;
+  }
+  auto t2 = MPI_Wtime();
+  std::cout << DD.get_array() << std::endl;
 
-  std::cout << *(DD.body.get()) << std::endl;
+  MPI_Barrier(world.comm());
+  auto G {final_project::array::array_base<double, 2>(shape)};
+  if (world.rank() == 0) std::cout << G.get_array() << std::endl;
+
+  // std::cout << t2 - t1 << std::endl;
 
 
 
