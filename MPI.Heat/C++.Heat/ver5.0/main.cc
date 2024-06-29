@@ -40,9 +40,56 @@ template <typename T, std::size_t NumDim>
 void Gather(final_project::array::array_base<T, NumDim>       & gather,   
             final_project::array::array_distribute<T, NumDim> & array)
 {
-  std::size_t i {1}, j {1}, k {1};
+  int root {0};
+  int pid, i, j, k;
+
+  std::size_t indexs[NumDim];
 
   MPI_Datatype sbuf_block, temp, mpi_T {final_project::__detail::__mpi_types::__get_mpi_type<T>()};
+
+  int num_procs {array.get_topology().__num_procs};
+
+  int Ns[NumDim], starts_cpy[NumDim];
+
+  int s_list[NumDim][num_procs], n_list[NumDim][num_procs];
+
+  for (std::size_t dim = 0; dim < NumDim; ++dim)
+  {
+    indexs[dim] = 1;
+    Ns[dim] = array.get_topology().__ends[0] - array.get_topology().__starts[0] + 1;
+    starts_cpy[dim] = array.get_topology().__starts[0];
+
+    if (starts_cpy[dim] == 1) 
+    {
+      -- starts_cpy[dim];
+      -- indexs[dim];
+      ++ Ns[dim];
+    }
+
+    if (array.get_topology().__ends[0] == array.get_topology().__global_shape[dim] - 2) 
+      ++ Ns[dim];
+
+
+    MPI_Gather(&starts_cpy[dim], 1, MPI_INT, s_list[dim], 1, MPI_INT, root, array.get_topology().__comm_cart);
+    MPI_Gather(&Ns[dim], 1, MPI_INT, n_list[dim], 1, MPI_INT, root, array.get_topology().__comm_cart);
+  }
+
+
+  if (array.get_topology().__rank == root);
+  {
+
+
+    for (pid = 0; pid < num_procs; ++pid)
+    {
+      if (pid == root)
+      {
+        for ( i = starts_cpy[pid]; i <= array.get_topology().__ends[0]; ++i)
+        {
+          // for (j = starts)
+        }
+      }
+    }
+  }
 
 
 }

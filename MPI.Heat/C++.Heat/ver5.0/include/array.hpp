@@ -32,13 +32,10 @@ template <class T, std::size_t NumDims>
 
   public:
   array_type& get_array()
-  {
-   return *body; 
-  }
+  { return *body; }
+
   array_type& get_array() const
-  {
-    return *body;
-  }
+  { return *body; }
 
  };
 
@@ -69,6 +66,12 @@ template <class T, std::size_t NumDims>
     public:
     array_type& get_array();
     array_type& get_array() const;
+
+    // int& get_num_procs() const 
+    // { return body->__local_topology.__num_procs; }
+
+    mpi_topology& get_topology() const 
+    { return body->__local_topology; }
 
     public:
     void fill_boundary(const T);
