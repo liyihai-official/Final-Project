@@ -316,7 +316,7 @@ int main( int argc, char ** argv)
   auto world {final_project::mpi::env(argc, argv)};
 
 
-  auto shape {final_project::__detail::__types::__multi_array_shape<2>(100, 100)};
+  auto shape {final_project::__detail::__types::__multi_array_shape<2>(19, 17)};
   // auto an_topology {final_project::__detail::__mpi_types::__mpi_topology<double, 2>(shape, world)};
   // std::cout 
   // << " PROCESS " << an_topology.__rank 
@@ -383,9 +383,9 @@ int main( int argc, char ** argv)
   }
   auto t2 = MPI_Wtime();
   // update(GG, DD);
-  // std::cout << DD.get_array() << std::endl;
+  std::cout << DD.get_array() << std::endl;
 
-  // MPI_Barrier(world.comm());
+  MPI_Barrier(world.comm());
   // exchange(DD);
   // MPI_Barrier(world.comm());
   // std::cout << DD.get_array() << std::endl;
@@ -396,6 +396,14 @@ int main( int argc, char ** argv)
   // if (world.rank() == 0) G.saveToBinaryFile("TEST.bin");
 
   // std::cout << t2 - t1 << std::endl;
+  
+  // std::cout 
+  // << "PROC : " << DD.get_topology().__rank 
+  // << " (" << DD.get_topology().__rank << ",1) >>> " 
+  // << DD.get_array().__local_array(DD.get_topology().__rank,1) 
+  // << std::endl;
+  
+  
 
   return 0;
 }
