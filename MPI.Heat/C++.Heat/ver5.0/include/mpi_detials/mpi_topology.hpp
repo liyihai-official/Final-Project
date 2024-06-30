@@ -163,10 +163,13 @@ __array_sub_sizes[i] = __array_sizes[i] - 2;
 
     for (__size_type i = 0; i < __NumD; ++i)
     {
-__array_sub_sizes[i] = 1;
+      auto temp = __array_sub_sizes[i];
+      __array_sub_sizes[i] = 1;
 MPI_Type_create_subarray(__dimension, __array_sizes, __array_sub_sizes, __array_starts, 
                           MPI_ORDER_C, __mpi_value_type, &__halo_vectors[i]);
 MPI_Type_commit(&__halo_vectors[i]);
+
+      __array_sub_sizes[i] = temp;
     }
 
 

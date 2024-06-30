@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <vector>
-#include <cmath>
+#include <fstream>
 #include "mpi_distribute/mpi_distribute_array.hpp"
 #include "assert.hpp"
 
@@ -36,6 +36,20 @@ template <class T, std::size_t NumDims>
 
   array_type& get_array() const
   { return *body; }
+
+  void saveToBinaryFile(const std::string & filename) const {
+    std::ofstream ofs(filename, std::ios::binary);
+
+    if (!ofs) { throw std::runtime_error("Cannot Open File."); }
+
+    for (size_type i = 0; i < NumDims; ++i) {
+      auto temp {body->__shape[i]};
+      ofs.write(reinterpret_cast<const char*>(&temp), sizeof((temp)));
+    }
+    
+    ofs.write(reinterpret_cast<const char*>(body->begin()), body->size() * sizeof(T));
+    
+  }
 
  };
 
@@ -73,66 +87,66 @@ template <class T, std::size_t NumDims>
     public:
     void fill_boundary(const T);
 
-    T update()
-    {
-      T diff {0}, temp;
-      std::size_t off;
+    // T update()
+    // {
+    //   T diff {0}, temp;
+    //   std::size_t off;
 
-      if (NumDims == 2)
-      {      
-      #pragma omp parallel for private(temp) num_threads(2) reduction(+:diff)
-      for (std::size_t id = 0; id < 2; ++id)
-      {
-        for (std::size_t i = 1; i < body->__local_array.__shape[0]-1; ++i)
-        {
-          off = 1 + (i + id + 1) % 2;
-          for (std::size_t j = off; j < body->__local_array.__shape[1]-1; j+=2)
-          {
-            temp = body->__local_array(i,j);
-            body->__local_array(i,j) = 0.25 * (
-              body->__local_array(i-1,j) + body->__local_array(i+1,j) + 
-              body->__local_array(i,j-1) + body->__local_array(i,j+1));
+    //   if (NumDims == 2)
+    //   {      
+    //   #pragma omp parallel for private(temp) num_threads(2) reduction(+:diff)
+    //   for (std::size_t id = 0; id < 2; ++id)
+    //   {
+    //     for (std::size_t i = 1; i < body->__local_array.__shape[0]-1; ++i)
+    //     {
+    //       off = 1 + (i + id + 1) % 2;
+    //       for (std::size_t j = off; j < body->__local_array.__shape[1]-1; j+=2)
+    //       {
+    //         temp = body->__local_array(i,j);
+    //         body->__local_array(i,j) = 0.25 * (
+    //           body->__local_array(i-1,j) + body->__local_array(i+1,j) + 
+    //           body->__local_array(i,j-1) + body->__local_array(i,j+1));
 
-            diff += std::pow(temp - body->__local_array(i,j), 2);
-          }
-        }
-      }
-      diff = std::sqrt(diff / (T) ((body->__local_array.__shape[0]-1) * (body->__local_array.__shape[1]-1)));
-      }
+    //         diff += std::pow(temp - body->__local_array(i,j), 2);
+    //       }
+    //     }
+    //   }
+    //   diff = std::sqrt(diff / (T) ((body->__local_array.__shape[0]-1) * (body->__local_array.__shape[1]-1)));
+    //   }
 
-    if (NumDims == 3)
-    {      
-        #pragma omp parallel for private(temp) num_threads(2) reduction(+:diff)
-        for (std::size_t id = 0; id < 2; ++id)
-        {
-            for (std::size_t i = 1; i < body->__local_array.__shape[0]-1; ++i)
-            {
-                for (std::size_t j = 1; j < body->__local_array.__shape[1]-1; ++j)
-                {
-                    for (std::size_t k = 1; k < body->__local_array.__shape[2]-1; ++k)
-                    {
-                        if ((i + j + k + id) % 2 == 0)
-                        {
-    temp = body->__local_array(i,j,k);
-    body->__local_array(i,j,k) = (1.0 / 6.0) * (
-        body->__local_array(i-1,j,k) + body->__local_array(i+1,j,k) +
-        body->__local_array(i,j-1,k) + body->__local_array(i,j+1,k) +
-        body->__local_array(i,j,k-1) + body->__local_array(i,j,k+1));
+    // if (NumDims == 3)
+    // {      
+    //     #pragma omp parallel for private(temp) num_threads(2) reduction(+:diff)
+    //     for (std::size_t id = 0; id < 2; ++id)
+    //     {
+    //         for (std::size_t i = 1; i < body->__local_array.__shape[0]-1; ++i)
+    //         {
+    //             for (std::size_t j = 1; j < body->__local_array.__shape[1]-1; ++j)
+    //             {
+    //                 for (std::size_t k = 1; k < body->__local_array.__shape[2]-1; ++k)
+    //                 {
+    //                     if ((i + j + k + id) % 2 == 0)
+    //                     {
+    //                       temp = body->__local_array(i,j,k);
+    //                       body->__local_array(i,j,k) = (1.0 / 6.0) * (
+    //                           body->__local_array(i-1,j,k) + body->__local_array(i+1,j,k) +
+    //                           body->__local_array(i,j-1,k) + body->__local_array(i,j+1,k) +
+    //                           body->__local_array(i,j,k-1) + body->__local_array(i,j,k+1));
 
-    diff += std::pow(temp - body->__local_array(i,j,k), 2);
-                        }
-                    }
-                }
-            }
-        }
-        diff = std::sqrt(diff / (T) (
-            (body->__local_array.__shape[0]-2) * 
-            (body->__local_array.__shape[1]-2) * 
-            (body->__local_array.__shape[2]-2)
-        ));
-    }
-      return diff;
-    }
+    //                       diff += std::pow(temp - body->__local_array(i,j,k), 2);
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     diff = std::sqrt(diff / (T) (
+    //         (body->__local_array.__shape[0]-2) * 
+    //         (body->__local_array.__shape[1]-2) * 
+    //         (body->__local_array.__shape[2]-2)
+    //     ));
+    // }
+    //   return diff;
+    // }
 
 }; // class array_distribute
 
@@ -192,10 +206,10 @@ template <class T, std::size_t NumDims>
         for (i = 0; i < ni; ++i) body->__local_array(i, 0) = junk_value;
 
       if (body->__local_topology.__ends[0] == Ni - 2)
-        for (j = 0; j < nj; ++j) body->__local_array(ni-1, j) = junk_value;
+        for (j = 0; j < nj; ++j) body->__local_array(ni-1, j) = junk_value + 1;
 
       if (body->__local_topology.__ends[1] == Nj - 2)
-        for (i = 0; i < ni; ++i) body->__local_array(i, nj - 1) = 0; 
+        for (i = 0; i < ni; ++i) body->__local_array(i, nj - 1) = -1; 
     }
 
     if (NumDims == 3)
