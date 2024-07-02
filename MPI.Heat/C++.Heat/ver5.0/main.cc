@@ -11,6 +11,8 @@
 #include <omp.h>
 #include <vector>
 #include <cstring>
+
+
 // template <typename T, std::size_t NumDims>
 // struct heat_equation {
 
@@ -36,50 +38,6 @@
 //   T diags[NumDims], weights[NumDims], minRange[NumDims], maxRange[NumDims], deltaXs[NumDims];
 
 // };
-
-
-template <typename T, std::size_t NumDim>
-void exchange( final_project::array::array_distribute<T, NumDim> & out )
-{
-  if (NumDim == 2)
-  {
-    std::size_t dim {0};
-    // for (std::size_t dim = 0; dim < 1; ++dim)
-    {
-      auto flag {dim};
-      auto n_size {out.get_array().__local_array.__shape[dim]};
-      MPI_Sendrecv( &out.get_array().__local_array(1,1), 1, 
-                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
-                    &out.get_array().__local_array(n_size-1, 1), 1, 
-                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
-                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-
-      MPI_Sendrecv( &out.get_array().__local_array(n_size-2,1), 1, 
-                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
-                    &out.get_array().__local_array(0, 1), 1, 
-                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
-                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-
-      dim = 1;
-      flag = dim;
-      n_size = out.get_array().__local_array.__shape[dim];
-      MPI_Sendrecv( &out.get_array().__local_array(1,        1), 1, 
-                          out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim  ], flag,
-                    &out.get_array().__local_array(1, n_size-1), 1, 
-                          out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
-                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-
-      MPI_Sendrecv( &out.get_array().__local_array(1, n_size-2), 1, 
-                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
-                    &out.get_array().__local_array(1, 0), 1, 
-                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
-                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-    }
-
-
-  }
-}
-
 
 
 
@@ -111,6 +69,42 @@ T update(final_project::array::array_distribute<T, NumDim> & in)
     }
     diff = std::sqrt(diff / (T)((in.get_array().__local_array.__shape[0]-1) * (in.get_array().__local_array.__shape[1]-1)));
   }
+
+
+  if (NumDim == 3)
+  {      
+      #pragma omp parallel for private(temp) num_threads(2) reduction(+:diff)
+      for (std::size_t id = 0; id < 2; ++id)
+      {
+          for (std::size_t i = 1; i < in.get_array().__local_array.__shape[0] - 1; ++i)
+          {
+              for (std::size_t j = 1; j < in.get_array().__local_array.__shape[1] - 1; ++j)
+              {
+                  for (std::size_t k = 1; k < in.get_array().__local_array.__shape[2] - 1; ++k)
+                  {
+                      if ((i + j + k + id) % 2 == 0)
+                      {
+                        temp = in.get_array().__local_array(i,j,k);
+                        in.get_array().__local_array(i,j,k) = (1.0 / 6.0) * (
+                            in.get_array().__local_array(i-1,j,k) + in.get_array().__local_array(i+1,j,k) +
+                            in.get_array().__local_array(i,j-1,k) + in.get_array().__local_array(i,j+1,k) +
+                            in.get_array().__local_array(i,j,k-1) + in.get_array().__local_array(i,j,k+1));
+
+                        diff += std::pow(temp - in.get_array().__local_array(i,j,k), 2);
+                      }
+                  }
+              }
+          }
+      }
+      diff = std::sqrt(diff / (T) (
+          (in.get_array().__local_array.__shape[0]-2) * 
+          (in.get_array().__local_array.__shape[1]-2) * 
+          (in.get_array().__local_array.__shape[2]-2)
+      ));
+  }
+
+
+
   return diff;
 }
 
@@ -399,7 +393,7 @@ int main( int argc, char ** argv)
   auto world {final_project::mpi::env(argc, argv)};
 
 
-  auto shape {final_project::__detail::__types::__multi_array_shape<3>(50, 50, 50)};
+  auto shape {final_project::__detail::__types::__multi_array_shape<3>(200, 200, 200)};
   // auto an_topology {final_project::__detail::__mpi_types::__mpi_topology<double, 2>(shape, world)};
   // std::cout 
   // << " PROCESS " << an_topology.__rank 
@@ -454,14 +448,16 @@ int main( int argc, char ** argv)
     // diff = update(DD);
     // diff = DD.update();
 
-    diff = update(DD, GG);
+    // diff = update(DD, GG);
     // exchange(GG);
     // MPI_Reduce(&diff, &gdiff, 1, MPI_DOUBLE, MPI_SUM, 0, world.comm());
     // if (world.rank() == 0 && i % 10 == 0) std::cout << std::fixed << std::setprecision(15) << std::setw(15) << gdiff << std::endl;
 
-    diff = update(GG, DD);
+    // diff = update(GG, DD);
     // exchange(DD);
     // MPI_Reduce(&diff, &gdiff, 1, MPI_DOUBLE, MPI_SUM, 0, world.comm());
+
+    diff = update(DD);
   }
   auto t2 = MPI_Wtime();
   // update(GG, DD);
@@ -474,8 +470,8 @@ int main( int argc, char ** argv)
   auto G {final_project::array::array_base<double, 3>(shape)};
 
   Gather(G, DD);
-  if (world.rank() == 0) std::cout << G.get_array() << std::endl;
-  if (world.rank() == 0) G.saveToBinaryFile("TEST.bin");
+  // if (world.rank() == 0) std::cout << G.get_array() << std::endl;
+  // if (world.rank() == 0) G.saveToBinaryFile("TEST.bin");
 
   std::cout << t2 - t1 << std::endl;
   
