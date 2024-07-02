@@ -121,6 +121,7 @@ T update( final_project::array::array_distribute<T, NumDim> & in,
 {
   T diff {0};
 
+  // ------------------------------------------------ Update ------------------------------------------------ //
   if (NumDim == 2)
   {
     for (std::size_t i = 1; i < in.get_array().__local_array.__shape[0] - 1; ++i)
@@ -135,15 +136,44 @@ T update( final_project::array::array_distribute<T, NumDim> & in,
         diff += std::pow(out.get_array().__local_array(i,j) - in.get_array().__local_array(i,j), 2);
       }
     }
-
+    diff = std::sqrt(diff / (T)((
+       in.get_array().__local_array.__shape[0]-1) * 
+      (in.get_array().__local_array.__shape[1]-1))
+    );
   }
 
-  diff = std::sqrt(diff / (T)((in.get_array().__local_array.__shape[0]-1) * (in.get_array().__local_array.__shape[1]-1)));
+  if (NumDim == 3)
+  {
+    for (std::size_t i = 1; i < in.get_array().__local_array.__shape[0] - 1; ++i)
+    {
+      for (std::size_t j = 1; j < in.get_array().__local_array.__shape[1] - 1; ++j)
+      {
+        for (std::size_t k = 1; k < in.get_array().__local_array.__shape[2] - 1; ++k)
+        {
+          out.get_array().__local_array(i,j,k) = 0.166667 * (
+            in.get_array().__local_array(i+1,j,k) + in.get_array().__local_array(i-1,j,k) + 
+            in.get_array().__local_array(i,j+1,k) + in.get_array().__local_array(i,j-1,k) + 
+            in.get_array().__local_array(i,j,k+1) + in.get_array().__local_array(i,j,k-1)
+          );
 
+          diff += std::pow(out.get_array().__local_array(i,j,k) - in.get_array().__local_array(i,j,k), 2);
+        }
+      }
+    }
+    diff = std::sqrt(diff / (T)(
+      (in.get_array().__local_array.__shape[0]-1) * 
+      (in.get_array().__local_array.__shape[1]-1) * 
+      (in.get_array().__local_array.__shape[2]-1))
+    );
+  }
+
+  
+
+  // ------------------------------------------------ Exchange ----------------------------------------------- //
   if (NumDim == 2)
   {
     std::size_t dim {0};
-    // for (std::size_t dim = 0; dim < 1; ++dim)
+    for (std::size_t dim = 0; dim < 1; ++dim)
     {
       auto flag {dim};
       auto n_size {out.get_array().__local_array.__shape[dim]};
@@ -174,6 +204,59 @@ T update( final_project::array::array_distribute<T, NumDim> & in,
                     out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
                     out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
     }
+  }
+
+  if (NumDim == 3)
+  {
+    std::size_t dim {0};
+    {
+      auto flag {dim};
+      auto n_size {out.get_array().__local_array.__shape[dim]};
+
+      MPI_Sendrecv( &out.get_array().__local_array(1,1,1), 1,
+                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
+                    &out.get_array().__local_array(n_size-1, 1, 1), 1,
+                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
+                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
+
+      MPI_Sendrecv( &out.get_array().__local_array(n_size-2,1,1), 1,
+                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
+                    &out.get_array().__local_array(0,1,1), 1,
+                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
+                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
+
+      dim = 1;
+      flag = dim;
+      n_size = out.get_array().__local_array.__shape[dim];
+      MPI_Sendrecv( &out.get_array().__local_array(1,        1, 1), 1, 
+                          out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim  ], flag,
+                    &out.get_array().__local_array(1, n_size-1,1), 1, 
+                          out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
+                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
+
+      MPI_Sendrecv( &out.get_array().__local_array(1, n_size-2,1), 1, 
+                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
+                    &out.get_array().__local_array(1, 0, 1), 1, 
+                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
+                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
+
+
+      dim = 2;
+      flag = dim;
+      n_size = out.get_array().__local_array.__shape[dim];
+      MPI_Sendrecv( &out.get_array().__local_array(1,        1, 1), 1, 
+                          out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim  ], flag,
+                    &out.get_array().__local_array(1, 1, n_size-1), 1, 
+                          out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
+                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
+
+      MPI_Sendrecv( &out.get_array().__local_array(1, 1, n_size-2), 1, 
+                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
+                    &out.get_array().__local_array(1, 1, 1), 1, 
+                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
+                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
+    }
+
   }
 
 
@@ -316,7 +399,7 @@ int main( int argc, char ** argv)
   auto world {final_project::mpi::env(argc, argv)};
 
 
-  auto shape {final_project::__detail::__types::__multi_array_shape<2>(19, 17)};
+  auto shape {final_project::__detail::__types::__multi_array_shape<3>(50, 50, 50)};
   // auto an_topology {final_project::__detail::__mpi_types::__mpi_topology<double, 2>(shape, world)};
   // std::cout 
   // << " PROCESS " << an_topology.__rank 
@@ -357,16 +440,16 @@ int main( int argc, char ** argv)
   { }
 
   // 
-  auto DD {final_project::array::array_distribute<double, 2>(shape, world)};
-  auto GG {final_project::array::array_distribute<double, 2>(shape, world)};
-  DD.fill_boundary(1);
-  GG.fill_boundary(1);
+  auto DD {final_project::array::array_distribute<double, 3>(shape, world)};
+  auto GG {final_project::array::array_distribute<double, 3>(shape, world)};
+  DD.fill_boundary(10);
+  GG.fill_boundary(10);
 
   // std::cout << DD.get_array() << std::endl;
   double diff {0}, gdiff {0};
 
   auto t1 = MPI_Wtime();
-  for (std::size_t i = 0; i < 4; ++i)
+  for (std::size_t i = 0; i < 10000; ++i)
   {
     // diff = update(DD);
     // diff = DD.update();
@@ -379,23 +462,22 @@ int main( int argc, char ** argv)
     diff = update(GG, DD);
     // exchange(DD);
     // MPI_Reduce(&diff, &gdiff, 1, MPI_DOUBLE, MPI_SUM, 0, world.comm());
-
   }
   auto t2 = MPI_Wtime();
   // update(GG, DD);
-  std::cout << DD.get_array() << std::endl;
-
-  MPI_Barrier(world.comm());
-  // exchange(DD);
-  // MPI_Barrier(world.comm());
   // std::cout << DD.get_array() << std::endl;
-  // auto G {final_project::array::array_base<double, 2>(shape)};
 
-  // Gather(G, DD);
-  // if (world.rank() == 0) std::cout << G.get_array() << std::endl;
-  // if (world.rank() == 0) G.saveToBinaryFile("TEST.bin");
+  // MPI_Barrier(world.comm());
+  // exchange(DD);
+  MPI_Barrier(world.comm());
+  // std::cout << DD.get_array() << std::endl;
+  auto G {final_project::array::array_base<double, 3>(shape)};
 
-  // std::cout << t2 - t1 << std::endl;
+  Gather(G, DD);
+  if (world.rank() == 0) std::cout << G.get_array() << std::endl;
+  if (world.rank() == 0) G.saveToBinaryFile("TEST.bin");
+
+  std::cout << t2 - t1 << std::endl;
   
   // std::cout 
   // << "PROC : " << DD.get_topology().__rank 
