@@ -47,7 +47,7 @@ int main( int argc, char ** argv)
   auto world {final_project::mpi::env(argc, argv)};
 
 
-  auto shape {final_project::__detail::__types::__multi_array_shape<2>(500, 500)};
+  auto shape {final_project::__detail::__types::__multi_array_shape<2>(190, 170)};
   // auto an_topology {final_project::__detail::__mpi_types::__mpi_topology<double, 2>(shape, world)};
   // std::cout 
   // << " PROCESS " << an_topology.__rank 
