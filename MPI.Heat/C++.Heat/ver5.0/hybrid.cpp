@@ -8,12 +8,34 @@
 
 #include "update.hpp"
 
+void communicate()
+{
+  sleep(2);
+  std::cout << ">>> ------------------- DO SOME COMMUNICATIONS ------------------- <<< " << std::endl;
+}
+
+void update_bulk(int i, int id, double & data)
+{
+  sleep(1);
+  if (id == 1) std::cout << "DO SOME UPDATES BULK " << id << "\t" << i << std::endl;
+}
 
 int main( int argc, char ** argv)
 {
-  auto world {final_project::mpi::env(argc, argv)};
+  // int provided;
+  // MPI_Init_thread(&argc, &argv, MPI_THREAD_MULTIPLE, &provided);
 
-  auto shape {final_project::__detail::__types::__multi_array_shape<2>(190, 170)};
+  // if (provided < MPI_THREAD_MULTIPLE) 
+  // {
+  //   std::cerr << "Not support MPI-Threads" << std::endl;
+  //   MPI_Abort(MPI_COMM_WORLD, 1);
+  // }
+
+
+  // MPI_Finalize();
+
+  auto world {final_project::mpi::env(argc, argv)};
+  auto shape {final_project::__detail::__types::__multi_array_shape<2>(19, 17)};
 
   auto DD {final_project::array::array_distribute<double, 2>(shape, world)};
   DD.fill_boundary(10);
@@ -22,7 +44,6 @@ int main( int argc, char ** argv)
 
   double diff {0}, gdiff {0}, t_com {0};
   auto G {final_project::array::array_base<double,2>(shape)};
-
 
   double t1 {MPI_Wtime()};
   #pragma omp parallel num_threads(2)
@@ -46,45 +67,28 @@ int main( int argc, char ** argv)
     MPI_Type_commit(&Halos[0]);
     MPI_Type_commit(&Halos[1]);
     
-    for (std::size_t i = 0; i < 235219; ++i)
+    for (std::size_t i = 0; i < 1000; ++i)
     {
-      #pragma omp reduction(+:diff)
-      {
-        diff = update_omp2(DD, id);
-      }
-
+      
+      // #pragma omp reduction(+:diff)
+      // {
+        // diff = update_omp2(DD, id);
+      // }
       // #pragma omp critical
-      {
-        std::size_t dim {0};
-        auto flag {dim};
-        auto n_size {DD.get_array().__local_array.__shape[dim]};
+      // {
+      //   if (i == 999 && id == 0)
+      //   {
+      //     MPI_Sendrecv( &DD.get_array().__local_array(1,1+id), 1, Halos[0], DD.get_topology().__neighbors[2*0], 0, 
+      //                   &DD.get_array().__local_array(DD.get_array().__local_array.__shape[0]-1, 1+id), 1, Halos[0], DD.get_topology().__neighbors[2*0+1], 0,
+      //                   DD.get_topology().__comm_cart, MPI_STATUS_IGNORE);
 
-        MPI_Sendrecv( &DD.get_array().__local_array(1,1+id), 1, 
-                      Halos[dim], DD.get_topology().__neighbors[2*dim], flag,
-                      &DD.get_array().__local_array(n_size-1, 1+id), 1, 
-                      Halos[dim], DD.get_topology().__neighbors[2*dim+1], flag,
-                      DD.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-
-        MPI_Sendrecv( &DD.get_array().__local_array(n_size-2,1+id), 1, 
-                      Halos[dim], DD.get_topology().__neighbors[2*dim+1], flag,
-                      &DD.get_array().__local_array(0, 1+id), 1, 
-                      Halos[dim], DD.get_topology().__neighbors[2*dim], flag,
-                      DD.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-
-        dim = 1;
-        flag = dim;
-        n_size = DD.get_array().__local_array.__shape[dim];
-        MPI_Sendrecv( &DD.get_array().__local_array(1+id,1), 1, 
-                      Halos[dim], DD.get_topology().__neighbors[2*dim], flag,
-                      &DD.get_array().__local_array(1+id, n_size-1), 1, 
-                      Halos[dim], DD.get_topology().__neighbors[2*dim+1], flag,
-                      DD.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-
-        MPI_Sendrecv( &DD.get_array().__local_array(1+id, n_size-2), 1, 
-                      Halos[dim], DD.get_topology().__neighbors[2*dim+1], flag,
-                      &DD.get_array().__local_array(1+id, 0), 1, 
-                      Halos[dim], DD.get_topology().__neighbors[2*dim], flag,
-                      DD.get_topology().__comm_cart, MPI_STATUS_IGNORE);
+      //     MPI_Sendrecv( &DD.get_array().__local_array(DD.get_array().__local_array.__shape[0]-2,1+id), 1, Halos[0], DD.get_topology().__neighbors[2*0+1], 0, 
+      //                   &DD.get_array().__local_array(0, 1+id), 1, Halos[0], DD.get_topology().__neighbors[2*0], 0,
+      //                   DD.get_topology().__comm_cart, MPI_STATUS_IGNORE);
+      //   }
+      // }
+      if (i == 999 && id == 0) {
+        std::cout << DD.get_array() << std::endl;
       }
     }
 
@@ -96,7 +100,7 @@ int main( int argc, char ** argv)
   Gather(G, DD);
   // if (world.rank() == 0) std::cout << G.get_array() << std::endl;
   if (world.rank() == 0) G.saveToBinaryFile("TEST.bin");
-  MPI_Reduce(&t2, &t_com, 1, MPI_DOUBLE, MPI_SUM, 0, world.comm());
+  // MPI_Reduce(&t2, &t_com, 1, MPI_DOUBLE, MPI_SUM, 0, world.comm());
   // if (world.rank() == 0) std::cout << t_com << std::endl;
 
   

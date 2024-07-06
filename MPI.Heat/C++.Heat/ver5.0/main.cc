@@ -97,16 +97,14 @@ int main( int argc, char ** argv)
   double diff {0}, gdiff {0};
 
   auto t1 = MPI_Wtime();
-  for (std::size_t i = 0; i < 1000000; ++i)
+  for (std::size_t i = 0; i < 10000; ++i)
   {
-    // diff = update_ping_pong1(DD, GG);
-    // diff = update_ping_pong1(GG, DD);
-
-    diff = update_omp1(DD);
+    diff = update_ping_pong1(DD, GG);
+    diff = update_ping_pong1(GG, DD);
 
     MPI_Allreduce(&diff, &gdiff, 1, MPI_DOUBLE, MPI_SUM, world.comm());
 
-    if (gdiff <= 1E-10) {
+    if (gdiff <= 1E-3) {
       std::cout << "Converge at : " << i << std::endl;
       break;
     }
