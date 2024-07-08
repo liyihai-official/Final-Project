@@ -10,6 +10,7 @@
 namespace final_project {
 namespace array {
 
+
 /// @brief 
 /// @tparam T 
 /// @tparam NumDims 
@@ -36,6 +37,9 @@ template <class T, std::size_t NumDims>
 
   array_type& get_array() const
   { return *body; }
+
+  size_type& shape(size_type index) const
+  { return body->__shape[index]; }
 
   void saveToBinaryFile(const std::string & filename) const {
     std::ofstream ofs(filename, std::ios::binary);
@@ -81,10 +85,8 @@ template <class T, std::size_t NumDims>
     public:
     void swap(array_distribute & other) 
     { 
-      FINAL_PROJECT_ASSERT_MSG((body->__local_topology == other.body->__local_topology), "Unmatched topology of distributed arrays.");
-      // auto a = body->__local_topology == other.body->__local_topology;
-      // std::cout << "CACA" << a << std::endl;
-      body.swap(other.body); 
+FINAL_PROJECT_ASSERT_MSG((body->__local_topology == other.body->__local_topology), "Unmatched topology of distributed arrays.");
+body.swap(other.body); 
     }
 
     array_type& get_array();
