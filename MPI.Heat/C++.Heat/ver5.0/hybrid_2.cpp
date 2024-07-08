@@ -9,38 +9,6 @@
 #endif
 #include "update.hpp"
 
-void communicate()
-{
-  sleep(2);
-  std::cout << ">>> ------------------- DO SOME COMMUNICATIONS ------------------- <<< " << std::endl;
-}
-
-void update_bulk(int i, int id, double & data)
-{
-  sleep(1);
-  if (id == 1) std::cout << "DO SOME UPDATES BULK " << id << "\t" << i << std::endl;
-}
-
-template <typename T, std::size_t NumDim>
-void update_ping_pong3(  final_project::array::array_distribute<T, NumDim> & in, 
-                        final_project::array::array_distribute<T, NumDim> & out)
-{
-  if (NumDim == 2)
-  {
-    #pragma omp for
-    for (std::size_t i = 1; i < in.get_array().__local_array.__shape[0] - 1; ++i)
-    {
-      for (std::size_t j = 1; j < in.get_array().__local_array.__shape[1] - 1; ++j)
-      {
-        out.get_array().__local_array(i,j) = 0.25 * (
-      in.get_array().__local_array(i+1,j) + in.get_array().__local_array(i-1,j) +
-      in.get_array().__local_array(i,j+1) + in.get_array().__local_array(i,j-1)
-        );
-      }
-    }
-  } 
-}
-
 
 template <typename T, std::size_t NumDim>
 void get_difference3( final_project::array::array_distribute<T, NumDim> & in,
@@ -56,6 +24,75 @@ void get_difference3( final_project::array::array_distribute<T, NumDim> & in,
 }
 
 
+template <typename T, std::size_t NumDim>
+void update_ping_pong_bulk1(  final_project::array::array_distribute<T, NumDim> & in, 
+                              final_project::array::array_distribute<T, NumDim> & out)
+{
+  if (NumDim == 2)
+  {
+    #pragma omp for 
+    for (std::size_t i = 2; i < in.get_array().__local_array.__shape[0] - 2; ++i)
+    {
+      for (std::size_t j = 2; j < in.get_array().__local_array.__shape[1] - 2; ++j)
+      {
+        out.get_array().__local_array(i,j) = 0.25 * (
+          in.get_array().__local_array(i+1,j) + in.get_array().__local_array(i-1,j) +
+          in.get_array().__local_array(i,j+1) + in.get_array().__local_array(i,j-1)
+        );
+      }
+    }
+  }
+}
+
+template <typename T, std::size_t NumDim>
+T update_ping_pong_boundary1( final_project::array::array_distribute<T, NumDim> & in, 
+                              final_project::array::array_distribute<T, NumDim> & out)
+{
+  T diff {0};
+  if (NumDim == 2)
+  {
+    #pragma omp for
+    for (std::size_t i = 1; i < in.get_array().__local_array.__shape[0] - 1; ++i)
+    {
+      std::size_t j = 1;
+      out.get_array().__local_array(i,j) = 0.25 * (
+        in.get_array().__local_array(i+1,j) + in.get_array().__local_array(i-1,j) +
+        in.get_array().__local_array(i,j+1) + in.get_array().__local_array(i,j-1)
+      );
+    }
+
+    #pragma omp for
+    for (std::size_t i = 1; i < in.get_array().__local_array.__shape[0] - 1; ++i)
+    {
+      std::size_t j = in.get_array().__local_array.__shape[1] - 2;
+      out.get_array().__local_array(i,j) = 0.25 * (
+        in.get_array().__local_array(i+1,j) + in.get_array().__local_array(i-1,j) +
+        in.get_array().__local_array(i,j+1) + in.get_array().__local_array(i,j-1)
+      );
+    }
+
+    #pragma omp for
+    for (std::size_t j = 1; j < in.get_array().__local_array.__shape[1] - 1; ++j)
+    {
+      std::size_t i = 1;
+      out.get_array().__local_array(i,j) = 0.25 * (
+        in.get_array().__local_array(i+1,j) + in.get_array().__local_array(i-1,j) +
+        in.get_array().__local_array(i,j+1) + in.get_array().__local_array(i,j-1)
+      );
+    }
+
+    #pragma omp for
+    for (std::size_t j = 1; j < in.get_array().__local_array.__shape[1] - 1; ++j)
+    {
+      std::size_t i = in.get_array().__local_array.__shape[0] - 2;
+      out.get_array().__local_array(i,j) = 0.25 * (
+        in.get_array().__local_array(i+1,j) + in.get_array().__local_array(i-1,j) +
+        in.get_array().__local_array(i,j+1) + in.get_array().__local_array(i,j-1)
+      );
+    }
+  }
+  return diff;
+}
 
 
 template <typename T, std::size_t NumDim>
@@ -63,37 +100,6 @@ void exchange(  final_project::array::array_distribute<T, NumDim> & out )
 {
   if (NumDim == 2)
   {
-    // std::size_t dim {0};
-    // {
-    //   auto flag {dim};
-    //   auto n_size {out.get_array().__local_array.__shape[dim]};
-    //   MPI_Sendrecv( &out.get_array().__local_array(1,1), 1, 
-    //                 out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
-    //                 &out.get_array().__local_array(n_size-1, 1), 1, 
-    //                 out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
-    //                 out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-
-    //   MPI_Sendrecv( &out.get_array().__local_array(n_size-2,1), 1, 
-    //                 out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
-    //                 &out.get_array().__local_array(0, 1), 1, 
-    //                 out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
-    //                 out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-
-    //   dim = 1;
-    //   flag = dim;
-    //   n_size = out.get_array().__local_array.__shape[dim];
-    //   MPI_Sendrecv( &out.get_array().__local_array(1,        1), 1, 
-    //                 out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim  ], flag,
-    //                 &out.get_array().__local_array(1, n_size-1), 1, 
-    //                 out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
-    //                 out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-
-    //   MPI_Sendrecv( &out.get_array().__local_array(1, n_size-2), 1, 
-    //                 out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
-    //                 &out.get_array().__local_array(1, 0), 1, 
-    //                 out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
-    //                 out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-    // }
 
 std::size_t dim {0};
 {
@@ -104,21 +110,21 @@ std::size_t dim {0};
     auto n_size {out.get_array().__local_array.__shape[dim]};
     
     // Send to neighbor 2*dim and receive from neighbor 2*dim+1
+    MPI_Irecv(&out.get_array().__local_array(n_size-1, 1), 1, 
+              out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag, 
+              out.get_topology().__comm_cart, &requests[request_count++]);
+              
     MPI_Isend(&out.get_array().__local_array(1,1), 1, 
               out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag, 
               out.get_topology().__comm_cart, &requests[request_count++]);
 
-    MPI_Irecv(&out.get_array().__local_array(n_size-1, 1), 1, 
-              out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag, 
-              out.get_topology().__comm_cart, &requests[request_count++]);
-
     // Send to neighbor 2*dim+1 and receive from neighbor 2*dim
-    MPI_Isend(&out.get_array().__local_array(n_size-2,1), 1, 
-              out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag, 
-              out.get_topology().__comm_cart, &requests[request_count++]);
-
     MPI_Irecv(&out.get_array().__local_array(0, 1), 1, 
               out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag, 
+              out.get_topology().__comm_cart, &requests[request_count++]);
+
+    MPI_Isend(&out.get_array().__local_array(n_size-2,1), 1, 
+              out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag, 
               out.get_topology().__comm_cart, &requests[request_count++]);
 
     dim = 1;
@@ -126,21 +132,21 @@ std::size_t dim {0};
     n_size = out.get_array().__local_array.__shape[dim];
 
     // Send to neighbor 2*dim and receive from neighbor 2*dim+1
-    MPI_Isend(&out.get_array().__local_array(1, 1), 1, 
-              out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag, 
-              out.get_topology().__comm_cart, &requests[request_count++]);
-
     MPI_Irecv(&out.get_array().__local_array(1, n_size-1), 1, 
               out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag, 
               out.get_topology().__comm_cart, &requests[request_count++]);
 
-    // Send to neighbor 2*dim+1 and receive from neighbor 2*dim
-    MPI_Isend(&out.get_array().__local_array(1, n_size-2), 1, 
-              out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag, 
+    MPI_Isend(&out.get_array().__local_array(1, 1), 1, 
+              out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag, 
               out.get_topology().__comm_cart, &requests[request_count++]);
 
+    // Send to neighbor 2*dim+1 and receive from neighbor 2*dim
     MPI_Irecv(&out.get_array().__local_array(1, 0), 1, 
               out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag, 
+              out.get_topology().__comm_cart, &requests[request_count++]);
+              
+    MPI_Isend(&out.get_array().__local_array(1, n_size-2), 1, 
+              out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag, 
               out.get_topology().__comm_cart, &requests[request_count++]);
 
     // Wait for all non-blocking operations to complete
@@ -149,9 +155,6 @@ std::size_t dim {0};
 
   }
 }
-
-
-
 
 int main( int argc, char ** argv)
 {
@@ -190,21 +193,29 @@ int main( int argc, char ** argv)
         std::cout << "Average Temperature at start: " << 0 << std::endl;
       }
     }
- 
+
   auto start_clock {MPI_Wtime()};
   for (int iter = 1; iter < 3760; iter++)
   {
+    update_ping_pong_bulk1(DD,GG);
     #pragma omp single
     exchange(DD);
-    update_ping_pong3(DD, GG);
+    update_ping_pong_boundary1(DD,GG);
 
     #pragma omp single
     {
       get_difference3(DD,GG, ldiff);
       MPI_Allreduce(&ldiff, &gdiff, 1, MPI_DOUBLE, MPI_SUM, world.comm());
       if (world.rank() == 0 && iter % 100 == 0) 
+      {
+        gdiff = std::sqrt(
+          gdiff / (double)(
+            (shape[0] - 1) * (shape[1] - 1)
+        ));
+
           std::cout   << "Iteration: " << std::fixed << std::setw(5) << iter << "\t" 
-                      << std::fixed << std::setprecision(10) << gdiff << std::endl;
+                      << std::fixed << std::setprecision(10) << gdiff  << std::endl;
+      }
       DD.swap(GG);
     } // omp end single
 

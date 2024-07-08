@@ -47,7 +47,7 @@ int main( int argc, char ** argv)
   auto world {final_project::mpi::env(argc, argv)};
 
 
-  auto shape {final_project::__detail::__types::__multi_array_shape<2>(190, 170)};
+  auto shape {final_project::__detail::__types::__multi_array_shape<2>(500, 500)};
   // auto an_topology {final_project::__detail::__mpi_types::__mpi_topology<double, 2>(shape, world)};
   // std::cout 
   // << " PROCESS " << an_topology.__rank 
@@ -97,14 +97,14 @@ int main( int argc, char ** argv)
   double diff {0}, gdiff {0};
 
   auto t1 = MPI_Wtime();
-  for (std::size_t i = 0; i < 10000; ++i)
+  for (std::size_t i = 0; i < 1000000; ++i)
   {
     diff = update_ping_pong1(DD, GG);
     diff = update_ping_pong1(GG, DD);
 
     MPI_Allreduce(&diff, &gdiff, 1, MPI_DOUBLE, MPI_SUM, world.comm());
 
-    if (gdiff <= 1E-3) {
+    if (gdiff <= 1E-8) {
       std::cout << "Converge at : " << i << std::endl;
       break;
     }
