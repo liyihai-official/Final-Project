@@ -38,11 +38,19 @@ $$ -->
     - MPI/OpenMP programming setup.
     - Learning how to use ```Libtorch``` in C++
 
+
 - Hybrid programming of MPI/SMP (Jun, 25 - Jul. 8)
+Hybrid programming is a reasonable idea of parallel programming which specifically optimized for each cluster hardware structure.
     - Version 4.0 and 5.0 is a Completely rewrite program of version 3.0
         - Add ```CMakeLists``` file to make build process smother, also it is required for ```Libtorch``` compiling.
         - Add visibility attributes for improving safety of programs.
         - The ```multiarray``` objects are rebuilt with template arguments of dimensions (1, 2, 3).
+    
+    - Version 5.0
+        - Add various exchange and evolving strategies on grids.
+            - [x] ping-pong evolving strategies
+            - [ ] even-odd strategies
+
 
 - Update Report.pdf
 
