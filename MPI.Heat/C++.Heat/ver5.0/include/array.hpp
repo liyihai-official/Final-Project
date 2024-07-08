@@ -77,7 +77,16 @@ template <class T, std::size_t NumDims>
     public:
     array_distribute(super_array_shape &, mpi_env &);
 
+
     public:
+    void swap(array_distribute & other) 
+    { 
+      FINAL_PROJECT_ASSERT_MSG((body->__local_topology == other.body->__local_topology), "Unmatched topology of distributed arrays.");
+      // auto a = body->__local_topology == other.body->__local_topology;
+      // std::cout << "CACA" << a << std::endl;
+      body.swap(other.body); 
+    }
+
     array_type& get_array();
     array_type& get_array() const;
 
@@ -203,13 +212,13 @@ template <class T, std::size_t NumDims>
         for (j = 0; j < nj; ++j) body->__local_array(0, j) = junk_value;
       
       if (body->__local_topology.__starts[1] == 1)
-        for (i = 0; i < ni; ++i) body->__local_array(i, 0) = junk_value;
+        for (i = 0; i < ni; ++i) body->__local_array(i, 0) = junk_value * 0.1;
 
       if (body->__local_topology.__ends[0] == Ni - 2)
-        for (j = 0; j < nj; ++j) body->__local_array(ni-1, j) = junk_value + 1;
+        for (j = 0; j < nj; ++j) body->__local_array(ni-1, j) = junk_value * 0.3;
 
       if (body->__local_topology.__ends[1] == Nj - 2)
-        for (i = 0; i < ni; ++i) body->__local_array(i, nj - 1) = -1; 
+        for (i = 0; i < ni; ++i) body->__local_array(i, nj - 1) = junk_value * 0.5; 
     }
 
     if (NumDims == 3)

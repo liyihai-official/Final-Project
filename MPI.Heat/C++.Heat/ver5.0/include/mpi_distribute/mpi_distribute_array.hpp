@@ -47,9 +47,9 @@ template <class __T, __size_type __NumD>
     : __local_topology(__global_shape, __env),
       __local_array(__local_topology.__local_shape)
     {
-
+      
       std::cout 
-      << "PROCS " << __local_topology.__rank 
+      << "PROCS " << std::fixed << std::setw(2) << __local_topology.__rank 
       << " constructs distributed " << __local_topology.__dimension << "D Array:"
       << " Global Shape [" 
       << __global_shape[0] 
@@ -62,11 +62,20 @@ template <class __T, __size_type __NumD>
       // << __local_topology.__local_shape[2] 
       << "]" 
       << " | Coords " << "[("
-      << __local_topology.__starts[0] << ", " << __local_topology.__ends[0] << "), ("
-      << __local_topology.__starts[1] << ", " << __local_topology.__ends[1] << ")" 
+      << std::fixed << std::setw(4) << __local_topology.__starts[0] << ", " 
+      << std::fixed << std::setw(4) << __local_topology.__ends[0] << "), ("
+      << std::fixed << std::setw(4) << __local_topology.__starts[1] << ", " 
+      << std::fixed << std::setw(4) << __local_topology.__ends[1] << ")" 
       // << ", (" << __local_topology.__starts[2] << ", " << __local_topology.__ends[2] 
       << ")] "
       << std::endl;
+    }
+
+    void swap(__mpi_distribute_array & other)
+    {
+      std::cout << "Swap __mpi_distributed_array " << __local_topology == other.__local_topology << std::endl;
+  FINAL_PROJECT_ASSERT_MSG((__local_topology == other.__local_topology), "Matched MPI Topology required for swapping");
+      __local_array.swap(other.__local_array);
     }
 
     /// @brief Print Distribute arrays in order of Rank
@@ -87,11 +96,9 @@ namespace __detail {
 template <class __U, __size_type __Dims>
 std::ostream& operator<<(std::ostream& os, const __mpi_distribute_array<__U, __Dims>& in)
 {
-  
   MPI_Barrier(in.__local_topology.__comm_cart);
+  sleep(1);
   os << "Attempting to print array in order \n";
-  sleep(0.1);
-
   MPI_Barrier(in.__local_topology.__comm_cart);
 
   for (int i = 0; i < in.__local_topology.__num_procs; ++i)

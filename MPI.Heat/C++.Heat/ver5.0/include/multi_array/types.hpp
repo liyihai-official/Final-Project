@@ -45,6 +45,23 @@ template <__size_type __NumD>
 
   __multi_array_shape(const __multi_array_shape& other);  
 
+  bool operator== (__multi_array_shape & other)
+  {
+    bool is_same {true};
+    for (__size_type dim = 0; dim < __NumD; ++dim)
+    {
+      if (other[dim] != sizes[dim]) is_same = false;
+    }
+
+    return is_same;
+  }
+
+  bool operator!= (__multi_array_shape & other)
+  {
+    if (other == *this) { return false; }
+    else return true;
+  }
+
 }; // struct _multi_array_shape
   
 

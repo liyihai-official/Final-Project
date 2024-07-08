@@ -28,7 +28,9 @@ class env {
   env(int argc, char ** argv)
   : comm_ {MPI_COMM_WORLD}
   {
-    MPI_Init(&argc, &argv);
+    // MPI_Init(&argc, &argv);
+    int provided;
+    MPI_Init_thread(&argc, &argv, MPI_THREAD_SERIALIZED, &provided);
     MPI_Comm_size(MPI_COMM_WORLD, &size_);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank_);  
   }

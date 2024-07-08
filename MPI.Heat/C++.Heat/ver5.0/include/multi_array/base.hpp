@@ -71,9 +71,14 @@ template <class __T, __size_type __NumD>
     reference operator()(Args... args);
     reference operator[](__size_type index);
 
+
   public:
     void fill (const_reference value);   
     void assign (const_reference value); 
+    void swap (__array & other) {
+FINAL_PROJECT_ASSERT_MSG((__shape == other.__shape), "Unmatched shape of arrays required."); 
+      __data.swap(other.__data); 
+    }
 
   public:
   template <class __U, __size_type __Dims>

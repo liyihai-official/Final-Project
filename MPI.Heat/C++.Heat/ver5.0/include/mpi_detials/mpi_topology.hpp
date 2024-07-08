@@ -63,6 +63,38 @@ template <typename __T, __size_type __NumD>
 
   /// @brief Destructor of __mpi_topology
   ~__mpi_topology();
+
+
+  bool operator== (__mpi_topology & other)
+  {
+    bool is_same {true};
+
+    if (other.__rank != __rank) return false;
+    if (other.__dimension != __dimension) return false;
+    if (other.__num_procs != __num_procs) return false;
+    if (other.__local_shape != __local_shape) return false;
+    if (other.__global_shape != __global_shape) return false;
+
+    for (__size_type i = 0; i < __NumD; ++i)
+    {
+      if (other.__dims[i] != __dims[i]) return false;
+      if (other.__starts[i] != __starts[i]) return false;
+      if (other.__ends[i] != __ends[i]) return false;
+      if (other.__periods[i] != __periods[i]) return false;
+      if (other.__coordinates[i] != __coordinates[i]) return false;
+    }
+
+    for (__size_type i = 0; i < __NumD * 2; ++i)
+      if (other.__neighbors[i] != __neighbors[i]) return false;
+
+    return is_same;
+  }
+
+  bool operator!= (__mpi_topology &other)
+  {
+    if (other == *this) { return false;}
+    else return true;
+  }
 }; // struct __mpi_topology
 
 
@@ -165,7 +197,7 @@ __array_sub_sizes[i] = __array_sizes[i] - 2;
     {
       auto temp = __array_sub_sizes[i];
       __array_sub_sizes[i] = 1;
-MPI_Type_create_subarray(__dimension, __array_sizes, __array_sub_sizes, __array_starts, 
+MPI_Type_create_subarray( __dimension, __array_sizes, __array_sub_sizes, __array_starts, 
                           MPI_ORDER_C, __mpi_value_type, &__halo_vectors[i]);
 MPI_Type_commit(&__halo_vectors[i]);
 
