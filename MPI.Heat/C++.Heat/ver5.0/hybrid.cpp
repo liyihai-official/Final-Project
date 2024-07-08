@@ -9,18 +9,6 @@
 #endif
 #include "update.hpp"
 
-void communicate()
-{
-  sleep(2);
-  std::cout << ">>> ------------------- DO SOME COMMUNICATIONS ------------------- <<< " << std::endl;
-}
-
-void update_bulk(int i, int id, double & data)
-{
-  sleep(1);
-  if (id == 1) std::cout << "DO SOME UPDATES BULK " << id << "\t" << i << std::endl;
-}
-
 template <typename T, std::size_t NumDim>
 void update_ping_pong3(  final_project::array::array_distribute<T, NumDim> & in, 
                         final_project::array::array_distribute<T, NumDim> & out)
