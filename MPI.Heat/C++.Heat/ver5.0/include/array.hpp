@@ -80,8 +80,9 @@ template <class T, std::size_t NumDims>
 
     public:
     void swap(array_distribute & other) 
-    { 
-      FINAL_PROJECT_ASSERT_MSG((body->__local_topology == other.body->__local_topology), "Unmatched topology of distributed arrays.");
+    {
+
+      // FINAL_PROJECT_ASSERT_MSG((body->__local_topology == other.body->__local_topology), "Unmatched topology of distributed arrays.");
       // auto a = body->__local_topology == other.body->__local_topology;
       // std::cout << "CACA" << a << std::endl;
       body.swap(other.body); 

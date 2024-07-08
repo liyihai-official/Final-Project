@@ -67,33 +67,40 @@ template <typename __T, __size_type __NumD>
 
   bool operator== (__mpi_topology & other)
   {
+    std::cout << "Calling operator == to make comparsion" << std::endl; 
     bool is_same {true};
 
-    if (other.__rank != __rank) return false;
-    if (other.__dimension != __dimension) return false;
-    if (other.__num_procs != __num_procs) return false;
-    if (other.__local_shape != __local_shape) return false;
-    if (other.__global_shape != __global_shape) return false;
+    if (other.__rank != __rank)                       return false;
+    if (other.__dimension != __dimension)             return false;
+    if (other.__num_procs != __num_procs)             return false;
+    if (other.__local_shape != __local_shape)         return false;
+    if (other.__global_shape != __global_shape)       return false;
 
     for (__size_type i = 0; i < __NumD; ++i)
     {
-      if (other.__dims[i] != __dims[i]) return false;
-      if (other.__starts[i] != __starts[i]) return false;
-      if (other.__ends[i] != __ends[i]) return false;
-      if (other.__periods[i] != __periods[i]) return false;
+      std::cout << "FAILING ON THIS STEP " << i 
+                << " " << other.__periods[i] << " vs " << __periods[i]
+                << std::endl;
+      
+      if (other.__dims[i] != __dims[i])               return false;
+      if (other.__starts[i] != __starts[i])           return false;
+      if (other.__ends[i] != __ends[i])               return false;
+      if (other.__periods[i] != __periods[i])         return false;
       if (other.__coordinates[i] != __coordinates[i]) return false;
+
+      
     }
 
     for (__size_type i = 0; i < __NumD * 2; ++i)
-      if (other.__neighbors[i] != __neighbors[i]) return false;
+      if (other.__neighbors[i] != __neighbors[i])     return false;
 
     return is_same;
   }
 
   bool operator!= (__mpi_topology &other)
   {
-    if (other == *this) { return false;}
-    else return true;
+    if (other == *this) { return false; }
+    else                  return true;
   }
 }; // struct __mpi_topology
 
