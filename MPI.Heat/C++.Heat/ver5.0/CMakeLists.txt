@@ -16,12 +16,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # Include Directory
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
+# Add O3 optimization flag
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+
 # Add OpenMP flag
 set(OpenMP_CXX_FLAGS "-fopenmp")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 
 # Executable Files
 add_executable(main main.cc)
+add_executable(naive_hybird hybrid.cpp)
+add_executable(hybird hybrid_2.cpp)
+add_executable(demo hybrid_demo.cc)
 
 # Link package
 # find_package(SomeLibrary REQUIRED)
