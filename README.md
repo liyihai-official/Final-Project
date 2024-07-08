@@ -29,6 +29,24 @@ $$ -->
 <!-- <img src="Heat3D/Heat_3D.gif" alt="Animated GIF" height="200"> -->
 
 ### Development Note
+
+#### Jun, 18- Jul, 8 2024
+- Working Path : ```MPI.Heat/C++Heat/ver5.0``` and ```PINN/```
+
+- Got a local CUDA accelerate supported PC (Jun, 18-30)
+    - Install ```Libtorch``` on ```Linux - Ubuntu 22.04```, with CUDA 12.x suported RTX 4070 .
+    - MPI/OpenMP programming setup.
+    - Learning how to use ```Libtorch``` in C++
+
+- Hybrid programming of MPI/SMP (Jun, 25 - Jul. 8)
+    - Version 4.0 and 5.0 is a Completely rewrite program of version 3.0
+        - Add ```CMakeLists``` file to make build process smother, also it is required for ```Libtorch``` compiling.
+        - Add visibility attributes for improving safety of programs.
+        - The ```multiarray``` objects are rebuilt with template arguments of dimensions (1, 2, 3).
+
+- Update Report.pdf
+
+
 #### Jun, 11-  2024
 Flight to China.
 
