@@ -5,7 +5,10 @@
 struct CustomLoss : torch::nn::Module {
     torch::Tensor forward(  const torch::Tensor & output, 
                             const torch::Tensor & target)
-    {return torch::mse_loss(output, target) + 0.01 * torch::sum(torch::abs(output));}
+
+
+
+    {return torch::mse_loss(output, target); }
 
 }; // end strct Custom loss : torch::nn::Module
 
@@ -69,8 +72,8 @@ int main() {
 
     torch::optim::SGD optimizer(net.parameters(), torch::optim::SGDOptions(0.01));
 
-    auto inputs = torch::rand({10,10}).to(device);
-    auto targets = torch::randn({10,1}).to(device);
+    auto inputs =   torch::rand({10,10}).to(device);
+    auto targets =  torch::randn({10,1}).to(device);
     
     auto t1 {std::chrono::steady_clock::now()};
     for (std::size_t epoch = 0; epoch < 10000000; ++epoch)
