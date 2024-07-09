@@ -76,7 +76,7 @@ int main() {
     auto targets =  torch::randn({10,1}).to(device);
     
     auto t1 {std::chrono::steady_clock::now()};
-    for (std::size_t epoch = 0; epoch < 10000000; ++epoch)
+    for (std::size_t epoch = 0; epoch < 10; ++epoch)
     {
         auto outputs = net.forward(inputs);
         auto loss = custom_loss.forward(outputs, targets);
