@@ -1,0 +1,71 @@
+\section{Problem Setups}
+In this project, I chose to use various numerical approaches to approximate the solutions.
+It begins with Finite Difference Methods(FDM) and an other method employed by deep neural 
+networks which leverage by their capability as universal function approximators
+\cite{DNN-HORNIK1989359}. 
+
+The Kormoglov PDEs are series of equations which describe the motions of Brownian Motions
+\cite{SolveKorPDE}.
+In general, 
+let $T \in (0, +\infty)$, $d \in \mathbb{N}$, 
+let $\mu : \mathbb{R}^d \rightarrow \mathbb{R}^d$ 
+and $\sigma: \mathbb{R}^d \rightarrow \mathbb{R}^{d \times d}$ be the Lipschitz continuous fucntions.
+Let $\varphi : \mathbb{R}^d \rightarrow \mathbb{R}$ be a function, 
+and $u$ be a function from Hilbert Space 
+$[0, T] \times \mathbb{R}^d$ to $\mathbb{R}$
+\begin{align*}
+  u : [0, T] \times \mathbb{R}^d & \longrightarrow \mathbb{R} \\
+      (t, x) & \longmapsto u 
+\end{align*}
+with at most polynomially growing partial derivatives.
+The problem is that $u$ satisfied a below system on $D = [0, T] \times \left[a, b \right]^d $ and 
+$a, b \in \mathbb{R}^d$ with $a < b$,
+\begin{align}
+  & \frac{\partial u}{
+    \partial t} 
+  = \frac{1}{2}
+  \text{Trace}_{\mathbb{R}^d}
+  \left[
+    \sigma(x) \sigma^{*}(x)
+    \left(\text{Hess}_x u\right)
+  \right]
+  +
+  \langle 
+    \mu, 
+    \nabla _x u
+  \rangle_{
+    \mathbb{R}^d
+  } \\
+ & u(0, x) = \varphi(x), 
+ \:\:\:\: 
+ x \in \left[a, b \right]^d
+ \\
+ & \left.
+ \left(
+  \frac{\partial u}{\partial \vec{n}}  + \lambda u 
+ \right)
+ \right|_{x \in \varGamma}
+ = g(t, x) 
+ \:\:\:\: 
+ \forall t \in [0, T],\: x \in \mathbb{R}^d
+\end{align}
+
+The goal is to numerically appriximate the stablized state $u(T, x)$ of the system in the fureture time $T$,
+and in the hypercude space $\left[a, b\right]\in \mathbb{R}^d$ with various boundary conditions $g$.
+
+Reprompt problem, this work aimed at solving this problem in a bigger picture which requires a more general 
+form. 
+In this project, I consider the parametrized and nonliner PDEs of the general form
+\begin{align}
+  \frac{\partial u}{\partial t}
+  + \mathcal{N} 
+  \left[
+    u; \lambda
+  \right] 
+  = 0
+  \:\:\:\: 
+  t \in \left[0. T\right], x \in D
+\end{align}
+where $\mathcal{N}\left[\cdot; \lambda \right]$ stands for a nonlinear operator parametrized by $\lambda$.
+
+\subsection{Navior-Stokz Equation}

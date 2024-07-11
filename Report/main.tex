@@ -57,15 +57,16 @@
 
 
 
-
-
-
-
 \begin{document}
-\title{MAP55640 Final Project}
+\title[Final Project]{MAP55640 - 
+Comparative Analysis of Hybrid-Parallel Finite Difference Methods on Multicore Systems 
+and 
+Physics-Informed Neural Networks on CUDA Systems}
+
+
 \author{Li Yihai}
 \email{liy35@tcd.ie}
-% \authornote{All codes are coded individually.}
+% \authornote{}
 \affiliation{%    
     \institution{Mathematics Institute}
     \institution{High Performance Computing}
@@ -73,10 +74,22 @@
     \country{Ireland}
 }
 
+\author{Mike Peardon}
+\authornote{Supervisor of this Final Project}
+\email{mjp@maths.tcd.ie}
+\affiliation{    
+  \institution{Mathematics Institute}
+  \institution{High Performance Computing}
+  \city{Dublin}
+  \country{Ireland}
+}
+
+
 \settopmatter{printacmref=false}
 
 
 \begin{abstract}
+  This is the abstract of this project
 \end{abstract}
     
 % Keywords. The author(s) should pick words that accurately describe
@@ -109,10 +122,20 @@ Despite of the relentless progress, modeling and predicting the evolution of non
 multiscale systems which has inhomogeneous cascades-scales by using classical analytical 
 or computational tools inevitably encounts severe challanges and comes with prohibitive
 cost and multiple sources of uncertainty.
+This project focuses the benefits of the parallalization on appriximating nonliner systems.
+In general, the FDM and FEM methods are evaluated on pure message passing interface (MPI) \cite{MPI}
+parallelizations.
+Moreover, it also prompted Hybrid parallel strategies on FDM which combined MPI and share memory 
+parallalization \cite{SMP}
+(SMP) to make more use of the speed promotions come from faster caches of each compute unit. 
+Besides the Hybrid strategies on FDM, the FEM is built on the external library Deal.II \cite{DEAL.II},
+which also built on MPI parallalizations. (BUT CURRENTLY NOT SURE for Hybrid).
+
 
 \include{chapter/relatedwork}
 \include{chapter/problemstatement}
-\section{Methodology}
+\include{chapter/methedology}
+\include{chapter/implementation}
 \section{Experiments}
 \section{Conclusion}
 \section{Acknowledgement}
