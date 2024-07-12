@@ -230,27 +230,27 @@ namespace final_project
     }
   }
 
-  template <class T>
-  void print_in_order(final_project::array2d_hybrid<T>& in)
-  {
-    MPI_Barrier(in.communicator);
-    std::cout << "Attempting to print 2d array in order" << std::endl;
-    sleep(0.01);
-    MPI_Barrier(in.communicator);
+  // template <class T>
+  // void print_in_order(final_project::array2d_hybrid<T>& in)
+  // {
+  //   MPI_Barrier(in.communicator);
+  //   std::cout << "Attempting to print 2d array in order" << std::endl;
+  //   sleep(0.01);
+  //   MPI_Barrier(in.communicator);
 
-    for ( int i = 0; i < in.num_proc; ++i)
-    {
-      if ( i == in.rank )
-      {
-        std::cout << "proc : " << in.rank << " at " 
-        << "( "<< in.coordinates[0] << ", "<< in.coordinates[1] << " )"
-        << "\n" << in << std::endl;
-      }
-      fflush(stdout);
-      sleep(0.01);
-      MPI_Barrier(in.communicator);
-    }
-  }
+  //   for ( int i = 0; i < in.num_proc; ++i)
+  //   {
+  //     if ( i == in.rank )
+  //     {
+  //       std::cout << "proc : " << in.rank << " at " 
+  //       << "( "<< in.coordinates[0] << ", "<< in.coordinates[1] << " )"
+  //       << "\n" << in << std::endl;
+  //     }
+  //     fflush(stdout);
+  //     sleep(0.01);
+  //     MPI_Barrier(in.communicator);
+  //   }
+  // }
 
 
   /**

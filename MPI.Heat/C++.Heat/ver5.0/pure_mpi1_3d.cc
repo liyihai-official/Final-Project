@@ -15,12 +15,11 @@
 #include "fdm/heat.hpp"
 
 
-
 int main(int argc, char ** argv)
 {
   constexpr double tol {1E-4};
-  constexpr std::size_t nsteps {100}, stepinterval {nsteps / 100};
-  constexpr std::size_t numDIM {3}, nx {50}, ny {50}, nz {50};
+  constexpr std::size_t nsteps {10000000}, stepinterval {nsteps / 1000};
+  constexpr std::size_t numDIM {3}, nx {300}, ny {300}, nz {300};
 
   bool converge {false};
   std::size_t iter {0};  
@@ -68,6 +67,7 @@ int main(int argc, char ** argv)
   sleep(1);
   MPI_Barrier(mpi_world.comm());
 
+
   // Time Evolve
   auto start_clock {MPI_Wtime()};
   for (iter=0; iter < nsteps; ++iter)
@@ -77,22 +77,30 @@ int main(int argc, char ** argv)
     MPI_Allreduce(&ldiff, &gdiff, 1, MPI_DOUBLE, MPI_SUM, mpi_world.comm());
 
     if (mpi_world.rank() == 0 && iter % stepinterval == 0) 
-      std::cout << std::fixed << std::setprecision(13) << std::setw(15) << gdiff << "\t" << ldiff << std::endl;
-
-    if (gdiff  <= tol) {
-      std::cout << "Converge at : " << std::fixed << std::setw(7) << iter << std::endl;
-      converge = true;
-      break;
+    {
+      std::cout << std::fixed << std::setprecision(13) << std::setw(15) << gdiff << std::endl;
+      
     }
 
-    ping.swap(pong);
+    if (gdiff  <= tol) 
+    {
+      if (mpi_world.rank() == 0) 
+        std::cout << "Converge at : " 
+                  << std::fixed << std::setw(7) << iter
+                  << std::endl;
+
+      converge = true;
+      break;
+    } else {
+      ping.swap(pong);
+    }
   }
   auto stop_clock {MPI_Wtime()-start_clock};
 
   // results
-  // if (converge)
+  if (converge)
   {
-    Gather(gather, pong);
+    Gather(gather, ping);
     MPI_Reduce(&stop_clock, &ttime, 1, MPI_DOUBLE, MPI_MAX, 0, mpi_world.comm());
     if (mpi_world.rank() == 0) 
     {
@@ -100,9 +108,9 @@ int main(int argc, char ** argv)
       gather.saveToBinaryFile("TEST.bin");
     }
   } 
-  // else {
-  //   if (mpi_world.rank() == 0) std::cout << "Fail to converge" << std::endl;
-  // }
+  else {
+    if (mpi_world.rank() == 0) std::cout << "Fail to converge" << std::endl;
+  }
 
 
   return 0;

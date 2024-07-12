@@ -74,7 +74,7 @@ int main( int argc, char ** argv)
     MPI_Allreduce(&ldiff, &gdiff, 1, MPI_DOUBLE, MPI_SUM, mpi_world.comm());
 
     if (mpi_world.rank() == 0 && iter % stepinterval == 0) 
-      std::cout << std::fixed << std::setprecision(13) << std::setw(15) << gdiff << std::endl;
+      std::cout << std::fixed << std::setprecision(13) << std::setw(15) << gdiff << "\t" << ldiff << std::endl;
 
     if (gdiff  <= tol) {
       std::cout << "Converge at : " << std::fixed << std::setw(7) << iter << std::endl;

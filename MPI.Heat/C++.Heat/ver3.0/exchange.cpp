@@ -113,12 +113,12 @@ namespace final_project
                     communicator, MPI_STATUS_IGNORE);
 
       flag = 1;
-      MPI_Sendrecv(&(*this)(1    , ny  ), 1, vecs[1], nbr_right, flag,
-                   &(*this)(1     , 0  ), 1, vecs[1], nbr_left,  flag, 
-                   communicator, MPI_STATUS_IGNORE);
-
       MPI_Sendrecv(&(*this)(1    , 1   ), 1, vecs[1], nbr_left,  flag,
                    &(*this)(1    , ny+1), 1, vecs[1], nbr_right, flag, 
+                   communicator, MPI_STATUS_IGNORE);
+                   
+      MPI_Sendrecv(&(*this)(1    , ny  ), 1, vecs[1], nbr_right, flag,
+                   &(*this)(1     , 0  ), 1, vecs[1], nbr_left,  flag, 
                    communicator, MPI_STATUS_IGNORE);
 
     }

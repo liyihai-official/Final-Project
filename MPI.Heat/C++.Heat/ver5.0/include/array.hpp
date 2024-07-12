@@ -102,67 +102,6 @@ template <class T, std::size_t NumDims>
     public:
     void fill_boundary(const T);
 
-    // T update()
-    // {
-    //   T diff {0}, temp;
-    //   std::size_t off;
-
-    //   if (NumDims == 2)
-    //   {      
-    //   #pragma omp parallel for private(temp) num_threads(2) reduction(+:diff)
-    //   for (std::size_t id = 0; id < 2; ++id)
-    //   {
-    //     for (std::size_t i = 1; i < body->__local_array.__shape[0]-1; ++i)
-    //     {
-    //       off = 1 + (i + id + 1) % 2;
-    //       for (std::size_t j = off; j < body->__local_array.__shape[1]-1; j+=2)
-    //       {
-    //         temp = body->__local_array(i,j);
-    //         body->__local_array(i,j) = 0.25 * (
-    //           body->__local_array(i-1,j) + body->__local_array(i+1,j) + 
-    //           body->__local_array(i,j-1) + body->__local_array(i,j+1));
-
-    //         diff += std::pow(temp - body->__local_array(i,j), 2);
-    //       }
-    //     }
-    //   }
-    //   diff = std::sqrt(diff / (T) ((body->__local_array.__shape[0]-1) * (body->__local_array.__shape[1]-1)));
-    //   }
-
-    // if (NumDims == 3)
-    // {      
-    //     #pragma omp parallel for private(temp) num_threads(2) reduction(+:diff)
-    //     for (std::size_t id = 0; id < 2; ++id)
-    //     {
-    //         for (std::size_t i = 1; i < body->__local_array.__shape[0]-1; ++i)
-    //         {
-    //             for (std::size_t j = 1; j < body->__local_array.__shape[1]-1; ++j)
-    //             {
-    //                 for (std::size_t k = 1; k < body->__local_array.__shape[2]-1; ++k)
-    //                 {
-    //                     if ((i + j + k + id) % 2 == 0)
-    //                     {
-    //                       temp = body->__local_array(i,j,k);
-    //                       body->__local_array(i,j,k) = (1.0 / 6.0) * (
-    //                           body->__local_array(i-1,j,k) + body->__local_array(i+1,j,k) +
-    //                           body->__local_array(i,j-1,k) + body->__local_array(i,j+1,k) +
-    //                           body->__local_array(i,j,k-1) + body->__local_array(i,j,k+1));
-
-    //                       diff += std::pow(temp - body->__local_array(i,j,k), 2);
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     diff = std::sqrt(diff / (T) (
-    //         (body->__local_array.__shape[0]-2) * 
-    //         (body->__local_array.__shape[1]-2) * 
-    //         (body->__local_array.__shape[2]-2)
-    //     ));
-    // }
-    //   return diff;
-    // }
-
 }; // class array_distribute
 
 } // namespace array

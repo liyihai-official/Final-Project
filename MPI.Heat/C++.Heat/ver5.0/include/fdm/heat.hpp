@@ -21,11 +21,11 @@ struct heat_equation {
     for (std::size_t i = 0; i < NumDims; ++i)
     {
       dxs[i] = (maxRange[i] - minRange[i]) / glob_shape[i];
-
-      auto mmadr {std::min_element(dxs.begin(), dxs.end())};
-      dt = *mmadr * *mmadr / coff / std::pow(2, NumDims);
-      dt = std::min(dt, 0.1);
     }
+
+    auto mmadr {std::min_element(dxs.begin(), dxs.end())};
+    dt = *mmadr * *mmadr / coff / std::pow(2, NumDims);
+    dt = std::min(dt, 0.1);
 
     for (std::size_t i = 0; i < NumDims; ++i)
     {

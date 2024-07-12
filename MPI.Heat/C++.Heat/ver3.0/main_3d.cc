@@ -78,6 +78,7 @@ int main ( int argc, char ** argv)
     if (i % 500 == 0) {
       char buffer[50];
       std::sprintf(buffer, "visualize/mat_%d.bin", i);
+      std::cout << glob_diff << std::endl;
       A.body.Gather3d(gather, root, comm_cart);
       if (world.rank() == 0) gather.saveToBinaryFile(buffer);
     }    
