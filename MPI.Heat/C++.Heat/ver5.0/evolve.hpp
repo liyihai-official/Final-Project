@@ -1,16 +1,10 @@
 
 #pragma once
-#include "mpi_detials/mpi_topology.hpp"
-#include "mpi_detials/mpi_types.hpp"
-#include "mpi_detials/mpi_environment.hpp"
-#include "multi_array/base.hpp"
-#include "mpi_distribute/mpi_distribute_array.hpp"
-#include "array.hpp"
-
 #include <cmath>
-
 #include <omp.h>
 
+#include "array.hpp"
+#include "fdm/heat.hpp"
 
 template <typename T, std::size_t NumDim>
 T update_omp1(final_project::array::array_distribute<T, NumDim> & in)
@@ -179,30 +173,27 @@ T update_omp2(final_project::array::array_distribute<T, NumDim> & in, const int 
 
 template <typename T, std::size_t NumDim>
 T update_ping_pong1(  final_project::array::array_distribute<T, NumDim> & in, 
-                      final_project::array::array_distribute<T, NumDim> & out)
+                      final_project::array::array_distribute<T, NumDim> & out,
+                      final_project::heat_equation<T, NumDim> & hq)
 {
   T diff {0};
 
   // ------------------------------------------------ Update ------------------------------------------------ //
   if (NumDim == 2)
   {
-    #pragma parallel for num_threads(2)
     for (std::size_t i = 1; i < in.get_array().__local_array.__shape[0] - 1; ++i)
     {
       for (std::size_t j = 1; j < in.get_array().__local_array.__shape[1] - 1; ++j)
       {
-        out.get_array().__local_array(i,j) = 0.25 * (
-          in.get_array().__local_array(i+1,j) + in.get_array().__local_array(i-1,j) +
-          in.get_array().__local_array(i,j+1) + in.get_array().__local_array(i,j-1)
-        );
+        T current {in.get_array().__local_array(i,j)};
+        out.get_array().__local_array(i,j) = 
+          hq.weights[0] * (in.get_array().__local_array(i-1,j) + in.get_array().__local_array(i+1,j))
+        + hq.weights[1] * (in.get_array().__local_array(i,j-1) + in.get_array().__local_array(i,j+1))
+        + current * (hq.diags[0]*hq.weights[0] + hq.diags[1]*hq.weights[1]);
 
         diff += std::pow(out.get_array().__local_array(i,j) - in.get_array().__local_array(i,j), 2);
       }
     }
-    diff = std::sqrt(diff / (T)((
-       in.get_array().__local_array.__shape[0]-1) * 
-      (in.get_array().__local_array.__shape[1]-1))
-    );
   }
 
   if (NumDim == 3)
@@ -219,24 +210,28 @@ T update_ping_pong1(  final_project::array::array_distribute<T, NumDim> & in,
             in.get_array().__local_array(i,j,k+1) + in.get_array().__local_array(i,j,k-1)
           );
 
+          // T current {in.get_array().__local_array(i,j,k)};
+          // out.get_array().__local_array(i,j,k) = 
+          //   hq.weights[0] * (in.get_array().__local_array(i-1,j,k) + in.get_array().__local_array(i+1,j,k))
+          // + hq.weights[1] * (in.get_array().__local_array(i,j-1,k) + in.get_array().__local_array(i,j+1,k))
+          // + hq.weights[2] * (in.get_array().__local_array(i,j,k-1) + in.get_array().__local_array(i,j,k+1))
+          // + current * (hq.diags[0]*hq.weights[0] + hq.diags[1]*hq.weights[1] + hq.diags[2]*hq.weights[2]);
+
           diff += std::pow(out.get_array().__local_array(i,j,k) - in.get_array().__local_array(i,j,k), 2);
         }
       }
     }
-    diff = std::sqrt(diff / (T)(
-      (in.get_array().__local_array.__shape[0]-1) * 
-      (in.get_array().__local_array.__shape[1]-1) * 
-      (in.get_array().__local_array.__shape[2]-1))
-    );
   }
+  return diff;
+}
 
-  
-
+template <typename T, std::size_t NumDim>
+void exchange_ping_pong1(final_project::array::array_distribute<T, NumDim> & out)
+{
   // ------------------------------------------------ Exchange ----------------------------------------------- //
   if (NumDim == 2)
   {
     std::size_t dim {0};
-    // for (std::size_t dim = 0; dim < 1; ++dim)
     {
       auto flag {dim};
       auto n_size {out.get_array().__local_array.__shape[dim]};
@@ -320,10 +315,8 @@ T update_ping_pong1(  final_project::array::array_distribute<T, NumDim> & in,
     }
 
   }
-
-
-  return diff;
 }
+
 
 
 template <typename T, std::size_t NumDim>

@@ -15,6 +15,7 @@
 
 // ------------------------------- Header File ------------------------------- // 
 
+#pragma once
 #include "types.hpp"
 
 namespace final_project {

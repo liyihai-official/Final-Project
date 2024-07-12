@@ -10,6 +10,7 @@
 
 #pragma once 
 #include <memory>
+#include <array>
 #include "multi_array/types.hpp"
 #include "mpi_types.hpp"
 #include "mpi_environment.hpp"
@@ -48,9 +49,13 @@ template <typename __T, __size_type __NumD>
   __super_array_shape       __local_shape;
 
   int __rank;
-  int __starts[__NumD], __ends[__NumD];
-  int __dims[__NumD], __periods[__NumD], __neighbors[__NumD * 2], __coordinates[__NumD];
-  MPI_Datatype __halo_vectors[__NumD];
+  // int __starts[__NumD], __ends[__NumD];
+  // int __dims[__NumD], __periods[__NumD], __neighbors[__NumD * 2], __coordinates[__NumD];
+  std::array<int, __NumD> __starts, __ends, __dims, __periods, __coordinates;
+  std::array<int, __NumD * 2> __neighbors;
+  std::array<MPI_Datatype, __NumD> __halo_vectors;
+
+  // MPI_Datatype __halo_vectors[__NumD];
 
   public:
   /// @brief Default constructor of __mpi_topology
@@ -65,11 +70,9 @@ template <typename __T, __size_type __NumD>
   ~__mpi_topology();
 
 
-  bool operator== (__mpi_topology & other)
+ bool operator==(const __mpi_topology& other) const
   {
-    std::cout << "Calling operator == to make comparsion" << std::endl; 
-    bool is_same {true};
-
+    std::cout << "Calling operator == to make comparison" << std::endl; 
     if (other.__rank != __rank)                       return false;
     if (other.__dimension != __dimension)             return false;
     if (other.__num_procs != __num_procs)             return false;
@@ -81,27 +84,21 @@ template <typename __T, __size_type __NumD>
       std::cout << "FAILING ON THIS STEP " << i 
                 << " " << other.__periods[i] << " vs " << __periods[i]
                 << std::endl;
-      
+
       if (other.__dims[i] != __dims[i])               return false;
       if (other.__starts[i] != __starts[i])           return false;
       if (other.__ends[i] != __ends[i])               return false;
       if (other.__periods[i] != __periods[i])         return false;
       if (other.__coordinates[i] != __coordinates[i]) return false;
-
-      
     }
 
     for (__size_type i = 0; i < __NumD * 2; ++i)
       if (other.__neighbors[i] != __neighbors[i])     return false;
 
-    return is_same;
+    return true;
   }
 
-  bool operator!= (__mpi_topology &other)
-  {
-    if (other == *this) { return false; }
-    else                  return true;
-  }
+  bool operator!= (__mpi_topology &other) { return !(*this == other); }
 }; // struct __mpi_topology
 
 
@@ -143,13 +140,13 @@ template <typename __T, __size_type __NumD>
     __mpi_value_type(MPI_DATATYPE_NULL), __comm_cart(MPI_COMM_NULL), 
     __local_shape(__global_shape), __rank(0)
   {
-    std::fill(      std::begin(__starts), std::end(__starts),       0);
-    std::fill(        std::begin(__ends), std::end(__ends),         0);
-    std::fill(        std::begin(__dims), std::end(__dims),         0);
-    std::fill(     std::begin(__periods), std::end(__periods),      0);
-    std::fill(   std::begin(__neighbors), std::end(__neighbors),    0);
-    std::fill( std::begin(__coordinates), std::end(__coordinates),  0);
-    std::fill(std::begin(__halo_vectors), std::end(__halo_vectors), MPI_DATATYPE_NULL);
+    std::fill(      __starts.begin(), __starts.end(),       0);
+    std::fill(        __ends.begin(), __ends.end(),         0);
+    std::fill(        __dims.begin(), __dims.end(),         0);
+    std::fill(     __periods.begin(), __periods.end(),      0);
+    std::fill(   __neighbors.begin(), __neighbors.end(),    0);
+    std::fill( __coordinates.begin(), __coordinates.end(),  0);
+    std::fill(__halo_vectors.begin(), __halo_vectors.end(), MPI_DATATYPE_NULL);
   }
 
 template <typename __T, __size_type __NumD>
@@ -161,14 +158,13 @@ template <typename __T, __size_type __NumD>
     __mpi_value_type = __get_mpi_type<__T>();
 
     for (__size_type i = 0; i < __NumD; ++i) { __dims[i] = 0; }
-    MPI_Dims_create(__env.size(), __dimension, __dims);
+    MPI_Dims_create(__env.size(), __dimension, __dims.data());
     
-    MPI_Cart_create(__env.comm(), __dimension, __dims, __periods, 1, &__comm_cart);
+    MPI_Cart_create(__env.comm(), __dimension, __dims.data(), __periods.data(), 1, &__comm_cart);
     MPI_Comm_size(__comm_cart, &__num_procs);
-
     // Local Features 
     MPI_Comm_rank(__comm_cart, &__rank);
-    MPI_Cart_coords(__comm_cart, __rank, __dimension, __coordinates);
+    MPI_Cart_coords(__comm_cart, __rank, __dimension, __coordinates.data());
 
 
 auto decomp = [](const int n, const int prob_size, const int rank, int& s, int& e)

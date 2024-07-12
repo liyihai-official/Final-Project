@@ -4,6 +4,8 @@
 #include <memory>
 #include <vector>
 #include <fstream>
+
+#pragma once
 #include "mpi_distribute/mpi_distribute_array.hpp"
 #include "assert.hpp"
 
@@ -57,8 +59,6 @@ template <class T, std::size_t NumDims>
 
  };
 
-
-
 /// @brief 
 /// @tparam T 
 /// @tparam NumDims 
@@ -79,6 +79,7 @@ template <class T, std::size_t NumDims>
     std::unique_ptr<array_type> body;
 
     public:
+    array_distribute() = default;
     array_distribute(super_array_shape &, mpi_env &);
 
 
@@ -238,11 +239,11 @@ template <class T, std::size_t NumDims>
 
       if (body->__local_topology.__starts[0] == 1) 
         for (j = 0; j < nj; ++j) 
-          for (k = 0; k < nk; ++k) body->__local_array(0,j,k) = junk_value;
+          for (k = 0; k < nk; ++k) body->__local_array(0,j,k) = junk_value * 0.1;
 
       if (body->__local_topology.__starts[1] == 1)
         for (i = 0; i < ni; ++i)
-          for (k = 0; k < nk; ++k) body->__local_array(i,0,k) = junk_value;
+          for (k = 0; k < nk; ++k) body->__local_array(i,0,k) = junk_value * 0.3;
 
       if (body->__local_topology.__starts[2] == 1)
         for (i = 0; i < ni; ++i)
@@ -250,15 +251,15 @@ template <class T, std::size_t NumDims>
 
       if (body->__local_topology.__ends[0] == Ni - 2)
         for (j = 0; j < nj; ++j) 
-          for (k = 0; k < nk; ++k) body->__local_array(ni-1,j,k) = junk_value;
+          for (k = 0; k < nk; ++k) body->__local_array(ni-1,j,k) = junk_value * 0.7;
 
       if (body->__local_topology.__ends[1] == Nj - 2)
         for (i = 0; i < ni; ++i)
-          for (k = 0; k < nk; ++k) body->__local_array(i,nj-1,k) = junk_value;
+          for (k = 0; k < nk; ++k) body->__local_array(i,nj-1,k) = junk_value * 0.8;
 
       if (body->__local_topology.__ends[2] == Nk - 2)
         for (i = 0; i < ni; ++i)
-          for (j = 0; j < nj; ++j) body->__local_array(i,j,nk-1) = junk_value;
+          for (j = 0; j < nj; ++j) body->__local_array(i,j,nk-1) = junk_value * 0.5;
     }
   }
 

@@ -7,7 +7,7 @@
 #ifdef _OPENMP
 #include <omp.h>
 #endif
-#include "update.hpp"
+#include "evolve.hpp"
 
 template <typename T, std::size_t NumDim>
 void update_ping_pong3(  final_project::array::array_distribute<T, NumDim> & in, 
