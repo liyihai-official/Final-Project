@@ -7,37 +7,40 @@
 #include "fdm/evolve.hpp"
 #include "fdm/heat.hpp"
 
+#if !defined(NX) || !defined(NY) || !defined(NZ)
+#define NX 50+2
+#define NY 50+2
+#define NZ 50+2
+#endif
+
 
 int main(int argc, char ** argv)
 {
+  constexpr int root_proc {0};
   constexpr double tol {1E-4};
   constexpr std::size_t nsteps {10000000}, stepinterval {nsteps / 1000};
-  constexpr std::size_t numDIM {3}, nx {300}, ny {300}, nz {300};
+  constexpr std::size_t numDIM {3}, nx {NX}, ny {NY}, nz {NZ};
 
   bool converge {false};
   std::size_t iter {0};  
   double gdiff {0.0}, ldiff {0.0}, ttime {0.0};
 
+  // Setups 
   auto mpi_world  {final_project::mpi::env(argc, argv)};
   auto glob_shape {final_project::__detail::__types::__multi_array_shape<numDIM>(nx, ny, nz)};
-
-  // Setups 
   auto heat_equation {final_project::heat_equation<double, numDIM>(glob_shape)};
 
-  auto gather {final_project::array::array_base<double,3>(glob_shape)};
-  auto ping {final_project::array::array_distribute<double, numDIM>(glob_shape, mpi_world)};
-  auto pong {final_project::array::array_distribute<double, numDIM>(glob_shape, mpi_world)};
-
-  // Brief informations
-  MPI_Barrier(mpi_world.comm());
-  if (0 == mpi_world.rank())
+  // Brief information of setups
+  if (root_proc == mpi_world.rank())
   {
-    std::cout << "Heat " << numDIM << "D Simulation Parameters: " << std::endl;;
-    std::cout << "\tRows: " << nx << " Columns: " << ny << std::endl;;
+    std::cout << numDIM << "Dimension Simulation Parameters: " << std::endl;;
+    std::cout << "\tRows: "       << nx 
+              << "\n\tColumns: "  << ny 
+              << "\n\tHeight: "   << nz << std::endl;;
     std::cout << "\tTime steps: " << nsteps << std::endl;
     std::cout << "MPI Parameters: " << std::endl;
     std::cout << "\tNumber of MPI Processes: " << mpi_world.size() << std::endl;
-    std::cout << "\tRoot Process: " << 0 << std::endl;
+    std::cout << "\tRoot Process: " << root_proc << std::endl;
 
 
     std::cout << "Heat Parameters: "    << std::endl;
@@ -50,6 +53,12 @@ int main(int argc, char ** argv)
                                         << heat_equation.dxs[1]     << ", " 
                                         << heat_equation.dxs[2]     << std::endl;
   }
+
+  MPI_Barrier(mpi_world.comm());
+  auto gather {final_project::array::array_base<double,3>(glob_shape)};
+  auto ping {final_project::array::array_distribute<double, numDIM>(glob_shape, mpi_world)};
+  auto pong {final_project::array::array_distribute<double, numDIM>(glob_shape, mpi_world)};
+
 
   // setups
   ping.fill_boundary(10);
@@ -68,14 +77,14 @@ int main(int argc, char ** argv)
     ldiff = update_ping_pong1(ping, pong, heat_equation);
     MPI_Allreduce(&ldiff, &gdiff, 1, MPI_DOUBLE, MPI_SUM, mpi_world.comm());
 
-    if (mpi_world.rank() == 0 && iter % stepinterval == 0) 
+    if (mpi_world.rank() == root_proc && iter % stepinterval == root_proc) 
     {
       std::cout << std::fixed << std::setprecision(13) << std::setw(15) << gdiff << std::endl;
     }
 
     if (gdiff  <= tol) 
     {
-      if (mpi_world.rank() == 0) 
+      if (mpi_world.rank() == root_proc) 
         std::cout << "Converge at : " 
                   << std::fixed << std::setw(7) << iter
                   << std::endl;
@@ -93,14 +102,14 @@ int main(int argc, char ** argv)
   {
     Gather(gather, ping);
     MPI_Reduce(&stop_clock, &ttime, 1, MPI_DOUBLE, MPI_MAX, 0, mpi_world.comm());
-    if (mpi_world.rank() == 0) 
+    if (mpi_world.rank() == root_proc) 
     {
       std::cout << "Total Converge time: " << ttime << std::endl;
       gather.saveToBinaryFile("TEST.bin");
     }
   } 
   else {
-    if (mpi_world.rank() == 0) std::cout << "Fail to converge" << std::endl;
+    if (mpi_world.rank() == root_proc) std::cout << "Fail to converge" << std::endl;
   }
 
 

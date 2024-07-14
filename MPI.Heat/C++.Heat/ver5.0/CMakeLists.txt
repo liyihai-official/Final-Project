@@ -30,6 +30,10 @@ add_executable(naive_hybird hybrid.cpp)
 add_executable(hybird hybrid_2.cpp)
 add_executable(demo hybrid_demo.cc)
 
+
+# Only add Ns definition to pure_mpi1_Xd
+target_compile_definitions(pure_mpi1_2d PRIVATE NX=${NX} NY=${NY})
+target_compile_definitions(pure_mpi1_3d PRIVATE NX=${NX} NY=${NY} NZ=${NZ})
 # Link package
 # find_package(SomeLibrary REQUIRED)
 # target_link_libraries(MyExecutable SomeLibrary)
