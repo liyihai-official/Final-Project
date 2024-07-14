@@ -15,3 +15,6 @@ draft*
 *strong_pro_main*
 *weak_pro_main*
 Report/*
+MPI.Heat/C++.Heat/ver3.0/benckmarks/*
+*.json
+CMakeFiles*
