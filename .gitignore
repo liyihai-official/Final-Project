@@ -14,7 +14,10 @@ draft*
 *best_model_2d/*
 *strong_pro_main*
 *weak_pro_main*
-Report/*
+Report/
 MPI.Heat/C++.Heat/ver3.0/benckmarks/*
 *.json
 CMakeFiles*
+PINN/ver3.0/libtorch/*
+*aux
+
