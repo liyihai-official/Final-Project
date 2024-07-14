@@ -149,12 +149,23 @@ void train(
   for (auto& batch : data_loader)
   {
     auto data {batch.data.to(device)}, targets {batch.target.to(device)};
+    data.requires_grad_(true);
 
     optimizer.zero_grad();
 
     auto output { model.forward(data) };
 
     auto loss {torch::nll_loss(output, targets)};
+
+    auto grad_output = torch::ones_like(output);
+    auto gradients = torch::autograd::grad({output}, {data}, {grad_output}, true);
+
+    auto grad_output_second = torch::ones_like(gradients[0]);
+    auto gradient_second    = torch::autograd::grad({gradients[0]}, {data},
+                                                    /* grad_outputs=*/{grad_output_second},
+                                                    /* Create_graph=*/true);
+    
+    // std::cout << "Gradients : " << gradients[0].to(torch::kCPU) << std::endl;
 
 AT_ASSERT(!std::isnan(loss.template item<float>()));
 

@@ -89,11 +89,25 @@ void train(
   {
     auto data {batch.data.to(device).view({-1,3})}, targets {batch.target.to(device).view({-1,1})};
 
+    data.requires_grad_(true);
+
     optimizer.zero_grad();
 
     auto output { model.forward(data) };
 
-    // std::cout << data.sizes() << "\t" << targets.sizes() << std::endl;
+    auto grad_output  = torch::ones_like(output);
+
+    auto gradient     = torch::autograd::grad({output}, {data}, {grad_output}, true);
+
+    // auto grad_output_second   = torch::ones_like(gradient);
+
+    // auto gradient_second      = torch::autograd::grad({gradient}, {data}, {grad_output_second}, true)[0];
+
+    // std::cout << "CHECK POINT" << gradient[0].to(torch::kCPU)<< std::endl;
+    // auto grad_output_second   = torch::ones_like(gradient);
+
+    // auto gradient_second      = torch::autograd::grad({gradient}, {data}, {grad_output_second}, true)[0];
+//  + grad_output_second.sum().mean()
 
     auto loss {torch::mse_loss(output, targets) };
 

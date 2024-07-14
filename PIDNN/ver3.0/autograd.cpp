@@ -94,13 +94,12 @@ void compute_higher_order_gradients_example(torch::Device & device)
 
   auto loss = torch::nn::MSELoss()(output, target);
 
-
-
   // Use norm of gradients as penalty
   auto grad_output  = torch::ones_like(output);
   auto gradient     = torch::autograd::grad({output}, {input}, 
                                             /* grad_outputs=*/{grad_output},
                                             /* create_graph=*/true)[0];
+
   auto gradient_penalty = torch::pow(
     (gradient.norm(2, /*dims=*/1)-1), 
     2
