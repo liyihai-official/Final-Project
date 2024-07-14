@@ -152,7 +152,6 @@ Eigen::VectorXd NeuralNetwork::feedforward( const Eigen::VectorXd & input_data )
 
   // With Layer Objects 
   a1 = HiddenLayer_1.feedforward(input_data, "relu");
-
   a2 =   OutputLayer.feedforward(a1, "none");
   
   return a2;
@@ -171,9 +170,13 @@ void NeuralNetwork::train(const std::vector<Eigen::VectorXd>& inputS_Boundary,
   for (int epoch = 0; epoch < epochS; ++epoch)
   {
     double total_Err {0.0};
+
     // 累积梯度
     Eigen::MatrixXd total_Delta2 = Eigen::MatrixXd::Zero(OutputLayer.get_ref_Weight().rows(), OutputLayer.get_ref_Weight().cols());
     Eigen::MatrixXd total_Delta1 = Eigen::MatrixXd::Zero(HiddenLayer_1.get_ref_Weight().rows(), HiddenLayer_1.get_ref_Weight().cols());
+
+    Eigen::MatrixXd total_Delta2_Bias = Eigen::VectorXd::Zero(OutputLayer.get_ref_Weight().rows());
+    Eigen::MatrixXd total_Delta1_Bias = Eigen::VectorXd::Zero(HiddenLayer_1.get_ref_Weight().rows());
 
     for (std::size_t i = 0; i < inputS_Boundary.size(); ++i) // Feed the Network Sample by Sample
     {
@@ -182,36 +185,54 @@ void NeuralNetwork::train(const std::vector<Eigen::VectorXd>& inputS_Boundary,
       Eigen::VectorXd output {feedforward(input)};
 
       // Calculate Error
-      Eigen::VectorXd Err = label - output;
-      total_Err += Err.norm(); //                        Temporary Loss Function, L2 Norm.
+      Eigen::VectorXd Err = output - label;
+      total_Err += Err.squaredNorm(); //                        Temporary Loss Function, L2 Norm.
 
-      // auto Delta_NN = HiddenLayer_1.get_derivative("relu");
-      // auto Hessian = 0.5 * (Delta_NN.transpose() * OutputLayer.get_ref_Weight().transpose() * OutputLayer.get_ref_Weight() * Delta_NN);
+      Eigen::MatrixXd Delta_NN = HiddenLayer_1.get_derivative("relu");
+      Eigen::MatrixXd Hessian = 0.5 * (Delta_NN.transpose() * OutputLayer.get_ref_Weight().transpose() * OutputLayer.get_ref_Weight() * Delta_NN);
 
-      // total_Err += Hessian.trace() * Hessian.trace();
+      total_Err += Hessian.trace() * Hessian.trace();
       
       // Backward Propagation
-      Eigen::VectorXd Delta2 = OutputLayer.backward_propagation(Err, "none");
+      Eigen::VectorXd Delta2 = OutputLayer.backward_propagation(2.0 * Err / inputS_Boundary.size(), "none");
       Eigen::VectorXd Delta1 = HiddenLayer_1.backward_propagation(OutputLayer.get_ref_Weight().transpose() * Delta2, "relu");
 
       // 累积梯度
-      std::cout << "----------------------------\n" << Delta2 << std::endl;
       total_Delta2 += Delta2 * HiddenLayer_1.get_ref_a().transpose();
-      total_Delta1 += Delta1 * input.transpose();
+      total_Delta2_Bias += Delta2;
 
-      // Update Weights and Biases
-      // OutputLayer.update_trainable_weights(   Delta2,   HiddenLayer_1.get_ref_a(),  learning_rate);
-      // HiddenLayer_1.update_trainable_weights( Delta1,   input,                      learning_rate);
+      total_Delta1 += Delta1 * input.transpose();
+      total_Delta1_Bias += Delta1;
 
     }
-
     
-    // 在处理完所有样本后更新权重和偏置
-    OutputLayer.update_trainable_weights(total_Delta2 / inputS_Boundary.size(), HiddenLayer_1.get_ref_a(), learning_rate);
-    HiddenLayer_1.update_trainable_weights(total_Delta1 / inputS_Boundary.size(), inputS_Boundary[0], learning_rate);
+    // // 在处理完所有样本后更新权重和偏置
+    // OutputLayer.get_ref_Weight() -= total_Delta2 / inputS_Boundary.size() * learning_rate;
+    // OutputLayer.get_ref_Bias()   -= total_Delta2_Bias / inputS_Boundary.size() * learning_rate;
+
+    // HiddenLayer_1.get_ref_Weight() -= total_Delta1 / inputS_Boundary.size() * learning_rate;
+    // HiddenLayer_1.get_ref_Bias()   -= total_Delta1_Bias / inputS_Boundary.size() * learning_rate;
+
+    // 更新权重和偏置
+    Eigen::MatrixXd Hessian_W2 = Eigen::MatrixXd::Zero(OutputLayer.get_ref_Weight().rows(), OutputLayer.get_ref_Weight().cols());
+    Eigen::MatrixXd Hessian_W1 = Eigen::MatrixXd::Zero(HiddenLayer_1.get_ref_Weight().rows(), HiddenLayer_1.get_ref_Weight().cols());
+   
+    // 计算Hessian矩阵对权重的影响（假设为identity matrix乘以某个因子）
+    Hessian_W2.setIdentity();
+    Hessian_W1.setIdentity();
+    
+    double hessian_factor = 1e-4; // 可调节因子，控制Hessian部分的更新幅度
+    
+    // std::cout << total_Delta2_Bias << "\n----------------------------------------------------- \n" << std::endl;
+    OutputLayer.get_ref_Weight() -= (total_Delta2 / inputS_Boundary.size() + hessian_factor * Hessian_W2) * learning_rate;
+    OutputLayer.get_ref_Bias()   -= (total_Delta2_Bias / inputS_Boundary.size() + hessian_factor * Hessian_W2.colwise().sum().rowwise().sum()) * learning_rate;
+
+    HiddenLayer_1.get_ref_Weight() -= (total_Delta1 / inputS_Boundary.size() + hessian_factor * Hessian_W1) * learning_rate;
+    HiddenLayer_1.get_ref_Bias()   -= (total_Delta1_Bias / inputS_Boundary.size() + hessian_factor * Hessian_W1.rowwise().sum()) * learning_rate;
+
 
     // Verbose for showing details during Training.
-    if (epoch % 100 == 0) std::cout << "Epoch " << epoch << " Total Error: " << total_Err << std::endl;
+    if (epoch % 1000 == 0) std::cout << "Epoch " << epoch << " Total Error: " << total_Err << std::endl;
   }
 }
 
@@ -257,7 +278,7 @@ int main ()
     }
   }
 
-  nn.train(inputS_Boundary, labelS_Boundary, 0.01, 30000);
+  nn.train(inputS_Boundary, labelS_Boundary, 0.001, 20000);
 
   std::cout << " ---------------------------------------------------- \n";
   std::cout << nn.feedforward(Eigen::VectorXd::Zero(2)) << std::endl; // A test for Forward Propagation

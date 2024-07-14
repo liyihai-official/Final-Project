@@ -1,48 +1,47 @@
-#include "multi_array/base.cpp"
 
+#include "final_project.cpp"
+#include "heat.cpp"
 
 #include <iostream>
 #include <iomanip>
+#include <mpi.h>
 
-int main ()
+int main ( int argc, char ** argv )
 {
 
-  auto a = final_project::_detail::_multi_array_shape<3>(2, 3, 4);
-  final_project::_detail::_multi_array::_array<double,3> b (a);
-
-  b.fill(-1);
-  for (std::size_t i = 0; i < b.size(); ++i) b[i] = i+1;
-
-  for (std::size_t i = 0; i < b.size(); ++i) std::cout << b[i] << " ";
-
-  std::cout << std::endl;
-  // std::cout << b._shape[0] << " " << b._shape[1] << std::endl;
-  std::cout << std::endl;
+  auto world {final_project::mpi::env(argc, argv)};
 
 
+  auto A {final_project::array::array_distribute<double, 2>(world, 7, 9)};
+  auto B {final_project::array::array_distribute<double, 2>(world, 7, 9)};
 
-  for (std::size_t i = 0; i < b._shape[0]; ++i)
+  // std::cout << A(1,1) << "\n";
+
+  if (world.rank() == 0)
   {
-    std::cout << "";
-    for (std::size_t j = 0; j < b._shape[1]; ++j)
-    {
-      std::cout << " ";
-      for (std::size_t k = 0; k < b._shape[2]; ++k)
-      {
-        std::cout << " ";
-        std::cout << std::fixed << std::setprecision(5) << std::setw(9) << b(i, j, k);
-        std::cout << " ";
-      }
-      std::cout << " ";
-      std::cout << std::endl;
-    }
-    std::cout << std::endl;
+    std::cout << B << std::endl;
+  } 
+
+  auto t1 = MPI_Wtime();
+  for ( int i = 0; i < 1000; ++i)
+  {
+    
   }
-  std::cout << std::endl;
+  auto t2 = MPI_Wtime();
 
+  auto C = final_project::heat_equation::_heat_pure_mpi<double, 2>(world, 7, 9);
+  auto D = final_project::heat_equation::_heat_pure_mpi<double, 2>(world, 7, 9);
 
+  auto E = final_project::heat_equation::_heat_2d<double>(world, 7, 9);
+  auto F = final_project::heat_equation::_heat_2d<double>(world, 7, 9);
+  // C._sweep(D);
+  // std::cout << C._grid_world(1,1);
+  E._sweep(F);
 
-  
+  if (world.rank() == 0)
+  {
+    std::cout << F._grid_world << std::endl;
+  } 
 
 
 

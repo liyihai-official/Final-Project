@@ -20,4 +20,7 @@ MPI.Heat/C++.Heat/ver3.0/benckmarks/*
 CMakeFiles*
 PINN/ver3.0/libtorch/*
 *aux
-
+*.bin
+MPI.Heat/C++.Heat/ver5.0/build/*
+*.mat
+*.m
