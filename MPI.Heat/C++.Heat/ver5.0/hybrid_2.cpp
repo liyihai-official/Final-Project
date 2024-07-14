@@ -7,7 +7,7 @@
 #ifdef _OPENMP
 #include <omp.h>
 #endif
-#include "evolve.hpp"
+#include "fdm/evolve.hpp"
 
 
 template <typename T, std::size_t NumDim>

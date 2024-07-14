@@ -1,10 +1,159 @@
-
+#ifndef EVOLVE_HPP
+#define EVOLVE_HPP
 #pragma once
 #include <cmath>
 #include <omp.h>
 
 #include "array.hpp"
 #include "fdm/heat.hpp"
+
+
+
+template <typename T, std::size_t NumDim>
+T update_ping_pong1(  final_project::array::array_distribute<T, NumDim> & in, 
+                      final_project::array::array_distribute<T, NumDim> & out,
+                      final_project::heat_equation<T, NumDim> & hq)
+{
+  T diff {0};
+
+  // ------------------------------------------------ Update ------------------------------------------------ //
+  if (NumDim == 2)
+  {
+    for (std::size_t i = 1; i < in.get_array().__local_array.__shape[0] - 1; ++i)
+    {
+      for (std::size_t j = 1; j < in.get_array().__local_array.__shape[1] - 1; ++j)
+      {
+        T current {in.get_array().__local_array(i,j)};
+        out.get_array().__local_array(i,j) = 
+          hq.weights[0] * (in.get_array().__local_array(i-1,j) + in.get_array().__local_array(i+1,j))
+        + hq.weights[1] * (in.get_array().__local_array(i,j-1) + in.get_array().__local_array(i,j+1))
+        + current * (hq.diags[0]*hq.weights[0] + hq.diags[1]*hq.weights[1]);
+
+        diff += std::pow(out.get_array().__local_array(i,j) - in.get_array().__local_array(i,j), 2);
+      }
+    }
+  }
+
+if (NumDim == 3)
+{
+  for (std::size_t i = 1; i < in.get_array().__local_array.__shape[0] - 1; ++i)
+  {
+    for (std::size_t j = 1; j < in.get_array().__local_array.__shape[1] - 1; ++j)
+    {
+      for (std::size_t k = 1; k < in.get_array().__local_array.__shape[2] - 1; ++k)
+      {
+        T current {in.get_array().__local_array(i,j,k)};
+        
+        out.get_array().__local_array(i,j,k) = 
+            hq.weights[0] * (in.get_array().__local_array(i-1,j,k) + in.get_array().__local_array(i+1,j,k))
+          + hq.weights[1] * (in.get_array().__local_array(i,j-1,k) + in.get_array().__local_array(i,j+1,k))
+          + hq.weights[2] * (in.get_array().__local_array(i,j,k-1) + in.get_array().__local_array(i,j,k+1))
+          + current * (hq.diags[0]*hq.weights[0] + hq.diags[1]*hq.weights[1] + hq.diags[2]*hq.weights[2]);
+
+        diff += std::pow(out.get_array().__local_array(i,j,k) - in.get_array().__local_array(i,j,k), 2);
+      }
+    }
+  }
+}
+  return diff;
+}
+
+
+/// @brief 
+/// @tparam T 
+/// @tparam NumDim 
+/// @param out 
+template <typename T, std::size_t NumDim>
+void exchange_ping_pong1(final_project::array::array_distribute<T, NumDim> & out)
+{
+  // ------------------------------------------------ Exchange ----------------------------------------------- //
+  if (NumDim == 2)
+  {
+    std::size_t dim {0};
+    {
+      auto flag {dim};
+      auto n_size {out.get_array().__local_array.__shape[dim]};
+      MPI_Sendrecv( &out.get_array().__local_array(1,1), 1, 
+                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
+                    &out.get_array().__local_array(n_size-1, 1), 1, 
+                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
+                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
+
+      MPI_Sendrecv( &out.get_array().__local_array(n_size-2,1), 1, 
+                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
+                    &out.get_array().__local_array(0, 1), 1, 
+                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
+                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
+
+      dim = 1;
+      flag = dim;
+      n_size = out.get_array().__local_array.__shape[dim];
+      MPI_Sendrecv( &out.get_array().__local_array(1,        1), 1, 
+                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim  ], flag,
+                    &out.get_array().__local_array(1, n_size-1), 1, 
+                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
+                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
+
+      MPI_Sendrecv( &out.get_array().__local_array(1, n_size-2), 1, 
+                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
+                    &out.get_array().__local_array(1, 0), 1, 
+                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
+                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
+    }
+  }
+
+  if (NumDim == 3)
+  {
+    std::size_t dim {0};
+    {
+      auto flag {dim};
+      auto n_size {out.get_array().__local_array.__shape[dim]};
+
+      MPI_Sendrecv( &out.get_array().__local_array(1,1,1), 1,
+                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
+                    &out.get_array().__local_array(n_size-1, 1, 1), 1,
+                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
+                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
+
+      MPI_Sendrecv( &out.get_array().__local_array(n_size-2,1,1), 1,
+                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
+                    &out.get_array().__local_array(0,1,1), 1,
+                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
+                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
+
+      dim = 1;
+      flag = dim;
+      n_size = out.get_array().__local_array.__shape[dim];
+      MPI_Sendrecv( &out.get_array().__local_array(1,        1, 1), 1, 
+                          out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim  ], flag,
+                    &out.get_array().__local_array(1, n_size-1,1), 1, 
+                          out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
+                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
+
+      MPI_Sendrecv( &out.get_array().__local_array(1, n_size-2,1), 1, 
+                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
+                    &out.get_array().__local_array(1, 0, 1), 1, 
+                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
+                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
+
+      dim = 2;
+      flag = dim;
+      n_size = out.get_array().__local_array.__shape[dim];
+      MPI_Sendrecv( &out.get_array().__local_array(1,        1, 1), 1, 
+                          out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim  ], flag,
+                    &out.get_array().__local_array(1, 1, n_size-1), 1, 
+                          out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
+                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
+
+      MPI_Sendrecv( &out.get_array().__local_array(1, 1, n_size-2), 1, 
+                          out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
+                    &out.get_array().__local_array(1, 1, 0), 1, 
+                          out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
+                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
+    }
+
+  }
+}
 
 template <typename T, std::size_t NumDim>
 T update_omp1(final_project::array::array_distribute<T, NumDim> & in)
@@ -171,148 +320,6 @@ T update_omp2(final_project::array::array_distribute<T, NumDim> & in, const int 
 
 
 
-template <typename T, std::size_t NumDim>
-T update_ping_pong1(  final_project::array::array_distribute<T, NumDim> & in, 
-                      final_project::array::array_distribute<T, NumDim> & out,
-                      final_project::heat_equation<T, NumDim> & hq)
-{
-  T diff {0};
-
-  // ------------------------------------------------ Update ------------------------------------------------ //
-  if (NumDim == 2)
-  {
-    for (std::size_t i = 1; i < in.get_array().__local_array.__shape[0] - 1; ++i)
-    {
-      for (std::size_t j = 1; j < in.get_array().__local_array.__shape[1] - 1; ++j)
-      {
-        T current {in.get_array().__local_array(i,j)};
-        out.get_array().__local_array(i,j) = 
-          hq.weights[0] * (in.get_array().__local_array(i-1,j) + in.get_array().__local_array(i+1,j))
-        + hq.weights[1] * (in.get_array().__local_array(i,j-1) + in.get_array().__local_array(i,j+1))
-        + current * (hq.diags[0]*hq.weights[0] + hq.diags[1]*hq.weights[1]);
-
-        diff += std::pow(out.get_array().__local_array(i,j) - in.get_array().__local_array(i,j), 2);
-      }
-    }
-  }
-
-if (NumDim == 3)
-{
-  for (std::size_t i = 1; i < in.get_array().__local_array.__shape[0] - 1; ++i)
-  {
-    for (std::size_t j = 1; j < in.get_array().__local_array.__shape[1] - 1; ++j)
-    {
-      for (std::size_t k = 1; k < in.get_array().__local_array.__shape[2] - 1; ++k)
-      {
-        T current {in.get_array().__local_array(i,j,k)};
-        
-        out.get_array().__local_array(i,j,k) = 
-            hq.weights[0] * (in.get_array().__local_array(i-1,j,k) + in.get_array().__local_array(i+1,j,k))
-          + hq.weights[1] * (in.get_array().__local_array(i,j-1,k) + in.get_array().__local_array(i,j+1,k))
-          + hq.weights[2] * (in.get_array().__local_array(i,j,k-1) + in.get_array().__local_array(i,j,k+1))
-          + current * (hq.diags[0]*hq.weights[0] + hq.diags[1]*hq.weights[1] + hq.diags[2]*hq.weights[2]);
-
-        diff += std::pow(out.get_array().__local_array(i,j,k) - in.get_array().__local_array(i,j,k), 2);
-      }
-    }
-  }
-}
-  return diff;
-}
-
-template <typename T, std::size_t NumDim>
-void exchange_ping_pong1(final_project::array::array_distribute<T, NumDim> & out)
-{
-  // ------------------------------------------------ Exchange ----------------------------------------------- //
-  if (NumDim == 2)
-  {
-    std::size_t dim {0};
-    {
-      auto flag {dim};
-      auto n_size {out.get_array().__local_array.__shape[dim]};
-      MPI_Sendrecv( &out.get_array().__local_array(1,1), 1, 
-                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
-                    &out.get_array().__local_array(n_size-1, 1), 1, 
-                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
-                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-
-      MPI_Sendrecv( &out.get_array().__local_array(n_size-2,1), 1, 
-                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
-                    &out.get_array().__local_array(0, 1), 1, 
-                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
-                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-
-      dim = 1;
-      flag = dim;
-      n_size = out.get_array().__local_array.__shape[dim];
-      MPI_Sendrecv( &out.get_array().__local_array(1,        1), 1, 
-                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim  ], flag,
-                    &out.get_array().__local_array(1, n_size-1), 1, 
-                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
-                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-
-      MPI_Sendrecv( &out.get_array().__local_array(1, n_size-2), 1, 
-                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
-                    &out.get_array().__local_array(1, 0), 1, 
-                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
-                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-    }
-  }
-
-  if (NumDim == 3)
-  {
-    std::size_t dim {0};
-    {
-      auto flag {dim};
-      auto n_size {out.get_array().__local_array.__shape[dim]};
-
-      MPI_Sendrecv( &out.get_array().__local_array(1,1,1), 1,
-                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
-                    &out.get_array().__local_array(n_size-1, 1, 1), 1,
-                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
-                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-
-      MPI_Sendrecv( &out.get_array().__local_array(n_size-2,1,1), 1,
-                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
-                    &out.get_array().__local_array(0,1,1), 1,
-                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
-                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-
-      dim = 1;
-      flag = dim;
-      n_size = out.get_array().__local_array.__shape[dim];
-      MPI_Sendrecv( &out.get_array().__local_array(1,        1, 1), 1, 
-                          out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim  ], flag,
-                    &out.get_array().__local_array(1, n_size-1,1), 1, 
-                          out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
-                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-
-      MPI_Sendrecv( &out.get_array().__local_array(1, n_size-2,1), 1, 
-                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
-                    &out.get_array().__local_array(1, 0, 1), 1, 
-                    out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
-                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-
-      dim = 2;
-      flag = dim;
-      n_size = out.get_array().__local_array.__shape[dim];
-      MPI_Sendrecv( &out.get_array().__local_array(1,        1, 1), 1, 
-                          out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim  ], flag,
-                    &out.get_array().__local_array(1, 1, n_size-1), 1, 
-                          out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
-                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-
-      MPI_Sendrecv( &out.get_array().__local_array(1, 1, n_size-2), 1, 
-                          out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
-                    &out.get_array().__local_array(1, 1, 0), 1, 
-                          out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
-                    out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-    }
-
-  }
-}
-
-
 
 template <typename T, std::size_t NumDim>
 void Gather(final_project::array::array_base<T, NumDim>       & gather,   
@@ -442,3 +449,6 @@ void Gather(final_project::array::array_base<T, NumDim>       & gather,
   }
 
 }
+
+
+#endif // end define EVOLVE_HPP

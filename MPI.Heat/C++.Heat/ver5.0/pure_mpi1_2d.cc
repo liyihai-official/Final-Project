@@ -1,17 +1,11 @@
 #include <iostream>
 #include <cmath>
 
-#include <omp.h>
+// #include <omp.h>
 #include <vector>
 #include <cstring>
 
-#include "mpi_detials/mpi_topology.hpp"
-#include "mpi_detials/mpi_types.hpp"
-#include "mpi_detials/mpi_environment.hpp"
-#include "multi_array/base.hpp"
-#include "mpi_distribute/mpi_distribute_array.hpp"
-
-#include "evolve.hpp"
+#include "fdm/evolve.hpp"
 #include "fdm/heat.hpp"
 
 
