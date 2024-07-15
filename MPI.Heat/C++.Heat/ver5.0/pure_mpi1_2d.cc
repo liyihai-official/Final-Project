@@ -17,8 +17,8 @@
 int main( int argc, char ** argv)
 {
   constexpr int root_proc {0};
-  constexpr double tol {1E-4};
-  constexpr std::size_t nsteps {1000000}, stepinterval {nsteps / 100};
+  constexpr double tol {1E-3};
+  constexpr std::size_t nsteps {1000000}, stepinterval {nsteps / 100000};
   constexpr std::size_t numDIM {2}, nx {NX}, ny {NY};
 
   bool converge {false};
@@ -33,18 +33,20 @@ int main( int argc, char ** argv)
   // Brief information of setups
   if (root_proc == mpi_world.rank())
   {
-    std::cout << numDIM << "Dimension Simulation Parameters: " << std::endl;
+    std::cout << numDIM << " Dimension Simulation Parameters: "     << std::endl;
     std::cout << "\tRows: "       << nx 
-              << "\n\tColumns: "  << ny << std::endl;;
+              << "\n\tColumns: "  << ny     << std::endl;
     std::cout << "\tTime steps: " << nsteps << std::endl;
-    std::cout << "MPI Parameters: " << std::endl;
-    std::cout << "\tNumber of MPI Processes: " << mpi_world.size() << std::endl;
-    std::cout << "\tRoot Process: " << root_proc << std::endl;
+    std::cout << "\tTolerance: "  << tol    << std::endl;
+
+    std::cout << "MPI Parameters: "             << std::endl;
+    std::cout << "\tNumber of MPI Processes: "  << mpi_world.size() << std::endl;
+    std::cout << "\tRoot Process: "             << root_proc        << std::endl;
 
 
     std::cout << "Heat Parameters: "    << std::endl;
-    std::cout << "\tCoefficient: "      << heat_equation.coff << "\n"
-              << "\tTime resolution: "  << heat_equation.dt   << "\n"
+    std::cout << "\tCoefficient: "      << heat_equation.coff       << "\n"
+              << "\tTime resolution: "  << heat_equation.dt         << "\n"
               << "\tWeights: "          << heat_equation.weights[0] << ", " 
                                         << heat_equation.weights[1] << "\n"
               << "\tdxs: "              << heat_equation.dxs[0]     << ", " 
@@ -67,14 +69,14 @@ int main( int argc, char ** argv)
 
   // Time Evolve
   auto start_clock {MPI_Wtime()};
-  for (iter = 0; iter < nsteps; ++iter)
+  for (iter = 1; iter <= 2000; ++iter)
   {
     exchange_ping_pong1(ping);
     ldiff = update_ping_pong1(ping, pong, heat_equation);
     MPI_Allreduce(&ldiff, &gdiff, 1, MPI_DOUBLE, MPI_SUM, mpi_world.comm());
 
     if (mpi_world.rank() == root_proc && iter % stepinterval == root_proc) 
-      std::cout << std::fixed << std::setprecision(13) << std::setw(15) << gdiff << "\t" << ldiff << std::endl;
+      std::cout << std::fixed << std::setprecision(13) << std::setw(15) << gdiff << std::endl;
 
     if (gdiff  <= tol) {
       std::cout << "Converge at : " << std::fixed << std::setw(7) << iter << std::endl;
@@ -87,7 +89,7 @@ int main( int argc, char ** argv)
   auto stop_clock {MPI_Wtime()-start_clock};
 
   // results
-  if (converge)
+  // if (converge)
   {
     Gather(gather, pong);
     MPI_Reduce(&stop_clock, &ttime, 1, MPI_DOUBLE, MPI_MAX, 0, mpi_world.comm());
@@ -96,9 +98,10 @@ int main( int argc, char ** argv)
       std::cout << "Total Converge time: " << ttime << std::endl;
       gather.saveToBinaryFile("TEST.bin");
     }
-  } else {
-    if (mpi_world.rank() == 0) std::cout << "Fail to converge" << std::endl;
-  }
+  } 
+  // else {
+  //   if (mpi_world.rank() == 0) std::cout << "Fail to converge" << std::endl;
+  // }
 
   
   return 0;

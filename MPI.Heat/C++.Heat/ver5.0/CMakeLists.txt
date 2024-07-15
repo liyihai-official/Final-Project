@@ -26,13 +26,14 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 # Executable Files
 add_executable(pure_mpi1_2d pure_mpi1_2d.cc)
 add_executable(pure_mpi1_3d pure_mpi1_3d.cc)
-add_executable(naive_hybird hybrid.cpp)
-add_executable(hybird hybrid_2.cpp)
+add_executable(hybrid_2d hybrid_2d.cc)
+add_executable(hybrid hybrid_2.cpp)
 add_executable(demo hybrid_demo.cc)
 
 
 # Only add Ns definition to pure_mpi1_Xd
 target_compile_definitions(pure_mpi1_2d PRIVATE NX=${NX} NY=${NY})
+target_compile_definitions(hybrid_2d    PRIVATE NX=${NX} NY=${NY})
 target_compile_definitions(pure_mpi1_3d PRIVATE NX=${NX} NY=${NY} NZ=${NZ})
 # Link package
 # find_package(SomeLibrary REQUIRED)
