@@ -33,7 +33,7 @@ x_d, y_d, t_d = map(lambda x: np.expand_dims(x, axis=1),
                     [data[:, 0], data[:, 1], data[:, 2]])
 
 
-print(x_d.shape, y_d.shape, t_d.shape)
+# print(x_d.shape, y_d.shape, t_d.shape)
 
 #
 N_c = 10000
@@ -49,8 +49,8 @@ x_c, y_c, x_d, y_d, t_d =map(lambda x: tf.convert_to_tensor(x,dtype=tf.float32),
                              [x_c, y_c, x_d, y_d, t_d])
 
 
-print(x_c.shape, y_c.shape, x_d.shape, y_d.shape, t_d.shape)
-print(t_d)
+# print(x_c.shape, y_c.shape, x_d.shape, y_d.shape, t_d.shape)
+# print(t_d)
 
 # plt.figure("", figsize=(6, 6))
 # plt.title("Boundary Data points and Collocation points")
@@ -92,6 +92,7 @@ def f(x, y):
     u_xx = tf.gradients(u_x, x)[0]
     u_yy = tf.gradients(u_y, y)[0]
     F = u_xx + u_yy
+    print(u_xx + u_yy)
     return tf.reduce_mean(tf.square(F))
 
 @tf.function
@@ -102,65 +103,112 @@ def u(x, y):
 def mse(y, y_):
     return tf.reduce_mean(tf.square(y-y_))
 
-model = DNN_builder(2, 1, layer, 20, "tanh")
+
+# 
+
+model = DNN_builder(2, 1, 1, 5, "tanh")
+
+x_temp = tf.convert_to_tensor(np.array([0,1]).reshape(2,1), dtype=tf.float32)
+y_temp = tf.convert_to_tensor(np.array([0,1]).reshape(2,1), dtype=tf.float32)
+t_temp = tf.convert_to_tensor(np.array([1,0]).reshape(2,1), dtype=tf.float32)
+
+
+x_temp = tf.convert_to_tensor(np.random.rand(10).reshape(10,1), dtype=tf.float32)
+y_temp = tf.convert_to_tensor(np.random.rand(10).reshape(10,1), dtype=tf.float32)
+
+temp = np.zeros_like(y_temp)
+temp[x_temp <= 0 ] = 1
+
+t_temp = tf.convert_to_tensor(temp, dtype=tf.float32)
+
+
+# print(u(x_temp, y_temp))
 
 loss = 0
 epochs = 100
 opt = tf.keras.optimizers.legacy.Adam(learning_rate=1e-3)
-
-# 用于计算预测
-n = 300
-X = np.linspace(-1, +1, n)
-Y = np.linspace(-1, +1, n)
-X0, Y0 = np.meshgrid(X, Y)
-X = X0.reshape([n*n, 1])
-Y = Y0.reshape([n*n, 1])
-X_T = tf.convert_to_tensor(X)
-Y_T = tf.convert_to_tensor(Y)
 
 epoch = 0
 loss_values = np.array([])
 start = time.time()
 for epoch in range(epochs):
     with tf.GradientTape() as tape:
-        T_ = u(x_d, y_d)
-        l = mse(t_d, T_)
-
-        L = f(x_c, y_c)
-        loss = l+L
+        T_ = u(x_temp, y_temp)
+        l = mse(t_temp, T_)
+        loss = l
+    
     g = tape.gradient(loss, model.trainable_weights)
     opt.apply_gradients(zip(g, model.trainable_weights))
-    loss_values = np.append(loss_values, loss)
-
-    # make predictions / 20 epoch
-    if epoch % 20 == 0 or epoch == epochs-1:
+    loss_vale = np.append(loss_values, loss)
+    if epoch % 100 == 0 :
         print(f"{epoch:5}, {loss.numpy():.3f}")
-        S = u(X_T, Y_T)*10.
-        S = S.numpy().reshape(n, n)
+# print(u(x_temp, y_temp))
+
+L = f(x_temp, y_temp)
+
+
+
+
+# model = DNN_builder(2, 1, layer, 20, "tanh")
+
+# loss = 0
+# epochs = 100
+# opt = tf.keras.optimizers.legacy.Adam(learning_rate=1e-3)    
+
+
+# # 用于计算预测
+# n = 300
+# X = np.linspace(-1, +1, n)
+# Y = np.linspace(-1, +1, n)
+# X0, Y0 = np.meshgrid(X, Y)
+# X = X0.reshape([n*n, 1])
+# Y = Y0.reshape([n*n, 1])
+# X_T = tf.convert_to_tensor(X)
+# Y_T = tf.convert_to_tensor(Y)
+
+# epoch = 0
+# loss_values = np.array([])
+# start = time.time()
+# for epoch in range(epochs):
+#     with tf.GradientTape() as tape:
+#         T_ = u(x_d, y_d)
+#         l = mse(t_d, T_)
+
+#         L = f(x_c, y_c)
+#         loss = l+L
+#     g = tape.gradient(loss, model.trainable_weights)
+#     opt.apply_gradients(zip(g, model.trainable_weights))
+#     loss_values = np.append(loss_values, loss)
+
+#     # make predictions / 20 epoch
+#     if epoch % 20 == 0 or epoch == epochs-1:
+#         print(f"{epoch:5}, {loss.numpy():.3f}")
+#         S = u(X_T, Y_T)*10.
+#         S = S.numpy().reshape(n, n)
         
-end = time.time()
-print(f"\ncomputation time: {end-start:.3f}\n")
+# end = time.time()
+# print(f"\ncomputation time: {end-start:.3f}\n")
 
-loss_dict[layer] = loss_values
-train_time[layer] = end-start
+# loss_dict[layer] = loss_values
+# train_time[layer] = end-start
 
-plt.figure("", figsize=(8, 6), dpi=200)
+# plt.figure("", figsize=(8, 6), dpi=200)
 
-#
-X = np.linspace(-2, +2, n)
-Y = np.linspace(-2, +2, n)
-X0, Y0 = np.meshgrid(X, Y)
-X = X0.reshape([n*n, 1])
-Y = Y0.reshape([n*n, 1])
-X_T = tf.convert_to_tensor(X)
-Y_T = tf.convert_to_tensor(Y)
+# #
+# X = np.linspace(-2, +2, n)
+# Y = np.linspace(-2, +2, n)
+# X0, Y0 = np.meshgrid(X, Y)
+# X = X0.reshape([n*n, 1])
+# Y = Y0.reshape([n*n, 1])
+# X_T = tf.convert_to_tensor(X)
+# Y_T = tf.convert_to_tensor(Y)
 
-plt.subplot(111)
-S = u(X_T, Y_T)
-S = S.numpy().reshape(n, n)
-plt.pcolormesh(-X0, Y0, 10.*S, cmap="jet")
-# plt.title("PINN 8 Hidden Layers")
-plt.xlabel("$x$")
-plt.ylabel("$y$")
-plt.colorbar()
-plt.show()
+# plt.subplot(111)
+# S = u(X_T, Y_T)
+# S = S.numpy().reshape(n, n)
+# plt.pcolormesh(-X0, Y0, 10.*S, cmap="jet")
+# # plt.title("PINN 8 Hidden Layers")
+# plt.xlabel("$x$")
+# plt.ylabel("$y$")
+# plt.colorbar()
+# plt.show()
