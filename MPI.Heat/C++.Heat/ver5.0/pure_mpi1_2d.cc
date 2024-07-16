@@ -89,7 +89,7 @@ int main( int argc, char ** argv)
   auto stop_clock {MPI_Wtime()-start_clock};
 
   // results
-  // if (converge)
+  if (converge)
   {
     Gather(gather, pong);
     MPI_Reduce(&stop_clock, &ttime, 1, MPI_DOUBLE, MPI_MAX, 0, mpi_world.comm());
@@ -99,9 +99,9 @@ int main( int argc, char ** argv)
       gather.saveToBinaryFile("TEST.bin");
     }
   } 
-  // else {
-  //   if (mpi_world.rank() == 0) std::cout << "Fail to converge" << std::endl;
-  // }
+  else {
+    if (mpi_world.rank() == 0) std::cout << "Fail to converge" << std::endl;
+  }
 
   
   return 0;

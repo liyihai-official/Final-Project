@@ -1,5 +1,6 @@
 #ifndef EVOLVE_HPP
 #define EVOLVE_HPP
+
 #pragma once
 #include <cmath>
 #include <omp.h>
@@ -8,7 +9,13 @@
 #include "fdm/heat.hpp"
 
 
-
+/// @brief 
+/// @tparam T 
+/// @tparam NumDim 
+/// @param in 
+/// @param out 
+/// @param hq 
+/// @return 
 template <typename T, std::size_t NumDim>
 T update_ping_pong1(  final_project::array::array_distribute<T, NumDim> & in, 
                       final_project::array::array_distribute<T, NumDim> & out,
@@ -58,6 +65,12 @@ if (NumDim == 3)
   return diff;
 }
 
+
+
+
+
+
+
 /// @brief 
 /// @tparam T 
 /// @tparam NumDim 
@@ -67,12 +80,11 @@ if (NumDim == 3)
 /// @return 
 template <typename T, std::size_t NumDim>
 T update_ping_pong_omp1(  final_project::array::array_distribute<T, NumDim> & in, 
-                      final_project::array::array_distribute<T, NumDim> & out,
-                      final_project::heat_equation<T, NumDim> & hq)
+                          final_project::array::array_distribute<T, NumDim> & out,
+                          final_project::heat_equation<T, NumDim>           & hq)
 {
   T diff {0};
 
-  // ------------------------------------------------ Update ------------------------------------------------ //
   if (NumDim == 2)
   {
     #pragma omp for
@@ -91,43 +103,178 @@ T update_ping_pong_omp1(  final_project::array::array_distribute<T, NumDim> & in
     }
   }
 
-if (NumDim == 3)
-{
-  #pragma omp for
-  for (std::size_t i = 1; i < in.get_array().__local_array.__shape[0] - 1; ++i)
+  if (NumDim == 3)
   {
-    for (std::size_t j = 1; j < in.get_array().__local_array.__shape[1] - 1; ++j)
+    #pragma omp for
+    for (std::size_t i = 1; i < in.get_array().__local_array.__shape[0] - 1; ++i)
     {
-      for (std::size_t k = 1; k < in.get_array().__local_array.__shape[2] - 1; ++k)
+      for (std::size_t j = 1; j < in.get_array().__local_array.__shape[1] - 1; ++j)
       {
-        T current {in.get_array().__local_array(i,j,k)};
-        
-        out.get_array().__local_array(i,j,k) = 
-            hq.weights[0] * (in.get_array().__local_array(i-1,j,k) + in.get_array().__local_array(i+1,j,k))
-          + hq.weights[1] * (in.get_array().__local_array(i,j-1,k) + in.get_array().__local_array(i,j+1,k))
-          + hq.weights[2] * (in.get_array().__local_array(i,j,k-1) + in.get_array().__local_array(i,j,k+1))
-          + current * (hq.diags[0]*hq.weights[0] + hq.diags[1]*hq.weights[1] + hq.diags[2]*hq.weights[2]);
+        for (std::size_t k = 1; k < in.get_array().__local_array.__shape[2] - 1; ++k)
+        {
+          T current {in.get_array().__local_array(i,j,k)};
+          
+          out.get_array().__local_array(i,j,k) = 
+              hq.weights[0] * (in.get_array().__local_array(i-1,j,k) + in.get_array().__local_array(i+1,j,k))
+            + hq.weights[1] * (in.get_array().__local_array(i,j-1,k) + in.get_array().__local_array(i,j+1,k))
+            + hq.weights[2] * (in.get_array().__local_array(i,j,k-1) + in.get_array().__local_array(i,j,k+1))
+            + current * (hq.diags[0]*hq.weights[0] + hq.diags[1]*hq.weights[1] + hq.diags[2]*hq.weights[2]);
 
-        diff += std::pow(out.get_array().__local_array(i,j,k) - in.get_array().__local_array(i,j,k), 2);
+          diff += std::pow(out.get_array().__local_array(i,j,k) - in.get_array().__local_array(i,j,k), 2);
+        }
       }
     }
   }
-}
+
   return diff;
 }
 
+
+
 template <typename T, std::size_t NumDim>
-void get_difference_omp1( final_project::array::array_distribute<T, NumDim> & in,
-                      final_project::array::array_distribute<T, NumDim> & out, T & diff)
+T update_ping_pong_omp_bulk(  final_project::array::array_distribute<T, NumDim> & in, 
+                              final_project::array::array_distribute<T, NumDim> & out,
+                              final_project::heat_equation<T, NumDim>           & hq)
 {
-  for (std::size_t i = 1; i < in.get_array().__local_array.__shape[0]-1; ++i)
+
+  T diff {0.0};
+
+  if ( NumDim == 2 )
   {
-    for (std::size_t j = 1; j < in.get_array().__local_array.__shape[1]-1; ++j)
+    #pragma omp for
+    for (std::size_t i = 2; i < in.get_array().__local_array.__shape[0] - 2; ++i)
     {
+      for (std::size_t j = 2; j < in.get_array().__local_array.__shape[1] - 2; ++j)
+      {
+        T current {in.get_array().__local_array(i,j)};
+        out.get_array().__local_array(i,j) = 
+          hq.weights[0] * (in.get_array().__local_array(i-1,j) + in.get_array().__local_array(i+1,j))
+        + hq.weights[1] * (in.get_array().__local_array(i,j-1) + in.get_array().__local_array(i,j+1))
+        + current * (hq.diags[0]*hq.weights[0] + hq.diags[1]*hq.weights[1]);
+
+        diff += std::pow(out.get_array().__local_array(i,j) - in.get_array().__local_array(i,j), 2);
+      }
+    }
+  }
+
+
+
+  if ( NumDim == 3)
+  {
+    #pragma omp for
+    for (std::size_t i = 2; i < in.get_array().__local_array.__shape[0] - 2; ++i)
+    {
+      for (std::size_t j = 2; j < in.get_array().__local_array.__shape[1] - 2; ++j)
+      {
+        for (std::size_t k = 2; k < in.get_array().__local_array.__shape[2] - 2; ++k)
+        {
+          T current {in.get_array().__local_array(i,j,k)};
+          
+          out.get_array().__local_array(i,j,k) = 
+              hq.weights[0] * (in.get_array().__local_array(i-1,j,k) + in.get_array().__local_array(i+1,j,k))
+            + hq.weights[1] * (in.get_array().__local_array(i,j-1,k) + in.get_array().__local_array(i,j+1,k))
+            + hq.weights[2] * (in.get_array().__local_array(i,j,k-1) + in.get_array().__local_array(i,j,k+1))
+            + current * (hq.diags[0]*hq.weights[0] + hq.diags[1]*hq.weights[1] + hq.diags[2]*hq.weights[2]);
+
+          diff += std::pow(out.get_array().__local_array(i,j,k) - in.get_array().__local_array(i,j,k), 2);
+        }
+      }
+    }
+  }
+
+  return diff;
+}
+
+
+
+
+template <typename T, std::size_t NumDim>
+T update_ping_pong_omp_boundary(  final_project::array::array_distribute<T, NumDim> & in, 
+                                  final_project::array::array_distribute<T, NumDim> & out,
+                                  final_project::heat_equation<T, NumDim>           & hq)
+{
+  T diff {0.0};
+
+  if ( NumDim == 2 )
+  {
+    #pragma omp for 
+    for (std::size_t i = 1; i < in.get_array().__local_array.__shape[0] - 1; ++i)
+    {
+      std::size_t j = 1;
+      T current {in.get_array().__local_array(i,j)};
+
+      out.get_array().__local_array(i,j) = 
+          hq.weights[0] * (in.get_array().__local_array(i-1,j) + in.get_array().__local_array(i+1,j))
+        + hq.weights[1] * (in.get_array().__local_array(i,j-1) + in.get_array().__local_array(i,j+1))
+        + current * (hq.diags[0]*hq.weights[0] + hq.diags[1]*hq.weights[1]);
+
+      diff += std::pow(out.get_array().__local_array(i,j) - in.get_array().__local_array(i,j), 2);
+    }
+
+    #pragma omp for 
+    for (std::size_t i = 1; i < in.get_array().__local_array.__shape[0] - 1; ++i)
+    {
+      std::size_t j = in.get_array().__local_array.__shape[1] - 2;
+      T current {in.get_array().__local_array(i,j)};
+
+      out.get_array().__local_array(i,j) = 
+          hq.weights[0] * (in.get_array().__local_array(i-1,j) + in.get_array().__local_array(i+1,j))
+        + hq.weights[1] * (in.get_array().__local_array(i,j-1) + in.get_array().__local_array(i,j+1))
+        + current * (hq.diags[0]*hq.weights[0] + hq.diags[1]*hq.weights[1]);
+      
+      diff += std::pow(out.get_array().__local_array(i,j) - in.get_array().__local_array(i,j), 2);
+    }
+
+    #pragma omp for 
+    for (std::size_t j = 2; j < in.get_array().__local_array.__shape[1] - 2; ++j)
+    {
+      std::size_t i = 1;
+      T current {in.get_array().__local_array(i,j)};
+
+      out.get_array().__local_array(i,j) = 
+          hq.weights[0] * (in.get_array().__local_array(i-1,j) + in.get_array().__local_array(i+1,j))
+        + hq.weights[1] * (in.get_array().__local_array(i,j-1) + in.get_array().__local_array(i,j+1))
+        + current * (hq.diags[0]*hq.weights[0] + hq.diags[1]*hq.weights[1]);
+
+      diff += std::pow(out.get_array().__local_array(i,j) - in.get_array().__local_array(i,j), 2);
+    }
+
+    #pragma omp for 
+    for (std::size_t j = 2; j < in.get_array().__local_array.__shape[1] - 2; ++j)
+    {
+      std::size_t i = in.get_array().__local_array.__shape[0] - 2;
+      T current {in.get_array().__local_array(i,j)};
+
+      out.get_array().__local_array(i,j) = 
+          hq.weights[0] * (in.get_array().__local_array(i-1,j) + in.get_array().__local_array(i+1,j))
+        + hq.weights[1] * (in.get_array().__local_array(i,j-1) + in.get_array().__local_array(i,j+1))
+        + current * (hq.diags[0]*hq.weights[0] + hq.diags[1]*hq.weights[1]);
+
       diff += std::pow(out.get_array().__local_array(i,j) - in.get_array().__local_array(i,j), 2);
     }
   }
+
+  return diff;
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /// @brief 
 /// @tparam T 
@@ -180,20 +327,20 @@ std::size_t dim {0};
     auto n_size {out.get_array().__local_array.__shape[dim]};
     
     // Send to neighbor 2*dim and receive from neighbor 2*dim+1
-    MPI_Isend(&out.get_array().__local_array(1,1), 1, 
+    MPI_Isend(&out.get_array().__local_array(1,         1), 1, 
               out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag, 
               out.get_topology().__comm_cart, &requests[request_count++]);
 
-    MPI_Irecv(&out.get_array().__local_array(n_size-1, 1), 1, 
+    MPI_Irecv(&out.get_array().__local_array(n_size-1,  1), 1, 
               out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag, 
               out.get_topology().__comm_cart, &requests[request_count++]);
 
     // Send to neighbor 2*dim+1 and receive from neighbor 2*dim
-    MPI_Isend(&out.get_array().__local_array(n_size-2,1), 1, 
+    MPI_Isend(&out.get_array().__local_array(n_size-2,  1), 1, 
               out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag, 
               out.get_topology().__comm_cart, &requests[request_count++]);
 
-    MPI_Irecv(&out.get_array().__local_array(0, 1), 1, 
+    MPI_Irecv(&out.get_array().__local_array(0,         1), 1, 
               out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag, 
               out.get_topology().__comm_cart, &requests[request_count++]);
 
@@ -202,20 +349,20 @@ std::size_t dim {0};
     n_size = out.get_array().__local_array.__shape[dim];
 
     // Send to neighbor 2*dim and receive from neighbor 2*dim+1
-    MPI_Isend(&out.get_array().__local_array(1, 1), 1, 
+    MPI_Isend(&out.get_array().__local_array(1,         1), 1, 
               out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag, 
               out.get_topology().__comm_cart, &requests[request_count++]);
 
-    MPI_Irecv(&out.get_array().__local_array(1, n_size-1), 1, 
+    MPI_Irecv(&out.get_array().__local_array(1,   n_size-1), 1, 
               out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag, 
               out.get_topology().__comm_cart, &requests[request_count++]);
 
     // Send to neighbor 2*dim+1 and receive from neighbor 2*dim
-    MPI_Isend(&out.get_array().__local_array(1, n_size-2), 1, 
+    MPI_Isend(&out.get_array().__local_array(1,   n_size-2), 1, 
               out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag, 
               out.get_topology().__comm_cart, &requests[request_count++]);
 
-    MPI_Irecv(&out.get_array().__local_array(1, 0), 1, 
+    MPI_Irecv(&out.get_array().__local_array(1,         0), 1, 
               out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag, 
               out.get_topology().__comm_cart, &requests[request_count++]);
 
@@ -273,176 +420,15 @@ std::size_t dim {0};
                           out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
                     out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
     }
-
   }
 }
 
-template <typename T, std::size_t NumDim>
-T update_omp1(final_project::array::array_distribute<T, NumDim> & in)
-{
-  // ------------------------------------------------ Update ------------------------------------------------ //
-  
-  T diff {0}, temp;
-  std::size_t off;
 
-  if (NumDim == 2)
-  {
-    #pragma omp parallel num_threads(2)
-    {
-    #pragma for private(temp) reduction(+:diff)
-    for (std::size_t id = 0; id < 2; ++id)
-    {
-      for (std::size_t i = 1; i < in.get_array().__local_array.__shape[0] - 1; ++i)
-      {
-        off = 1 + ( i + id + 1 ) % 2;
-        for (std::size_t j = off; j < in.get_array().__local_array.__shape[1] - 1; j+=2)
-        {
-          temp = in.get_array().__local_array(i,j);
-          in.get_array().__local_array(i,j) = 0.25 * (
-            in.get_array().__local_array(i+1,j) + in.get_array().__local_array(i-1,j) +
-            in.get_array().__local_array(i,j+1) + in.get_array().__local_array(i,j-1)
-          );
-
-          diff += std::pow(temp - in.get_array().__local_array(i,j), 2);
-        }
-      }
-
-      // ------------------------------------------------ Exchange ----------------------------------------------- //
-      MPI_Datatype omp_halos[NumDim];
-      int array_size[NumDim], array_sub_size[NumDim], array_starts[NumDim];
-      for (std::size_t dim = 0; dim < NumDim; ++dim) 
-      {
-        auto n {in.get_topology().__local_shape[dim] - 2};
-        array_starts[dim]   = 0;
-        array_size[dim]     = (id == 0) ? (n / 2 + 1) : (n - n / 2);
-        array_sub_size[dim] = array_size[dim];
-      }
-
-      for (std::size_t dim = 0; dim < NumDim; ++dim)
-      {
-        auto temp_sub   = array_sub_size[dim];
-        array_sub_size[dim] = 1;
-
-        auto temp_size = array_size[dim];
-        array_size[dim] = in.get_topology().__local_shape[dim] * 2;
-
-        MPI_Type_create_subarray( in.get_topology().__dimension, 
-                                  array_size, array_sub_size, array_starts,
-                                  MPI_ORDER_C, in.get_topology().__mpi_value_type, &omp_halos[dim]);
-
-        MPI_Type_commit(&omp_halos[dim]);
-
-        array_sub_size[dim] = temp_sub;
-        array_size[dim] = temp_size;
-      }
-
-      #pragma omp master
-      {
-        std::size_t dim {0};
-        auto flag {dim};
-        auto n_size {in.get_array().__local_array.__shape[dim]};
-        MPI_Sendrecv( &in.get_array().__local_array(1,1), 1, 
-                      in.get_topology().__halo_vectors[dim], in.get_topology().__neighbors[2*dim], flag,
-                      &in.get_array().__local_array(n_size-1, 1), 1, 
-                      in.get_topology().__halo_vectors[dim], in.get_topology().__neighbors[2*dim+1], flag,
-                      in.get_topology().__comm_cart, MPI_STATUS_IGNORE); // 数据类型错了
-
-        MPI_Sendrecv( &in.get_array().__local_array(n_size-2,1), 1, 
-                      in.get_topology().__halo_vectors[dim], in.get_topology().__neighbors[2*dim+1], flag,
-                      &in.get_array().__local_array(0, 1), 1, 
-                      in.get_topology().__halo_vectors[dim], in.get_topology().__neighbors[2*dim], flag,
-                      in.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-
-        dim = 1;
-        flag = dim;
-        n_size = in.get_array().__local_array.__shape[dim];
-        MPI_Sendrecv( &in.get_array().__local_array(1,        1), 1, 
-                      in.get_topology().__halo_vectors[dim], in.get_topology().__neighbors[2*dim  ], flag,
-                      &in.get_array().__local_array(1, n_size-1), 1, 
-                      in.get_topology().__halo_vectors[dim], in.get_topology().__neighbors[2*dim+1], flag,
-                      in.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-
-        MPI_Sendrecv( &in.get_array().__local_array(1, n_size-2), 1, 
-                      in.get_topology().__halo_vectors[dim], in.get_topology().__neighbors[2*dim+1], flag,
-                      &in.get_array().__local_array(1, 0), 1, 
-                      in.get_topology().__halo_vectors[dim], in.get_topology().__neighbors[2*dim], flag,
-                      in.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-      }
-
-      for (std::size_t dim = 0; dim < NumDim; ++dim)
-        MPI_Type_free(&omp_halos[dim]);
-    }
-    }
-    diff = std::sqrt(diff / (T)((in.get_array().__local_array.__shape[0]-1) * (in.get_array().__local_array.__shape[1]-1)));
-  }
-
-  if (NumDim == 3)
-  {      
-      #pragma omp parallel for private(temp) num_threads(2) reduction(+:diff)
-      for (std::size_t id = 0; id < 2; ++id)
-      {
-          for (std::size_t i = 1; i < in.get_array().__local_array.__shape[0] - 1; ++i)
-          {
-              for (std::size_t j = 1; j < in.get_array().__local_array.__shape[1] - 1; ++j)
-              {
-                  for (std::size_t k = 1; k < in.get_array().__local_array.__shape[2] - 1; ++k)
-                  {
-                      if ((i + j + k + id) % 2 == 0)
-                      {
-  temp = in.get_array().__local_array(i,j,k);
-  in.get_array().__local_array(i,j,k) = (1.0 / 6.0) * (
-      in.get_array().__local_array(i-1,j,k) + in.get_array().__local_array(i+1,j,k) +
-      in.get_array().__local_array(i,j-1,k) + in.get_array().__local_array(i,j+1,k) +
-      in.get_array().__local_array(i,j,k-1) + in.get_array().__local_array(i,j,k+1));
-
-  diff += std::pow(temp - in.get_array().__local_array(i,j,k), 2);
-                      }
-                  }
-              }
-          }
-      }
-      diff = std::sqrt(diff / (T) (
-          (in.get_array().__local_array.__shape[0]-2) * 
-          (in.get_array().__local_array.__shape[1]-2) * 
-          (in.get_array().__local_array.__shape[2]-2)
-      ));
-  }
-
-  return diff;
-}
-
-
-template <typename T, std::size_t NumDim>
-T update_omp2(final_project::array::array_distribute<T, NumDim> & in, const int & omp_id)
-{
-  T diff {0};
-  // ------------------------------------------------ Update ------------------------------------------------ //
-  if (NumDim == 2)
-  {
-    T temp;
-    std::size_t off;
-    for (std::size_t i = 1; i < in.get_array().__local_array.__shape[0] - 1; ++i)
-    {
-      off = 1 + ( i + omp_id + 1 ) % 2;
-      for (std::size_t j = off; j < in.get_array().__local_array.__shape[1] - 1; j+=2)
-      {
-        temp = in.get_array().__local_array(i,j);
-        in.get_array().__local_array(i,j) = 0.25 * (
-          in.get_array().__local_array(i+1,j) + in.get_array().__local_array(i-1,j) +
-          in.get_array().__local_array(i,j+1) + in.get_array().__local_array(i,j-1)
-        );
-
-        diff += std::pow(temp - in.get_array().__local_array(i,j), 2);
-      }
-    }
-  }
-
-  return diff;
-}
-
-
-
-
+/// @brief 
+/// @tparam T 
+/// @tparam NumDim 
+/// @param gather 
+/// @param array 
 template <typename T, std::size_t NumDim>
 void Gather(final_project::array::array_base<T, NumDim>       & gather,   
             final_project::array::array_distribute<T, NumDim> & array)
@@ -574,3 +560,183 @@ void Gather(final_project::array::array_base<T, NumDim>       & gather,
 
 
 #endif // end define EVOLVE_HPP
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// template <typename T, std::size_t NumDim>
+// T update_omp1(final_project::array::array_distribute<T, NumDim> & in)
+// {
+//   // ------------------------------------------------ Update ------------------------------------------------ //
+  
+//   T diff {0}, temp;
+//   std::size_t off;
+
+//   if (NumDim == 2)
+//   {
+//     #pragma omp parallel num_threads(2)
+//     {
+//     #pragma for private(temp) reduction(+:diff)
+//     for (std::size_t id = 0; id < 2; ++id)
+//     {
+//       for (std::size_t i = 1; i < in.get_array().__local_array.__shape[0] - 1; ++i)
+//       {
+//         off = 1 + ( i + id + 1 ) % 2;
+//         for (std::size_t j = off; j < in.get_array().__local_array.__shape[1] - 1; j+=2)
+//         {
+//           temp = in.get_array().__local_array(i,j);
+//           in.get_array().__local_array(i,j) = 0.25 * (
+//             in.get_array().__local_array(i+1,j) + in.get_array().__local_array(i-1,j) +
+//             in.get_array().__local_array(i,j+1) + in.get_array().__local_array(i,j-1)
+//           );
+
+//           diff += std::pow(temp - in.get_array().__local_array(i,j), 2);
+//         }
+//       }
+
+//       // ------------------------------------------------ Exchange ----------------------------------------------- //
+//       MPI_Datatype omp_halos[NumDim];
+//       int array_size[NumDim], array_sub_size[NumDim], array_starts[NumDim];
+//       for (std::size_t dim = 0; dim < NumDim; ++dim) 
+//       {
+//         auto n {in.get_topology().__local_shape[dim] - 2};
+//         array_starts[dim]   = 0;
+//         array_size[dim]     = (id == 0) ? (n / 2 + 1) : (n - n / 2);
+//         array_sub_size[dim] = array_size[dim];
+//       }
+
+//       for (std::size_t dim = 0; dim < NumDim; ++dim)
+//       {
+//         auto temp_sub   = array_sub_size[dim];
+//         array_sub_size[dim] = 1;
+
+//         auto temp_size = array_size[dim];
+//         array_size[dim] = in.get_topology().__local_shape[dim] * 2;
+
+//         MPI_Type_create_subarray( in.get_topology().__dimension, 
+//                                   array_size, array_sub_size, array_starts,
+//                                   MPI_ORDER_C, in.get_topology().__mpi_value_type, &omp_halos[dim]);
+
+//         MPI_Type_commit(&omp_halos[dim]);
+
+//         array_sub_size[dim] = temp_sub;
+//         array_size[dim] = temp_size;
+//       }
+
+//       #pragma omp master
+//       {
+//         std::size_t dim {0};
+//         auto flag {dim};
+//         auto n_size {in.get_array().__local_array.__shape[dim]};
+//         MPI_Sendrecv( &in.get_array().__local_array(1,1), 1, 
+//                       in.get_topology().__halo_vectors[dim], in.get_topology().__neighbors[2*dim], flag,
+//                       &in.get_array().__local_array(n_size-1, 1), 1, 
+//                       in.get_topology().__halo_vectors[dim], in.get_topology().__neighbors[2*dim+1], flag,
+//                       in.get_topology().__comm_cart, MPI_STATUS_IGNORE); // 数据类型错了
+
+//         MPI_Sendrecv( &in.get_array().__local_array(n_size-2,1), 1, 
+//                       in.get_topology().__halo_vectors[dim], in.get_topology().__neighbors[2*dim+1], flag,
+//                       &in.get_array().__local_array(0, 1), 1, 
+//                       in.get_topology().__halo_vectors[dim], in.get_topology().__neighbors[2*dim], flag,
+//                       in.get_topology().__comm_cart, MPI_STATUS_IGNORE);
+
+//         dim = 1;
+//         flag = dim;
+//         n_size = in.get_array().__local_array.__shape[dim];
+//         MPI_Sendrecv( &in.get_array().__local_array(1,        1), 1, 
+//                       in.get_topology().__halo_vectors[dim], in.get_topology().__neighbors[2*dim  ], flag,
+//                       &in.get_array().__local_array(1, n_size-1), 1, 
+//                       in.get_topology().__halo_vectors[dim], in.get_topology().__neighbors[2*dim+1], flag,
+//                       in.get_topology().__comm_cart, MPI_STATUS_IGNORE);
+
+//         MPI_Sendrecv( &in.get_array().__local_array(1, n_size-2), 1, 
+//                       in.get_topology().__halo_vectors[dim], in.get_topology().__neighbors[2*dim+1], flag,
+//                       &in.get_array().__local_array(1, 0), 1, 
+//                       in.get_topology().__halo_vectors[dim], in.get_topology().__neighbors[2*dim], flag,
+//                       in.get_topology().__comm_cart, MPI_STATUS_IGNORE);
+//       }
+
+//       for (std::size_t dim = 0; dim < NumDim; ++dim)
+//         MPI_Type_free(&omp_halos[dim]);
+//     }
+//     }
+//     diff = std::sqrt(diff / (T)((in.get_array().__local_array.__shape[0]-1) * (in.get_array().__local_array.__shape[1]-1)));
+//   }
+
+//   if (NumDim == 3)
+//   {      
+//       #pragma omp parallel for private(temp) num_threads(2) reduction(+:diff)
+//       for (std::size_t id = 0; id < 2; ++id)
+//       {
+//           for (std::size_t i = 1; i < in.get_array().__local_array.__shape[0] - 1; ++i)
+//           {
+//               for (std::size_t j = 1; j < in.get_array().__local_array.__shape[1] - 1; ++j)
+//               {
+//                   for (std::size_t k = 1; k < in.get_array().__local_array.__shape[2] - 1; ++k)
+//                   {
+//                       if ((i + j + k + id) % 2 == 0)
+//                       {
+//   temp = in.get_array().__local_array(i,j,k);
+//   in.get_array().__local_array(i,j,k) = (1.0 / 6.0) * (
+//       in.get_array().__local_array(i-1,j,k) + in.get_array().__local_array(i+1,j,k) +
+//       in.get_array().__local_array(i,j-1,k) + in.get_array().__local_array(i,j+1,k) +
+//       in.get_array().__local_array(i,j,k-1) + in.get_array().__local_array(i,j,k+1));
+
+//   diff += std::pow(temp - in.get_array().__local_array(i,j,k), 2);
+//                       }
+//                   }
+//               }
+//           }
+//       }
+//       diff = std::sqrt(diff / (T) (
+//           (in.get_array().__local_array.__shape[0]-2) * 
+//           (in.get_array().__local_array.__shape[1]-2) * 
+//           (in.get_array().__local_array.__shape[2]-2)
+//       ));
+//   }
+
+//   return diff;
+// }
+
+
+
+// template <typename T, std::size_t NumDim>
+// T update_omp2(final_project::array::array_distribute<T, NumDim> & in, const int & omp_id)
+// {
+//   T diff {0};
+//   // ------------------------------------------------ Update ------------------------------------------------ //
+//   if (NumDim == 2)
+//   {
+//     T temp;
+//     std::size_t off;
+//     for (std::size_t i = 1; i < in.get_array().__local_array.__shape[0] - 1; ++i)
+//     {
+//       off = 1 + ( i + omp_id + 1 ) % 2;
+//       for (std::size_t j = off; j < in.get_array().__local_array.__shape[1] - 1; j+=2)
+//       {
+//         temp = in.get_array().__local_array(i,j);
+//         in.get_array().__local_array(i,j) = 0.25 * (
+//           in.get_array().__local_array(i+1,j) + in.get_array().__local_array(i-1,j) +
+//           in.get_array().__local_array(i,j+1) + in.get_array().__local_array(i,j-1)
+//         );
+
+//         diff += std::pow(temp - in.get_array().__local_array(i,j), 2);
+//       }
+//     }
+//   }
+
+//   return diff;
+// }

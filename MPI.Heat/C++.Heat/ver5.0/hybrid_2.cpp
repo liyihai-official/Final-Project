@@ -49,6 +49,7 @@ T update_ping_pong_boundary1( final_project::array::array_distribute<T, NumDim> 
                               final_project::array::array_distribute<T, NumDim> & out)
 {
   T diff {0};
+  
   if (NumDim == 2)
   {
     #pragma omp for
@@ -91,6 +92,7 @@ T update_ping_pong_boundary1( final_project::array::array_distribute<T, NumDim> 
       );
     }
   }
+
   return diff;
 }
 
