@@ -16,22 +16,25 @@ struct CustomLoss : torch::nn::Module {
 struct Net : torch::nn::Module
 {
 
-  torch::nn::Linear fc1, fc2;
+  torch::nn::Linear fc1, fc2, fc3;
 
   Net()
     : fc1(3 , 10),
-      fc2(10, 1)
+      fc2(10, 10),
+      fc3(10, 1)
     {
       register_module("fc1", fc1);
       register_module("fc2", fc2);
+      register_module("fc3", fc3);
     }
 
 
   torch::Tensor forward(torch::Tensor x)
   {
     x = torch::relu(fc1->forward(x));
+    x = torch::tanh(fc2->forward(x));
 
-    x = fc2->forward(x);
+    x = fc3->forward(x);
 
     return x;
   }
@@ -95,21 +98,24 @@ void train(
 
     auto output { model.forward(data) };
 
+    // Compute gradients
     auto grad_output  = torch::ones_like(output);
 
-    auto gradient     = torch::autograd::grad({output}, {data}, {grad_output}, true);
+    auto gradients     = torch::autograd::grad({output}, {data}, 
+                                                /* grad_outputs= */ {grad_output}, 
+                                                /* Create_graph= */ true,
+                                                /* allow_unused= */ true)[0]
+                                                .requires_grad_(true);
 
-    // auto grad_output_second   = torch::ones_like(gradient);
+    auto grad_output_second   = torch::ones_like(gradients);
 
-    // auto gradient_second      = torch::autograd::grad({gradient}, {data}, {grad_output_second}, true)[0];
+    auto gradient_second      = torch::autograd::grad({gradients}, {data}, 
+                                                      /* grad_outputs= */ {grad_output_second}, 
+                                                      /* Create_graph= */ true,
+                                                      /* allow_unused= */ true)[0];
+    // end of compute gradients
 
-    // std::cout << "CHECK POINT" << gradient[0].to(torch::kCPU)<< std::endl;
-    // auto grad_output_second   = torch::ones_like(gradient);
-
-    // auto gradient_second      = torch::autograd::grad({gradient}, {data}, {grad_output_second}, true)[0];
-//  + grad_output_second.sum().mean()
-
-    auto loss {torch::mse_loss(output, targets) };
+    auto loss { torch::mse_loss(output, targets) + gradient_second.sum() };
 
     loss.backward();
 
@@ -149,18 +155,18 @@ int main() {
   std::vector<float> targets = {0.1, 0.2, 0.3, 0.1};
 
 
-  auto dataset = CustomDataset(data, targets)
+  auto train_dataset = CustomDataset(data, targets)
     .map(torch::data::transforms::Normalize<>(0.0, 1.0))
     .map(torch::data::transforms::Stack<>());
 
-  const size_t train_dataset_size = dataset.size().value();
+  const size_t train_dataset_size = train_dataset.size().value();
 
-  auto data_loader = torch::data::make_data_loader<torch::data::samplers::SequentialSampler>(
-    std::move(dataset),
+  auto train_loader = torch::data::make_data_loader<torch::data::samplers::SequentialSampler>(
+    std::move(train_dataset),
     2
   );
 
-  std::cout << train_dataset_size << std::endl;
+  std::cout << "Train Dataset Size: " << train_dataset_size << std::endl;
 
   torch::optim::SGD optimizer(
     model.parameters(), torch::optim::SGDOptions(0.01).momentum(0.5)
@@ -176,9 +182,9 @@ int main() {
   //   std::cout << std::endl;
   // }
 
-  for (size_t epoch = 1; epoch <= 20; ++epoch)
+  for (size_t epoch = 1; epoch <= 200; ++epoch)
   {
-    train(epoch, model, device, *data_loader, optimizer, train_dataset_size);
+    train(epoch, model, device, *train_loader, optimizer, train_dataset_size);
   }
   
   // std::cout << " \n \t\t THIS is THE GAP \n " << std::endl;

@@ -165,7 +165,7 @@ void train(
                                                     /* grad_outputs=*/{grad_output_second},
                                                     /* Create_graph=*/true);
     
-    // std::cout << "Gradients : " << gradients[0].to(torch::kCPU) << std::endl;
+    std::cout << "Gradients : " << gradients[0].to(torch::kCPU) << std::endl;
 
 AT_ASSERT(!std::isnan(loss.template item<float>()));
 
