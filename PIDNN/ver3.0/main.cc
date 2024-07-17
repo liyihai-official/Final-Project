@@ -1,6 +1,7 @@
 #include <torch/torch.h>
 #include <iostream>
 #include <chrono>
+#include <random>
 
 #include <vector>
 
@@ -31,7 +32,7 @@ struct Net : torch::nn::Module
 
   torch::Tensor forward(torch::Tensor x)
   {
-    x = torch::relu(fc1->forward(x));
+    x = torch::tanh(fc1->forward(x));
     x = torch::tanh(fc2->forward(x));
 
     x = fc3->forward(x);
@@ -106,16 +107,25 @@ void train(
                                                 /* Create_graph= */ true,
                                                 /* allow_unused= */ true)[0]
                                                 .requires_grad_(true);
+    auto u_x = gradients.select(1, 0); // x direct 
+    auto u_y = gradients.select(1, 1); // y direct
 
-    auto grad_output_second   = torch::ones_like(gradients);
+  // 计算二阶导数 u_xx
+  auto u_xx = torch::autograd::grad({u_x}, {data}, /* grad_outputs= */{torch::ones_like(u_x)}, true, true)[0].select(1, 0);
 
-    auto gradient_second      = torch::autograd::grad({gradients}, {data}, 
-                                                      /* grad_outputs= */ {grad_output_second}, 
-                                                      /* Create_graph= */ true,
-                                                      /* allow_unused= */ true)[0];
+  // 计算二阶导数 u_yy
+  auto u_yy = torch::autograd::grad({u_y}, {data}, /* grad_outputs= */{torch::ones_like(u_y)}, true, true)[0].select(1, 1);
+
+
+
+  std::cout << F << std::endl;
     // end of compute gradients
 
-    auto loss { torch::mse_loss(output, targets) + gradient_second.sum() };
+ auto F = u_xx + u_yy;
+ auto F_mean_square = torch::mean(torch::square(F));
+
+
+    auto loss { torch::mse_loss(output, targets) + F_mean_square};
 
     loss.backward();
 
@@ -124,35 +134,82 @@ void train(
 AT_ASSERT(!std::isnan(loss.template item<float>()));
 
 
-  if (batch_idx++ % 2 == 0)
+  if (batch_idx++ % 320 == 0)
     std::printf(
-      "\nTrain Epoch : %ld Loss: %.4f",
+      "\nTrain Epoch : %ld Loss: %.14f",
       epoch, loss.template item<float>()
     );
   }
 }
 
+    // auto grad_output_second   = torch::ones_like(gradients);
 
+    // auto gradient_second      = torch::autograd::grad({gradients}, {data}, 
+    //                                                   /* grad_outputs= */ {grad_output_second}, 
+    //                                                   /* Create_graph= */ true,
+    //                                                   /* allow_unused= */ true)[0];
 
 int main() {
   
   torch::DeviceType device_type {torch::cuda::is_available() ? torch::kCUDA : torch::kCPU};
   std::cout << "Running on: " << device_type << std::endl;
 
+  std::default_random_engine rd {std::random_device{}()};
+
+  std::uniform_real_distribution<float> rng(0.0, 1.0);
+
+  // float rm {rng(rd)};
+
+  // std::cout << "Random Value: " << rm << std::endl;
+
+
   torch::Device device(device_type);
 
   Net model;
   model.to(device);
 
-  std::vector<std::vector<float>> data = 
-    {
-      {1.0, 2.0, 3.0},
-      {4.0, 5.0, 0.0},
-      {3.0, 1.0, 1.0},
-      {2.0, 1.0, 1.0}
-    };
+  // std::vector<std::vector<float>> data = 
+  //   {
+  //     {1.0, 2.0, 3.0},
+  //     {4.0, 5.0, 0.0},
+  //     {3.0, 1.0, 1.0},
+  //     {2.0, 1.0, 1.0}
+  //   };
+
+  const int nn {1000};
+  std::vector<std::vector<float>> data (nn*4, std::vector<float>(3, 0));
+  std::vector<float> targets(nn*4, 0);
+
+  // std::cout << data1[1000][0] << std::endl;
+
+  for (int i = 0; i < nn*4; ++i)
+  {
+    if (i < nn) {               /* x = 0 */
+      /*x*/ data[i][0] = 0; /*y*/ data[i][1] = rng(rd); /*t*/ data[i][2] = 0; /*u*/ targets[i] = 10;
+    }
+    
+    if (i < nn*2 && i >= nn) {  /* y = 0 */
+      /*x*/ data[i][0] = rng(rd); /*y*/ data[i][1] = 0; /*t*/ data[i][2] = 0; /*u*/ targets[i] = 8;
+    }
+
+    if (i < nn*3 && i >= nn*2) {  /* x = 1 */
+      /*x*/ data[i][0] = 1; /*y*/ data[i][1] = rng(rd); /*t*/ data[i][2] = 0; /*u*/ targets[i] = 3;
+    }
+
+    if (i < nn*4 && i >= nn*3) {  /* y = 1 */
+      /*x*/ data[i][0] = rng(rd); /*y*/ data[i][1] = 1; /*t*/ data[i][2] = 0; /*u*/ targets[i] = 0;
+    }
+  }
   
-  std::vector<float> targets = {0.1, 0.2, 0.3, 0.1};
+  // for (const auto & row : data)
+  // {
+  //   for (const auto & elem : row)
+  //   {
+  //     std::cout << elem << " ";
+  //   }
+  //   std::cout << std::endl;
+  // }
+  // std::cout << "-----------------------------------------" << std::endl;
 
 
   auto train_dataset = CustomDataset(data, targets)
@@ -163,7 +220,7 @@ int main() {
 
   auto train_loader = torch::data::make_data_loader<torch::data::samplers::SequentialSampler>(
     std::move(train_dataset),
-    2
+    16
   );
 
   std::cout << "Train Dataset Size: " << train_dataset_size << std::endl;
@@ -220,6 +277,6 @@ int main() {
   // auto t2 {std::chrono::steady_clock::now()};
   // std::cout << std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count() << std::endl;
 
-
+  std::cout << std::endl;
   return 0;
 }
