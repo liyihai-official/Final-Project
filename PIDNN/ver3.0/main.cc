@@ -20,7 +20,7 @@ struct Net : torch::nn::Module
   torch::nn::Linear fc1, fc2, fc3;
 
   Net()
-    : fc1(3 , 10),
+    : fc1(2 , 10),
       fc2(10, 10),
       fc3(10, 1)
     {
@@ -54,7 +54,7 @@ class CustomDataset : public torch::data::datasets::Dataset<CustomDataset>
   {
     for (const auto& sample: data)
     {
-      data_.push_back(torch::tensor(sample).view({3}));
+      data_.push_back(torch::tensor(sample).view({2}));
     }
 
     for (const auto& target : targets)
@@ -91,7 +91,7 @@ void train(
 
   for (auto & batch : data_loader)
   {
-    auto data {batch.data.to(device).view({-1,3})}, targets {batch.target.to(device).view({-1,1})};
+    auto data {batch.data.to(device).view({-1,2})}, targets {batch.target.to(device).view({-1,1})};
 
     data.requires_grad_(true);
 
@@ -118,7 +118,7 @@ void train(
 
 
 
-  std::cout << F << std::endl;
+  // std::cout << F << std::endl;
     // end of compute gradients
 
  auto F = u_xx + u_yy;
@@ -177,30 +177,35 @@ int main() {
   //   };
 
   const int nn {1000};
-  std::vector<std::vector<float>> data (nn*4, std::vector<float>(3, 0));
+  std::vector<std::vector<float>> data (nn*4, std::vector<float>(2, 0));
   std::vector<float> targets(nn*4, 0);
 
-  // std::cout << data1[1000][0] << std::endl;
-
+  // Boundary Points
   for (int i = 0; i < nn*4; ++i)
   {
     if (i < nn) {               /* x = 0 */
-      /*x*/ data[i][0] = 0; /*y*/ data[i][1] = rng(rd); /*t*/ data[i][2] = 0; /*u*/ targets[i] = 10;
+      /*x*/ data[i][0] = 0; /*y*/ data[i][1] = rng(rd); data[i][2] = 1,/*u*/ targets[i] = 10;
     }
     
     if (i < nn*2 && i >= nn) {  /* y = 0 */
-      /*x*/ data[i][0] = rng(rd); /*y*/ data[i][1] = 0; /*t*/ data[i][2] = 0; /*u*/ targets[i] = 8;
+      /*x*/ data[i][0] = rng(rd); /*y*/ data[i][1] = 0; /*u*/ targets[i] = 8;
     }
 
     if (i < nn*3 && i >= nn*2) {  /* x = 1 */
-      /*x*/ data[i][0] = 1; /*y*/ data[i][1] = rng(rd); /*t*/ data[i][2] = 0; /*u*/ targets[i] = 3;
+      /*x*/ data[i][0] = 1; /*y*/ data[i][1] = rng(rd); /*u*/ targets[i] = 3;
     }
 
     if (i < nn*4 && i >= nn*3) {  /* y = 1 */
-      /*x*/ data[i][0] = rng(rd); /*y*/ data[i][1] = 1; /*t*/ data[i][2] = 0; /*u*/ targets[i] = 0;
+      /*x*/ data[i][0] = rng(rd); /*y*/ data[i][1] = 1; /*u*/ targets[i] = 0;
     }
   }
-  
+
+  // Domain Points
+  std::vector<std::vector<float>> data_d (10000, std::vector<float>(3, 0));
+
+
+
+
   // for (const auto & row : data)
   // {
   //   for (const auto & elem : row)

@@ -7,15 +7,15 @@ find_package(Torch REQUIRED)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 
 add_executable(main main.cc)
-add_executable(autograd autograd.cpp)
+add_executable(pinn_2d pinn_2d.cpp)
 add_executable(example minist.cpp)
 
 target_link_libraries(main "${TORCH_LIBRARIES}")
-target_link_libraries(autograd "${TORCH_LIBRARIES}")
+target_link_libraries(pinn_2d "${TORCH_LIBRARIES}")
 target_link_libraries(example "${TORCH_LIBRARIES}")
 
 set_property(TARGET main PROPERTY CXX_STANDARD 20)
-set_property(TARGET autograd PROPERTY CXX_STANDARD 20)
+set_property(TARGET pinn_2d PROPERTY CXX_STANDARD 20)
 set_property(TARGET example PROPERTY CXX_STANDARD 20)
 
 # Add O3 optimization flag
@@ -31,11 +31,11 @@ if (MSVC)
                      COMMAND ${CMAKE_COMMAND} -E copy_if_different
                      ${TORCH_DLLS}
                      $<TARGET_FILE_DIR:main>)
-  add_custom_command(TARGET autograd
+  add_custom_command(TARGET pinn_2d
                     POST_BUILD
                     COMMAND ${CMAKE_COMMAND} -E copy_if_different
                     ${TORCH_DLLS}
-                    $<TARGET_FILE_DIR:autograd)
+                    $<TARGET_FILE_DIR:pinn_2d)
 
   add_custom_command(TARGET example
                      POST_BUILD
