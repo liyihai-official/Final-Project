@@ -117,7 +117,6 @@ void train(
   auto u_yy = torch::autograd::grad({u_y}, {data}, /* grad_outputs= */{torch::ones_like(u_y)}, true, true)[0].select(1, 1);
 
 
-
   // std::cout << F << std::endl;
     // end of compute gradients
 
