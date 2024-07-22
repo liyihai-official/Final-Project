@@ -253,7 +253,17 @@ T update_ping_pong_omp_boundary(  final_project::array::array_distribute<T, NumD
       diff += std::pow(out.get_array().__local_array(i,j) - in.get_array().__local_array(i,j), 2);
     }
   }
+  
 
+
+  if (NumDim == 3)
+  {
+    #pragma omp for
+    #pragma omp for
+    #pragma omp for
+    #pragma omp for
+    #pragma omp for
+  }
   return diff;
 
 }
