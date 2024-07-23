@@ -12,50 +12,78 @@
 namespace final_project {
 namespace array {
 
+// /// @brief 
+// /// @tparam NumDims 
+// template <std::size_t NumDims>
+//   struct multi_array_shape {
+//     private:
+//     typedef __detail::__types::__multi_array_shape<NumDims> shape_type;
+
+//     public:
+//     std::unique_ptr<shape_type> shape;
+
+//     template <typename ... Args>
+//     multi_array_shape( Args ... args) 
+//     : shape (std::make_unique<shape_type>(args ...))
+//     {
+//       // auto temp {shape_type(args ...)};
+//       // temp.swap(shape);
+//     }
+
+//     // shape_type 
+
+//   }; // end of struct multi_array_shape
+
+
 
 /// @brief 
 /// @tparam T 
 /// @tparam NumDims 
 template <class T, std::size_t NumDims>
- class array_base {
-  private:
-  typedef T                                               value_type;
-  typedef __detail::__multi_array::__array<T, NumDims>    array_type;
+  class array_base {
+    private:
+    typedef T                                               value_type;
+    typedef __detail::__multi_array::__array<T, NumDims>    array_type;
 
-  typedef __detail::__mpi_types::__size_type              size_type;
-  typedef __detail::__types::__multi_array_shape<NumDims> super_array_shape;
+    typedef __detail::__mpi_types::__size_type              size_type;
+    typedef __detail::__types::__multi_array_shape<NumDims> super_array_shape;
 
-  private:
-  std::unique_ptr<array_type> body;
+    private:
+    std::unique_ptr<array_type> body;
 
-  public:
-  array_base(super_array_shape & array_base_shape)
-  : body (std::make_unique<array_type>(array_base_shape)) 
-  { FINAL_PROJECT_ASSERT_MSG((NumDims < 4), "Invalid Dimension of Array.\n"); }
+    public:
+    array_base(super_array_shape & array_base_shape)
+    : body (std::make_unique<array_type>(array_base_shape)) 
+    { FINAL_PROJECT_ASSERT_MSG((NumDims < 4), "Invalid Dimension of Array.\n"); }
 
-  public:
-  array_type& get_array()
-  { return *body; }
+    template <typename ... Args>
+    array_base( Args ... args )
+    : body(std::make_unique<array_type>(super_array_shape(args ...)))
+    { FINAL_PROJECT_ASSERT_MSG((NumDims < 4), "Invalid Dimension of Array.\n"); }
 
-  array_type& get_array() const
-  { return *body; }
+    public:
+    array_type& get_array()
+    { return *body; }
 
-  size_type& shape(size_type index) const
-  { return body->__shape[index]; }
+    array_type& get_array() const
+    { return *body; }
 
-  void saveToBinaryFile(const std::string & filename) const {
-    std::ofstream ofs(filename, std::ios::binary);
+    size_type& shape(size_type index) const
+    { return body->__shape[index]; }
 
-    if (!ofs) { throw std::runtime_error("Cannot Open File."); }
+    void saveToBinaryFile(const std::string & filename) const {
+      std::ofstream ofs(filename, std::ios::binary);
 
-    for (size_type i = 0; i < NumDims; ++i) {
-      auto temp {body->__shape[i]};
-      ofs.write(reinterpret_cast<const char*>(&temp), sizeof((temp)));
+      if (!ofs) { throw std::runtime_error("Cannot Open File."); }
+
+      for (size_type i = 0; i < NumDims; ++i) {
+        auto temp {body->__shape[i]};
+        ofs.write(reinterpret_cast<const char*>(&temp), sizeof((temp)));
+      }
+      
+      ofs.write(reinterpret_cast<const char*>(body->begin()), body->size() * sizeof(T));
+      
     }
-    
-    ofs.write(reinterpret_cast<const char*>(body->begin()), body->size() * sizeof(T));
-    
-  }
 
  };
 
@@ -66,8 +94,8 @@ template <class T, std::size_t NumDims>
   class array_distribute {
     
     private:
-    typedef T                                             value_type;
-    typedef __detail::__mpi_distribute_array<T, NumDims>  array_type;
+    typedef T                                                 value_type;
+    typedef __detail::__mpi_distribute_array<T, NumDims>      array_type;
 
     typedef __detail::__mpi_types::__size_type                size_type;
     typedef __detail::__types::__multi_array_shape<NumDims>   super_array_shape;
@@ -82,11 +110,19 @@ template <class T, std::size_t NumDims>
     array_distribute() = default;
     array_distribute(super_array_shape &, mpi_env &);
 
+    template <typename ... Args>
+    array_distribute(mpi_env & env, Args ... args)
+    : body([&]() 
+    {
+      super_array_shape shape(args...);
+      return std::make_unique<array_type>(shape, env);
+    }())
+    { FINAL_PROJECT_MPI_ABORT_IF_FALSE((NumDims < 4), env.comm(), 1, "Invalid Dimension of Array.\n"); }
+// 
 
     public:
     void swap(array_distribute & other) 
     {
-
       // FINAL_PROJECT_ASSERT_MSG((body->__local_topology == other.body->__local_topology), "Unmatched topology of distributed arrays.");
       // auto a = body->__local_topology == other.body->__local_topology;
       // std::cout << "CACA" << a << std::endl;

@@ -37,7 +37,6 @@ template <class __T, __size_type __NumD>
     typedef __types::__multi_array_shape<__NumD>     __super_array_shape;
     typedef __mpi_types::__mpi_topology<__T, __NumD> __topology;
 
-
     public:
     __topology  __local_topology;
     __array     __local_array;
@@ -117,7 +116,6 @@ std::ostream& operator<<(std::ostream& os, const __mpi_distribute_array<__U, __D
 
   return os;
 }
-
 
 
 

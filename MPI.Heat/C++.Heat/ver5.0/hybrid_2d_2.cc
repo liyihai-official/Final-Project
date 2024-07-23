@@ -21,7 +21,7 @@ int main ( int argc, char ** argv )
 {
   constexpr int root_proc {0};
   constexpr value_type tol {1E-3};
-  constexpr std::size_t nsteps {10000}, stepinterval {nsteps / 100};
+  constexpr std::size_t nsteps {100000}, stepinterval {nsteps / 100};
   constexpr std::size_t numDim {2},     nx {NX},      ny {NY};
 
   bool converge {false};
@@ -93,7 +93,10 @@ int main ( int argc, char ** argv )
   
       omp_ldiff_bulk      = update_ping_pong_omp_bulk(ping, pong, heat_equation);
 
+      #pragma omp single
       exchange_ping_pong1(ping);
+      #pragma omp barrier
+      // exchange_ping_pong2(ping, omp_id);
 
       omp_ldiff_boundary  = update_ping_pong_omp_boundary(ping, pong, heat_equation);
 

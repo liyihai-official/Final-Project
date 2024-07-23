@@ -14,6 +14,7 @@
 // ------------------------------- Header File ------------------------------- // 
 
 #include <memory>
+#include <algorithm>
 
 namespace final_project {
 namespace __detail {
@@ -40,6 +41,8 @@ template <__size_type __NumD>
   bool is_in(__size_type index)            const;
 
   // Constructors
+  __multi_array_shape();
+
   template <typename ... Args>
   __multi_array_shape( Args ... args );
 
@@ -62,6 +65,14 @@ template <__size_type __NumD>
     else return true;
   }
 
+  void swap(__multi_array_shape & other)
+  {
+    if (other.num_dim() == this->num_dim())
+    {
+      std::swap(other.sizes, this->sizes);
+    }
+  }
+
 }; // struct _multi_array_shape
   
 
@@ -78,6 +89,11 @@ template <__size_type __NumD>
 namespace final_project {
 namespace __detail {
 namespace __types {
+
+template <__size_type __NumD>
+  inline 
+  __multi_array_shape<__NumD>::__multi_array_shape()
+  { std::fill(sizes, sizes + __NumD, 0); }
 
 
 template <__size_type __NumD>

@@ -23,7 +23,7 @@ int main ( int argc, char ** argv )
   int num_threads {1};
   constexpr int root_proc {0};
   constexpr value_type tol {1E-3};
-  constexpr std::size_t nsteps {10000}, stepinterval {nsteps / 10000},
+  constexpr std::size_t nsteps {100000}, stepinterval {nsteps / 100000}, 
             numDim {3}, nx {NX}, ny {NY}, nz {NZ};
 
   bool converge {false};
@@ -49,7 +49,7 @@ int main ( int argc, char ** argv )
 
 
   // Setups
-  #pragma omp parallel
+  #pragma omp parallel num_threads(2)
   {
     #ifdef _OPENMP
       #pragma omp master
@@ -90,19 +90,28 @@ int main ( int argc, char ** argv )
 
     // Time Evolve
     auto start_clock {MPI_Wtime()};
-    for ( int iter = 1; iter <= nsteps; ++iter )
+    for ( int iter = 1; iter <= 2; ++iter )
     {
       ldiff = 0;
       if (converge) { break; }
-
-      omp_ldiff_bulk = update_ping_pong_omp_bulk(ping, pong, heat_equation);
-
-      // exchange_ping_pong1(ping);
-
       omp_ldiff_boundary = update_ping_pong_omp_boundary(ping, pong, heat_equation);
+      #pragma omp single
+      exchange_ping_pong1(ping);
+      omp_ldiff_bulk = update_ping_pong_omp_bulk(ping, pong, heat_equation);
+      // #pragma omp barrier
+
+    
+
+      #pragma omp barrier
+      #pragma omp master
+      {
+        std::cout << pong.get_array() << std::endl;
+      }
+      #pragma omp barrier
 
       #pragma omp critical
       {
+        // if (iter > 8) std::cout << "  >>>> " << omp_ldiff_boundary  << " <<< " <<  omp_ldiff_bulk << std::endl;
         ldiff += omp_ldiff_boundary;
         ldiff += omp_ldiff_bulk;
       }

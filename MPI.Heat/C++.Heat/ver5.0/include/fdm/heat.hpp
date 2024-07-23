@@ -12,9 +12,13 @@ namespace final_project {
 template <typename T, std::size_t NumDims>
 struct heat_equation {
 
-  heat_equation(final_project::__detail::__types::__multi_array_shape<NumDims> & glob_shape)
-  {
-    
+  template <typename ... Args>
+  heat_equation(Args ... args)
+  { 
+    auto glob_shape {
+      final_project::__detail::__types::__multi_array_shape<NumDims>(args ...)
+    };
+
     std::fill(minRange.begin(), minRange.end(), 0);
     std::fill(maxRange.begin(), maxRange.end(), 1); 
 

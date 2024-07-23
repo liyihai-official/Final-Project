@@ -2,10 +2,6 @@
 #include <cmath>
 #include <cstring>
 
-
-
-
-
 #include "fdm/evolve.hpp"
 #include "fdm/heat.hpp"
 
@@ -21,7 +17,7 @@ int main(int argc, char ** argv)
 {
   constexpr int root_proc {0};
   constexpr double tol {1E-3};
-  constexpr std::size_t nsteps {100000}, stepinterval {nsteps / 10000};
+  constexpr std::size_t nsteps {100000}, stepinterval {nsteps / 100};
   constexpr std::size_t numDIM {3}, nx {NX}, ny {NY}, nz {NZ};
 
   bool converge {false};
@@ -31,13 +27,12 @@ int main(int argc, char ** argv)
 
   // Setups 
   auto mpi_world  {final_project::mpi::env(argc, argv)};
-  auto glob_shape {final_project::__detail::__types::__multi_array_shape<numDIM>(nx, ny, nz)};
-  auto heat_equation {final_project::heat_equation<double, numDIM>(glob_shape)};
+  auto heat_equation {final_project::heat_equation<double, numDIM>(nx, ny, nz)};
 
   MPI_Barrier(mpi_world.comm());
-  auto gather {final_project::array::array_base<double,3>(glob_shape)};
-  auto ping {final_project::array::array_distribute<double, numDIM>(glob_shape, mpi_world)};
-  auto pong {final_project::array::array_distribute<double, numDIM>(glob_shape, mpi_world)};
+  auto gather {final_project::array::array_base<double,numDIM>(nx, ny, nz)};
+  auto ping {final_project::array::array_distribute<double, numDIM>(mpi_world, nx, ny, nz)};
+  auto pong {final_project::array::array_distribute<double, numDIM>(mpi_world, nx, ny, nz)};
 
   // setups
   ping.fill_boundary(10);
@@ -46,15 +41,6 @@ int main(int argc, char ** argv)
   MPI_Barrier(mpi_world.comm());
   sleep(1);
   MPI_Barrier(mpi_world.comm());
-
-
-
-
-
-
-
-
-
 
   // Brief information of setups
   if (root_proc == mpi_world.rank())
@@ -81,10 +67,6 @@ int main(int argc, char ** argv)
                                         << heat_equation.dxs[1]     << ", " 
                                         << heat_equation.dxs[2]     << std::endl;
   }
-
-
-
-
 
 
   // Time Evolve

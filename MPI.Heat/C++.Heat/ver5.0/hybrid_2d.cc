@@ -21,7 +21,7 @@ int main ( int argc, char ** argv )
 {
   constexpr int root_proc {0};
   constexpr value_type tol {1E-3};
-  constexpr std::size_t nsteps {10000}, stepinterval {nsteps / 100};
+  constexpr std::size_t nsteps {100000}, stepinterval {nsteps / 100};
   constexpr std::size_t numDIM {2}, nx {NX}, ny {NY};
 
   bool converge {false};
@@ -31,13 +31,12 @@ int main ( int argc, char ** argv )
 
   // Setups 
   auto mpi_world  {final_project::mpi::env(argc, argv)};
-  auto glob_shape {final_project::__detail::__types::__multi_array_shape<numDIM>(nx, ny)};
-  auto heat_equation {final_project::heat_equation<value_type, numDIM>(glob_shape)};
+  auto heat_equation {final_project::heat_equation<double, numDIM>(nx, ny)};
 
   MPI_Barrier(mpi_world.comm());
-  auto gather {final_project::array::array_base<value_type,2>(glob_shape)};
-  auto ping {final_project::array::array_distribute<value_type, numDIM>(glob_shape, mpi_world)};
-  auto pong {final_project::array::array_distribute<value_type, numDIM>(glob_shape, mpi_world)};
+  auto gather {final_project::array::array_base<double, numDIM>(nx, ny)};
+  auto ping {final_project::array::array_distribute<double, numDIM>(mpi_world, nx, ny)};
+  auto pong {final_project::array::array_distribute<double, numDIM>(mpi_world, nx, ny)};
   
   // setups
   ping.fill_boundary(10);

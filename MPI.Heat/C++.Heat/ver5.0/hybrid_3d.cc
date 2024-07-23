@@ -21,7 +21,7 @@ int main ( int argc, char ** argv )
 {
   constexpr int root_proc {0};
   constexpr value_type tol {1E-3};
-  constexpr std::size_t nsteps {100000}, stepinterval {nsteps / 10000};
+  constexpr std::size_t nsteps {100000}, stepinterval {nsteps / 100};
   constexpr std::size_t numDIM {3}, nx {NX}, ny {NY}, nz {NZ};
 
   bool converge {false};
@@ -31,13 +31,13 @@ int main ( int argc, char ** argv )
 
   // Setups 
   auto mpi_world  {final_project::mpi::env(argc, argv)};
-  auto glob_shape {final_project::__detail::__types::__multi_array_shape<numDIM>(nx, ny, nz)};
-  auto heat_equation {final_project::heat_equation<value_type, numDIM>(glob_shape)};
+  auto heat_equation {final_project::heat_equation<double, numDIM>(nx, ny, nz)};
 
   MPI_Barrier(mpi_world.comm());
-  auto gather {final_project::array::array_base<value_type,3>(glob_shape)};
-  auto ping {final_project::array::array_distribute<value_type, numDIM>(glob_shape, mpi_world)};
-  auto pong {final_project::array::array_distribute<value_type, numDIM>(glob_shape, mpi_world)};
+  auto gather {final_project::array::array_base<double,numDIM>(nx, ny, nz)};
+  auto ping {final_project::array::array_distribute<double, numDIM>(mpi_world, nx, ny, nz)};
+  auto pong {final_project::array::array_distribute<double, numDIM>(mpi_world, nx, ny, nz)};
+
 
   // setups
   ping.fill_boundary(10);
@@ -94,9 +94,20 @@ int main ( int argc, char ** argv )
       omp_ldiff = update_ping_pong_omp1(ping, pong, heat_equation);
 
       #pragma omp critical
+    {
       ldiff += omp_ldiff;
+            // std::cout << "  >>>> " << omp_ldiff << std::endl;
+    }
       #pragma omp barrier
 
+
+      // #pragma omp barrier
+      // #pragma omp master
+      // {
+      //   std::cout << pong.get_array() << std::endl;
+      // }
+      // #pragma omp barrier
+      
       #pragma omp single
       {
         MPI_Allreduce(&ldiff, &gdiff, 1, MPI_DOUBLE, MPI_SUM, mpi_world.comm());
