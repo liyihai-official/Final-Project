@@ -91,7 +91,7 @@ int main( int argc, char ** argv)
   // results
   if (converge)
   {
-    Gather(gather, pong);
+    final_project::array::Gather(gather, pong);
     MPI_Reduce(&stop_clock, &ttime, 1, MPI_DOUBLE, MPI_MAX, 0, mpi_world.comm());
     if (mpi_world.rank() == root_proc) 
     {

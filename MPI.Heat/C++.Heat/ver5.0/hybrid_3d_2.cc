@@ -144,7 +144,7 @@ int main ( int argc, char ** argv )
     {
       if (converge)
       {
-        Gather(gather, ping);
+        final_project::array::Gather(gather, ping);
         MPI_Reduce(&stop_clock, &ttime, 1, MPI_DOUBLE, MPI_MAX, 0, mpi_world.comm());
 
         if ( root_proc == mpi_world.rank())
