@@ -8,8 +8,7 @@
 │   │   ├── asserts.hpp
 │   │   ├── environment.hpp
 │   │   ├── topology.hpp
-│   │   ├── types.hpp
-│   │   └── util
+│   │   └── types.hpp
 │   ├── multiarray
 │   │   ├── base.hpp
 │   │   ├── types.hpp
@@ -31,8 +30,11 @@
 │   │   ├── gather.hpp
 │   │   └── mpi_distribute_array.hpp
 │   └── types.hpp
+├── src
+│   ├── assert.cpp
+│   └── types.cpp
 └── test
     └── test.cc
 
-11 directories, 23 files
+11 directories, 25 files
 ```
