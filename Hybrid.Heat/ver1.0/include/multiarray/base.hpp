@@ -1,0 +1,22 @@
+///
+///
+
+
+
+
+#ifndef FINAL_PROJECT_MULTIARRAY_BASE_HPP_LIYIHAI
+#define FINAL_PROJECT_MULTIARRAY_BASE_HPP_LIYIHAI
+
+#pragma once
+
+
+
+
+
+
+
+
+
+
+
+#endif // end of define FINAL_PROJECT_MULTIARRAY_BASE_HPP_LIYIHAI
