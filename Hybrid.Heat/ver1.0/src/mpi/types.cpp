@@ -1,16 +1,11 @@
-#ifndef FINAL_PROJECT_MPI_TYPES_HPP_LIYIHAI
-#define FINAL_PROJECT_MPI_TYPES_HPP_LIYIHAI
 
-#pragma once
-#include <mpi.h>
-#include "../types.hpp"
+#ifndef FINAL_PROJECT_MPI_TYPES_CPP_LIYIHAI
+#define FINAL_PROJECT_MPI_TYPES_CPP_LIYIHAI
+
+#include "mpi/types.hpp"
 
 namespace final_project {
 namespace mpi {
-
-
-template <typename T>
-MPI_Datatype get_mpi_type(); 
 
 template <>
   inline 
@@ -57,13 +52,4 @@ template <>
 } // end of namespace mpi
 } // end of namespace final_project
 
-
-
-
-
-
-
-
-
-
-#endif // end of define FINAL_PROJECT_MPI_TYPES_HPP_LIYIHAI
+#endif // end of define FINAL_PROJECT_MPI_TYPES_CPP_LIYIHAI

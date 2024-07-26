@@ -20,7 +20,7 @@ set(OpenMP_CXX_FLAGS "-fopenmp")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 
 # 收集所有源文件
-# file(GLOB_RECURSE SOURCES "include/**/*.cpp")
+# file(GLOB_RECURSE SOURCES "src/*")
 
 # 添加可执行文件，并链接所有源文件
 add_executable(test test/test.cc ${SOURCES})

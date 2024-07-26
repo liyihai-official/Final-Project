@@ -15,9 +15,9 @@ main ( int argc, char ** argv )
     << "Running Test Program"
     << std::endl;
 
-  final_project::Double a;
+  final_project::Word a;
 
-  MPI_Datatype A {final_project::mpi::get_mpi_type<final_project::Double>()};
+  MPI_Datatype A {final_project::mpi::get_mpi_type<final_project::Word>()};
   int size;
   MPI_Type_size(A, &size);
   std::cout << size <<std::endl;
