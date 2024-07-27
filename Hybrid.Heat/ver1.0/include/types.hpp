@@ -12,7 +12,7 @@
 #include <string>   // Include 'std::string' type
 
 
-namespace final_project
+namespace final_project 
 {
 
   // Type Aliases
@@ -28,22 +28,6 @@ namespace final_project
   using Double          = double;
 
   using String          = std::string;
-
-  // Enumerate types 
-  // ------------ TBD ------------
-  // enum 
-  // class PDE 
-  // {
-  //   HEAT,
-  //   NAVIER
-  // };
-
-  // enum
-  // class CONVERGE
-  // {
-  //   SUCCESS,
-  //   FAILURE
-  // };
 
 } // end of namespace final_project
 

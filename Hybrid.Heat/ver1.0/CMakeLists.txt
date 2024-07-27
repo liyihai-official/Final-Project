@@ -20,10 +20,17 @@ set(OpenMP_CXX_FLAGS "-fopenmp")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 
 # 收集所有源文件
-# file(GLOB_RECURSE SOURCES "src/*")
+file(GLOB_RECURSE PROJECT_SOURCES
+  ${PROJECT_SOURCE_DIR}/src/*.cpp
+)
 
 # 添加可执行文件，并链接所有源文件
-add_executable(test test/test.cc ${SOURCES})
+add_executable(test test/test.cc ${PROJECT_SOURCES})
+
+# 如果是发布模式，则启用 NDEBUG 宏
+if (CMAKE_BUILD_TYPE STREQUAL "Release")
+  target_compile_definitions(test PRIVATE NDEBUG)
+endif()
 
 # 链接 MPI 库
 target_link_libraries(test ${MPI_LIBRARIES})
