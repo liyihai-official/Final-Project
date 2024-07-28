@@ -26,6 +26,7 @@ namespace final_project
   using UnsignedInteger = unsigned int;
   using Float           = float;
   using Double          = double;
+  using Char            = char;
 
   using String          = std::string;
 

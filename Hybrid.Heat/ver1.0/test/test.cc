@@ -8,14 +8,23 @@
 #include "mpi/types.hpp"
 #include "mpi/assert.hpp"
 
+#include "mpi/environment.hpp"
+
 #include "assert.hpp"
+
+#include "multiarray/types.hpp"
+#include "multiarray/base.hpp"
 
 int 
 main ( int argc, char ** argv )
 {
-  MPI_Init(&argc, &argv);
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  auto env = final_project::mpi::environment(argc, argv);
+  // MPI_Init(&argc, &argv);
+  auto B = env.size();
+  // std::cout << B;
+  
+
+  // // MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   std::cout 
     << "Running Test Program"
     << std::endl;
@@ -27,18 +36,15 @@ main ( int argc, char ** argv )
   MPI_Type_size(A, &size);
   
 
-  size = 10;
-  if (rank == 0) 
-  {
-    size = 1;
-  }
-  std::cout << size << "\t" << std::endl;
+  auto SS {final_project::multi_array::__detail::__multi_array_shape<3>(3,4,7)};
+  std::cout << " [" << SS[0] 
+            << ", " << SS[1] 
+            << ", " << SS[2] 
+            << "] " << std::endl;
 
-  // FINAL_PROJECT_MPI_ASSERT((size == 10));
-  // FINAL_PROJECT_MPI_WARN((size == 10));
-  // FINAL_PROJECT_MPI_ASSERT_GLOBAL((size == 10));
-
-  
-  MPI_Finalize();
+  auto Mat {final_project::multi_array::__detail::__array<double, 3>(SS)};
+  Mat.fill(1);
+  std::cout << Mat << std::endl;
+  // MPI_Finalize();
   return 0;
 }

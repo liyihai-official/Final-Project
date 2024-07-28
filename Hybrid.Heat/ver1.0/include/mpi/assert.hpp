@@ -27,9 +27,11 @@
 #include <cassert>
 #include <iostream>
 
+#include "types.hpp"
+
 #define FINAL_PROJECT_MPI_WARN(expr) \
   if (!(expr)) { \
-    int rank, size; \
+    final_project::Integer rank, size; \
     MPI_Comm_rank(MPI_COMM_WORLD, &rank); \
     MPI_Comm_size(MPI_COMM_WORLD, &size); \
     std::cerr << "MPI Assertion Failed: " #expr \
@@ -41,7 +43,7 @@
 
 #define FINAL_PROJECT_MPI_ASSERT(expr) \
   do { \
-    int cond = (expr); \
+    final_project::Integer cond = (expr); \
     if (!cond) { \
       FINAL_PROJECT_MPI_WARN(cond); \
       MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE); \
@@ -50,7 +52,7 @@
 
 #define FINAL_PROJECT_MPI_ASSERT_GLOBAL(expr) \
   do { \
-    int loc_cond = (expr), glob_cond; \
+    final_project::Integer loc_cond = (expr), glob_cond; \
     MPI_Allreduce(&loc_cond, &glob_cond, 1, MPI_INT, MPI_LAND, MPI_COMM_WORLD); \
     if (!glob_cond) { \
       FINAL_PROJECT_MPI_WARN(loc_cond); \
@@ -61,7 +63,7 @@
 
 #define FINAL_PROJECT_MPI_INIT_CHECK() \
   { \
-    int initialized; \
+    final_project::Integer initialized; \
     MPI_Initialized(&initialized); \
     FINAL_PROJECT_MPI_ASSERT(initialized); \
   }
@@ -69,7 +71,7 @@
 
 #define FINAL_PROJECT_MPI_FINALIZE_CHECK() \
   { \
-    int finalized; \
+    final_project::Integer finalized; \
     MPI_Finalized(&finalized); \
     FINAL_PROJECT_MPI_ASSERT(finalized); \
   }

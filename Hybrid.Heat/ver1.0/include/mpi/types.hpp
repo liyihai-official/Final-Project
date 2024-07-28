@@ -8,8 +8,8 @@
 #define FINAL_PROJECT_MPI_TYPES_HPP_LIYIHAI
 
 #pragma once
-#include <mpi.h>
-#include "../types.hpp"
+#include <mpi.h>          // OpenMPI Library
+#include <types.hpp>   // Final Project Header Files
 
 namespace final_project {
 namespace mpi {
@@ -29,14 +29,14 @@ MPI_Datatype get_mpi_type();
 template <>
   inline 
   MPI_Datatype 
-  get_mpi_type<final_project::Integer>()
+  get_mpi_type<Integer>()
 { return MPI_INT; }
 
 /// @return MPI_FLOAT
 template <>
   inline 
   MPI_Datatype
-  get_mpi_type<final_project::Float>()
+  get_mpi_type<Float>()
 { return MPI_FLOAT; }
 
 
@@ -44,35 +44,35 @@ template <>
 template <>
   inline 
   MPI_Datatype
-  get_mpi_type<final_project::Double>()
+  get_mpi_type<Double>()
 { return MPI_DOUBLE; }
 
 /// @return MPI_BYTE
 template <>
   inline 
   MPI_Datatype
-  get_mpi_type<final_project::Byte>() 
+  get_mpi_type<Byte>() 
 { return MPI_BYTE; }
 
 /// @return MPI_UNSIGNED_SHORT
 template <> 
   inline 
   MPI_Datatype
-  get_mpi_type<final_project::Word>()
+  get_mpi_type<Word>()
 { return MPI_UNSIGNED_SHORT; }
 
 /// @return MPI_UNSIGNED
 template <>
   inline 
   MPI_Datatype
-  get_mpi_type<final_project::Dworld>()
+  get_mpi_type<Dworld>()
 { return MPI_UNSIGNED; }
 
 /// @return MPI_UNSIGNED_LONG_LONG
 template <>
   inline 
   MPI_Datatype 
-  get_mpi_type<final_project::Qworld>()
+  get_mpi_type<Qworld>()
 { return MPI_UNSIGNED_LONG_LONG; }
 
 
