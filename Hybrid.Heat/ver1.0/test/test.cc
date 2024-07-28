@@ -9,11 +9,14 @@
 #include "mpi/assert.hpp"
 
 #include "mpi/environment.hpp"
+#include "mpi/topology.hpp"
 
 #include "assert.hpp"
 
 #include "multiarray/types.hpp"
 #include "multiarray/base.hpp"
+
+
 
 int 
 main ( int argc, char ** argv )
@@ -36,15 +39,20 @@ main ( int argc, char ** argv )
   MPI_Type_size(A, &size);
   
 
-  auto SS {final_project::multi_array::__detail::__multi_array_shape<3>(3,4,7)};
-  std::cout << " [" << SS[0] 
-            << ", " << SS[1] 
-            << ", " << SS[2] 
-            << "] " << std::endl;
+  auto SS {final_project::multi_array::__detail::__multi_array_shape<2>(4,7)};
+  // std::cout << " [" << SS[0] 
+  //           << ", " << SS[1] 
+  //           << ", " << SS[2] 
+  //           << "] " << std::endl;
 
-  auto Mat {final_project::multi_array::__detail::__array<double, 3>(SS)};
+  auto Mat {final_project::multi_array::__detail::__array<double, 2>(SS)};
   Mat.fill(1);
-  std::cout << Mat << std::endl;
+  // std::cout << Mat << std::endl;
+
+  final_project::mpi::topology::Cartesian<final_project::Double, 2> togo(SS, env);
+
+
+
   // MPI_Finalize();
   return 0;
 }

@@ -57,9 +57,12 @@ Integer size();
 /// @brief Return the rank of current process in @c MPI_COMM_WORLD
 Integer rank();
 
+/// @brief Return the @c MPI_COMM_WORLD
+MPI_Comm comm();
 
 private:
 Integer prank, psize;
+MPI_Comm comm_world {MPI_COMM_WORLD};
 
 }; 
 
@@ -83,6 +86,11 @@ Integer
   inline 
   environment::rank()
   { return prank; }
+
+MPI_Comm
+  inline 
+  environment::comm()
+  { return comm_world; }
 
 } // end namespace mpi
 } // end namespace final_project
