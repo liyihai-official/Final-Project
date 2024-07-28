@@ -5,36 +5,35 @@
 ├── include
 │   ├── assert.hpp
 │   ├── mpi
-│   │   ├── asserts.hpp
+│   │   ├── assert.hpp
 │   │   ├── environment.hpp
 │   │   ├── topology.hpp
 │   │   └── types.hpp
 │   ├── multiarray
 │   │   ├── base.hpp
-│   │   ├── types.hpp
-│   │   └── util
-│   │       ├── base.cpp
-│   │       └── types.cpp
+│   │   └── types.hpp
 │   ├── solver
 │   │   ├── boundaryconditions
 │   │   │   ├── DirchletBC.hpp
-│   │   │   ├── NeumannBC.hpp
-│   │   │   └── detials
-│   │   │       ├── DirchletBC.cpp
-│   │   │       └── NeumannBC.cpp
+│   │   │   └── NeumannBC.hpp
 │   │   ├── detials
 │   │   │   ├── evolve_hybrid.hpp
-│   │   │   ├── evolve_pure_mpi.hpp
-│   │   │   └── mpi_distribute_array.cpp
+│   │   │   └── evolve_pure_mpi.hpp
 │   │   ├── evolve.hpp
 │   │   ├── gather.hpp
 │   │   └── mpi_distribute_array.hpp
 │   └── types.hpp
 ├── src
 │   ├── assert.cpp
+│   ├── mpi
+│   │   ├── environment.cpp
+│   │   └── types.cpp
+│   ├── multiarray
+│   │   └── types.cpp
+│   ├── solver
 │   └── types.cpp
 └── test
     └── test.cc
 
-11 directories, 25 files
+12 directories, 23 files
 ```
