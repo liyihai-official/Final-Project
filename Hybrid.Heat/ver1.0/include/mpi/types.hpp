@@ -76,9 +76,6 @@ template <>
 { return MPI_UNSIGNED_LONG_LONG; }
 
 
-// template <typename T>
-//   T gg (T a);
-
 } // end of namespace mpi
 } // end of namespace final_project
 
