@@ -18,23 +18,50 @@
 #include <multiarray/base.hpp>
 #include <multiarray/types.hpp>
 
-namespace final_project { namespace multi_array {
+namespace final_project { 
+  
+  
+namespace multi_array {
+  /// @brief A base multi-dimension array class, interacted with USERs.
+  /// @tparam T The value type of array.
+  /// @tparam NumD Number of dimensions.
+  template <class T, size_type NumD>
+    class array_base;
+} // namespace multi_array
+
+namespace mpi {
+
+  /// @brief An array routine based on @c MPI_Cart Cartesian topology struture.
+  /// @tparam T The value type of array.
+  /// @tparam NumD The number of dimensions.
+  template <class T, size_type NumD>
+    class array_Cart;
 
 
-template <class T, size_type NumD>
-  class array_base;
+  /// @brief Gather the distributed arrays on every processes in @c MPI_Comm environment.
+  /// @tparam T the value type of arrays.
+  /// @tparam NumD Number of dimension
+  /// @param  gather The collective array.
+  /// @param  cart  The distributed array on every processes.
+  template <typename T, size_type NumD>
+    void Gather(array_base<T, NumD> &, array_Cart<T, NumD> &);
 
-template <class T, size_type NumD>
-  class array_Cart;
-
-}}
+} // namespace mpi
 
 
-namespace final_project { namespace multi_array {
+} // namespace final_project
 
-/// @brief A base multi-dimension array class, interacted with USERs.
-/// @tparam T The value type of array
-/// @tparam NumD Number of dimensions.
+
+// Final Project Header Files
+#include <mpi/types.hpp>
+#include <mpi/topology.hpp>
+#include <mpi/multiarray.hpp>
+#include <mpi/environment.hpp>
+
+namespace final_project { 
+  
+  
+namespace multi_array {
 template <class T, size_type NumD>
   class array_base 
   {
@@ -61,10 +88,53 @@ template <class T, size_type NumD>
 
     void saveToBinary(const String &) const;
   }; // class array_base
-
-
-
 } // namespace multi_array
+
+
+
+namespace mpi {
+
+template <class T, size_type NumD>
+  class array_Cart {
+
+    // friend final_project::PDE::Heat<T, NumD>;
+    // friend final_project::PDE::Naiver_Stokes<T, NumD>;
+
+    public:
+    typedef T                                       value_type;
+    typedef topology::Cartesian<T, NumD>            topology_Cart;
+
+    typedef mpi::__detail::__array_Cart<T, NumD>                loc_array;    // mpi details
+    typedef multi_array::__detail::__multi_array_shape<NumD>    array_shape;  // multi_array details
+
+    private:
+    std::unique_ptr<loc_array> body;
+
+    public:
+    array_Cart(environment &, array_shape &);
+    
+    template <typename ... Args>
+    array_Cart(environment &, Args ...);
+
+    public:
+    void swap(array_Cart &);
+
+    array_Cart& array();
+    array_Cart& array() const;
+
+    topology_Cart& topology() const;
+  }; // class array_Cart
+
+} // namespace mpi
+
+
+
+
+
+
+
+
+
 } // namespace final_project
 
 
@@ -77,7 +147,11 @@ template <class T, size_type NumD>
 #include <assert.hpp>
 
 
-namespace final_project { namespace multi_array {
+namespace final_project { 
+  
+  
+  
+namespace multi_array {
   
 template <class T, size_type NumD>
   inline
@@ -118,6 +192,35 @@ template <class T, size_type NumD>
 
 
 } // namespace multi_array
+
+
+
+namespace mpi {
+
+template <class T, size_type NumD>
+  inline
+  array_Cart<T, NumD>::array_Cart(environment & env, array_shape & glob_shape)
+: body(std::make_unique<array_Cart>(glob_shape, env))
+{ FINAL_PROJECT_ASSERT((NumD < 4)); }
+
+
+template <class T, size_type NumD>
+template <typename ... Args>
+  inline
+  array_Cart<T, NumD>::array_Cart(environment & env, Args ... args)
+: body(
+  [&](){
+    array_shape shape(args...);
+    return std::make_unique<array_Cart>(shape, env);
+  }())
+{ FINAL_PROJECT_ASSERT((NumD < 4)); }
+
+  
+} // namespace mpi
+
+
+
+
 } // namespace final_project
 
 

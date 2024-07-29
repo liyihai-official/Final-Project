@@ -19,6 +19,11 @@ namespace topology {
   typedef Qworld    super_size_type;
 }
 
+namespace __detail {
+  typedef size_type         __size_type;
+  typedef super_size_type   __super_size_type;
+}
+
 ///
 /// @brief Predefined MPI Datatypes, 
 ///   INT, FLOAT, DOUBLE, BYTE, 

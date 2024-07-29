@@ -31,13 +31,8 @@ namespace final_project
   using String          = std::string;
 
 
-namespace multi_array {
-
   typedef Dworld    size_type;
   typedef Qworld    super_size_type;
-  
-
-}
 
 
 } // end of namespace final_project
