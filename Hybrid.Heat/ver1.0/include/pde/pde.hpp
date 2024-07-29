@@ -17,23 +17,12 @@ template <typename T, size_type NumD>
   class Naiver_Stokes;
 
 
+
 template <typename T, size_type NumD>
   class BoundaryConditions;
 
 template <typename T>
   class InitialConditions;
-
-
-// template <typename T>
-//   class BoundaryConditions<T, 1> {
-
-//   };
-
-
-
-
-
-
 
 
 } // namespace pde

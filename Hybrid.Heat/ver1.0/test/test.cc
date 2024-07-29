@@ -5,17 +5,17 @@
 
 #include "types.hpp"
 
-#include "mpi/types.hpp"
-#include "mpi/assert.hpp"
+// #include "mpi/types.hpp"
+// #include "mpi/assert.hpp"
 
-#include "mpi/environment.hpp"
-#include "mpi/topology.hpp"
-#include "mpi/multiarray.hpp"
+// #include "mpi/environment.hpp"
+// #include "mpi/topology.hpp"
+// #include "mpi/multiarray.hpp"
 
-#include "assert.hpp"
+// #include "assert.hpp"
 
-#include "multiarray/types.hpp"
-#include "multiarray/base.hpp"
+// #include "multiarray/types.hpp"
+// #include "multiarray/base.hpp"
 #include "multiarray.hpp"
 
 
@@ -55,8 +55,18 @@ main ( int argc, char ** argv )
   }
 
   MPI_Barrier(mpi_world.comm());
+  if (mpi_world.rank () == 0)
+  {
+    mat.array().__loc_array.fill(1);
+  }
   std::cout << mat.array() << std::endl;
+
   
+  final_project::mpi::Gather(gather, mat);
+  if (mpi_world.rank() == 0)
+  {
+    std::cout << gather.data() << std::endl;
+  }
 
 
   return 0;

@@ -37,15 +37,6 @@ namespace mpi {
   template <class T, size_type NumD>
     class array_Cart;
 
-
-  /// @brief Gather the distributed arrays on every processes in @c MPI_Comm environment.
-  /// @tparam T the value type of arrays.
-  /// @tparam NumD Number of dimension
-  /// @param  gather The collective array.
-  /// @param  cart  The distributed array on every processes.
-  template <typename T, size_type NumD>
-    void Gather(multi_array::array_base<T, NumD> &, array_Cart<T, NumD> &, const Integer);
-
 } // namespace mpi
 
 
@@ -79,12 +70,11 @@ template <class T, size_type NumD>
     array_base( array_shape & );
 
     public:
-    array& data()                       { return *body; }
-    array& data()                 const { return *body; }
+    array& data()                             { return *body; }
+    array& data()                       const { return *body; }
     size_type&  shape(size_type index)  const { return body->__shape[index]; }
 
-    void saveToBinary(const String &) const;
-
+    void saveToBinary(const String &)   const;
 
     // friend final_project::pde::Heat<T, NumD>;
     // friend final_project::pde::Naiver_Stokes<T, NumD>;
@@ -117,11 +107,10 @@ template <class T, size_type NumD>
     public:
     void swap(array_Cart &);
 
-    loc_array& array() { return *body; }
-    loc_array& array() const { return *body; }
+    loc_array& array()              { return *body; }
+    loc_array& array()        const { return *body; }
 
-    topology_Cart& topology() const;
-
+    topology_Cart& topology() const { return body->__loc_Cart; }
 
     // friend final_project::PDE::Heat<T, NumD>;
     // friend final_project::PDE::Naiver_Stokes<T, NumD>;
@@ -217,7 +206,73 @@ template <typename ... Args>
 { FINAL_PROJECT_ASSERT((NumD < 4)); }
 
 
+/// @brief Gather the distributed arrays on every processes in @c MPI_Comm environment.
+/// @tparam T the value type of arrays.
+/// @tparam NumD Number of dimension
+/// @param  gather The collective array.
+/// @param  cart  The distributed array on every processes.
+template <typename T, size_type NumD>
+  void Gather(multi_array::array_base<T, NumD> &, array_Cart<T, NumD> &, const Integer=0);
 
+template <typename T, size_type NumD>
+  void Gather(
+    multi_array::array_base<T, NumD> & gather, 
+    array_Cart<T, NumD> & loc,
+    const Integer root)
+  {
+    MPI_Datatype sbuf_block, value_type {get_mpi_type<T>()};
+
+    // if (loc.topology().num_procs == 1) {
+    //   *(gather.body).swap(*(loc.body).__loc_array);
+    // }
+
+    Integer pid, i, j, k, dim, num_proc {loc.topology().num_procs}, dimension {loc.topology().dimension};
+    Integer s_list[NumD][num_proc], n_list[NumD][num_proc];
+    std::array<Integer, NumD> Ns, starts_cpy, array_sizes, array_subsizes, array_starts = {0}, indexes = {1};
+
+    for (dim = 0; dim < dimension; ++dim)
+    {
+      Ns[dim] = loc.topology().__local_shape[dim] - 2;
+      starts_cpy[dim] = loc.topology().starts[dim];
+
+      if (starts_cpy[dim] == 1)
+      {
+        -- starts_cpy[dim];
+        -- indexes[dim];
+        ++ Ns[dim];
+      }
+
+      if (loc.topology().ends[dim] == loc.topology().__global_shape[dim] - 2)
+        ++ Ns[dim];
+
+      MPI_Datatype gtype {get_mpi_type<Integer>()};
+      MPI_Gather(&starts_cpy[dim], 1, gtype, s_list[dim], 1, gtype, root, loc.topology().comm_cart);
+      MPI_Gather(&Ns[dim], 1, gtype, n_list[dim], 1, gtype, root, loc.topology().comm_cart);  
+    }
+
+    if (loc.topology().rank == root)
+    {
+
+    }
+
+    if (loc.topology().rank != root)
+    {
+      for ( pid = 0; pid < num_proc; ++pid)
+      {
+        if (pid == root)
+        {
+          for ( i=starts_cpy[0]; i <= loc.topology().ends[0]; ++i)
+          {
+            if (NumD == 2)
+            {
+              // memcpy( )
+            }
+          }
+        }
+      }
+    }
+
+  }
 
 
 

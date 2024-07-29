@@ -90,22 +90,8 @@ namespace final_project { namespace mpi {
 namespace topology 
 {
 
-/// @brief Helper Function, provides the decomposition routine.
-auto Decomp = [](
-  const Integer n, const Integer prob_size, const Integer rank, 
-  Integer & s, Integer & e)
-{
-  Integer n_loc {n / prob_size}, deficit {n % prob_size};
 
-  s = rank * n_loc + 1;
-  s += ((rank < deficit) ? rank : deficit);
-
-  if (rank < deficit) ++n_loc;
-  e = s + n_loc - 1;
-
-  if (e > n || rank == prob_size - 1) e = n;
-  return 0;
-};typedef Dworld size_type;
+// typedef Dworld size_type;
 
 
 
@@ -155,6 +141,23 @@ template <typename T, size_type NumD>
 : __global_shape(global_shape), __local_shape(global_shape)
   {
     FINAL_PROJECT_ASSERT_MSG((NumD < 4), "Number of dimension if out of range.");
+
+/// @brief Helper Function, provides the decomposition routine.
+auto Decomp = [](
+  const Integer n, const Integer prob_size, const Integer rank, 
+  Integer & s, Integer & e)
+{
+  Integer n_loc {n / prob_size}, deficit {n % prob_size};
+
+  s = rank * n_loc + 1;
+  s += ((rank < deficit) ? rank : deficit);
+
+  if (rank < deficit) ++n_loc;
+  e = s + n_loc - 1;
+
+  if (e > n || rank == prob_size - 1) e = n;
+  return 0;
+};
 
     Integer i {0};
     dimension = static_cast<Integer>(NumD); // 0 < Num < 4
