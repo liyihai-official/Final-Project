@@ -10,6 +10,7 @@
 
 #include "mpi/environment.hpp"
 #include "mpi/topology.hpp"
+#include "mpi/multiarray.hpp"
 
 #include "assert.hpp"
 
@@ -18,45 +19,45 @@
 #include "multiarray.hpp"
 
 
+#if !defined(NX) || !defined(NY)
+#define NX 10+2
+#define NY 15+2
+#endif
+
+
 int 
 main ( int argc, char ** argv )
 {
-  auto env = final_project::mpi::environment(argc, argv);
-  // MPI_Init(&argc, &argv);
-  // auto B = env.size();
-  // std::cout << B;
+
+  constexpr final_project::Integer root_proc {0};
+  constexpr final_project::Double tol {1E-3};
+  constexpr final_project::Dworld nsteps {1000000}, stepinterval {nsteps / 1000};
+  constexpr final_project::Dworld numDIM {2}, nx {NX}, ny {NY};
+
+  auto mpi_world {final_project::mpi::environment(argc, argv)};
+
+  auto mat {final_project::mpi::array_Cart<double, 2>(mpi_world, nx, ny)};
+  auto gather {final_project::multi_array::array_base<double, 2>(nx, ny)};
   
 
-  // // MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  std::cout 
-    << "Running Test Program"
-    << std::endl;
+  // Brief information of setups
+  if (root_proc == mpi_world.rank())
+  {
+    std::cout << numDIM << " Dimension Simulation Parameters: "     << std::endl;
+    std::cout << "\tRows: "       << nx 
+              << "\n\tColumns: "  << ny     << std::endl;
+    std::cout << "\tTime steps: " << nsteps << std::endl;
+    std::cout << "\tTolerance: "  << tol    << std::endl;
 
-  final_project::Word a;
+    std::cout << "MPI Parameters: "             << std::endl;
+    std::cout << "\tNumber of MPI Processes: "  << mpi_world.size() << std::endl;
+    std::cout << "\tRoot Process: "             << root_proc        << std::endl;
+  }
 
-  MPI_Datatype A {final_project::mpi::get_mpi_type<final_project::Integer>()};
-  MPI_Datatype B {final_project::mpi::get_mpi_type<final_project::Dworld>()};
-  int sizeA, sizeB;
-  MPI_Type_size(A, &sizeA);
-  MPI_Type_size(B, &sizeB);
-
-  std::cout << sizeA << "\t" << sizeB << std::endl;
+  MPI_Barrier(mpi_world.comm());
+  std::cout << mat.array() << std::endl;
   
 
-  auto SS {final_project::multi_array::__detail::__multi_array_shape<2>(4,7)};
-  // std::cout << " [" << SS[0] 
-  //           << ", " << SS[1] 
-  //           << ", " << SS[2] 
-  //           << "] " << std::endl;
 
-  auto Mat {final_project::multi_array::__detail::__array<double, 2>(SS)};
-  Mat.fill(1);
-  // std::cout << Mat << std::endl;
-
-  final_project::mpi::topology::Cartesian<final_project::Double, 2> togo(SS, env);
-
-
-
-  // MPI_Finalize();
   return 0;
 }

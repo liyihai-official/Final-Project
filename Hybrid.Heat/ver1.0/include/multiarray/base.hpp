@@ -46,7 +46,7 @@ template <class __T, __size_type __NumD>
 
   public: // Cons & Decons 
     __array();
-    __array(__array_shape &);
+    __array(__array_shape );
 
     ~__array() = default;
 
@@ -108,7 +108,7 @@ template <class __T, __size_type __NumD>
 
 template <class __T, __size_type __NumD>
   inline
-  __array<__T, __NumD>::__array(__array_shape & __in_shape)
+  __array<__T, __NumD>::__array(__array_shape __in_shape)
   : __shape {__in_shape},
     __data {std::make_unique<value_type[]>(__in_shape.size())}
   {}

@@ -175,6 +175,7 @@ template <typename T, size_type NumD>
       __local_shape[i] = ends[i] - starts[i] + 1 + 2; // Include halos
       array_size[i] = __local_shape[i];
       array_sub_size[i] = array_size[i] - 2;
+FINAL_PROJECT_MPI_ASSERT_GLOBAL((array_sub_size[i] > 0)); // sub size must bigger than 0
     }
     
     for (i = 0; i < dimension; ++i)

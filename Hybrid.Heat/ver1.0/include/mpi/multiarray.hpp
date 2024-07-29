@@ -33,9 +33,11 @@ namespace __detail {
 template <class __T, __size_type __NumD>
   class __array_Cart {
     public:
-    typedef multi_array::__detail::__array<__T, __NumD> __array;
-    typedef multi_array::__detail::__multi_array_shape<__NumD> __shape;
-    typedef topology::Cartesian<__T, __NumD>            __Cart;
+    typedef topology::Cartesian<__T, __NumD>                   __Cart;
+    
+    typedef multi_array::__detail::__array<__T, __NumD>         __array;
+    typedef multi_array::__detail::__multi_array_shape<__NumD>  __shape;
+    
 
     public:
     __Cart  __loc_Cart;

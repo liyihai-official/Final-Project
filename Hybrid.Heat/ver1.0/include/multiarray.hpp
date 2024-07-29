@@ -44,7 +44,7 @@ namespace mpi {
   /// @param  gather The collective array.
   /// @param  cart  The distributed array on every processes.
   template <typename T, size_type NumD>
-    void Gather(array_base<T, NumD> &, array_Cart<T, NumD> &);
+    void Gather(multi_array::array_base<T, NumD> &, array_Cart<T, NumD> &, const Integer);
 
 } // namespace mpi
 
@@ -65,9 +65,6 @@ namespace multi_array {
 template <class T, size_type NumD>
   class array_base 
   {
-    // friend final_project::PDE::Heat<T, NumD>;
-    // friend final_project::PDE::Naiver_Stokes<T, NumD>;
-
     private:
     typedef T                                     value_type;
     typedef __detail::__array<T, NumD>            array;
@@ -87,6 +84,11 @@ template <class T, size_type NumD>
     size_type&  shape(size_type index)  const { return body->__shape[index]; }
 
     void saveToBinary(const String &) const;
+
+
+    // friend final_project::pde::Heat<T, NumD>;
+    // friend final_project::pde::Naiver_Stokes<T, NumD>;
+
   }; // class array_base
 } // namespace multi_array
 
@@ -96,10 +98,6 @@ namespace mpi {
 
 template <class T, size_type NumD>
   class array_Cart {
-
-    // friend final_project::PDE::Heat<T, NumD>;
-    // friend final_project::PDE::Naiver_Stokes<T, NumD>;
-
     public:
     typedef T                                       value_type;
     typedef topology::Cartesian<T, NumD>            topology_Cart;
@@ -119,10 +117,15 @@ template <class T, size_type NumD>
     public:
     void swap(array_Cart &);
 
-    array_Cart& array();
-    array_Cart& array() const;
+    loc_array& array() { return *body; }
+    loc_array& array() const { return *body; }
 
     topology_Cart& topology() const;
+
+
+    // friend final_project::PDE::Heat<T, NumD>;
+    // friend final_project::PDE::Naiver_Stokes<T, NumD>;
+
   }; // class array_Cart
 
 } // namespace mpi
@@ -148,11 +151,10 @@ template <class T, size_type NumD>
 
 
 namespace final_project { 
-  
-  
-  
 namespace multi_array {
   
+
+
 template <class T, size_type NumD>
   inline
   array_base<T, NumD>::array_base(array_shape & shape)
@@ -190,7 +192,6 @@ template <class T, size_type NumD>
   );
 }
 
-
 } // namespace multi_array
 
 
@@ -200,7 +201,7 @@ namespace mpi {
 template <class T, size_type NumD>
   inline
   array_Cart<T, NumD>::array_Cart(environment & env, array_shape & glob_shape)
-: body(std::make_unique<array_Cart>(glob_shape, env))
+: body(std::make_unique<loc_array>(glob_shape, env))
 { FINAL_PROJECT_ASSERT((NumD < 4)); }
 
 
@@ -211,16 +212,16 @@ template <typename ... Args>
 : body(
   [&](){
     array_shape shape(args...);
-    return std::make_unique<array_Cart>(shape, env);
+    return std::make_unique<loc_array>(shape, env);
   }())
 { FINAL_PROJECT_ASSERT((NumD < 4)); }
 
-  
+
+
+
+
+
 } // namespace mpi
-
-
-
-
 } // namespace final_project
 
 
