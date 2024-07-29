@@ -88,7 +88,7 @@ template <class __T, __size_type __NumD>
 
 
 
-
+/// --------------------------------------------------
 ///
 /// Definition of inline member functions
 ///

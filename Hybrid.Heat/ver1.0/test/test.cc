@@ -15,7 +15,7 @@
 
 #include "multiarray/types.hpp"
 #include "multiarray/base.hpp"
-
+#include "multiarray.hpp"
 
 
 int 
@@ -23,7 +23,7 @@ main ( int argc, char ** argv )
 {
   auto env = final_project::mpi::environment(argc, argv);
   // MPI_Init(&argc, &argv);
-  auto B = env.size();
+  // auto B = env.size();
   // std::cout << B;
   
 
@@ -34,9 +34,13 @@ main ( int argc, char ** argv )
 
   final_project::Word a;
 
-  MPI_Datatype A {final_project::mpi::get_mpi_type<final_project::Word>()};
-  int size;
-  MPI_Type_size(A, &size);
+  MPI_Datatype A {final_project::mpi::get_mpi_type<final_project::Integer>()};
+  MPI_Datatype B {final_project::mpi::get_mpi_type<final_project::Dworld>()};
+  int sizeA, sizeB;
+  MPI_Type_size(A, &sizeA);
+  MPI_Type_size(B, &sizeB);
+
+  std::cout << sizeA << "\t" << sizeB << std::endl;
   
 
   auto SS {final_project::multi_array::__detail::__multi_array_shape<2>(4,7)};

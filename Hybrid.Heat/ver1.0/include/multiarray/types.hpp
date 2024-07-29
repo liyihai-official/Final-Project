@@ -11,13 +11,24 @@
 #include <vector>       // Standard Libraries
 #include <types.hpp>    // Final Project Header Files
 
+namespace final_project { namespace multi_array {
+
+namespace __detail {
+  typedef size_type         __size_type;
+  typedef super_size_type   __super_size_type;
+
+  template <__size_type __NumD>
+    struct __multi_array_shape;
+}
+
+
+}}
+
+
 
 namespace final_project { namespace multi_array {
 
 namespace __detail {
-
-typedef final_project::Dworld __size_type;
-typedef final_project::Qworld __super_size_type;
 
 /// @brief A shape viewer of multi-array which is __NumD dimension(s).
 /// @tparam __NumD Template __size_type number, the dimensions.
@@ -70,7 +81,7 @@ template <__size_type __NumD>
 
 
 
-
+/// --------------------------------------------------
 ///
 /// Definition of inline member functions
 ///

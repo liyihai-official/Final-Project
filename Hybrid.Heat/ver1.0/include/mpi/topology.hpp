@@ -27,17 +27,19 @@ namespace final_project { namespace mpi {
 
 namespace topology 
 {
-  
+
   /// @brief Cartesian struct contains the Basic Features of Cartesian @c MPI_Cart_Create
   ///         and also creates the basic routines of halo @c MPI_Datatype for communicating.
   ///         
   /// @tparam T The value type of topology structure members.
   /// @tparam NumD Number of dimensions, ranging from 0 to 3.
-  template <typename T, UnsignedInteger NumD>
+  template <typename T, size_type NumD>
     struct Cartesian 
     {
       typedef multi_array::__detail::__multi_array_shape<NumD>    __array_shape;
 
+
+      // ------------------------- Global Entities ------------------------- //
       public:
       Integer dimension, num_procs;
       __array_shape __global_shape;
@@ -45,6 +47,7 @@ namespace topology
       MPI_Comm comm_cart;
       MPI_Datatype value_type {get_mpi_type<T>()};
 
+      // ------------------------- Local Entities ------------------------- //
       public: 
       __array_shape __local_shape;
 
@@ -53,14 +56,18 @@ namespace topology
       std::array<Integer, NumD> nbr_src, nbr_dest, coordinates;
       std::array<MPI_Datatype, NumD> halos;
 
+
+      // -------------------------- Cons & Decons ------------------------- //
       public:
       Cartesian();
       Cartesian(__array_shape &, environment &);
+      ~Cartesian();
 
+      // --------------------------- Operators --------------------------- //
       bool operator==(const Cartesian &) const;
       bool operator!=(const Cartesian &) const;
 
-      ~Cartesian();
+      
 
     }; // struct Cartesian
 
@@ -98,10 +105,14 @@ auto Decomp = [](
 
   if (e > n || rank == prob_size - 1) e = n;
   return 0;
-};
+};typedef Dworld size_type;
 
 
-template <typename T, UnsignedInteger NumD>
+
+/// @brief Default Constructor, fill with {0} value
+/// @tparam T The value type
+/// @tparam NumD Number of dimension {0}
+template <typename T, size_type NumD>
   inline
   Cartesian<T, NumD>::Cartesian()
     : num_procs {0}, rank {0}, comm_cart {MPI_COMM_NULL}, 
@@ -117,7 +128,8 @@ std::fill( coordinates.begin(), coordinates.end(),  0);
 std::fill(halos.begin(),halos.end(), MPI_DATATYPE_NULL);
   }
 
-template <typename T, UnsignedInteger NumD>
+/// @brief Destructor, Free halo @c MPI_Datatype and the @c MPI_Comm communicator
+template <typename T, size_type NumD>
   inline
   Cartesian<T, NumD>::~Cartesian()
   {
@@ -130,13 +142,14 @@ template <typename T, UnsignedInteger NumD>
       MPI_Comm_free(&comm_cart);
   }
 
+typedef Dworld size_type;
 
 /// @brief Constructor Cartesian Topology,
 /// @tparam T 
 /// @tparam NumD 
 /// @param global_shape 
-/// @param env 
-template <typename T, UnsignedInteger NumD>
+/// @param env The default mpi::environment
+template <typename T, size_type NumD>
   inline 
   Cartesian<T, NumD>::Cartesian( __array_shape & global_shape, environment & env )
 : __global_shape(global_shape), __local_shape(global_shape)

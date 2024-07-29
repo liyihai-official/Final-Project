@@ -14,6 +14,11 @@
 namespace final_project {
 namespace mpi {
 
+namespace topology {
+  typedef Dworld    size_type;
+  typedef Qworld    super_size_type;
+}
+
 ///
 /// @brief Predefined MPI Datatypes, 
 ///   INT, FLOAT, DOUBLE, BYTE, 
@@ -74,6 +79,7 @@ template <>
   MPI_Datatype 
   get_mpi_type<Qworld>()
 { return MPI_UNSIGNED_LONG_LONG; }
+
 
 
 } // end of namespace mpi

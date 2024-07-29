@@ -30,6 +30,16 @@ namespace final_project
 
   using String          = std::string;
 
+
+namespace multi_array {
+
+  typedef Dworld    size_type;
+  typedef Qworld    super_size_type;
+  
+
+}
+
+
 } // end of namespace final_project
 
 #endif // end of define FINAL_PROJECT_TYPES_HPP_LIYIHAI
