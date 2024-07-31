@@ -46,6 +46,9 @@ template <class __T, __size_type __NumD>
     public:
     __array_Cart(__shape &, environment &);
 
+    template <typename ... Args>
+    __T& operator()(Args ... args) { return __loc_array(args...); }
+
     // Member Functions
     public:
     void swap(__array_Cart &);

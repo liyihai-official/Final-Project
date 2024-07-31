@@ -1,7 +1,7 @@
 ///
 /// @file mpi/assert.hpp
 /// @brief Defines the MPI assert using `assert`
-/// @autor LI Yihai
+/// @author LI Yihai
 /// @version 6.0
 /// 
 #ifndef FINAL_PROJECT_MPI_ASSERT_HPP_LIYIHAI

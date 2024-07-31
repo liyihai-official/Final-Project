@@ -18,10 +18,14 @@
 // #include "multiarray/base.hpp"
 #include "multiarray.hpp"
 
+// #include <pde/pde.hpp>
+#include <pde/Heat.hpp>
+
 
 #if !defined(NX) || !defined(NY)
-#define NX 10+2
-#define NY 15+2
+#define NX 5+2
+#define NY 7+2
+#define NZ 8+2
 #endif
 
 
@@ -32,18 +36,20 @@ main ( int argc, char ** argv )
   constexpr final_project::Integer root_proc {0};
   constexpr final_project::Double tol {1E-3};
   constexpr final_project::Dworld nsteps {1000000}, stepinterval {nsteps / 1000};
-  constexpr final_project::Dworld numDIM {2}, nx {NX}, ny {NY};
+  constexpr final_project::Dworld numDim {3}, nx {NX}, ny {NY}, nz {NZ};
 
   auto mpi_world {final_project::mpi::environment(argc, argv)};
 
-  auto mat {final_project::mpi::array_Cart<double, 2>(mpi_world, nx, ny)};
-  auto gather {final_project::multi_array::array_base<double, 2>(nx, ny)};
+  final_project::pde::Heat_2D<double> obj(mpi_world, nx, ny);
+
+  auto mat {final_project::mpi::array_Cart<double, numDim>(mpi_world, nx, ny, nz)};
+  auto gather {final_project::multi_array::array_base<double, numDim>(nx, ny, nz)};
   
 
   // Brief information of setups
   if (root_proc == mpi_world.rank())
   {
-    std::cout << numDIM << " Dimension Simulation Parameters: "     << std::endl;
+    std::cout << numDim << " Dimension Simulation Parameters: "     << std::endl;
     std::cout << "\tRows: "       << nx 
               << "\n\tColumns: "  << ny     << std::endl;
     std::cout << "\tTime steps: " << nsteps << std::endl;
@@ -57,17 +63,21 @@ main ( int argc, char ** argv )
   MPI_Barrier(mpi_world.comm());
   if (mpi_world.rank () == 0)
   {
-    mat.array().__loc_array.fill(1);
+    gather.data().fill(-1);
   }
-  std::cout << mat.array() << std::endl;
+  mat.array().__loc_array.fill(5+mpi_world.rank());
 
   
-  final_project::mpi::Gather(gather, mat);
-  if (mpi_world.rank() == 0)
-  {
-    std::cout << gather.data() << std::endl;
-  }
+  final_project::mpi::Gather(gather, mat, 0);
 
+
+  MPI_Barrier(mpi_world.comm());
+  // if (mpi_world.rank() == 0)
+  // {
+  //   std::cout << gather.data() << std::endl;
+  // }
+
+  // std::cout << mat.array() << std::endl;
 
   return 0;
 }

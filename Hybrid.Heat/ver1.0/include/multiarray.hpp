@@ -18,6 +18,8 @@
 #include <multiarray/base.hpp>
 #include <multiarray/types.hpp>
 
+
+/// @brief Give the prototypes of objects and functions.
 namespace final_project { 
   
   
@@ -36,6 +38,15 @@ namespace mpi {
   /// @tparam NumD The number of dimensions.
   template <class T, size_type NumD>
     class array_Cart;
+
+  /// @brief Gather the distributed arrays on every processes in @c MPI_Comm environment.
+  /// @tparam T the value type of arrays.
+  /// @tparam NumD Number of dimension
+  /// @param  gather The collective array.
+  /// @param  cart  The distributed array on every processes.
+  template <typename T, size_type NumD>
+    void Gather(multi_array::array_base<T, NumD> &, array_Cart<T, NumD> &, const Integer=0);
+
 
 } // namespace mpi
 
@@ -69,15 +80,20 @@ template <class T, size_type NumD>
     array_base( Args ... );
     array_base( array_shape & );
 
+    template <typename ... Args>
+    T& operator()(Args ... args) { return (*body)(args...); }
+
     public:
-    array& data()                             { return *body; }
-    array& data()                       const { return *body; }
+    array&      data()                        { return *body; }
+    array&      data()                  const { return *body; }
     size_type&  shape(size_type index)  const { return body->__shape[index]; }
 
     void saveToBinary(const String &)   const;
 
     // friend final_project::pde::Heat<T, NumD>;
     // friend final_project::pde::Naiver_Stokes<T, NumD>;
+
+    friend mpi::array_Cart<T, NumD>;
 
   }; // class array_base
 } // namespace multi_array
@@ -86,6 +102,7 @@ template <class T, size_type NumD>
 
 namespace mpi {
 
+
 template <class T, size_type NumD>
   class array_Cart {
     public:
@@ -93,6 +110,8 @@ template <class T, size_type NumD>
     typedef topology::Cartesian<T, NumD>            topology_Cart;
 
     typedef mpi::__detail::__array_Cart<T, NumD>                loc_array;    // mpi details
+
+    typedef multi_array::array_base<T, NumD>                    super_array;  
     typedef multi_array::__detail::__multi_array_shape<NumD>    array_shape;  // multi_array details
 
     private:
@@ -104,8 +123,12 @@ template <class T, size_type NumD>
     template <typename ... Args>
     array_Cart(environment &, Args ...);
 
+    template <typename ... Args>
+    T& operator()(Args ... args) { return (*body)(args...); }
+
     public:
     void swap(array_Cart &);
+    void swap(super_array &);
 
     loc_array& array()              { return *body; }
     loc_array& array()        const { return *body; }
@@ -136,6 +159,7 @@ template <class T, size_type NumD>
 ///
 
 #include <fstream>
+#include <cstring>
 #include <assert.hpp>
 
 
@@ -206,29 +230,24 @@ template <typename ... Args>
 { FINAL_PROJECT_ASSERT((NumD < 4)); }
 
 
-/// @brief Gather the distributed arrays on every processes in @c MPI_Comm environment.
-/// @tparam T the value type of arrays.
-/// @tparam NumD Number of dimension
-/// @param  gather The collective array.
-/// @param  cart  The distributed array on every processes.
-template <typename T, size_type NumD>
-  void Gather(multi_array::array_base<T, NumD> &, array_Cart<T, NumD> &, const Integer=0);
-
 template <typename T, size_type NumD>
   void Gather(
     multi_array::array_base<T, NumD> & gather, 
     array_Cart<T, NumD> & loc,
     const Integer root)
   {
-    MPI_Datatype sbuf_block, value_type {get_mpi_type<T>()};
 
-    // if (loc.topology().num_procs == 1) {
-    //   *(gather.body).swap(*(loc.body).__loc_array);
-    // }
+    MPI_Datatype buf_block, value_type {get_mpi_type<T>()};
+    const Integer num_procs {loc.topology().num_procs}, dimension {loc.topology().dimension};
 
-    Integer pid, i, j, k, dim, num_proc {loc.topology().num_procs}, dimension {loc.topology().dimension};
-    Integer s_list[NumD][num_proc], n_list[NumD][num_proc];
-    std::array<Integer, NumD> Ns, starts_cpy, array_sizes, array_subsizes, array_starts = {0}, indexes = {1};
+    Integer pid, i, j, k, dim, back {0};
+    Integer s_list[NumD][num_procs], n_list[NumD][num_procs];
+    std::array<Integer, NumD> Ns, starts_cpy, array_sizes, array_subsizes, array_starts, indexes;
+
+// Gather basic information of sending entities
+
+    if (num_procs == 1) { ++back; } // For handling the special case that there is only 1 process.
+    array_starts.fill(0), indexes.fill(1);
 
     for (dim = 0; dim < dimension; ++dim)
     {
@@ -244,36 +263,106 @@ template <typename T, size_type NumD>
 
       if (loc.topology().ends[dim] == loc.topology().__global_shape[dim] - 2)
         ++ Ns[dim];
+        
 
       MPI_Datatype gtype {get_mpi_type<Integer>()};
       MPI_Gather(&starts_cpy[dim], 1, gtype, s_list[dim], 1, gtype, root, loc.topology().comm_cart);
       MPI_Gather(&Ns[dim], 1, gtype, n_list[dim], 1, gtype, root, loc.topology().comm_cart);  
     }
 
-    if (loc.topology().rank == root)
-    {
-
-    }
-
+// ------------------- Local Proc Sending to ROOT Proc ------------------- /
     if (loc.topology().rank != root)
     {
-      for ( pid = 0; pid < num_proc; ++pid)
+
+// - -  - - - - begin of create sending buffer datatypes - - - - - - - - //
+for (dim = 0; dim < dimension; ++dim)
+{
+  array_sizes[dim] = loc.topology().__local_shape[dim];
+  array_subsizes[dim] = Ns[dim];
+}
+
+MPI_Type_create_subarray( dimension, 
+                          array_sizes.data(), 
+                          array_subsizes.data(), 
+                          array_starts.data(),
+                          MPI_ORDER_C, value_type, &buf_block);
+MPI_Type_commit(&buf_block);
+// - -  - - - - end of create sending buffer datatypes - - - - - - - - //
+
+if (NumD == 2) {
+  MPI_Send( &loc(indexes[0], indexes[1]), 1, 
+            buf_block, root, loc.topology().rank, loc.topology().comm_cart);
+} 
+  else if (NumD == 3)
+{
+  MPI_Send( &loc(indexes[0], indexes[1], indexes[2]), 1, 
+            buf_block, root, loc.topology().rank, loc.topology().comm_cart);
+}
+
+MPI_Type_free(&buf_block);
+    }
+
+
+// ============= ROOT Gathering Information other Processes ============= //
+    if (loc.topology().rank == root)
+    {
+      for ( pid = 0; pid < num_procs; ++pid)
       {
-        if (pid == root)
+// ------------------- At the ROOT process ------------------- // 
+        if (pid == root) // Local Memory Copy
         {
-          for ( i=starts_cpy[0]; i <= loc.topology().ends[0]; ++i)
+          for ( i=starts_cpy[0]; i <= loc.topology().ends[0] + back; ++i)
           {
-            if (NumD == 2)
-            {
-              // memcpy( )
-            }
+if (NumD == 2)
+{
+  memcpy( &gather(i, starts_cpy[1]) , 
+          &loc(i, starts_cpy[1])    ,   n_list[1][pid]*sizeof(T));
+} 
+  else if (NumD == 3)
+{
+  for ( j=starts_cpy[1]; j <= loc.topology().ends[1]+back; ++j)
+    memcpy( &gather(i,j,starts_cpy[2]), 
+            &loc(i,j,starts_cpy[2])   , n_list[2][pid]*sizeof(T));
+}
           }
-        }
+        } 
+// ------------------- At the Other processes ------------------- // 
+          else          // Recv From others
+        {
+
+// - -  - - - - begin of create receiving buffer datatypes - - - - - - - - //
+for (dim = 0; dim < dimension; ++dim)
+{
+  array_sizes[dim] = loc.topology().__global_shape[dim];
+  array_subsizes[dim] = n_list[dim][pid];
+}
+
+MPI_Type_create_subarray( dimension, 
+                          array_sizes.data(), 
+                          array_subsizes.data(), 
+                          array_starts.data(),
+                          MPI_ORDER_C, value_type, &buf_block);
+MPI_Type_commit(&buf_block);
+// - -  - - - - end of create receiving buffer datatypes - - - - - - - - //
+
+if (NumD==2)
+{
+  MPI_Recv( &gather(s_list[0][pid], s_list[1][pid]),
+            1, buf_block, pid, pid, loc.topology().comm_cart, MPI_STATUS_IGNORE);
+} else if (NumD==3)
+{
+  MPI_Recv( &gather(s_list[0][pid], s_list[1][pid], s_list[2][pid]),
+            1, buf_block, pid, pid, loc.topology().comm_cart, MPI_STATUS_IGNORE);
+}
+
+MPI_Type_free(&buf_block);
+        }               // end of Recv From others
+        
       }
+    
     }
 
   }
-
 
 
 } // namespace mpi

@@ -1,5 +1,5 @@
 /// @file mpi/types.hpp
-/// @brief Gives the Predefined MPI_Datatypes and Portable MPI_Datatypes
+/// @brief Gives the Predefined @c MPI_Datatypes and Portable @c MPI_Datatypes
 ///     for communicating.
 /// @date Jul. 27. 2024
 /// @author LI Yihai
