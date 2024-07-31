@@ -4,6 +4,12 @@
 This is the final project of M.Sc in High Performance Computing program.
 Currently, research is focusing on finding numerical solutions of Partial
 Differential Equations (PDEs), including heat equations.
+
+### Report Note
+
+- Two main reasons for using meta-programming techniques:
+    - Improved type safety
+    - Improved run-time performance
 <!-- $$
 \frac{\partial u}{\partial t} 
 (t,\textbf{x})
@@ -29,6 +35,7 @@ $$ -->
 <!-- <img src="Heat3D/Heat_3D.gif" alt="Animated GIF" height="200"> -->
 
 ### Development Note
+
 
 #### Jun, 18- Jul, 8 2024
 - Working Path : ```MPI.Heat/C++Heat/ver5.0``` and ```PINN/```
