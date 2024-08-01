@@ -114,15 +114,20 @@ template <class T, size_type NumD>
     typedef multi_array::array_base<T, NumD>                    super_array;  
     typedef multi_array::__detail::__multi_array_shape<NumD>    array_shape;  // multi_array details
 
-    private:
-    std::unique_ptr<loc_array> body;
-
     public:
-    array_Cart(environment &, array_shape &);
+    array_Cart()                                                  = default;
+    array_Cart(array_Cart<T, NumD> &&)                            = default; // move
+    array_Cart<T, NumD> & operator=(array_Cart<T,NumD> &&)        = default;
+    array_Cart(const array_Cart<T, NumD> &)                       = default;
+    array_Cart<T, NumD> & operator=(const array_Cart<T, NumD> &)  = default; // copy
+    ~array_Cart() = default;
     
-    template <typename ... Args>
-    array_Cart(environment &, Args ...);
+    template <typename ... Exts>
+    array_Cart(environment &, Exts ...);    // specify the extents
 
+    array_Cart(environment &, array_shape &); // initialize from extent
+
+    //
     template <typename ... Args>
     T& operator()(Args ... args) { return (*body)(args...); }
 
@@ -138,6 +143,8 @@ template <class T, size_type NumD>
     // friend final_project::PDE::Heat<T, NumD>;
     // friend final_project::PDE::Naiver_Stokes<T, NumD>;
 
+    private:
+    std::unique_ptr<loc_array> body;
   }; // class array_Cart
 
 } // namespace mpi

@@ -41,6 +41,12 @@ main ( int argc, char ** argv )
   auto mpi_world {final_project::mpi::environment(argc, argv)};
 
   final_project::pde::Heat_2D<double> obj(mpi_world, nx, ny);
+  
+  auto A = obj.update_ping_pong();
+  obj.show();
+  std::cout << A << std::endl;
+
+
 
   auto mat {final_project::mpi::array_Cart<double, numDim>(mpi_world, nx, ny, nz)};
   auto gather {final_project::multi_array::array_base<double, numDim>(nx, ny, nz)};

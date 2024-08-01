@@ -19,8 +19,8 @@ template <typename T, size_type NumD>
   class Heat_Base
   {
     public:
-    template <typename ... Args>
-    Heat_Base(mpi::environment &, Args ...);
+    template <typename ... Exts>
+    Heat_Base(mpi::environment &, Exts ...);
 
     protected:
     // Coefficients of Heat Equation
@@ -33,51 +33,43 @@ template <typename T, size_type NumD>
     public:
     virtual void exchange_ping_pong()         = 0;
 
-
     // Updates
     public: 
-    virtual void update_ping_pong()           = 0;
-    virtual void update_ping_pong_bulk()      = 0;
-    virtual void update_ping_pong_boundary()  = 0;
+    virtual T update_ping_pong()           = 0;
+    virtual T update_ping_pong_bulk()      = 0;
+    virtual T update_ping_pong_boundary()  = 0;
     
   }; 
 
 template <typename T>
   class Heat_2D : protected Heat_Base<T, 2> 
   {
-
+    
     friend class BoundaryConditions::DirchletBC<T, 2>;
     friend class BoundaryConditions::NeumannBC<T, 2>;
 
     public:
-    Heat_2D(mpi::environment & env, size_type nx, size_type ny)
-  : Heat_Base<T, 2>(env, nx, ny)
+    Heat_2D(mpi::environment & env, size_type nx, size_type ny);
+
+    void exchange_ping_pong() override;
+
+    T update_ping_pong() override;
+    T update_ping_pong_bulk() override 
     {
-      exchange_ping_pong();
+      return 0;
+    }
+    T update_ping_pong_boundary() override  
+    {
+      return 0;
     }
 
-    
-    void exchange_ping_pong() override
+    void show() 
     {
-      std::cout << " EXCHANGE PING PONG " << this->dt << std::endl;
-    }
-
-    void update_ping_pong() override
-    {
-      std::cout << "UPDATE" << std::endl;
-    }
-    void update_ping_pong_bulk() override 
-    {
-
-    }
-
-    void update_ping_pong_boundary() override  
-    {
-
+      std::cout << pong.array() << std::endl;
     }
 
     private:
-    // mpi::array_Cart<T, 2>();
+    mpi::array_Cart<T, 2> ping, pong;
   
   }; // class Heat_2D
 
@@ -107,13 +99,13 @@ namespace final_project { namespace pde {
 
 
 template <typename T, size_type NumD>
-template <typename ... Args>
+template <typename ... Exts>
   inline
-  Heat_Base<T, NumD>::Heat_Base(mpi::environment & env, Args ... args)
+  Heat_Base<T, NumD>::Heat_Base(mpi::environment & env, Exts ... exts)
   {
-    std::cout << "Constructor from Base" << std::endl;
+    std::cout << "Constructor from Heat_Base" << std::endl;
 
-    multi_array::__detail::__multi_array_shape<NumD> shape(args...);
+    multi_array::__detail::__multi_array_shape<NumD> shape(exts...);
 
     std::fill(minRange.begin(), minRange.end(), 0);
     std::fill(maxRange.begin(), maxRange.end(), 1);
@@ -134,6 +126,53 @@ template <typename ... Args>
     }
   }
 
+
+template <typename T>
+  inline
+  Heat_2D<T>::Heat_2D(mpi::environment & env, size_type nx, size_type ny)
+: Heat_Base<T, 2>(env, nx, ny)
+  {
+    ping = mpi::array_Cart<T, 2>(env, nx, ny);
+    pong = mpi::array_Cart<T, 2>(env, nx, ny);
+
+    ping.array().__loc_array.fill(10);
+    pong.array().__loc_array.fill(10);
+    
+  }
+
+
+template <typename T>
+  inline void 
+  Heat_2D<T>::exchange_ping_pong()
+  {
+
+  }
+
+template <typename T>
+  inline T 
+  Heat_2D<T>::update_ping_pong()
+  {
+    T diff {0.0};
+    size_type i {1}, j {1};
+
+    for (i=1; i < ping.topology().__local_shape[0] - 1; ++i)
+    {
+      for ( j = 1; j < ping.topology().__local_shape[1] - 1; ++j)
+      {
+        T current {ping(i,j)};
+        pong(i,j) = 1 + 
+            this->weights[0] * (ping(i-1, j) + ping(i+1,j))
+          + this->weights[1] * (ping(i, j-1) + ping(i,j+1))
+          + current * (
+            this->diags[0]*this->weights[0] 
+          + this->diags[1]*this->weights[1]);
+
+        diff += std::pow(current - pong(i,j), 2);
+      }
+      
+    }
+    return diff;
+  }
 
 } // namespace pde
 } // namespace final_project
