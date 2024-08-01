@@ -132,8 +132,17 @@ template <class T, size_type NumD>
     T& operator()(Args ... args) { return (*body)(args...); }
 
     public:
-    void swap(array_Cart &);
-    void swap(super_array &);
+    void swap(array_Cart & out)
+    {
+      std::swap(body, out.body);
+    }
+    // void swap(super_array &);
+
+    // void swap(array_Cart& other) noexcept {
+    //     using std::swap;
+    //     swap(body, other.body);
+    // }
+
 
     loc_array& array()              { return *body; }
     loc_array& array()        const { return *body; }

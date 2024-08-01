@@ -20,6 +20,7 @@
 
 // #include <pde/pde.hpp>
 #include <pde/Heat.hpp>
+#include <pde/detials/Heat_2D.hpp>
 
 
 #if !defined(NX) || !defined(NY)
@@ -42,9 +43,14 @@ main ( int argc, char ** argv )
 
   final_project::pde::Heat_2D<double> obj(mpi_world, nx, ny);
   
-  auto A = obj.update_ping_pong();
+  for (final_project::Integer i = 1; i < 100; ++i)
+  {
+    obj.update_ping_pong();
+    obj.switch_in_out();
+  }
   obj.show();
-  std::cout << A << std::endl;
+
+  // std::cout << A << std::endl;
 
 
 
