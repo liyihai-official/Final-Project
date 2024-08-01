@@ -68,16 +68,16 @@ template <class T, size_type NumD>
   class array_base 
   {
     private:
-    typedef T                                     value_type;
-    typedef __detail::__array<T, NumD>            array;
-    typedef __detail::__multi_array_shape<NumD>   array_shape;
+    using value_type  = T;
+    using array       = __detail::__array<T, NumD>;
+    using array_shape = __detail::__multi_array_shape<NumD>;
 
     private:
     std::unique_ptr<array> body;
 
     public:
-    template <typename ... Args>
-    array_base( Args ... );
+    template <typename ... Exts>
+    array_base( Exts ... );
     array_base( array_shape & );
 
     template <typename ... Args>

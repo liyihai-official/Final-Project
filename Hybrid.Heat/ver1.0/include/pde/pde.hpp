@@ -30,9 +30,13 @@ namespace final_project {
 ///           
 namespace pde {
 
-
+/// @brief The basic abstract class of heat equation.
+/// @tparam T The value type.
+/// @tparam NumD The number of dimension.
 template <typename T, size_type NumD>
   class Heat_Base;
+
+
 
 template <typename T, size_type NumD>
   class Naiver_Stokes_Base;

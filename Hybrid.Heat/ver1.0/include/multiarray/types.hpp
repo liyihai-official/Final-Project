@@ -52,8 +52,8 @@ template <__size_type __NumD>
     __multi_array_shape(); 
 
     /// @brief Construct dims from packed arguments.
-    template <typename ... Args>
-    __multi_array_shape( Args ... );
+    template <typename ... Exts>
+    __multi_array_shape( Exts ... );
 
     /// @brief Construct dims from other one.
     __multi_array_shape(const __multi_array_shape& );
@@ -99,17 +99,17 @@ template <__size_type __NumD>
 { dims.resize(0); }
 
 template <__size_type __NumD>
-template <typename ... Args>
+template <typename ... Exts>
   inline 
-  __multi_array_shape<__NumD>::__multi_array_shape(Args ... args)
+  __multi_array_shape<__NumD>::__multi_array_shape(Exts ... exts)
 { 
   FINAL_PROJECT_ASSERT_MSG(
-    (sizeof...(args) == __NumD),
+    (sizeof...(exts) == __NumD),
     "Number of Arguments must Match the dimension."
   );
 
   // cast the inputs (non-negative) into __size_type (uint64_t)
-  dims = { check_and_cast(args)... };
+  dims = { check_and_cast(exts)... };
 }
 
 template <__size_type __NumD>

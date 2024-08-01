@@ -31,16 +31,17 @@ template <class __T, __size_type __NumD>
   class __array {
 
   public: // Member Datatypes
-    typedef __T         value_type;
-    typedef const __T   const_value_type;
-    typedef __T&        reference;
-    typedef const __T&  const_reference;
-    typedef __T*        iterator;
-    typedef const __T*  const_iterator;
+    using value_type        =       __T;
+    using const_value_type  = const __T;
+    using reference         =       __T&;
+    using const_reference   = const __T&;
+    using iterator          =       __T*;
+    using const_iterator    = const __T*;
 
-    typedef __multi_array_shape<__NumD> __array_shape;
+    using __array_shape     = __multi_array_shape<__NumD>;// __array_shape;
 
   public: // Member Variables
+    static constexpr __size_type order {__NumD};
     __array_shape               __shape;
     std::unique_ptr<value_type[]> __data;
 
@@ -52,8 +53,8 @@ template <class __T, __size_type __NumD>
 
 
   public: // Operators
-    template <typename ... Args>
-    reference operator()(Args ...);
+    template <typename ... Exts>
+    reference operator()(Exts ...);
     reference operator[](__size_type);
   
     iterator          begin()       { return __data.get(); }
@@ -68,10 +69,10 @@ template <class __T, __size_type __NumD>
     __super_size_type size() const { return __shape.size(); }
 
   public: // Member Functions for Features
+    
     void swap(__array &);
     void fill(const_reference);
     void assign(const_reference);
-
 
   template <class __U, __size_type __Dims>
   friend std::ostream & operator<<(std::ostream &, const __array<__U, __Dims> &);
@@ -116,19 +117,19 @@ template <class __T, __size_type __NumD>
 
 // Operators
 template <class __T, __size_type __NumD>
-template <typename ... Args>
+template <typename ... Exts>
   inline
   __T& 
-  __array<__T, __NumD>::operator()(Args ... args)
+  __array<__T, __NumD>::operator()(Exts ... exts)
   {
     FINAL_PROJECT_ASSERT_MSG(
-      (sizeof...(args) == __NumD),
+      (sizeof...(exts) == __NumD),
       "Number of Arguments must Match the dimension."
     );
 
     __size_type index {0}, i {0};
     __size_type multiplier {1};
-    __size_type indices[] = { __shape.check_and_cast(args) ... };
+    __size_type indices[] = { __shape.check_and_cast(exts) ... };
 
     for (; i < __NumD; ++i)
     {
