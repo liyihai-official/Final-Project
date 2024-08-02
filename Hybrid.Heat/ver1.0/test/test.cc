@@ -11,7 +11,7 @@
 // #include "pde/Heat.hpp"
 #include <pde/detials/Heat_2D.hpp>
 #include <pde/detials/InitializationsC.hpp>
-#include <pde/detials/BoundaryConditions.hpp>
+#include <pde/detials/BoundaryConditions/BoundaryConditions.hpp>
 
 
 
@@ -56,7 +56,9 @@ main ( int argc, char ** argv )
 
   // std::cout << A << std::endl;
 
-  obj.solve_pure_mpi(1E-3);
+  auto iter = obj.solve_pure_mpi(1E-3);
+
+  std::cout << "Converge at : " << std::fixed << std::setw(7) << iter << std::endl;
 
 
 

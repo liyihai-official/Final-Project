@@ -14,12 +14,13 @@ template <typename T>
     public:
     Heat_2D(mpi::environment &, size_type, size_type);
 
-    void solve_pure_mpi(T, Integer=100, Integer=0);
+    Integer solve_pure_mpi(T, Integer=100, Integer=0);
 
     private:
     mpi::array_Cart<T, 2> in, out;
     multi_array::array_base<T, 2> gather;
 
+    private:
     void exchange_ping_pong() override;
 
     T update_ping_pong() override;
@@ -129,24 +130,38 @@ template <typename T>
     MPI_Sendrecv( &in(1, n_size-2), 1, in.topology().halos[dim], in.topology().nbr_dest[dim], flag,
                   &in(1, 0)       , 1, in.topology().halos[dim], in.topology().nbr_src[dim] , flag,
                   in.topology().comm_cart, MPI_STATUS_IGNORE);
-
   }
 
 
 template <typename T>
-  void 
+  Integer 
   Heat_2D<T>::solve_pure_mpi(T tol, Integer nsteps, Integer root)
     {
-      for (Integer i = 1; i < nsteps; ++i)
+      T ldiff {0.0}, gdiff {0.0}; MPI_Datatype DiffType {mpi::get_mpi_type<T>()};
+      Bool converge {false}; Integer iter;
+
+      for (iter = 1; iter < nsteps; ++iter)
       {
-        update_ping_pong();
-        switch_in_out();
         exchange_ping_pong();
+        ldiff = update_ping_pong();
+        MPI_Allreduce(&ldiff, &gdiff, 1, DiffType, MPI_SUM, in.topology().comm_cart);
+
+        if (in.topology().rank == root) 
+          std::cout << std::fixed << std::setprecision(13) << std::setw(15) << gdiff << std::endl;
+
+        if (gdiff  <= tol) {
+          converge = true;
+          break;
+        }
+
+        switch_in_out();
       }
 
       mpi::Gather(gather, in, root);
       if (in.topology().rank == root)
         std::cout << gather.data() << std::endl;
+
+      return iter;
     }  
 } // namespace pde
 } // namespace final_project

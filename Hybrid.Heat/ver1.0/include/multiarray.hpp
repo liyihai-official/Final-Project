@@ -91,9 +91,6 @@ template <class T, size_type NumD>
 
     void saveToBinary(const String &)   const;
 
-    // friend final_project::pde::Heat<T, NumD>;
-    // friend final_project::pde::Naiver_Stokes<T, NumD>;
-
     friend mpi::array_Cart<T, NumD>;
 
   }; // class array_base
@@ -124,26 +121,14 @@ template <class T, size_type NumD>
     ~array_Cart() = default;
     
     template <typename ... Exts>
-    array_Cart(environment &, Exts ...);    // specify the extents
-
+    array_Cart(environment &, Exts ...);      // specify the extents
     array_Cart(environment &, array_shape &); // initialize from extent
 
-    //
     template <typename ... Args>
     T& operator()(Args ... args) { return (*body)(args...); }
 
     public:
-    void swap(array_Cart & out)
-    {
-      std::swap(body, out.body);
-    }
-    // void swap(super_array &);
-
-    // void swap(array_Cart& other) noexcept {
-    //     using std::swap;
-    //     swap(body, other.body);
-    // }
-
+    void swap(array_Cart &);
 
     loc_array& array()              { return *body; }
     loc_array& array()        const { return *body; }
@@ -234,6 +219,11 @@ template <class T, size_type NumD>
 : body(std::make_unique<loc_array>(glob_shape, env))
 { FINAL_PROJECT_ASSERT((NumD < 4)); }
 
+
+template <class T, size_type NumD>
+  inline void
+  array_Cart<T, NumD>::swap(array_Cart & out) 
+  { std::swap(body, out.body); }
 
 template <class T, size_type NumD>
 template <typename ... Args>
