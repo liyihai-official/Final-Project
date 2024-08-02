@@ -76,6 +76,7 @@ template <class T, size_type NumD>
     std::unique_ptr<array> body;
 
     public:
+    array_base()    =     default;
     template <typename ... Exts>
     array_base( Exts ... );
     array_base( array_shape & );

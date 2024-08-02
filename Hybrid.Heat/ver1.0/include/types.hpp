@@ -27,6 +27,7 @@ namespace final_project
   using Float           = float;
   using Double          = double;
   using Char            = char;
+  using Bool            = bool;
 
   using String          = std::string;
 

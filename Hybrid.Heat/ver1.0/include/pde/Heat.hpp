@@ -6,10 +6,8 @@
 
 #pragma once
 
-// Final Project 
-#include <types.hpp>
+// Final Project
 #include <pde/pde.hpp>
-#include <multiarray.hpp>
 
 
 namespace final_project {  namespace pde {
@@ -37,11 +35,10 @@ template <typename T, size_type NumD>
     virtual T update_ping_pong()           = 0;
     virtual T update_ping_pong_bulk()      = 0;
     virtual T update_ping_pong_boundary()  = 0;
-    
+      
   }; 
 
 
-  
 // template <typename T>
 //   class Heat_3D : public Heat_Base<T, 3> 
 //    { }; // class Heat<T, 3>
@@ -76,7 +73,7 @@ template <typename ... Exts>
 
     for (std::size_t i = 0; i < NumD; ++i)
     {
-      dxs[i] = (maxRange[i] - minRange[i]) / shape[i];
+      dxs[i] = (maxRange[i] - minRange[i]) / (shape[i]-1);
     }
 
     auto mmadr {std::min_element(dxs.begin(), dxs.end())};

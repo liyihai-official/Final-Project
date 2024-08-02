@@ -5,39 +5,32 @@
 #include <pde/Heat.hpp>
 
 
-
 namespace final_project {  namespace pde {
 
 
 template <typename T>
   class Heat_2D : protected Heat_Base<T, 2> 
   {
-    
-    friend class BoundaryConditions::DirchletBC<T, 2>;
-    friend class BoundaryConditions::NeumannBC<T, 2>;
-
     public:
-    Heat_2D(mpi::environment & env, size_type nx, size_type ny);
+    Heat_2D(mpi::environment &, size_type, size_type);
+
+    void solve_pure_mpi(T, Integer=100, Integer=0);
+
+    private:
+    mpi::array_Cart<T, 2> in, out;
+    multi_array::array_base<T, 2> gather;
 
     void exchange_ping_pong() override;
 
     T update_ping_pong() override;
     T update_ping_pong_bulk() override;
     T update_ping_pong_boundary() override;
-
-
     void switch_in_out();
-    void show() 
-    {
-      std::cout << in.array() << std::endl;
-      // std::cout << out.array() << std::endl;
-    }
 
-    private:
-    mpi::array_Cart<T, 2> in, out;
+    friend InitialConditions::Init_2D<T>;
+    friend BoundaryConditions_2D<T>;
   
   }; // class Heat_2D
-
 
 }}
 
@@ -60,26 +53,10 @@ template <typename T>
   {
     in = mpi::array_Cart<T, 2>(env, nx, ny);
     out = mpi::array_Cart<T, 2>(env, nx, ny);
+    gather = multi_array::array_base<T, 2>(nx, ny);
 
-
-    // Boundary Conditions
     in.array().__loc_array.fill(0);
-    out.array().__loc_array.fill(0);
-
-
-    for (size_type i = 0; i < in.topology().__local_shape[0]; ++i)
-    {
-
-      size_type j = 0;
-      // for (size_type j = 0; j < in.topology().__local_shape[1]; ++j)
-
-      if (in.topology().rank == 0 || in.topology().rank == 1)
-      {
-        in(i,j) = 1;
-        out(i,j) = 1;
-      }
-    }
-    
+    out.array().__loc_array.fill(0);    
   }
 
 template <typename T>
@@ -96,7 +73,7 @@ template <typename T>
 
     for (i=1; i < in.topology().__local_shape[0] - 1; ++i)
     {
-      for ( j = 1; j < in.topology().__local_shape[1] - 1; ++j)
+      for ( j=1; j < in.topology().__local_shape[1] - 1; ++j)
       {
         T current {in(i,j)};
         out(i,j) =
@@ -132,46 +109,45 @@ template <typename T>
   inline void 
   Heat_2D<T>::exchange_ping_pong()
   {
-    Integer flag {0};
-    size_type dim {0};
+    Integer flag {0}; size_type dim {0};
     
+    auto n_size {in.topology().__local_shape[dim]};
+    MPI_Sendrecv( &in(1 ,1), 1, in.topology().halos[dim], in.topology().nbr_src[dim], flag,
+                  &in(n_size-1 ,1), 1, in.topology().halos[dim], in.topology().nbr_dest[dim] , flag,
+                  in.topology().comm_cart, MPI_STATUS_IGNORE);
 
-    // in.topology().halos
-    
+    MPI_Sendrecv( &in(n_size-2 ,1), 1, in.topology().halos[dim], in.topology().nbr_dest[dim], flag,
+                  &in(0 ,1)       , 1, in.topology().halos[dim], in.topology().nbr_src[dim] , flag,
+                  in.topology().comm_cart, MPI_STATUS_IGNORE);
 
+    flag = 1; dim = 1;
+    n_size = in.topology().__local_shape[dim];
+    MPI_Sendrecv( &in(1,        1), 1, in.topology().halos[dim], in.topology().nbr_src[dim], flag,
+                  &in(1, n_size-1), 1, in.topology().halos[dim], in.topology().nbr_dest[dim] , flag,
+                  in.topology().comm_cart, MPI_STATUS_IGNORE);
 
-// std::size_t dim {0};
-// {
-//   auto flag {dim};
-//   auto n_size {out.get_array().__local_array.__shape[dim]};
-//   MPI_Sendrecv( &out.get_array().__local_array(1,1), 1, 
-//                 out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
-//                 &out.get_array().__local_array(n_size-1, 1), 1, 
-//                 out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
-//                 out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
+    MPI_Sendrecv( &in(1, n_size-2), 1, in.topology().halos[dim], in.topology().nbr_dest[dim], flag,
+                  &in(1, 0)       , 1, in.topology().halos[dim], in.topology().nbr_src[dim] , flag,
+                  in.topology().comm_cart, MPI_STATUS_IGNORE);
 
-//   MPI_Sendrecv( &out.get_array().__local_array(n_size-2,1), 1, 
-//                 out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
-//                 &out.get_array().__local_array(0, 1), 1, 
-//                 out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
-//                 out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-
-//   dim = 1;
-//   flag = dim;
-//   n_size = out.get_array().__local_array.__shape[dim];
-//   MPI_Sendrecv( &out.get_array().__local_array(1,        1), 1, 
-//                 out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim  ], flag,
-//                 &out.get_array().__local_array(1, n_size-1), 1, 
-//                 out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
-//                 out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-
-//   MPI_Sendrecv( &out.get_array().__local_array(1, n_size-2), 1, 
-//                 out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim+1], flag,
-//                 &out.get_array().__local_array(1, 0), 1, 
-//                 out.get_topology().__halo_vectors[dim], out.get_topology().__neighbors[2*dim], flag,
-//                 out.get_topology().__comm_cart, MPI_STATUS_IGNORE);
-// }
   }
+
+
+template <typename T>
+  void 
+  Heat_2D<T>::solve_pure_mpi(T tol, Integer nsteps, Integer root)
+    {
+      for (Integer i = 1; i < nsteps; ++i)
+      {
+        update_ping_pong();
+        switch_in_out();
+        exchange_ping_pong();
+      }
+
+      mpi::Gather(gather, in, root);
+      if (in.topology().rank == root)
+        std::cout << gather.data() << std::endl;
+    }  
 } // namespace pde
 } // namespace final_project
 

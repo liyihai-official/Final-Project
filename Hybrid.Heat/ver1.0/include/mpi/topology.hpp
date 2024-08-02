@@ -172,7 +172,8 @@ auto Decomp = [](
     
     for (i = 0; i < dimension; ++i)
     {
-      MPI_Cart_shift(comm_cart, dimension, 1, &nbr_src[i], &nbr_dest[i]);
+      MPI_Cart_shift(comm_cart, i, 1, &nbr_src[i], &nbr_dest[i]);
+
 
       Decomp(__global_shape[i]-2, dims[i], coordinates[i], starts[i], ends[i]);
       __local_shape[i] = ends[i] - starts[i] + 1 + 2; // Include halos
@@ -185,15 +186,14 @@ FINAL_PROJECT_MPI_ASSERT_GLOBAL((array_sub_size[i] > 0)); // sub size must bigge
     {
       auto temp = array_sub_size[i];
       array_sub_size[i] = 1;
-MPI_Type_create_subarray( dimension, array_size.data(), 
-                                  array_sub_size.data(), 
-                                  array_starts.data(), 
+MPI_Type_create_subarray( dimension,  array_size.data(), 
+                                      array_sub_size.data(), 
+                                      array_starts.data(), 
                         MPI_ORDER_C, value_type, &halos[i]);
 
 MPI_Type_commit(&halos[i]);
       array_sub_size[i] = temp;
     }
-
   }
 
 
