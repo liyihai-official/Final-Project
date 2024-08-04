@@ -36,6 +36,7 @@ $$ -->
 
 ### Development Note
 
+<img src="Hybrid.Heat/ver1.0/main1.png" alt="Heat_2D" height="300">
 
 #### Jun, 18- Jul, 8 2024
 - Working Path : ```MPI.Heat/C++Heat/ver5.0``` and ```PINN/```

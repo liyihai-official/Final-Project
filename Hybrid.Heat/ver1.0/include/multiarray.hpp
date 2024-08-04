@@ -193,18 +193,27 @@ template <class T, size_type NumD>
   array_base<T, NumD>::saveToBinary(const String & filename) 
   const 
 {
-  std::ostream ofs (filename, std::ios::binary);
-  FINAL_PROJECT_ASSERT(ofs);
+  std::ofstream ofs(filename, std::ios::binary);
+  FINAL_PROJECT_ASSERT_MSG(ofs, "Cannot Open File");
 
   for (size_type i = 0 ; i < NumD; ++i)
   {
-    auto temp {body->__shape[i]};
+    Dworld temp {body->__shape[i]};
     ofs.write(reinterpret_cast<const Char*>(&temp), sizeof((temp)));
   }
   
   ofs.write(reinterpret_cast<const Char*>(
     body->begin()), body->size() * sizeof(T)
   );
+
+
+      // for (size_type i = 0; i < NumDims; ++i) {
+      //   auto temp {body->__shape[i]};
+      //   ofs.write(reinterpret_cast<const char*>(&temp), sizeof((temp)));
+      // }
+      
+      // ofs.write(reinterpret_cast<const char*>(body->begin()), body->size() * sizeof(T));
+      
 }
 
 } // namespace multi_array

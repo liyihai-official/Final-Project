@@ -26,11 +26,14 @@ file(GLOB_RECURSE PROJECT_SOURCES
 
 # 添加可执行文件，并链接所有源文件
 add_executable(test test/test.cc ${PROJECT_SOURCES})
+add_executable(main1 main1/main1.cpp ${PROJECT_SOURCES})
 
 # 如果是发布模式，则启用 NDEBUG 宏
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
   target_compile_definitions(test PRIVATE NDEBUG)
+  target_compile_definitions(main1 PRIVATE NDEBUG)
 endif()
 
 # 链接 MPI 库
 target_link_libraries(test ${MPI_LIBRARIES})
+target_link_libraries(main1 ${MPI_LIBRARIES})

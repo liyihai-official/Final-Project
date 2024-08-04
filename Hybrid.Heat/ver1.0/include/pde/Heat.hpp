@@ -28,7 +28,8 @@ template <typename T, size_type NumD>
 
     // Exchange 
     public:
-    virtual void exchange_ping_pong()      = 0;
+    virtual void exchange_ping_pong_SR()      = 0;
+    virtual void exchange_ping_pong_I()       = 0;
 
     // Updates
     public: 
@@ -64,7 +65,9 @@ template <typename ... Exts>
   inline
   Heat_Base<T, NumD>::Heat_Base(mpi::environment & env, Exts ... exts)
   {
+    #ifndef NDEBUG
     std::cout << "Constructor from Heat_Base" << std::endl;
+    #endif
 
     multi_array::__detail::__multi_array_shape<NumD> shape(exts...);
 

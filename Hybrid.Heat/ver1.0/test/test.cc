@@ -16,9 +16,9 @@
 
 
 #if !defined(NX) || !defined(NY)
-#define NX 8+2
-#define NY 9+2
-#define NZ 10+2
+#define NX 100+2
+#define NY 100+2
+#define NZ 15+2
 #endif
 
 
@@ -35,14 +35,15 @@ main ( int argc, char ** argv )
 
   final_project::pde::Heat_2D<double> obj(mpi_world, nx, ny);
 
-
-  auto customLambda = [](double x, double y) { return x + y; };
-  final_project::pde::InitialConditions::Init_2D<double> init(obj, 
-    [](double x, double y) { return 0; }
+  final_project::pde::InitialConditions::Init_2D<double> IC
+  ( 
+    [](double x, double y) { return x; }
   );
 
-  final_project::pde::BoundaryConditions_2D<double> BC (obj, 1,2,3,4);
-
+  obj.SetHeatInitC(IC);
+  final_project::pde::BoundaryConditions_2D<double> BC (false, true, true, false);
+  // BC.SetBC(obj, 1, 2,3,4);
+  obj.SetHeatBC(BC, 1, 2, 3, -1);
 
   // for (final_project::Integer i = 1; i < 100; ++i)
   // {
@@ -56,9 +57,14 @@ main ( int argc, char ** argv )
 
   // std::cout << A << std::endl;
 
-  auto iter = obj.solve_pure_mpi(1E-3);
+  auto iter = obj.solve_pure_mpi(1E-3, 10000);
 
-  std::cout << "Converge at : " << std::fixed << std::setw(7) << iter << std::endl;
+  // std::cout << "Converge at : " << std::fixed << std::setw(7) << iter << std::endl;
+  // obj.show();
+  // BC.SetBC(obj, 1, 2,3,4);
+  // obj.show();
+
+  obj.SaveToBinary("test.bin");
 
 
 
