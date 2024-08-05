@@ -37,6 +37,8 @@ $$ -->
 ### Development Note
 
 <img src="Hybrid.Heat/ver1.0/main1.png" alt="Heat_2D" height="400">
+
+```mpiexec -np [n] ./main1```
 <img src="Hybrid.Heat/ver1.0/Strong_main1.png" alt="Heat_2D" height="400">
 
 #### Jun, 18- Jul, 8 2024
