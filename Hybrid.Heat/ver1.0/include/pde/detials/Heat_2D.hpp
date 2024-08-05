@@ -13,11 +13,16 @@ namespace final_project {  namespace pde {
 template <typename T>
   class Heat_2D : protected Heat_Base<T, 2> 
   {
+    using ICFunction = std::function<T(T, T)>;
+    using BCFunction = std::function<T(T, T, T)>;
+    
     public:
     Heat_2D() = delete;
     Heat_2D(mpi::environment &, size_type, size_type);
 
-    void SetHeatBC(BoundaryConditions_2D<T> &, T, T, T, T );
+    // void SetHeatBC(BoundaryConditions_2D<T> &, T, T, T, T );
+    void SetHeatBC(BoundaryConditions_2D<T> &, BCFunction, BCFunction, BCFunction, BCFunction);
+
     void SetHeatInitC(InitialConditions::Init_2D<T> &     );
 
     Integer solve_pure_mpi(T, Integer=100, Integer=0);
@@ -28,7 +33,7 @@ template <typename T>
     void exchange_ping_pong_SR()     override;
     void exchange_ping_pong_I()      override;
 
-    T update_ping_pong()          override;
+    T update_ping_pong(const T)      override;
     T update_ping_pong_bulk()     override;
     T update_ping_pong_boundary() override;
     void switch_in_out();
@@ -98,19 +103,34 @@ template <typename T>
 /// @param ValueDim01 Value or Derivative in Dimension [0] on [Dest] site.
 /// @param ValueDim10 Value or Derivative in Dimension [1] on [Source] site.
 /// @param ValueDim11 Value or Derivative in Dimension [1] on [Dest] site.
-template <typename T>
-  inline void
+// template <typename T>
+//   inline void
+//   Heat_2D<T>::SetHeatBC(
+//     BoundaryConditions_2D<T> & BC, 
+//     T ValueDim00, T ValueDim01, 
+//     T ValueDim10, T ValueDim11)
+//   {
+//     BC_2D = std::make_unique<BoundaryConditions_2D<T>>(BC);
+
+//     BC_2D->SetBC(*this, 
+//       ValueDim00, ValueDim01, 
+//       ValueDim10, ValueDim11);
+//   }
+
+template <typename T> 
+  inline void 
   Heat_2D<T>::SetHeatBC(
     BoundaryConditions_2D<T> & BC, 
-    T ValueDim00, T ValueDim01, 
-    T ValueDim10, T ValueDim11)
+    BCFunction FuncDim00, BCFunction FuncDim01, 
+    BCFunction FuncDim10, BCFunction FuncDim11)
   {
     BC_2D = std::make_unique<BoundaryConditions_2D<T>>(BC);
 
     BC_2D->SetBC(*this, 
-      ValueDim00, ValueDim01, 
-      ValueDim10, ValueDim11);
+      FuncDim00, FuncDim01, 
+      FuncDim10, FuncDim11);
   }
+
 
 
 /// @brief Setup the Initial Conditions of this system.
@@ -138,7 +158,7 @@ template <typename T>
 /// @return Return the difference of each iteration.
 template <typename T>
   inline T 
-  Heat_2D<T>::update_ping_pong()
+  Heat_2D<T>::update_ping_pong(const T time)
   {
     T diff {0.0};
     size_type i {1}, j {1};
@@ -160,7 +180,8 @@ template <typename T>
       }
     }
 
-    BC_2D->UpdateBC(*this);
+    // BC_2D->UpdateBC(*this);
+    BC_2D->UpdateBC(*this, time);
 
     return diff;
   }
@@ -259,7 +280,7 @@ template <typename T>
   Integer 
   Heat_2D<T>::solve_pure_mpi(T tol, Integer nsteps, Integer root)
     {
-      T ldiff {0.0}, gdiff {0.0}; MPI_Datatype DiffType {mpi::get_mpi_type<T>()};
+      T ldiff {0.0}, gdiff {0.0}, time {0}; MPI_Datatype DiffType {mpi::get_mpi_type<T>()};
       Integer iter;
 
 #ifndef NDEBUG
@@ -270,8 +291,9 @@ FINAL_PROJECT_ASSERT(BC_2D->isSetUpBC == true && IC_2D->isSetUpInit == true);
       Double t0 {MPI_Wtime()};
       for (iter = 1; iter < nsteps; ++iter)
       {
+        time = iter*this->dt; 
         exchange_ping_pong_SR();
-        ldiff = update_ping_pong();
+        ldiff = update_ping_pong(time);
         MPI_Allreduce(&ldiff, &gdiff, 1, DiffType, MPI_SUM, in.topology().comm_cart);
 
         #ifndef NDEBUG

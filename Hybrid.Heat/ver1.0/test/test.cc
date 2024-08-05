@@ -41,7 +41,7 @@ main ( int argc, char ** argv )
   obj.SetHeatInitC(IC);
   final_project::pde::BoundaryConditions_2D<double> BC (false, true, true, false);
   // BC.SetBC(obj, 1, 2,3,4);
-  obj.SetHeatBC(BC, 1, 2, 3, -1);
+  // obj.SetHeatBC(BC, 1, 2, 3, -1);
 
   // for (final_project::Integer i = 1; i < 100; ++i)
   // {

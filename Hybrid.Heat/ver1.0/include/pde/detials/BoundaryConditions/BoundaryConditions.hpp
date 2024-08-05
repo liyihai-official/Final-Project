@@ -16,31 +16,23 @@ template <typename T>
     using BCFunction = std::function<T(T, T, T)>;
 
     public:
-    BoundaryConditions_2D();
-    BoundaryConditions_2D(Bool, Bool, Bool, Bool);
-
-    void SetBC(Heat_2D<T> &, T, T, T, T);
-    void SetBC(Heat_2D<T> &, BCFunction, BCFunction, BCFunction, BCFunction);
+    BoundaryConditions_2D();                        // An empty BC object.
+    BoundaryConditions_2D(Bool, Bool, Bool, Bool);  // Setup the Boundary Condition Types.
+    void SetBC(Heat_2D<T> &, BCFunction, BCFunction, BCFunction, BCFunction);     // Setup the function of Boundary Conditions
 
     private:
     Bool isSetUpBC;
     std::array<Bool, 4> isDirichletBC;
     std::array<Bool, 4> isNeumann;
-    std::array<T, 4>    BCValue;
     std::array<BCFunction, 4> BCFunc; 
 
-    void SetBCinDim00(Heat_2D<T> &, T &);
-    void SetBCinDim01(Heat_2D<T> &, T &);
-    void SetBCinDim10(Heat_2D<T> &, T &);
-    void SetBCinDim11(Heat_2D<T> &, T &);
+    void SetBCinDim00(Heat_2D<T> &, const T &);
+    void SetBCinDim01(Heat_2D<T> &, const T &);
+    void SetBCinDim10(Heat_2D<T> &, const T &);
+    void SetBCinDim11(Heat_2D<T> &, const T &);
 
-    void SetBCinDim00(Heat_2D<T> &, BCFunction &);
-    void SetBCinDim01(Heat_2D<T> &, BCFunction &);
-    void SetBCinDim10(Heat_2D<T> &, BCFunction &);
-    void SetBCinDim11(Heat_2D<T> &, BCFunction &);
-
-    
-    void UpdateBC(Heat_2D<T> &);
+    // void UpdateBC(Heat_2D<T> &);
+    void UpdateBC(Heat_2D<T> &, const T);
 
     friend Heat_2D<T>;
   };
@@ -80,21 +72,20 @@ template <typename T>
     }
   }
 
-
 template <typename T>
   inline void 
-  BoundaryConditions_2D<T>::SetBC(Heat_2D<T> & obj, 
-    BCFunction Funcdim00, BCFunction Funcdim01,   // is Neumann in Dimension 0, as Function g(x,y,t)
-    BCFunction Funcdim10, BCFunction Funcdim11)   // is Neumann in Dimension 1, as Function g(x,y,t)
+  BoundaryConditions_2D<T>::SetBC(
+    Heat_2D<T> & obj, 
+    BCFunction FuncDim00, BCFunction FuncDim01,   // is Neumann or Dirichlet in Dimension 0, as Function g(x,y,t)
+    BCFunction FuncDim10, BCFunction FuncDim11)   // is Neumann or Dirichlet in Dimension 1, as Function g(x,y,t)
   {
+    BCFunc = {FuncDim00, FuncDim01, FuncDim10, FuncDim11};
 
-    BCFunc = {Funcdim00, Funcdim01, Funcdim10, Funcdim11};
-
-    SetBCinDim00(obj, BCFunc[0]);
-    // SetBCinDim01(obj, BCFunc[1]);
-    // SetBCinDim10(obj, BCFunc[2]);
-    // SetBCinDim11(obj, BCFunc[3]);
-
+    SetBCinDim00(obj, 0);
+    SetBCinDim01(obj, 0);
+    SetBCinDim10(obj, 0);
+    SetBCinDim11(obj, 0);
+    
     isSetUpBC = true;
 
     #ifndef NDEBUG
@@ -102,203 +93,176 @@ template <typename T>
               << " as function."
               << std::endl;
     #endif
-  } 
+
+  }
 
 
 template <typename T>
   inline void 
-  BoundaryConditions_2D<T>::SetBC(Heat_2D<T> &obj, 
-    T Vdim00, T Vdim01,   // in Dimension 0, as Constant, value or derivative
-    T Vdim10, T Vdim11)   // in Dimension 1, as Constant, value or derivative
-  {
-    BCValue = {Vdim00, Vdim01, Vdim10, Vdim11};
-
-    SetBCinDim00(obj, BCValue[0]);
-    SetBCinDim01(obj, BCValue[1]);
-    SetBCinDim10(obj, BCValue[2]);
-    SetBCinDim11(obj, BCValue[3]);
-
-    isSetUpBC = true;
-
-  #ifndef NDEBUG
-  std::cout << "Boundary Conditions are setup" 
-            << " (rank " << obj.in.topology().rank << "): " 
-            << " as constant value."
-            << std::endl;
-  #endif
-  }
-
-template <typename T>
-  inline void
-  BoundaryConditions_2D<T>::UpdateBC(Heat_2D<T> &obj)
+  BoundaryConditions_2D<T>::UpdateBC(
+    Heat_2D<T> & obj, 
+    const T time)
   {
     FINAL_PROJECT_MPI_ASSERT_GLOBAL(isSetUpBC);
 
-    SetBCinDim00(obj, BCValue[0]);
-    SetBCinDim01(obj, BCValue[1]);
-    SetBCinDim10(obj, BCValue[2]);
-    SetBCinDim11(obj, BCValue[3]);
+    SetBCinDim00(obj, time);
+    SetBCinDim01(obj, time);
+    SetBCinDim10(obj, time);
+    SetBCinDim11(obj, time);
   }
 
-template <typename T>
-  inline void
-  BoundaryConditions_2D<T>::SetBCinDim00(Heat_2D<T> & obj, T & Value)
-  {
-    auto shape_cpy  { obj.in.topology().__local_shape};
-    auto starts_cpy {obj.in.topology().starts};
 
-    T value {isDirichletBC[0] ? BCValue[0] : 0};
+
+
+template <typename T>
+  inline void 
+  BoundaryConditions_2D<T>::SetBCinDim00(
+    Heat_2D<T> & obj, 
+    const T & time)
+  {
+    auto shape_cpy  { obj.in.topology().__local_shape };
+    auto starts_cpy { obj.in.topology().starts };
+
+    T x {0}, y {0};
 
     if (starts_cpy[0] == 1)
     {
-      size_type x = 0;
-      for (size_type y = 1; y < shape_cpy[1] - 1; ++y)
+      size_type i {0};
+      for (size_type j = 1; j < shape_cpy[1]-1; ++j)
       {
-        if (isDirichletBC[0] && !isSetUpBC)
+        x = ( i + starts_cpy[0] - 1) * obj.dxs[0];
+        y = ( j + starts_cpy[1] - 1) * obj.dxs[1];
+
+        if (isDirichletBC[0])
         {
-          obj.in(x,y)  = value;
-          obj.out(x,y) = value;
-        } else if (isNeumann[0] && isSetUpBC)
+          obj.in(i,j)  = BCFunc[0](x,y,time);
+          obj.out(i,j) = BCFunc[0](x,y,time);
+        }
+        else if (isNeumann[0])
         {
-          obj.in(x,y)  += BCValue[0]*obj.dt;
-          obj.out(x,y) += BCValue[0]*obj.dt;
+          obj.in(i,j)  += BCFunc[0](x,y,time)*obj.dt;
+          obj.out(i,j) += BCFunc[0](x,y,time)*obj.dt;
         }
       }
-    }
+    }    
   }
 
 template <typename T>
   inline void 
-  BoundaryConditions_2D<T>::SetBCinDim01(Heat_2D<T> & obj, T & Value)
+  BoundaryConditions_2D<T>::SetBCinDim01(
+    Heat_2D<T> & obj,
+    const T & time)
   {
     auto shape_cpy  { obj.in.topology().__local_shape};
     auto glob_cpy   { obj.in.topology().__global_shape};
-    auto ends_cpy {obj.in.topology().ends};
-    
-    T value {isDirichletBC[1] ? BCValue[1] : 0};
+
+    auto starts_cpy { obj.in.topology().starts };
+    auto ends_cpy   { obj.in.topology().ends};
+
+    T x {0}, y {0};
 
     if (ends_cpy[0] == glob_cpy[0] - 2)
-    {
-      size_type x = shape_cpy[0]-1;
-      for (size_type y = 1; y < shape_cpy[1] - 1; ++y)
-      { 
-        if (isDirichletBC[1] && !isSetUpBC)
+    { 
+      size_type i {shape_cpy[0]-1};
+      for (size_type j = 1; j < shape_cpy[1]-1; ++j)
+      {
+        x = ( i + starts_cpy[0] - 1) * obj.dxs[0];
+        y = ( j + starts_cpy[1] - 1) * obj.dxs[1];
+
+        if (isDirichletBC[1])
         {
-          obj.in(x,y)  = value;
-          obj.out(x,y) = value;
-        } else if (isNeumann[1] && isSetUpBC)
-        {
-          obj.in(x,y)  += BCValue[1]*obj.dt;
-          obj.out(x,y) += BCValue[1]*obj.dt;
+          obj.in(i,j)  = BCFunc[1](x,y,time);
+          obj.out(i,j) = BCFunc[1](x,y,time);
         }
+        else if (isNeumann[1])
+        {
+          obj.in(i,j)  += BCFunc[1](x,y,time)*obj.dt;
+          obj.out(i,j) += BCFunc[1](x,y,time)*obj.dt;
+        }
+
       }
     }
+
   }
 
-template <typename T>
-  inline
-  void
-  BoundaryConditions_2D<T>::SetBCinDim10(Heat_2D<T> & obj, T & Value)
-  {
-    auto shape_cpy  {obj.in.topology().__local_shape};
-    auto starts_cpy {obj.in.topology().starts};
 
-    T value {isDirichletBC[2] ? BCValue[2] : 0};
-    
-    if (starts_cpy[1] == 1)
-    {
-      size_type y = 0;
-      for (size_type x = 1; x < shape_cpy[0] - 1; ++x)
-      { 
-        if (isDirichletBC[2] && !isSetUpBC)
-        {
-          obj.in(x,y)  = value;
-          obj.out(x,y) = value;
-        } else if (isNeumann[2] && isSetUpBC)
-        {
-          obj.in(x,y)  += BCValue[2]*obj.dt;
-          obj.out(x,y) += BCValue[2]*obj.dt;
-        }
-      }
-    }
-  }
+
+
+
 
 template <typename T>
-  inline 
-  void 
-  BoundaryConditions_2D<T>::SetBCinDim11(Heat_2D<T> & obj, T & Value)
+  inline void 
+  BoundaryConditions_2D<T>::SetBCinDim10(
+    Heat_2D<T> & obj,
+    const T & time)
   {
     auto shape_cpy  { obj.in.topology().__local_shape};
     auto glob_cpy   { obj.in.topology().__global_shape};
-    auto ends_cpy {obj.in.topology().ends};
-    
-    T value {isDirichletBC[3] ? BCValue[3] : 0};
+
+    auto starts_cpy { obj.in.topology().starts };
+    // auto ends_cpy {obj.in.topology().ends};
+
+    T x {0}, y {0};
+
+    if (starts_cpy[1] == 1)
+    {
+      size_type j {0};
+      for (size_type i = 1; i < shape_cpy[0]-1; ++i)
+      {
+        x = ( i + starts_cpy[0] - 1) * obj.dxs[0];
+        y = ( j + starts_cpy[1] - 1) * obj.dxs[1];
+
+        if (isDirichletBC[2])
+        {
+          obj.in(i,j)  = BCFunc[2](x,y,time);
+          obj.out(i,j) = BCFunc[2](x,y,time);
+        }
+        else if (isNeumann[2])
+        {
+          obj.in(i,j)  += BCFunc[2](x,y,time)*obj.dt;
+          obj.out(i,j) += BCFunc[2](x,y,time)*obj.dt;
+        }
+      }
+    }
+  }
+
+
+template <typename T>
+  inline void 
+  BoundaryConditions_2D<T>::SetBCinDim11(
+    Heat_2D<T> & obj,
+    const T & time)
+  {
+    auto shape_cpy  { obj.in.topology().__local_shape};
+    auto glob_cpy   { obj.in.topology().__global_shape};
+
+    auto starts_cpy { obj.in.topology().starts };
+    auto ends_cpy   {obj.in.topology().ends};
+
+    T x {0}, y {0};
 
     if (ends_cpy[1] == glob_cpy[1] - 2 )
     {
-      size_type y = shape_cpy[1]-1;
-      for (size_type x = 1; x < shape_cpy[0] - 1; ++x)
-      { 
-        if (isDirichletBC[3] && !isSetUpBC)
+      size_type j {shape_cpy[1]-1};
+      for (size_type i = 1; i < shape_cpy[0]-1; ++i)
+      {
+        x = ( i + starts_cpy[0] - 1) * obj.dxs[0];
+        y = ( j + starts_cpy[1] - 1) * obj.dxs[1];
+
+        if (isDirichletBC[3])
         {
-          obj.in(x,y)  = value;
-          obj.out(x,y) = value;
-        } else if (isNeumann[3] && isSetUpBC)
+          obj.in(i,j)  = BCFunc[3](x,y,time);
+          obj.out(i,j) = BCFunc[3](x,y,time);
+        }
+        else if (isNeumann[3])
         {
-          obj.in(x,y)  += BCValue[3]*obj.dt;
-          obj.out(x,y) += BCValue[3]*obj.dt;
+          obj.in(i,j)  += BCFunc[3](x,y,time)*obj.dt;
+          obj.out(i,j) += BCFunc[3](x,y,time)*obj.dt;
         }
       }
     }
   }
-  
-//////////////////////////////////////////////////////////////////////////////////////////
-// Requires Time (iteration).
-template <typename T>
-  inline void
-  BoundaryConditions_2D<T>::SetBCinDim00(Heat_2D<T> & obj, BCFunction & func)
-  {
-    auto shape_cpy  { obj.in.topology().__local_shape};
-    auto starts_cpy {obj.in.topology().starts};
 
-    // T value {isDirichletBC[0] ? BCValue[0] : 0};
-
-
-    // T x {0}, y {0};
-    // if (starts_cpy[0] == 1)
-    // {
-    //   size_type i = 0;
-    //   x = (i + obj.in.topology().starts[0] - 1) * obj.dxs[0];
-    //   for (size_type j = 1; j < shape_cpy[1] - 1; ++j)
-    //   {
-    //     y = (j + obj.in.topology().starts[1] - 1) * obj.dxs[1];
-
-    //     if (isDirichletBC[0] && !isSetUpBC)
-    //     {
-    //       obj.in(i,j) = func(x,y,0);
-    //       obj.out(i,j) = func(x,y,0);
-    //     } else if (isNeumann[0] && isSetUpBC)
-    //     {
-    //       obj.in(i,j) = func(x,y)
-    //     }
-
-    //   }
-    //   for (size_type y = 1; y < shape_cpy[1] - 1; ++y)
-    //   {
-    //     if (isDirichletBC[0] && !isSetUpBC)
-    //     {
-    //       obj.in(x,y)  = value;
-    //       obj.out(x,y) = value;
-    //     } else if (isNeumann[0] && isSetUpBC)
-    //     {
-    //       obj.in(x,y)  += BCValue[0]*obj.dt;
-    //       obj.out(x,y) += BCValue[0]*obj.dt;
-    //     }
-    //   }
-    // }
-  }
-
-  
 
 
 } // namespace pde

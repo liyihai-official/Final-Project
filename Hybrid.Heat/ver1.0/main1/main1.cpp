@@ -4,6 +4,7 @@
 #include <cmath>
 #include <iostream>
 
+#include <numbers>
 #include <types.hpp>
 
 #include <pde/detials/Heat_2D.hpp>
@@ -12,8 +13,8 @@
 
 
 #if !defined(NX) || !defined(NY)
-#define NX 1000+2
-#define NY 1000+2
+#define NX 200+2
+#define NY 200+2
 #endif
 
 
@@ -41,10 +42,15 @@ Integer
   ICFunction InitCond {[](Double x, Double y) { return 0; }};
   final_project::pde::InitialConditions::Init_2D<Double> IC (InitCond);
   
-  final_project::pde::BoundaryConditions_2D<Double> BC (false, false, true, true);
+  final_project::pde::BoundaryConditions_2D<Double> BC (true, true, true, true);
 
+  BCFunction Dim00 {[](Double x, Double y, Double t){ return 10 * std::sin(y * 2 * std::numbers::pi);}};
+  BCFunction Dim01 {[](Double x, Double y, Double t){ return 0;}};
 
-  obj.SetHeatBC(BC, -10, 10, 10, 0);
+  BCFunction Dim10 {[](Double x, Double y, Double t){ return 10*x;}};
+  BCFunction Dim11 {[](Double x, Double y, Double t){ return 10*x;}};
+
+  obj.SetHeatBC(BC, Dim00, Dim01, Dim10, Dim11);
   obj.SetHeatInitC(IC);
 
   auto iter = obj.solve_pure_mpi(tol, nsteps, root_proc);
