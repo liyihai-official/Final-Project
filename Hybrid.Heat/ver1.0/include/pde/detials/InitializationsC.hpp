@@ -19,7 +19,7 @@ template <typename T>
 
     public:
     Init_2D();
-    Init_2D(InitFunction );
+    Init_2D(InitFunction & );
 
     private:
     InitFunction initFunc;
@@ -45,7 +45,7 @@ template <typename T>
   {}
 
 template <typename T>
-  Init_2D<T>::Init_2D(InitFunction initFunc)
+  Init_2D<T>::Init_2D(InitFunction & initFunc)
   : initFunc {initFunc}, isSetUpInit {false}
   {}
 

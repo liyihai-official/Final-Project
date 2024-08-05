@@ -275,8 +275,13 @@ FINAL_PROJECT_ASSERT(BC_2D->isSetUpBC == true && IC_2D->isSetUpInit == true);
         MPI_Allreduce(&ldiff, &gdiff, 1, DiffType, MPI_SUM, in.topology().comm_cart);
 
         #ifndef NDEBUG
-        if (in.topology().rank == root) 
-          std::cout << std::fixed << std::setprecision(13) << std::setw(15) << gdiff << std::endl;
+        mpi::Gather(gather, in, root);
+        if (in.topology().rank == root) {
+          std::cout << std::fixed << std::setprecision(13) << std::setw(15) << gdiff 
+                    << std::endl;
+
+          // gather.saveToBinary("");
+        }
         #endif 
 
         if (gdiff  <= tol) {
@@ -287,10 +292,11 @@ FINAL_PROJECT_ASSERT(BC_2D->isSetUpBC == true && IC_2D->isSetUpInit == true);
       }
       Double t1 {MPI_Wtime() - t0};
 
+      mpi::Gather(gather, in, root);
       if (converge)
       {
         Double total {0};
-        mpi::Gather(gather, in, root);
+        // mpi::Gather(gather, in, root);
         MPI_Reduce(&t1, &total, 1, MPI_DOUBLE, MPI_MAX, root, in.topology().comm_cart);
         if (in.topology().rank == root)
           std::cout << "Total Converge time: " << total << "\n" 

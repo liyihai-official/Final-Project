@@ -16,8 +16,8 @@
 
 
 #if !defined(NX) || !defined(NY)
-#define NX 100+2
-#define NY 100+2
+#define NX 1000+2
+#define NY 1000+2
 #define NZ 15+2
 #endif
 
@@ -35,10 +35,8 @@ main ( int argc, char ** argv )
 
   final_project::pde::Heat_2D<double> obj(mpi_world, nx, ny);
 
-  final_project::pde::InitialConditions::Init_2D<double> IC
-  ( 
-    [](double x, double y) { return x; }
-  );
+  std::function<double(double, double)> InitCond {[](double x, double y) { return x; }};
+  final_project::pde::InitialConditions::Init_2D<double> IC ( InitCond );
 
   obj.SetHeatInitC(IC);
   final_project::pde::BoundaryConditions_2D<double> BC (false, true, true, false);
