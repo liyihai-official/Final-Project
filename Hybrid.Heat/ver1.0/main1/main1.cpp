@@ -13,8 +13,8 @@
 
 
 #if !defined(NX) || !defined(NY)
-#define NX 200+2
-#define NY 200+2
+#define NX 2000+2
+#define NY 2000+2
 #endif
 
 
@@ -31,7 +31,7 @@ Integer
 {
 
   constexpr Integer root_proc {0};
-  constexpr Double tol {1E-4};
+  constexpr Double tol {1E-2};
   constexpr size_type nsteps {100'000'000};
   constexpr size_type numDim {2}, nx {NX}, ny {NY};
 
