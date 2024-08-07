@@ -22,7 +22,7 @@ template <typename T, size_type NumD>
 
     protected:
     // Coefficients of Heat Equation
-    T coff {1}, dt {0.1};
+    T coff {2}, dt {0.1};
     std::array<T, NumD> minRange, maxRange;
     std::array<T, NumD> diags, weights, dxs;
 
@@ -33,7 +33,7 @@ template <typename T, size_type NumD>
 
     // Updates
     public: 
-    virtual T update_ping_pong(const T)   = 0;
+    virtual T update_ping_pong(const T)    = 0;
     virtual T update_ping_pong_bulk()      = 0;
     virtual T update_ping_pong_boundary()  = 0;
       

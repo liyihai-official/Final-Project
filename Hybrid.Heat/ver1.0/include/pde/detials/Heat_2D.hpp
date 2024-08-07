@@ -63,6 +63,8 @@ template <typename T>
 #include <cmath>
 #include <algorithm>
 
+#include <omp.h> // OpenMP 
+
 
 namespace final_project { namespace pde {
 
@@ -92,30 +94,6 @@ template <typename T>
       if (in.topology().rank == 0)
         gather.saveToBinary(filename);
   }
-
-/// @brief Setup the Boundary Conditions of this 2D system on four sites.
-///         The input values are constant numbers if it's Dirchlet Boundary Conditions, or 
-///         derivatives of function if it's Neumann Boundary Conditions.
-///
-/// @tparam T Value type.
-/// @param BC Boundary Condition Object.
-/// @param ValueDim00 Value or Derivative in Dimension [0] on [Source] site.
-/// @param ValueDim01 Value or Derivative in Dimension [0] on [Dest] site.
-/// @param ValueDim10 Value or Derivative in Dimension [1] on [Source] site.
-/// @param ValueDim11 Value or Derivative in Dimension [1] on [Dest] site.
-// template <typename T>
-//   inline void
-//   Heat_2D<T>::SetHeatBC(
-//     BoundaryConditions_2D<T> & BC, 
-//     T ValueDim00, T ValueDim01, 
-//     T ValueDim10, T ValueDim11)
-//   {
-//     BC_2D = std::make_unique<BoundaryConditions_2D<T>>(BC);
-
-//     BC_2D->SetBC(*this, 
-//       ValueDim00, ValueDim01, 
-//       ValueDim10, ValueDim11);
-//   }
 
 template <typename T> 
   inline void 
@@ -180,7 +158,6 @@ template <typename T>
       }
     }
 
-    // BC_2D->UpdateBC(*this);
     BC_2D->UpdateBC(*this, time);
 
     return diff;
@@ -188,16 +165,104 @@ template <typename T>
 
 template <typename T>
   inline T
-  Heat_2D<T>::update_ping_pong_boundary()
+  Heat_2D<T>::update_ping_pong_bulk()
   {
-    return 0;
+    T diff {0.0};
+
+    size_type i{2}, j{2};
+    #pragma omp for
+    for (i=2; i < in.topology().__local_shape[0]-2; ++i)
+    {
+      for (j=2; j < in.topology().__local_shape[1]-2; ++j)
+      {
+        T current {in(i,j)};
+        out(i,j) =
+            this->weights[0] * (in(i-1,j) + in(i+1,j))
+          + this->weights[1] * (in(i,j-1) + in(i,j+1))
+          + current * (
+              this->diags[0]*this->weights[0] 
+            + this->diags[1]*this->weights[1]
+            );
+
+        diff += std::pow(current - out(i,j), 2);
+      }
+    }
+
+    return diff;
   }
 
 template <typename T>
   inline T
-  Heat_2D<T>::update_ping_pong_bulk()
-  {
-    return 0;
+  Heat_2D<T>::update_ping_pong_boundary()
+  { 
+    T diff {0.0};
+    auto local_shape {in.topology().__local_shape};
+
+    size_type i, j;
+
+
+    j = 1;
+    #pragma omp for
+    for (i = 2; i < local_shape[0]-2; ++i)
+    {
+      T current {in(i,j)};
+      out(i,j) =
+          this->weights[0] * (in(i-1,j) + in(i+1,j))
+        + this->weights[1] * (in(i,j-1) + in(i,j+1))
+        + current * (
+            this->diags[0]*this->weights[0] 
+          + this->diags[1]*this->weights[1]
+          );
+      diff += std::pow(current - out(i,j), 2); 
+    }
+
+    j = local_shape[1] - 2;
+    #pragma omp for
+    for (i = 2; i < local_shape[0]-2; ++i)
+    {
+      T current {in(i,j)};
+      out(i,j) =
+          this->weights[0] * (in(i-1,j) + in(i+1,j))
+        + this->weights[1] * (in(i,j-1) + in(i,j+1))
+        + current * (
+            this->diags[0]*this->weights[0] 
+          + this->diags[1]*this->weights[1]
+          );
+      diff += std::pow(current - out(i,j), 2);
+    }
+
+    i = 1;
+    #pragma omp for
+    for (j = 2; j < local_shape[1]-2; ++j)
+    {
+      T current {in(i,j)};
+      out(i,j) =
+          this->weights[0] * (in(i-1,j) + in(i+1,j))
+        + this->weights[1] * (in(i,j-1) + in(i,j+1))
+        + current * (
+            this->diags[0]*this->weights[0] 
+          + this->diags[1]*this->weights[1]
+          );
+      diff += std::pow(current - out(i,j), 2);
+    }
+
+    i = local_shape[0] - 2;
+    #pragma omp for
+    for (j = 2; j < local_shape[1]-2; ++j)
+    {
+      T current {in(i,j)};
+      out(i,j) =
+          this->weights[0] * (in(i-1,j) + in(i+1,j))
+        + this->weights[1] * (in(i,j-1) + in(i,j+1))
+        + current * (
+            this->diags[0]*this->weights[0] 
+          + this->diags[1]*this->weights[1]
+          );
+      diff += std::pow(current - out(i,j), 2);
+    }
+
+
+    return diff;
   }
 
 /// @brief A communication function using @c MPI_Sendrecv , the blocking @c MPI_Send and @c MPI_Recv  .
