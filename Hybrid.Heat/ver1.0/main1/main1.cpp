@@ -1,6 +1,8 @@
 
 
 #include <mpi.h>
+#include <omp.h>
+
 #include <cmath>
 #include <iostream>
 
@@ -13,8 +15,8 @@
 
 
 #if !defined(NX) || !defined(NY)
-#define NX 2000+2
-#define NY 2000+2
+#define NX 1000+2
+#define NY 1000+2
 #endif
 
 
@@ -31,7 +33,7 @@ Integer
 {
 
   constexpr Integer root_proc {0};
-  constexpr Double tol {1E-2};
+  constexpr Double tol {1E0};
   constexpr size_type nsteps {100'000'000};
   constexpr size_type numDim {2}, nx {NX}, ny {NY};
 
@@ -53,9 +55,14 @@ Integer
   obj.SetHeatBC(BC, Dim00, Dim01, Dim10, Dim11);
   obj.SetHeatInitC(IC);
 
-  auto iter = obj.solve_pure_mpi(tol, nsteps, root_proc);
+
+  // auto iter = obj.solve_pure_mpi(tol, nsteps, root_proc);
+  // auto iter = obj.solve_hybrid_mpi_omp(tol, nsteps, root_proc);
+  auto iter = obj.solve_hybrid2_mpi_omp(tol, nsteps, root_proc);
+
 
   obj.SaveToBinary("test.bin");
+
 
   return 0;
 }

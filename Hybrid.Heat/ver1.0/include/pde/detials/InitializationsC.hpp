@@ -1,3 +1,10 @@
+///
+/// @file InitializationsC.hpp
+/// @brief Objects of Initialization Conditions of PDEs
+///
+/// @author LI Yihai
+/// @version 6.0
+///
 #ifndef FINAL_PROJECT_INITIALIZATIONS_C_HPP
 #define FINAL_PROJECT_INITIALIZATIONS_C_HPP
 
@@ -9,9 +16,12 @@
 
 namespace final_project { namespace pde {
 
+
 namespace InitialConditions {
 
 
+/// @brief An object of Initial Condition in 2D space.
+/// @tparam T Value type
 template <typename T>
   class Init_2D
   {
@@ -30,26 +40,52 @@ template <typename T>
     friend Heat_2D<T>;
   }; // class Init_2D
 
+} // namespace InitialConditions
+
+
+
+
+
+} // namespace pde
+} // namespace final_project
+
+
+
 
 
 ///
 ///
-/// Inline Function Definitions
+/// --------------------------- Inline Function Definitions  ---------------------------  ///
 ///
 ///
 
 
+
+namespace final_project { namespace pde {
+
+
+namespace InitialConditions {
+
+
+/// @brief The empty Initial Condition (=0)
+/// @tparam T  Value type
 template <typename T>
   Init_2D<T>::Init_2D()
   : initFunc([](T x, T y) { return 0; }), isSetUpInit {false}
   {}
 
+
+/// @brief Use external function as initial condition.
+/// @tparam T  Value type
+/// @param initFunc 
 template <typename T>
   Init_2D<T>::Init_2D(InitFunction & initFunc)
   : initFunc {initFunc}, isSetUpInit {false}
   {}
 
-
+/// @brief Apply function to object.
+/// @tparam T Value type
+/// @param obj Reference of object Heat_2D<T>
 template <typename T>
   inline void 
   Init_2D<T>::SetUpInit(Heat_2D<T> & obj)
