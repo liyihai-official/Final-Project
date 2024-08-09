@@ -1,4 +1,6 @@
 #include <torch/torch.h>
+#include <cuda_runtime.h>
+#include <cublas_v2.h>
 
 #include <iostream>
 #include <iomanip>
@@ -37,18 +39,21 @@ TORCH_MODULE(HeatPINN);
 
 void get_whole_dataset_X(
   std::vector<Float> &, 
-  std::mt19937 & , 
-  std::uniform_real_distribution<Float> &, 
+  std::mt19937 &, std::uniform_real_distribution<Float> &, 
   size_type, size_type);
 
 void get_bc_dataset_X(
   std::vector<Float> &, 
-  std::mt19937 & , 
-  std::uniform_real_distribution<Float> &, 
+  std::mt19937 & ,std::uniform_real_distribution<Float> &, 
   size_type, size_type);
+
+torch::Tensor get_pde_loss(torch::Tensor &, torch::Tensor &, torch::Device &);
+torch::Tensor get_total_loss(HeatPINN &, torch::Tensor &, torch::Tensor &, torch::Tensor &, torch::Device &);
+
 
 int main ()
 {
+
   std::cout 
     << "---" 
     << " C++ Libtorh Example for Heat Equation 2D PINN"
@@ -75,7 +80,7 @@ int main ()
 /// ------------------ Y train ------------------ ///
 
 torch::Tensor Y_train {
-  torch::zeros({2 * (NX + NY, OUT_SIZE)}, device)
+  torch::zeros({2 * (NX + NY),  OUT_SIZE}, device)
 };
 
 #ifndef NDEBUG
@@ -93,7 +98,8 @@ torch::Tensor Y_train {
   torch::Tensor X {
     torch::from_blob(
       X_data.data(), 
-      {NX * NY, IN_SIZE}
+      {NX * NY, IN_SIZE},
+      torch::requires_grad()
     ).to(device)
   };
 
@@ -174,7 +180,7 @@ torch::Tensor Y_train {
   net->to(device);
 
   torch::Tensor loss_sum;
-  Integer iter {1};
+  Integer iter {1}, nsteps {10'000};
 
   torch::optim::Adam adam_optim(
     net->parameters(), 
@@ -182,10 +188,51 @@ torch::Tensor Y_train {
   );
 
 
+  while (iter <= nsteps)
+  { 
+    auto closure = [&](){
+      loss_sum = get_total_loss(net, X, X_train, Y_train, device);
+      loss_sum.backward();
+      return loss_sum;
+    };
+
+    adam_optim.step(closure);
+
+    if (iter % 10 == 0)
+    {
+      std::cout 
+        << "Iteration = " << iter << "\t"
+        << "Loss = " << std::fixed << std::setprecision(4) << std::setw(8) << loss_sum.item<Float>() << "\t"
+        << "Loss.Device.Type = " << loss_sum.device().type() 
+        << std::endl; 
+    }
+
+
+    ++iter;
+    if (loss_sum.item<Float>() < 1E-3)
+    {
+      break;
+    }
+  }
+
+
+
+  std::cout 
+    << "\nTraining stopped." << "\n"
+    << "Final iter=" << iter - 1 << ", loss=" << std::setprecision(7) << loss_sum.item<float>()  << "\n"
+    << ", loss.device().type()=" << loss_sum.device().type() 
+    << std::endl;
+
   return 0;
 }
 
 
+/// @brief 
+/// @param obj 
+/// @param rde 
+/// @param rng 
+/// @param nx 
+/// @param ny 
 void 
 get_whole_dataset_X(std::vector<Float> & obj,
   std::mt19937 & rde, 
@@ -203,6 +250,12 @@ get_whole_dataset_X(std::vector<Float> & obj,
   }
 }
 
+/// @brief 
+/// @param obj 
+/// @param rde 
+/// @param rng 
+/// @param nx 
+/// @param ny 
 void get_bc_dataset_X(std::vector<Float> & obj,
   std::mt19937 & rde, 
   std::uniform_real_distribution<Float> & rng,
@@ -229,7 +282,10 @@ void get_bc_dataset_X(std::vector<Float> & obj,
 
 }
 
-
+/// @brief 
+/// @param insize 
+/// @param outsize 
+/// @param hidsize 
 inline 
 HeatPINNImpl::HeatPINNImpl(Integer insize, Integer outsize, Integer hidsize)
 : 
@@ -240,4 +296,88 @@ HeatPINNImpl::HeatPINNImpl(Integer insize, Integer outsize, Integer hidsize)
   register_module("Input", input);
   register_module("hidden_0", h0);
   register_module("output", output);
+}
+
+
+/// @brief 
+/// @param x 
+/// @return 
+inline 
+torch::Tensor 
+HeatPINNImpl::forward(torch::Tensor x)
+{
+  x = torch::tanh(input(x));
+  x = torch::tanh(h0(x));
+  x = output(x);
+
+  return x;
+}
+
+
+
+
+
+
+
+
+
+///
+///
+/// ====================================== Definitions about PDEs ====================================== ///
+///
+///
+
+
+
+
+/// @brief 
+/// @param u 
+/// @param X 
+/// @param device 
+torch::Tensor get_pde_loss(torch::Tensor & u, torch::Tensor & X, torch::Device & device)
+{
+  torch::Tensor du_dX {
+    torch::autograd::grad(
+      {u},
+      {X},
+      {torch::ones_like(u)},
+      true,
+      true, 
+      true
+    )[0]
+  };
+
+  torch::Tensor du_dx { du_dX.index({"...", 0}) };
+  torch::Tensor du_dy { du_dX.index({"...", 1}) };
+
+  torch::Tensor du_dxx {
+    torch::autograd::grad(
+      {du_dx}, {X}, {torch::ones_like(du_dx),}, 
+      true, true, true)[0].index({"...", 0})
+  };
+
+  torch::Tensor du_dyy {
+    torch::autograd::grad(
+      {du_dy}, {X}, {torch::ones_like(du_dy),}, 
+      true, true, true)[0].index({"...", 1})
+  };
+
+  torch::Tensor f_X { torch::zeros_like(du_dxx) };
+
+  return torch::mse_loss( du_dxx + du_dyy, f_X );
+}
+
+/// @brief 
+/// @param net 
+/// @param X 
+/// @param X_train 
+/// @param Y_train 
+/// @param device 
+torch::Tensor get_total_loss(HeatPINN & net, 
+  torch::Tensor & X, torch::Tensor & X_train, torch::Tensor & Y_train, 
+  torch::Device & device)
+{
+  torch::Tensor u { net->forward(X) };
+
+  return torch::mse_loss(net->forward(X_train), Y_train) + get_pde_loss(u, X, device);
 }
