@@ -8,7 +8,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 
 add_executable(main main.cc)
 add_executable(pinn_2d pinn_2d.cpp)
-add_executable(example minist.cpp)
+add_executable(example pinn_pde_solver.cpp)
 
 target_link_libraries(main "${TORCH_LIBRARIES}")
 target_link_libraries(pinn_2d "${TORCH_LIBRARIES}")
@@ -42,6 +42,11 @@ if (MSVC)
                      COMMAND ${CMAKE_COMMAND}
                      ${TORCH_DLLS}
                      $<TARGET_FILE_DIR:example>)
-
-
 endif (MSVC)
+
+
+if (CMAKE_BUILD_TYPE STREQUAL "RELEASE")
+  target_compile_definitions(main PRIVATE NDEBUG)
+  target_compile_definitions(example PRIVATE NDEBUG)
+  target_compile_definitions(pinn_2d PRIVATE NDEBUG)
+endif()
