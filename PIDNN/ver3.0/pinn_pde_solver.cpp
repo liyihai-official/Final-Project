@@ -218,13 +218,31 @@ torch::Tensor Y_train {
 
 
   std::cout 
-    << "\nTraining stopped." << "\n"
-    << "Final iter=" << iter - 1 << ", loss=" << std::setprecision(7) << loss_sum.item<float>()  << "\n"
-    << ", loss.device().type()=" << loss_sum.device().type() 
+    << "Training stopped." << "\n"
+    << "Final iter=" << iter - 1 << "\n"
+    << "loss=" << std::setprecision(7) << loss_sum.item<float>()  << "\n"
+    << "loss.device().type()=" << loss_sum.device().type() 
     << std::endl;
 
+  torch::save(net, "model.pth");
+
   return 0;
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /// @brief 
