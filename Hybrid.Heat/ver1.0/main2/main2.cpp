@@ -2,7 +2,7 @@
 #include <torch/script.h> // for torch::save
 
 
-
+#include <numbers>
 #include <random>
 #include <vector>
 #include <cassert>
@@ -27,6 +27,7 @@ using size_type = uint32_t;
 #endif 
 
 
+using BCFunction = std::function<Float(Float, Float)>;
 
 // void get_whole_dataset_X(
 //   std::vector<Float> &, 
@@ -64,12 +65,19 @@ int main ()
   std::mt19937 rde {std::random_device{}()};
   std::uniform_real_distribution<Float> rng(0.0, 1.0);
 
-  final_project::PINN::dataset dataset (IN_SIZE, OUT_SIZE, NX, NY, rde, rng, device);
+  BCFunction Dim00 {[](Float x, Float y){ return 1;}};
+  BCFunction Dim01 {[](Float x, Float y){ return 3;}};
+
+  BCFunction Dim10 {[](Float x, Float y){ return 4;}};
+  BCFunction Dim11 {[](Float x, Float y){ return 10;}};
+
+  final_project::PINN::dataset dataset (IN_SIZE, OUT_SIZE, NX, NY, rde, rng, Dim00, Dim01, Dim10, Dim11, device);
+
   dataset.show_Y_boundary();
   dataset.show_X_internal();
   dataset.show_X_boundary();
 
-  auto net { final_project::PINN::HeatPINN(IN_SIZE, OUT_SIZE, /*hsize*/ 2) };
+  auto net { final_project::PINN::HeatPINN(IN_SIZE, OUT_SIZE, /*hsize*/ 10) };
   net->to(device);
 // /// ------------------ Y train ------------------ ///
 
@@ -124,7 +132,7 @@ int main ()
 
   // auto net { final_project::PINN::HeatPINN(IN_SIZE, OUT_SIZE, 2) };
   // net->to(device);
-
+///////////////////////////////////
   torch::Tensor loss_sum;
   Integer iter {1}, nsteps {10'000};
 
@@ -132,11 +140,14 @@ int main ()
     net->parameters(), 
     torch::optim::AdamOptions(1E-3)
   );
-
+  // torch::optim::LBFGSOptions LBFGS_optim_options =
+  //         torch::optim::LBFGSOptions(1).max_iter(50000).max_eval(50000).history_size(50);
+  // torch::optim::LBFGS LBFGS_optim(net->parameters(), LBFGS_optim_options);
 
   while (iter <= nsteps)
   { 
     auto closure = [&](){
+      adam_optim.zero_grad();
       loss_sum = final_project::PINN::get_total_loss(net, dataset.X_internal, dataset.X_boundary, dataset.Y_boundary, device);
       loss_sum.backward();
       return loss_sum;
@@ -144,7 +155,7 @@ int main ()
 
     adam_optim.step(closure);
 
-    if (iter % 10 == 0)
+    if (iter % 100 == 0)
     {
       std::cout 
         << "Iteration = " << iter << "\t"
@@ -175,7 +186,20 @@ int main ()
 
   final_project::PINN::dataset valset (IN_SIZE, OUT_SIZE, NX, NY, device);
   auto out = net->forward(valset.X_internal);
-  std::cout << out << std::endl;
+  // std::cout << out << std::endl;
+
+  final_project::multi_array::array_base<Float, 2> gather (NX, NY);
+
+  for (Integer x = 0; x < NX; ++x)
+  {
+    for (Integer y = 0; y < NY; ++y)
+    {
+      gather(x,y) = out.index({x * NY + y}).item<Float>();
+    }
+  }
+
+  std::cout << gather.data() << std::endl;
+  gather.saveToBinary("test.bin");
 
   return 0;
 

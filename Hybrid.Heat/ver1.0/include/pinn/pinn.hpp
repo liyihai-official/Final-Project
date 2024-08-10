@@ -33,7 +33,7 @@ struct HeatPINNImpl
 
   torch::Tensor forward(torch::Tensor);
 
-  torch::nn::Linear input, h0, output;
+  torch::nn::Linear input, h0, h1, h2, output;
 }; // struct HeatPINNImpl
 
 TORCH_MODULE(HeatPINN);
@@ -69,10 +69,14 @@ inline
 : 
   input(torch::nn::Linear(insize, hidsize)),
   h0(torch::nn::Linear(hidsize, hidsize)),
+  h1(torch::nn::Linear(hidsize, hidsize)),
+  h2(torch::nn::Linear(hidsize, hidsize)),
   output(torch::nn::Linear(hidsize, outsize))
 {
   register_module("Input", input);
   register_module("hidden_0", h0);
+  register_module("hidden_1", h1);
+  register_module("hidden_2", h2);
   register_module("output", output);
 }
 
@@ -86,6 +90,8 @@ inline
 {
   x = torch::tanh(input(x));
   x = torch::tanh(h0(x));
+  x = torch::tanh(h1(x));
+  x = torch::tanh(h2(x));
   x = output(x);
 
   return x;
@@ -128,7 +134,8 @@ torch::Tensor get_pde_loss(torch::Tensor & u, torch::Tensor & X, torch::Device &
 
   torch::Tensor f_X { torch::zeros_like(du_dxx) };
 
-  return torch::mse_loss( du_dxx + du_dyy, f_X );
+  // return torch::mse_loss( du_dxx + du_dyy, f_X );
+  return torch::mean(torch::square(du_dxx + du_dyy));
 }
 
 /// @brief 
