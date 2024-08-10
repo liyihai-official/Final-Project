@@ -36,7 +36,12 @@ $$ -->
 
 ### Development Note
 
+FDM
 <img src="Hybrid.Heat/ver1.0/main1.png" alt="Heat_2D" height="400">
+PINN
+<img src="Hybrid.Heat/ver1.0/main2.png" alt="Heat_2D" height="400">
+
+
 <img src="Hybrid.Heat/ver1.0/Strong_main1.png" alt="Heat_2D" height="400">
 ```mpiexec -np [n] ./main1```
 

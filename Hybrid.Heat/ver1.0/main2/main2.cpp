@@ -17,8 +17,8 @@ using size_type = uint32_t;
 
 
 #if !defined (NX) || !defined (NY)
-#define NX 13
-#define NY 9
+#define NX 100
+#define NY 100
 #endif 
 
 #if !defined (IN_SIZE) || !defined (OUT_SIZE)
@@ -65,11 +65,11 @@ int main ()
   std::mt19937 rde {std::random_device{}()};
   std::uniform_real_distribution<Float> rng(0.0, 1.0);
 
-  BCFunction Dim00 {[](Float x, Float y){ return 1;}};
-  BCFunction Dim01 {[](Float x, Float y){ return 3;}};
+  BCFunction Dim00 {[](Float x, Float y){ return 5 * std::abs(std::sin(y * 2 * std::numbers::pi));}};
+  BCFunction Dim01 {[](Float x, Float y){ return 0;}};
 
-  BCFunction Dim10 {[](Float x, Float y){ return 4;}};
-  BCFunction Dim11 {[](Float x, Float y){ return 10;}};
+  BCFunction Dim10 {[](Float x, Float y){ return 20 * std::sin(x * 2 * std::numbers::pi);}};
+  BCFunction Dim11 {[](Float x, Float y){ return -20  * std::sin(x * 2 * std::numbers::pi);}};
 
   final_project::PINN::dataset dataset (IN_SIZE, OUT_SIZE, NX, NY, rde, rng, Dim00, Dim01, Dim10, Dim11, device);
 
@@ -77,7 +77,7 @@ int main ()
   dataset.show_X_internal();
   dataset.show_X_boundary();
 
-  auto net { final_project::PINN::HeatPINN(IN_SIZE, OUT_SIZE, /*hsize*/ 10) };
+  auto net { final_project::PINN::HeatPINN(IN_SIZE, OUT_SIZE, /*hsize*/ 20) };
   net->to(device);
 // /// ------------------ Y train ------------------ ///
 
@@ -134,7 +134,7 @@ int main ()
   // net->to(device);
 ///////////////////////////////////
   torch::Tensor loss_sum;
-  Integer iter {1}, nsteps {10'000};
+  Integer iter {1}, nsteps {20'000};
 
   torch::optim::Adam adam_optim(
     net->parameters(), 
@@ -155,7 +155,7 @@ int main ()
 
     adam_optim.step(closure);
 
-    if (iter % 100 == 0)
+    if (iter % 300 == 0)
     {
       std::cout 
         << "Iteration = " << iter << "\t"
@@ -166,7 +166,7 @@ int main ()
 
 
     ++iter;
-    if (loss_sum.item<Float>() < 1E-3)
+    if (loss_sum.item<Float>() < 1E-2)
     {
       break;
     }
