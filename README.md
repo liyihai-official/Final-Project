@@ -36,9 +36,10 @@ $$ -->
 
 ### Development Note
 
-FDM
+#### FDM 
 <img src="Hybrid.Heat/ver1.0/main1.png" alt="Heat_2D" height="400">
-PINN
+
+#### PINN
 <img src="Hybrid.Heat/ver1.0/main2.png" alt="Heat_2D" height="400">
 
 
