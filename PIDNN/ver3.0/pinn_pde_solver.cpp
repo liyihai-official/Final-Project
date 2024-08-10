@@ -1,6 +1,5 @@
 #include <torch/torch.h>
-#include <cuda_runtime.h>
-#include <cublas_v2.h>
+#include <torch/script.h> // for torch::save
 
 #include <iostream>
 #include <iomanip>
@@ -224,13 +223,19 @@ torch::Tensor Y_train {
     << "loss.device().type()=" << loss_sum.device().type() 
     << std::endl;
 
-  torch::save(net, "model.pth");
+  torch::save(net, "model.pt");
+
+  torch::Tensor sample { 
+    torch::zeros({1, IN_SIZE}, device)
+  };
+
+  auto out = net->forward(sample);
+
+  std::cout << out << std::endl;
 
   return 0;
 
 }
-
-
 
 
 
