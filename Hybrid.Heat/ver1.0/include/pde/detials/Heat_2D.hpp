@@ -162,7 +162,6 @@ template <typename T>
   {
     T diff {0.0};
     size_type i {1}, j {1};
-
     for (i=1; i < in.topology().__local_shape[0] - 1; ++i)
     {
       for (j=1; j < in.topology().__local_shape[1] - 1; ++j)
@@ -179,7 +178,7 @@ template <typename T>
         diff += std::pow(current - out(i,j), 2);
       }
     }
-
+      
     return diff;
   }
 
@@ -468,6 +467,32 @@ template <typename T>
 FINAL_PROJECT_MPI_ASSERT_GLOBAL((BC_2D != nullptr && IC_2D != nullptr));
 FINAL_PROJECT_ASSERT(BC_2D->isSetUpBC == true && IC_2D->isSetUpInit == true);
 #endif 
+
+#ifndef NDEBUG
+{
+  if (root == in.topology().rank)
+  {
+    std::cout << 2 << " Dimension Simulation Parameters: " << std::endl;
+    std::cout << "\tRows: "       << in.topology().__local_shape[0]-2 
+              << "\n\tColumns: "  << in.topology().__local_shape[1]-2       << std::endl;
+    std::cout << "\tTime steps: " << nsteps << std::endl;
+    std::cout << "\tTolerance: "  << tol    << std::endl;
+
+    std::cout << "MPI Parameters: "             << std::endl;
+    std::cout << "\tNumber of MPI Processes: "  << in.topology().num_procs  << std::endl;
+    std::cout << "\tRoot Process: "             << root                     << std::endl;
+
+    std::cout << "Heat Parameters: "    << std::endl;
+    std::cout << "\tCoefficient: "      << this->coff       << "\n"
+              << "\tTime resolution: "  << this->dt         << "\n"
+              << "\tWeights: "          << this->weights[0] << ", " 
+                                        << this->weights[1] << "\n"
+              << "\tdxs: "              << this->dxs[0]     << ", " 
+                                        << this->dxs[1]     << std::endl;
+  }
+}
+#endif // end NDEBUG
+
 
       Double t0 {MPI_Wtime()};
       for (iter = 1; iter < nsteps; ++iter)

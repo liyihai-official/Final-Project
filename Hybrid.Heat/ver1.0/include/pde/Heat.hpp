@@ -82,7 +82,8 @@ template <typename ... Exts>
 
     auto mmadr {std::min_element(dxs.begin(), dxs.end())};
     dt = *mmadr * *mmadr / coff / std::pow(2, NumD);
-    dt = std::min(dt, 0.1);
+    T mindt {0.1};
+    dt = std::min(dt, mindt);
 
     for (std::size_t i = 0; i < NumD; ++i)
     {

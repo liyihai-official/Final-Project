@@ -5,7 +5,7 @@ Col = fread(fid, 1, 'uint32');
 
 [X,Y]=meshgrid(1:Col, 1:Row);
 
-A = fread(fid, [Row * Col], 'double');
+A = fread(fid, [Row * Col], 'float32');
 A = reshape(A, [Col, Row]);
 
 A = permute(A,[1,2]);
@@ -17,8 +17,8 @@ imagesc(A');
 colormap(jet);
 
 colorbar;
-saveas(gcf, 'main1.png')
-% caxis([0 10]);
+saveas(gcf, 'main2.png')
+caxis([-20 +20]);
 % pause(0.05);
 
 
