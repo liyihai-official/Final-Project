@@ -1,10 +1,12 @@
 % \documentclass[manuscript,screen,review]{acmart}
-\documentclass[sigconf, screen, final, language=english, natbib=false]{acmart}
-% \documentclass[manuscript, screen, review, language=english, natbib=false]{acmart}
+% \documentclass[sigconf, screen, final, language=english, natbib=false]{acmart}
+\documentclass[manuscript, screen, review, language=english, natbib=false]{acmart}
 
 \usepackage{algorithm, algorithmic}
 \usepackage{listings}
 \usepackage{color} % use color
+
+\usepackage{lipsum}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -89,7 +91,9 @@ Physics-Informed Neural Networks on CUDA Systems}
 
 
 \begin{abstract}
-  This is the abstract of this project
+  This is the abstract of this project.
+
+  \lipsum[2-4]
 \end{abstract}
     
 % Keywords. The author(s) should pick words that accurately describe
@@ -122,14 +126,13 @@ Despite of the relentless progress, modeling and predicting the evolution of non
 multiscale systems which has inhomogeneous cascades-scales by using classical analytical 
 or computational tools inevitably encounts severe challanges and comes with prohibitive
 cost and multiple sources of uncertainty.
-This project focuses the benefits of the parallalization on appriximating nonliner systems.
-In general, the FDM and FEM methods are evaluated on pure message passing interface (MPI) \cite{MPI}
-parallelizations.
-Moreover, it also prompted Hybrid parallel strategies on FDM which combined MPI and share memory 
-parallalization \cite{SMP}
-(SMP) to make more use of the speed promotions come from faster caches of each compute unit. 
-Besides the Hybrid strategies on FDM, the FEM is built on the external library Deal.II \cite{DEAL.II},
-which also built on MPI parallalizations. (BUT CURRENTLY NOT SURE for Hybrid).
+
+This project focuses on the promotions on performance gained from the parallel compute systems, 
+in general, the FDMs and Neural Networks (NNs) are evaluated.
+Moreover, it prompted series Message Passing and Shared Memory hybrid parallel strategies using 
+Message Passing Interface (MPI) \cite{MPI}
+and
+Open Multi-processing (OpenMP) \cite{OpenMP}.
 
 
 \include{chapter/relatedwork}
