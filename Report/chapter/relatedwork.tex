@@ -26,7 +26,7 @@ The mostly widely used stochastic method for solving PDEs is
 Monte Carlo Method \cite{Monte Carlo Method} which is a popular method in solving PDEs in higher dimension space with 
 notable complexity.
 
-\subsection{Finite Difference Method}
+\subsection{Finite Difference Method}\label{SEC:FDM}
 The Finithe Difference Method(FDM) is based on the numerical approximation method in calculus of finite differences.
 The motivation is quiet straightforward which is approximating solutions by finding values satisfied PDEs on a set of 
 presctibed interconnected points within the domain of it. Those points are which referd as nodes, and the set of nodes 
@@ -67,7 +67,7 @@ figure \ref{FIG_POSSION_2D_10_NODES}
 \end{equation}
 \begin{figure}[htbp]
   \centering
-  
+  \includegraphics[width=0.5\textwidth]{figure/FIG_POSSION_2D_10_NODES.jpg}
   \caption{The Schematic Representa of of a 2D Computiatioal Domain and Grid. The nodes are used for the FDM by solid circles. 
   Nodes $11-15$ denote boundary nodes, while nodes $1-10$ denote internal nodes.}
   \label{FIG_POSSION_2D_10_NODES}
@@ -102,7 +102,69 @@ The value of loss function is a combination of the metrics of how well does thes
 fit the natural law [Fig. \ref{FIG_Schematic_View_PINN}]. 
 \begin{figure}[htbp]
   \centering
-  
+  \includegraphics[width=0.5\textwidth]{figure/FIG_Schematic_View_PINN.jpg}
   \caption{The Schematic Representa of a structure of PINN.}
   \label{FIG_Schematic_View_PINN}
 \end{figure}
+
+\subsection{Finite Difference Time Domain Method}
+As described previously in the 
+section \ref{SEC:FDM}, FDM could solve the PDEs in its original form where 
+Finite Element and Finite Volume Methods gained results by solving modified form such as an integral form of the governing equation.
+Though the latter methods are commonly get better results or less computational hungery, 
+the FDM has many descendants, 
+for instance the Finite Difference Time Domain Method (FDTD) where it still finds prolific usage are computational heat equation and 
+computational electromagnetics (Maxwell's equations \cite{Maxwell_equations}). 
+Assuming the operator $\mathcal{N}[\cdot;\lambda]$ is set to $\nabla$ where it makes E.q. \ref{EQ_General_PDEs} become 
+to heat equation \ref{EQ_HEAT_EQ_EG}.
+\begin{equation}\label{EQ_HEAT_EQ_EG}
+  \frac{\partial u}{\partial t} 
+  - \lambda \left(
+    \frac{\partial^2 u}{\partial x^2}  + \frac{\partial^2 u}{\partial y^2} 
+  \right) = 0
+\end{equation}
+Using the key idea of FDM, assuming the step size in spatio-time space are $\Delta x$, $\Delta y$ and $\Delta t$,
+we could have a series equations which have form [E.q. \ref{EQ_FDM_FDTD_EQ}].
+\begin{equation}\label{EQ_FDM_FDTD_EQ}
+  \frac{u^{n+1}_{i,j} - u^n_{i,j}}{\Delta t} 
+  = 
+  \lambda
+  \left(
+    \frac{
+      u^n_{i+1,j} - 2u^n_{i,j} + u^n_{i-1,j}
+    }{\Delta x^2}
+    +
+    \frac{
+      u^n_{i,j+1} - 2u^n_{i,j} + u^n_{i,j+1}
+    }{\Delta y^2}
+  \right)
+\end{equation}
+when the time step size satisfies the 
+Couran, Friedrichs, and Lewy condition (CFL\cite{CFL_limitation}).
+We could get the strong results by iterating the equation \ref{EQ_FDM_FDTD_EQ}, or more specifically using 
+equation \ref{EQ_FDM_FDTD_EQ_Iterating} to get the value $u$ of next time stamp $n+1$ on nodes $i,j$.
+\begin{equation}\label{EQ_FDM_FDTD_EQ_Iterating}
+  u^{n+1}_{i,j}
+  = 
+  u^n_{i,j} + 
+    \frac{
+      \lambda\Delta t
+    }{\Delta x^2}\left(
+      u^n_{i+1,j} - 2u^n_{i,j} + u^n_{i-1,j}
+    \right)
+    +
+    \frac{
+      \lambda\Delta t
+    }{\Delta y^2}\left(
+      u^n_{i,j+1} - 2u^n_{i,j} + u^n_{i,j+1}
+    \right)
+\end{equation}
+also shown in the figure \ref{FIG_Schematic_View_FDTD}.
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figure/FIG_Schematic_View_FDTD.jpg}
+  \caption{The Schematic Representa the computational spatio-time domain of FDTD methods.}
+  \label{FIG_Schematic_View_FDTD}
+\end{figure}
+
+
