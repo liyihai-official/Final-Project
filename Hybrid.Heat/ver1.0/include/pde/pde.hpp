@@ -19,7 +19,9 @@
 #include <multiarray.hpp>
 
 #include <pde/Heat.hpp>
-#include <pde/detials/Heat_2D.hpp>
+
+// #include <pde/detials/Heat_2D.hpp>
+// #include <pde/detials/Heat_3D.hpp>
 
 // #include <pde/detials/InitializationsC.hpp>
 
@@ -37,8 +39,8 @@ namespace pde {
 template <typename T, size_type NumD>
   class Heat_Base;
 
-template <typename T, size_type NumD>
-  class Naiver_Stokes_Base;
+// template <typename T, size_type NumD>
+//   class Naiver_Stokes_Base;
 
 
 // / @namespace BoundaryConditions
@@ -47,6 +49,9 @@ template <typename T, size_type NumD>
 template <typename T>
   class BoundaryConditions_2D;
 
+template <typename T>
+  class BoundaryConditions_3D;
+
 
 /// @namespace InitialConditions
 ///   Give the initialization routines to the defined @class array_Cart.
@@ -54,6 +59,9 @@ namespace InitialConditions {
 
 template <typename T>
   class Init_2D;
+
+template <typename T>
+  class Init_3D;
 
 
   

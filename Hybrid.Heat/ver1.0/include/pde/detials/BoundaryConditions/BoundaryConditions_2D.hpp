@@ -1,5 +1,5 @@
 ///
-/// @file BoundaryConditions.hpp
+/// @file BoundaryConditions_2D.hpp
 /// @brief Objects of Boundary Conditions of PDE. 
 ///         Includes Dirichlet and Von Neumann Boundary Conditions.
 ///
@@ -7,8 +7,8 @@
 /// @version 6.0
 ///
 
-#ifndef FINAL_PROJECT_BOUNDARY_CONDITIONS_HPP
-#define FINAL_PROJECT_BOUNDARY_CONDITIONS_HPP
+#ifndef FINAL_PROJECT_BOUNDARY_CONDITIONS_2D_HPP
+#define FINAL_PROJECT_BOUNDARY_CONDITIONS_2D_HPP
 
 #pragma once 
 #include <functional>
@@ -318,5 +318,5 @@ else if (isNeumann[3])
 } // namespace final_project
 
 
-#endif // end define FINAL_PROJECT_BOUNDARY_CONDITIONS_HPP
+#endif // end define FINAL_PROJECT_BOUNDARY_CONDITIONS_2D_HPP
 

@@ -11,7 +11,7 @@
 
 #include <pde/detials/Heat_2D.hpp>
 #include <pde/detials/InitializationsC.hpp>
-#include <pde/detials/BoundaryConditions/BoundaryConditions.hpp>
+#include <pde/detials/BoundaryConditions/BoundaryConditions_2D.hpp>
 
 
 #if !defined(NX) || !defined(NY)
@@ -56,11 +56,9 @@ Integer
   obj.SetHeatBC(BC, Dim00, Dim01, Dim10, Dim11);
   obj.SetHeatInitC(IC);
 
-
-  auto iter = obj.solve_pure_mpi(tol, nsteps, root_proc);
+  // auto iter = obj.solve_pure_mpi(tol, nsteps, root_proc);
   // auto iter = obj.solve_hybrid_mpi_omp(tol, nsteps, root_proc);
-  // auto iter = obj.solve_hybrid2_mpi_omp(tol, nsteps, root_proc);
-
+  auto iter = obj.solve_hybrid2_mpi_omp(tol, nsteps, root_proc);
 
   obj.SaveToBinary("test.bin");
 

@@ -40,11 +40,6 @@ template <typename T, size_type NumD>
       
   }; 
 
-
-// template <typename T>
-//   class Heat_3D : public Heat_Base<T, 3> 
-//    { }; // class Heat<T, 3>
-
 }}
 
 

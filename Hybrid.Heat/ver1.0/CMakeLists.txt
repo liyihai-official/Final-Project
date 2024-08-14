@@ -34,6 +34,7 @@ file(GLOB_RECURSE PROJECT_SOURCES
 add_executable(main2 main2/main2.cpp ${PROJECT_SOURCES})
 add_executable(test test/test.cc ${PROJECT_SOURCES})
 add_executable(main1 main1/main1.cpp ${PROJECT_SOURCES})
+add_executable(main1_3D main1/main1_3D.cpp ${PROJECT_SOURCES})
 
 # 链接 Torch 库
 target_link_libraries(main2 "${TORCH_LIBRARIES}")
@@ -41,6 +42,7 @@ target_link_libraries(main2 "${TORCH_LIBRARIES}")
 # 链接 MPI 库
 target_link_libraries(test ${MPI_LIBRARIES})
 target_link_libraries(main1 ${MPI_LIBRARIES})
+target_link_libraries(main1_3D ${MPI_LIBRARIES})
 
 # 添加 O3 优化标志
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
@@ -60,4 +62,5 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release")
   target_compile_definitions(main2 PRIVATE NDEBUG)
   target_compile_definitions(test PRIVATE NDEBUG)
   target_compile_definitions(main1 PRIVATE NDEBUG)
+  target_compile_definitions(main1_3D PRIVATE NDEBUG)
 endif()
