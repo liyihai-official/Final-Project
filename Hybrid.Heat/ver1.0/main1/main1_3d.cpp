@@ -15,9 +15,9 @@
 #include <mpi/environment.hpp>
 
 #if !defined(NX) || !defined (NY) || !defined(NZ)
-#define NX 98+2
-#define NY 98+2
-#define NZ 98+2
+#define NX 28+2
+#define NY 28+2
+#define NZ 28+2
 #endif
 
 using Integer = final_project::Integer;
@@ -48,10 +48,10 @@ Integer
   ///
   final_project::pde::Heat_3D<Float> obj (mpi_world, nx, ny, nz);
 
-  ICFunction InitCond { [](Float x, Float y, Float z) { return 0; }};
+  ICFunction InitCond { [](Float x, Float y, Float z) { return 10 * std::abs(std::sin(x*x + y*y + z*z)); }};
 
-  ///
-  /// TODO:
+  /// FINISH 
+  /// TODO: 
   ///   Complete Init_3D<T> class
   ///
   final_project::pde::InitialConditions::Init_3D<Float> IC (InitCond);
@@ -70,13 +70,13 @@ Integer
   BCFunction Dim101 {[](Float x, Float y, Float z, Float t){ return 0;}};
 
   // obj.SetHeatBC(BC, Dim000, Dim001, Dim010, Dim011, Dim100, Dim101);
-  // obj.SetHeatInitC(IC);
+  obj.SetHeatInitC(IC);
 
   auto iter = obj.solve_pure_mpi(tol, nsteps, root_proc);
   // auto iter = obj.solve_hybrid_mpi_omp(tol, nsteps, root_proc);
   // auto iter = obj.solve_hybrid2_mpi_omp(tol, nsteps, root_proc);
 
-  obj.SaveToBinary("test.bin");
+  obj.SaveToBinary("test_3d.bin");
 
   return 0;
 }

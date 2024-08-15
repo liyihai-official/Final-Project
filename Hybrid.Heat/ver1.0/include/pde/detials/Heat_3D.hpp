@@ -247,10 +247,10 @@ template <typename T>
     T ldiff {0.0}, gdiff {0.0}, time {0.0}; MPI_Datatype DiffType {mpi::get_mpi_type<T>()};
     Integer iter {1};
 
-#ifndef DEBUG
-FINAL_PROJECT_MPI_ASSERT((BC_3D != nullptr && IC_3D != nullptr));
-FINAL_PROJECT_ASSERT(BC_3D->isSetUpBC && IC_3D->isSetUpInit);
-#endif
+// #ifndef DEBUG
+// FINAL_PROJECT_MPI_ASSERT((BC_3D != nullptr && IC_3D != nullptr));
+// FINAL_PROJECT_ASSERT(BC_3D->isSetUpBC && IC_3D->isSetUpInit);
+// #endif
 
 #ifndef NDEBUG
 {
@@ -285,10 +285,10 @@ FINAL_PROJECT_ASSERT(BC_3D->isSetUpBC && IC_3D->isSetUpInit);
     for (iter = 1; iter < nsteps; ++iter)
     {
       time = iter*this->dt;
-      exchange_ping_pong_SR();
-      ldiff = update_ping_pong(time);
-      BC_3D->UpdateBC(*this, time);
-      MPI_Allreduce(&ldiff, &gdiff, 1, DiffType, MPI_SUM, in.topology().comm_cart);
+      // exchange_ping_pong_SR();
+      // ldiff = update_ping_pong(time);
+      // BC_3D->UpdateBC(*this, time);
+      // MPI_Allreduce(&ldiff, &gdiff, 1, DiffType, MPI_SUM, in.topology().comm_cart);
 
 #ifndef NDEBUG
 mpi::Gather(gather, in, root);

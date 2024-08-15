@@ -160,10 +160,10 @@ template <typename T>
         {
 x = (i + obj.in.topology().starts[0]-1) * obj.dxs[0];
 y = (j + obj.in.topology().starts[1]-1) * obj.dxs[1];
-y = (k + obj.in.topology().starts[2]-1) * obj.dxs[2];
+z = (k + obj.in.topology().starts[2]-1) * obj.dxs[2];
 
-obj.in(i,j,k)  = initFunc(x,y,k);
-obj.out(i,j,k) = initFunc(x,y,k);
+obj.in(i,j,k)  = initFunc(x,y,z);
+obj.out(i,j,k) = initFunc(x,y,z);
         }
       }
     }
