@@ -31,9 +31,9 @@ template <typename T>
 
     void SetHeatInitC(InitialConditions::Init_2D<T> &     );
 
-    Integer solve_pure_mpi(T, Integer=100, Integer=0);
-    Integer solve_hybrid_mpi_omp(T, Integer=100, Integer=0);
-    Integer solve_hybrid2_mpi_omp(T, Integer=100, Integer=0);
+    Integer solve_pure_mpi(       const T, const Integer=100, const Integer=0);
+    Integer solve_hybrid_mpi_omp( const T, const Integer=100, const Integer=0);
+    Integer solve_hybrid2_mpi_omp(const T, const Integer=100, const Integer=0);
 
     void SaveToBinary(const String);
 
@@ -458,14 +458,14 @@ template <typename T>
 /// @return The number of convergence of the steps it takes to converge.
 template <typename T>
   Integer 
-  Heat_2D<T>::solve_pure_mpi(T tol, Integer nsteps, Integer root)
+  Heat_2D<T>::solve_pure_mpi(const T tol, const Integer nsteps, const Integer root)
     {
       T ldiff {0.0}, gdiff {0.0}, time {0}; MPI_Datatype DiffType {mpi::get_mpi_type<T>()};
-      Integer iter;
+      Integer iter {1};
 
 #ifndef NDEBUG
 FINAL_PROJECT_MPI_ASSERT_GLOBAL((BC_2D != nullptr && IC_2D != nullptr));
-FINAL_PROJECT_ASSERT(BC_2D->isSetUpBC == true && IC_2D->isSetUpInit == true);
+FINAL_PROJECT_ASSERT(BC_2D->isSetUpBC && IC_2D->isSetUpInit);
 #endif 
 
 #ifndef NDEBUG
@@ -550,7 +550,7 @@ mpi::Gather(gather, in, root);
 /// @return number of iterations
 template <typename T>
   Integer
-  Heat_2D<T>::solve_hybrid_mpi_omp(T tol, Integer nsteps, Integer root)
+  Heat_2D<T>::solve_hybrid_mpi_omp(const T tol, const Integer nsteps, const Integer root)
   {
     T ldiff {0.0}, gdiff {0.0}; MPI_Datatype DiffType {mpi::get_mpi_type<T>()};
     Integer num_threads {1};
@@ -675,7 +675,7 @@ mpi::Gather(gather, in, root);
 /// @return number of iterations
 template <typename T>
   Integer
-  Heat_2D<T>::solve_hybrid2_mpi_omp(T tol, Integer nsteps, Integer root)
+  Heat_2D<T>::solve_hybrid2_mpi_omp(const T tol, const Integer nsteps, const Integer root)
   {
     T ldiff {0.0}, gdiff {0.0}; MPI_Datatype DiffType {mpi::get_mpi_type<T>()};
 

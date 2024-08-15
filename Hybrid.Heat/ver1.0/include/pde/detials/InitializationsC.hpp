@@ -139,7 +139,7 @@ template <typename T>
 /// @param initFunc 
 template <typename T>
   Init_3D<T>::Init_3D(InitFunction & initFunc)
-  : initFunc {initFunc}, isSetUpInit {false}
+: initFunc {initFunc}, isSetUpInit {false}
   {}
 
 
@@ -158,27 +158,16 @@ template <typename T>
       {
         for (size_type k = 1; k < obj.in.topology().__local_shape[2]-1; ++k)
         {
-          x = (i + obj.in.topology().starts[0]-1) * obj.dxs[0];
-          y = (j + obj.in.topology().starts[1]-1) * obj.dxs[1];
-          y = (k + obj.in.topology().starts[2]-1) * obj.dxs[2];
+x = (i + obj.in.topology().starts[0]-1) * obj.dxs[0];
+y = (j + obj.in.topology().starts[1]-1) * obj.dxs[1];
+y = (k + obj.in.topology().starts[2]-1) * obj.dxs[2];
 
-          obj.in(i,j,k)  = initFunc(x,y,k);
-          obj.out(i,j,k) = initFunc(x,y,k);
+obj.in(i,j,k)  = initFunc(x,y,k);
+obj.out(i,j,k) = initFunc(x,y,k);
         }
       }
     }
   }
-
-
-
-
-
-
-
-
-
-
-
 
 } // namespace InitialConditions
 

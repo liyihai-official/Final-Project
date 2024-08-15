@@ -25,7 +25,7 @@ template <typename T>
 
     public:
     BoundaryConditions_3D();                                          // An empty BC object.
-    BoundaryConditions_3D(Bool, Bool, Bool, Bool, Bool, Bool, Bool);  // Setup the Boundary Condition Types.
+    BoundaryConditions_3D(Bool, Bool, Bool, Bool, Bool, Bool);  // Setup the Boundary Condition Types.
     void SetBC(Heat_3D<T> &, 
       BCFunction, BCFunction, 
       BCFunction, BCFunction, 
@@ -56,6 +56,35 @@ template <typename T>
 } // namespace final_project
 
 
+///
+///
+/// --------------------------- Inline Function Definitions  ---------------------------  ///
+///
+///
 
+
+
+
+namespace final_project { namespace pde {
+
+
+
+
+
+
+
+
+template <typename T>
+  inline 
+  BoundaryConditions_3D<T>::BoundaryConditions_3D(
+    Bool isDirichDim000, Bool isDirichDim001,   // is Dirichlet in Dimension 0, as Constant Value 
+    Bool isDirichDim010, Bool isDirichDim011,   // is Dirichlet in Dimension 1, as Constant Value 
+    Bool isDirichDim100, Bool isDirichDim101)   // is Dirichlet in Dimension 1, as Constant Value 
+  {
+    
+  }
+
+} // namespace pde
+} // namespace final_project
 
 #endif // end define FINAL_PROJECT_BOUNDARY_CONDITIONS_3D_HPP

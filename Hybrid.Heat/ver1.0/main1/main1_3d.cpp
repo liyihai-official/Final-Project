@@ -37,7 +37,7 @@ Integer
 
   constexpr Integer root_proc {0};
   constexpr Float tol {1E-4};
-  constexpr size_type nsteps {100'000'000};
+  constexpr size_type nsteps {2};
   constexpr size_type numDim {3}, nx {NX}, ny {NY}, nz {NZ};
 
   auto mpi_world {final_project::mpi::environment(argc, argv)};
@@ -56,6 +56,10 @@ Integer
   ///
   final_project::pde::InitialConditions::Init_3D<Float> IC (InitCond);
 
+  ///
+  /// TODO:
+  ///
+  final_project::pde::BoundaryConditions_3D<Float> BC (true, true, true, true, true, true);
   BCFunction Dim000 {[](Float x, Float y, Float z, Float t){ return 0;}};
   BCFunction Dim001 {[](Float x, Float y, Float z, Float t){ return 0;}};
 
@@ -65,14 +69,14 @@ Integer
   BCFunction Dim100 {[](Float x, Float y, Float z, Float t){ return 0;}};
   BCFunction Dim101 {[](Float x, Float y, Float z, Float t){ return 0;}};
 
-  // obj.setHeatBC(BC, Dim000, Dim001, Dim010, Dim011, Dim100, Dim101);
-  // obj.setHeatInitC(IC);
+  // obj.SetHeatBC(BC, Dim000, Dim001, Dim010, Dim011, Dim100, Dim101);
+  // obj.SetHeatInitC(IC);
 
-  // auto iter = obj.solve_pure_mpi(tol, nsteps, root_proc);
+  auto iter = obj.solve_pure_mpi(tol, nsteps, root_proc);
   // auto iter = obj.solve_hybrid_mpi_omp(tol, nsteps, root_proc);
   // auto iter = obj.solve_hybrid2_mpi_omp(tol, nsteps, root_proc);
 
-  // obj.SaveToBinary("test.bin");
+  obj.SaveToBinary("test.bin");
 
   return 0;
 }

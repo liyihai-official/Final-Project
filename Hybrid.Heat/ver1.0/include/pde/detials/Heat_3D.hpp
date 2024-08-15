@@ -16,7 +16,9 @@
 namespace final_project { namespace pde {
 
 
-
+/// @class Heat_3D<T>
+/// @brief A 3D Heat Equation object with internal functions for solving this system.
+/// @tparam T The Value type.
 template <typename T>
   class Heat_3D : protected Heat_Base<T, 3>
   {
@@ -34,9 +36,9 @@ template <typename T>
 
     void SetHeatInitC(InitialConditions::Init_3D<T> & );
 
-    Integer solve_pure_mpi(T, Integer=100, Integer=0);
-    Integer solve_hybrid_mpi_omp(T, Integer=100, Integer=0);
-    Integer solve_hybrid2_mpi_omp(T, Integer=100, Integer=0);
+    Integer solve_pure_mpi(       const T, const Integer=100, const Integer=0);
+    Integer solve_hybrid_mpi_omp( const T, const Integer=100, const Integer=0);
+    Integer solve_hybrid2_mpi_omp(const T, const Integer=100, const Integer=0);
 
     void SaveToBinary( const String );
 
@@ -124,7 +126,15 @@ template <typename T>
 
 
 
-
+/// @brief 
+/// @tparam T 
+/// @param BC 
+/// @param FuncDim000 
+/// @param FuncDim001 
+/// @param FuncDim010 
+/// @param FuncDim011 
+/// @param FuncDim100 
+/// @param FuncDim101 
 template <typename T>
   inline void 
   Heat_3D<T>::SetHeatBC(
@@ -133,25 +143,34 @@ template <typename T>
     BCFunction FuncDim010, BCFunction FuncDim011,
     BCFunction FuncDim100, BCFunction FuncDim101)
   {
-
+    BC_3D = std::make_unique<BoundaryConditions_3D<T>>(BC);
+    BC_3D->SetBC(*this, 
+      FuncDim000, FuncDim001,
+      FuncDim000, FuncDim011,
+      FuncDim100, FuncDim101);
   }
 
 
+/// @brief 
+/// @tparam T 
+/// @param IC 
 template <typename T>
   inline void 
   Heat_3D<T>::SetHeatInitC(InitialConditions::Init_3D<T> & IC)
   {
-
+    IC_3D = std::make_unique<InitialConditions::Init_3D<T>>(IC);
+    IC_3D->SetUpInit(*this);
   }
 
+/// @brief 
+/// @tparam T 
 template <typename T>
   inline void
   Heat_3D<T>::switch_in_out()
-  {
+{ in.swap(out); }
 
-  }
-
-
+/// @brief 
+/// @tparam T 
 template <typename T>
   inline void 
   Heat_3D<T>::exchange_ping_pong_SR()
@@ -159,6 +178,13 @@ template <typename T>
 
   }
 
+
+
+
+
+
+/// @brief 
+/// @tparam T 
 template <typename T>
   inline void 
   Heat_3D<T>::exchange_ping_pong_I()
@@ -166,7 +192,10 @@ template <typename T>
 
   }
 
-
+/// @brief 
+/// @tparam T 
+/// @param time 
+/// @return 
 template <typename T>
   inline T 
   Heat_3D<T>::update_ping_pong(const T time)
@@ -174,7 +203,10 @@ template <typename T>
     return 0;
   }
 
-
+/// @brief 
+/// @tparam T 
+/// @param time 
+/// @return 
 template <typename T>
   inline T 
   Heat_3D<T>::update_ping_pong_omp(const T time)
@@ -183,6 +215,9 @@ template <typename T>
   }
 
 
+/// @brief 
+/// @tparam T 
+/// @return 
 template <typename T>
   inline T
   Heat_3D<T>::update_ping_pong_bulk( )
@@ -191,14 +226,119 @@ template <typename T>
     return diff;
   }
 
-
+/// @brief 
+/// @tparam T 
+/// @param time 
+/// @return 
 template <typename T>
   inline T 
   Heat_3D<T>::update_ping_pong_edge(const T time)
   {
-    
-    return 0;
+
+    return 0; 
   }
+
+
+
+template <typename T>
+  Integer
+  Heat_3D<T>::solve_pure_mpi(const T tol, const Integer nsteps, const Integer root)
+  {
+    T ldiff {0.0}, gdiff {0.0}, time {0.0}; MPI_Datatype DiffType {mpi::get_mpi_type<T>()};
+    Integer iter {1};
+
+#ifndef DEBUG
+FINAL_PROJECT_MPI_ASSERT((BC_3D != nullptr && IC_3D != nullptr));
+FINAL_PROJECT_ASSERT(BC_3D->isSetUpBC && IC_3D->isSetUpInit);
+#endif
+
+#ifndef NDEBUG
+{
+  if (root == in.topology().rank)
+  {
+    std::cout << 3 << " Dimension Simulation Parameters: " << std::endl;
+    std::cout << "\tDepth: "        << in.topology().__local_shape[0]-2 
+              << "\n\tRow: "        << in.topology().__local_shape[1]-2 
+              << "\n\tColumn: "     << in.topology().__local_shape[2]-2     << std::endl;
+    std::cout << "\tTime steps: " << nsteps << std::endl;
+    std::cout << "\tTolerance: "  << tol    << std::endl;
+
+    std::cout << "MPI Parameters: "             << std::endl;
+    std::cout << "\tNumber of MPI Processes: "  << in.topology().num_procs  << std::endl;
+    std::cout << "\tRoot Process: "             << root                     << std::endl;
+
+    std::cout << "Heat Parameters: "    << std::endl;
+    std::cout << "\tCoefficient: "      << this->coff       << "\n"
+              << "\tTime resolution: "  << this->dt         << "\n"
+              << "\tWeights: "          << this->weights[0] << ", " 
+                                        << this->weights[1] << "\n"
+                                        << this->weights[2] << "\n"
+              << "\tdxs: "              << this->dxs[0]     << ", " 
+                                        << this->dxs[1]     << ", "
+                                        << this->dxs[2]     << std::endl;
+  }
+} 
+#endif // end NDEBUG
+
+
+    Double t0 { MPI_Wtime() };
+    for (iter = 1; iter < nsteps; ++iter)
+    {
+      time = iter*this->dt;
+      exchange_ping_pong_SR();
+      ldiff = update_ping_pong(time);
+      BC_3D->UpdateBC(*this, time);
+      MPI_Allreduce(&ldiff, &gdiff, 1, DiffType, MPI_SUM, in.topology().comm_cart);
+
+#ifndef NDEBUG
+mpi::Gather(gather, in, root);
+if (in.topology().rank == root) 
+{
+  std::cout << std::fixed << std::setprecision(13) << std::setw(15) << gdiff 
+            << std::endl;
+}
+#endif 
+
+      switch_in_out();
+
+      if (gdiff <= tol) {
+        converge = true;
+        break;
+      }
+    }
+    Double t1 { MPI_Wtime() - t0 };
+
+
+    if (converge)
+    {
+      Double total {0.0};
+      mpi::Gather(gather, in, root);
+      MPI_Reduce(&t1, &total, 1, MPI_DOUBLE, MPI_MAX, root, in.topology().comm_cart);
+      if (root == in.topology().rank)
+          std::cout << "Total Converge time: " << total << "\n" 
+                    << "Iterations: " << iter << std::endl;
+    } else {
+      if (in.topology().rank == root) std::cout << "Fail to converge" << std::endl;
+    }
+
+
+
+#ifndef NDEBUG // Gather 
+mpi::Gather(gather, in, root);
+#endif
+
+
+    return iter;
+  }
+
+
+
+
+
+
+
+
+
 
 } // namespace pde
 } // namespace final_project
