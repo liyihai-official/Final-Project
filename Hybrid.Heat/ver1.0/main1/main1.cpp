@@ -15,8 +15,8 @@
 
 
 #if !defined(NX) || !defined(NY)
-#define NX 98+2
-#define NY 98+2
+#define NX 20000+2
+#define NY 20000+2
 #endif
 
 
@@ -34,8 +34,8 @@ Integer
 {
 
   constexpr Integer root_proc {0};
-  constexpr Float tol {1E-4};
-  constexpr size_type nsteps {10000};
+  constexpr Float tol {1E3};
+  constexpr size_type nsteps {100'000'000};
   constexpr size_type numDim {2}, nx {NX}, ny {NY};
 
   auto mpi_world {final_project::mpi::environment(argc, argv)};
@@ -47,21 +47,21 @@ Integer
   
   final_project::pde::BoundaryConditions_2D<Float> BC (true, true, true, true);
 
-  BCFunction Dim00 {[](Float x, Float y, Float t){ return 5 * std::abs(std::sin(y * 2 * std::numbers::pi));}};
-  BCFunction Dim01 {[](Float x, Float y, Float t){ return 0;}};
+  BCFunction Dim00 {[](Float x, Float y, Float t){ return y;}};
+  BCFunction Dim01 {[](Float x, Float y, Float t){ return 1-y;}};
 
-  BCFunction Dim10 {[](Float x, Float y, Float t){ return 20 * std::sin(x * 2 * std::numbers::pi);}};
-  BCFunction Dim11 {[](Float x, Float y, Float t){ return -20  * std::sin(x * 2 * std::numbers::pi);}};
+  BCFunction Dim10 {[](Float x, Float y, Float t){ return x;}};
+  BCFunction Dim11 {[](Float x, Float y, Float t){ return 1-x;}};
 
   obj.SetHeatBC(BC, Dim00, Dim01, Dim10, Dim11);
   obj.SetHeatInitC(IC);
 
-  // auto iter = obj.solve_pure_mpi(tol, nsteps, root_proc);
-  auto iter = obj.solve_hybrid_mpi_omp(tol, nsteps, root_proc);
+  auto iter = obj.solve_pure_mpi(tol, nsteps, root_proc);
+  // auto iter = obj.solve_hybrid_mpi_omp(tol, nsteps, root_proc);
   // auto iter = obj.solve_hybrid2_mpi_omp(tol, nsteps, root_proc);
 
   obj.SaveToBinary("test.bin");
 
-
+  std::cout << iter << std::endl;
   return 0;
 }

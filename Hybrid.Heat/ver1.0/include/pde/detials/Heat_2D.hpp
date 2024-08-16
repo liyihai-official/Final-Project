@@ -571,6 +571,7 @@ template <typename T>
   {
     T ldiff {0.0}, gdiff {0.0}; MPI_Datatype DiffType {mpi::get_mpi_type<T>()};
     Integer num_threads {1};
+    Integer iter = 1;
 
 #ifndef NDEBUG
 FINAL_PROJECT_MPI_ASSERT_GLOBAL((BC_2D != nullptr && IC_2D != nullptr));
@@ -580,6 +581,7 @@ FINAL_PROJECT_ASSERT(BC_2D->isSetUpBC == true && IC_2D->isSetUpInit == true);
 
     #pragma omp parallel num_threads(2)
     {
+      Integer omp_iter = 1;
       T omp_ldiff {0.0}, time {0};
 
 #ifdef _OPENMP
@@ -616,16 +618,16 @@ FINAL_PROJECT_ASSERT(BC_2D->isSetUpBC == true && IC_2D->isSetUpInit == true);
 }
 #endif // end NDEBUG
 
-    Integer iter = 1;
+    
     Double t0 {MPI_Wtime()};
-    for (iter = 1; iter <= nsteps; ++iter)
+    for (omp_iter = 1; omp_iter <= nsteps; ++omp_iter)
     {
       #pragma omp single
       exchange_ping_pong_I();
       #pragma omp barrier
 
       ldiff = 0; 
-      time = iter*this->dt;
+      time = omp_iter*this->dt;
 
       omp_ldiff = update_ping_pong_omp();
       
@@ -662,6 +664,7 @@ if (in.topology().rank == root)
     if (converge)
     {
       Double total {0};
+      iter = omp_iter;
       mpi::Gather(gather, in, root);
       MPI_Reduce(&t1, &total, 1, MPI_DOUBLE, MPI_MAX, root, in.topology().comm_cart);
       if (root == in.topology().rank)
@@ -678,7 +681,7 @@ mpi::Gather(gather, in, root);
 
     } // end omp parallel 
 
-    return 0;
+    return iter;
 
   }
 
@@ -697,6 +700,7 @@ template <typename T>
     T ldiff {0.0}, gdiff {0.0}; MPI_Datatype DiffType {mpi::get_mpi_type<T>()};
 
     Integer num_threads {1}; // omp_threads
+    Integer iter {1};
 
 #ifndef NDEBUG
 FINAL_PROJECT_MPI_ASSERT_GLOBAL((BC_2D != nullptr && IC_2D != nullptr));
@@ -709,6 +713,7 @@ FINAL_PROJECT_ASSERT(BC_2D->isSetUpBC == true && IC_2D->isSetUpInit == true);
     {
       Integer omp_id { omp_get_thread_num() };
       T omp_ldiff_bulk {0.0}, omp_ldiff_edge {0.0}, time {0.0};
+      Integer omp_iter {1};
 
     #ifdef _OPENMP
       #pragma omp master
@@ -744,11 +749,10 @@ FINAL_PROJECT_ASSERT(BC_2D->isSetUpBC == true && IC_2D->isSetUpInit == true);
 }
 #endif // end NDEBUG
 
-      Integer iter {1};
       Double t0 { MPI_Wtime() };
-      for (; iter < nsteps; ++iter )
+      for (omp_iter = 1; omp_iter < nsteps; ++omp_iter )
       {
-        ldiff = 0; time = iter*this->dt;
+        ldiff = 0; time = omp_iter*this->dt;
 
         // omp_ldiff_bulk = update_ping_pong_bulk();
 
@@ -834,12 +838,13 @@ if (in.topology().rank == root)
 {
   if (converge)
     {
+      iter = omp_iter;
       Double total {0};
       mpi::Gather(gather, in, root);
       MPI_Reduce(&t1, &total, 1, MPI_DOUBLE, MPI_MAX, root, in.topology().comm_cart);
       if (root == in.topology().rank)
         std::cout << "Total Converge time: " << total << "\n" 
-                  << "Iterations: " << iter << std::endl;
+                  << "Iterations: " << omp_iter << std::endl;
     } else {
       if (in.topology().rank == root) std::cout << "Fail to converge" << std::endl;
     }
@@ -851,7 +856,7 @@ mpi::Gather(gather, in, root);
 
     } // end of omp parallel
 
-    return 0;
+    return iter;
   }
 
 

@@ -4,7 +4,7 @@ Row = fread(fid, 1, 'uint32');
 Col = fread(fid, 1, 'uint32');
 Dep = fread(fid, 1, 'uint32');
 
-A = fread(fid, [Row * Col * Dep], 'float32'); 
+A = fread(fid, [Row * Col * Dep], 'double'); 
 A = reshape(A, [Dep, Col, Row]);
 A = permute(A, [2,3,1]);
 
@@ -16,14 +16,21 @@ X_norm = (X - 1) / (Row - 1);
 Y_norm = (Y - 1) / (Col - 1);
 Z_norm = (Z - 1) / (Dep - 1);
 
-F = (sin(pi * X_norm) .* sin(2 * pi * Y_norm) .* sinh(sqrt(5) * pi * Z_norm)) / sinh(sqrt(5) * pi);
+ 
+% F = (sin(pi * X_norm) .* sin(2 * pi * Y_norm) .* sinh(sqrt(5) * pi * Z_norm)) / sinh(sqrt(5) * pi);
+
+F = X_norm + Y_norm + Z_norm ...
+    - 2 * X_norm .* Y_norm ...
+    - 2 * X_norm .* Z_norm ...
+    - 2 * Y_norm .* Z_norm ...
+    + 4 * X_norm .* Y_norm .* Z_norm;
 
 figure;
 h = gcf;
 title("TEST");
-
+% max(abs(A(2:Row-2, 2:Col-2,2:Dep-2) - F(2:Row-2, 2:Col-2,2:Dep-2)).^2, [], 'all')
 % 绘制数据 A 的切片图
-slice(X_norm, Y_norm, Z_norm, A, [0.5 1], [0.5 1], [0 1]);
+slice(X_norm(1:Row-1, 1:Col-1,1:Dep-1), Y_norm(1:Row-1, 1:Col-1,1:Dep-1), Z_norm(1:Row-1, 1:Col-1,1:Dep-1), A(1:Row-1, 1:Col-1,1:Dep-1), [0.5 1], [0.5 1], [0 1]);
 % hold on; % 保持当前图形
 
 % % 绘制函数 F 的切片图

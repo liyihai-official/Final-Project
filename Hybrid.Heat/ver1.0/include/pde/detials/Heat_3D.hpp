@@ -643,7 +643,7 @@ FINAL_PROJECT_MPI_ASSERT((BC_3D != nullptr && IC_3D != nullptr));
 FINAL_PROJECT_ASSERT(BC_3D->isSetUpBC && IC_3D->isSetUpInit);
 #endif
 
-    #pragma omp parallel num_threads(2)
+    #pragma omp parallel num_threads(4)
     {
       T omp_ldiff_bulk {0.0}, omp_ldiff_edge {0.0}, time {0.0};
       Integer omp_iter = 1;
@@ -800,7 +800,6 @@ if (in.topology().rank == root)
 mpi::Gather(gather, in, root);
 #endif
 }
-
 
     } // omp parallel
 

@@ -16,8 +16,8 @@
 
 #if !defined(NX) || !defined (NY) || !defined(NZ)
 #define NX 100+2
-#define NY 54+2
-#define NZ 70+2
+#define NY 100+2
+#define NZ 100+2
 #endif
 
 using Integer = final_project::Integer;
@@ -28,7 +28,7 @@ using size_type = final_project::Dworld;
 
 
 
-using maintype  = Float;
+using maintype  = Double;
 
 using BCFunction = std::function<maintype(maintype, maintype, maintype, maintype)>;
 using ICFunction = std::function<maintype(maintype, maintype, maintype)>;
@@ -39,8 +39,8 @@ Integer
 {
 
   constexpr Integer root_proc {0};
-  constexpr maintype tol {1E-4};
-  constexpr size_type nsteps {100000};
+  constexpr maintype tol {1E-10};
+  constexpr size_type nsteps {1'000'000'000};
   constexpr size_type numDim {3}, nx {NX}, ny {NY}, nz {NZ};
 
   auto mpi_world {final_project::mpi::environment(argc, argv)};
@@ -62,22 +62,23 @@ Integer
   /// TODO:
   ///
   final_project::pde::BoundaryConditions_3D<maintype> BC (true, true, true, true, true, true);
-  BCFunction Dim000 {[](maintype x, maintype y, maintype z, maintype t){ return 0; }};
-  BCFunction Dim001 {[](maintype x, maintype y, maintype z, maintype t){ return 0; }};
+  BCFunction Dim000 {[](maintype x, maintype y, maintype z, maintype t){ return y + z - 2 * y * z; }};
+  BCFunction Dim001 {[](maintype x, maintype y, maintype z, maintype t){ return 1 - y - z + 2 * y * z; }};
 
-  BCFunction Dim010 {[](maintype x, maintype y, maintype z, maintype t){ return 0; }};
-  BCFunction Dim011 {[](maintype x, maintype y, maintype z, maintype t){ return 0; }};
+  BCFunction Dim010 {[](maintype x, maintype y, maintype z, maintype t){ return x + z - 2 * x * z; }};
+  BCFunction Dim011 {[](maintype x, maintype y, maintype z, maintype t){ return 1 - x - z + 2 * x * z; }};
 
-  BCFunction Dim100 {[](maintype x, maintype y, maintype z, maintype t){ return 0; }};
-  BCFunction Dim101 {[](maintype x, maintype y, maintype z, maintype t){ return std::sin(std::numbers::pi * x) * std::sin(2 * std::numbers::pi * y); }};
+  BCFunction Dim100 {[](maintype x, maintype y, maintype z, maintype t){ return x + y - 2 * x * y; }};
+  BCFunction Dim101 {[](maintype x, maintype y, maintype z, maintype t){ return 1 - x - y + 2 * x * y; }};
 
   obj.SetHeatInitC(IC);
   obj.SetHeatBC(BC, Dim000, Dim001, Dim010, Dim011, Dim100, Dim101);
 
-  // auto iter = obj.solve_pure_mpi(tol, nsteps, root_proc);
+  auto iter = obj.solve_pure_mpi(tol, nsteps, root_proc);
   // auto iter = obj.solve_hybrid_mpi_omp(tol, nsteps, root_proc);
   // auto iter = obj.solve_hybrid2_mpi_omp(tol, nsteps, root_proc);
 
+  std::cout << iter << std::endl;
   obj.SaveToBinary("test_3d.bin");
 
   return 0;
