@@ -406,8 +406,6 @@ template <typename T>
       diff += std::pow(in(i,j,k) - out(i,j,k), 2);
     }
   }
-// 0.0001000253178
-// 0.0000998815522
 
     return diff; 
   }

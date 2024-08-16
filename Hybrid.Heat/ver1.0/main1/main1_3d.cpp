@@ -39,7 +39,7 @@ Integer
 {
 
   constexpr Integer root_proc {0};
-  constexpr maintype tol {1E-10};
+  constexpr maintype tol {1E-4};
   constexpr size_type nsteps {1'000'000'000};
   constexpr size_type numDim {3}, nx {NX}, ny {NY}, nz {NZ};
 
@@ -49,7 +49,6 @@ Integer
   ///   Complete Heat_3D<T> class
   ///
   final_project::pde::Heat_3D<maintype> obj (mpi_world, nx, ny, nz);
-  // 10 * std::abs(std::sin(x*x + y*y + z*z))
   ICFunction InitCond { [](maintype x, maintype y, maintype z) { return 0; }};
 
   /// FINISH 
@@ -74,9 +73,9 @@ Integer
   obj.SetHeatInitC(IC);
   obj.SetHeatBC(BC, Dim000, Dim001, Dim010, Dim011, Dim100, Dim101);
 
-  auto iter = obj.solve_pure_mpi(tol, nsteps, root_proc);
+  // auto iter = obj.solve_pure_mpi(tol, nsteps, root_proc);
   // auto iter = obj.solve_hybrid_mpi_omp(tol, nsteps, root_proc);
-  // auto iter = obj.solve_hybrid2_mpi_omp(tol, nsteps, root_proc);
+  auto iter = obj.solve_hybrid2_mpi_omp(tol, nsteps, root_proc);
 
   std::cout << iter << std::endl;
   obj.SaveToBinary("test_3d.bin");

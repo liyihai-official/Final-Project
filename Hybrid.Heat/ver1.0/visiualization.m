@@ -3,17 +3,29 @@ fid = fopen('build/test.bin', 'rb');
 Row = fread(fid, 1, 'uint32');
 Col = fread(fid, 1, 'uint32');
 
-[X,Y]=meshgrid(1:Col, 1:Row);
+% [X,Y]=meshgrid(1:Col, 1:Row);
 
-A = fread(fid, [Row * Col], 'float32');
+% X_norm = (X - 1) / (Row - 1);
+% Y_norm = (Y - 1) / (Col - 1);
+
+x = linspace(0,1,Row);
+y = linspace(0,1,Col);
+
+% 创建网格
+[X, Y] = meshgrid(x, y);
+
+% 计算解析解 u(x, y)
+U = X + Y - X .* Y;
+
+A = fread(fid, [Row * Col], 'double');
 A = reshape(A, [Col, Row]);
-
-A = permute(A,[1,2]);
+A = permute(A, [2,1]);
 
 figure;
 h = gcf;
 title("TEST");
-imagesc(A');
+contourf(x, y, U, 10);
+% contourf(x, y, A', 10);
 colormap(jet);
 
 colorbar;
@@ -21,8 +33,21 @@ saveas(gcf, 'main2.png')
 % caxis([-20 +20]);
 % pause(0.05);
 
+xlabel('Row-axis Label'); % 替换为你想要的 X 轴标签
+ylabel('Col-axis Label'); % 替换为你想要的 Y 轴标签
 
 
+% figure;
+% imagesc(x, y, U);  % 绘制热图，使用指定的 X 和 Y 坐标
+% colormap(jet);
+
+% colorbar;
+% xlabel('X');
+% ylabel('Y');
+% title('解析解 u(x, y) = x + 2y + xy 的二维热分布图');
+
+
+% mean(A(2:Row-2, 2:Col-2)' - U(2:Col-2, 2:Row-2).^2, 'all')
 
 
 
