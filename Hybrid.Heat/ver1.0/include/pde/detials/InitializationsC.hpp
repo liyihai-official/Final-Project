@@ -167,6 +167,8 @@ obj.out(i,j,k) = initFunc(x,y,z);
         }
       }
     }
+
+    isSetUpInit = true;
   }
 
 } // namespace InitialConditions

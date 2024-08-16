@@ -115,6 +115,7 @@ template <typename T>
 
     SetBCinDim00(obj, 0);
     SetBCinDim01(obj, 0);
+    
     SetBCinDim10(obj, 0);
     SetBCinDim11(obj, 0);
     
@@ -144,6 +145,7 @@ FINAL_PROJECT_MPI_ASSERT_GLOBAL(isSetUpBC); // The BCs have to be setup.
 
     SetBCinDim00(obj, time);
     SetBCinDim01(obj, time);
+
     SetBCinDim10(obj, time);
     SetBCinDim11(obj, time);
   }
@@ -242,11 +244,8 @@ template <typename T>
     Heat_2D<T> & obj,
     const T & time)
   {
-    auto shape_cpy  { obj.in.topology().__local_shape};
-    auto glob_cpy   { obj.in.topology().__global_shape};
-
+    auto shape_cpy  { obj.in.topology().__local_shape };
     auto starts_cpy { obj.in.topology().starts };
-    // auto ends_cpy {obj.in.topology().ends};
 
     T x {0}, y {0};
 

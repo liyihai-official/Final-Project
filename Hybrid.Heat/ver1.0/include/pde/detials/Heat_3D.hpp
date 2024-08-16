@@ -120,34 +120,27 @@ template <typename T>
   inline void 
   Heat_3D<T>::SaveToBinary(const String filename)
   {
-      if (in.topology().rank == 0)
-        gather.saveToBinary(filename);
+    if (in.topology().rank == 0)
+      gather.saveToBinary(filename);
   }
 
 
 
-/// @brief 
-/// @tparam T 
-/// @param BC 
-/// @param FuncDim000 
-/// @param FuncDim001 
-/// @param FuncDim010 
-/// @param FuncDim011 
-/// @param FuncDim100 
-/// @param FuncDim101 
+
 template <typename T>
   inline void 
   Heat_3D<T>::SetHeatBC(
     BoundaryConditions_3D<T> & BC, 
-    BCFunction FuncDim000, BCFunction FuncDim001,
-    BCFunction FuncDim010, BCFunction FuncDim011,
-    BCFunction FuncDim100, BCFunction FuncDim101)
+    BCFunction FuncDim00, BCFunction FuncDim01,
+    BCFunction FuncDim10, BCFunction FuncDim11,
+    BCFunction FuncDim20, BCFunction FuncDim21)
   {
     BC_3D = std::make_unique<BoundaryConditions_3D<T>>(BC);
+
     BC_3D->SetBC(*this, 
-      FuncDim000, FuncDim001,
-      FuncDim000, FuncDim011,
-      FuncDim100, FuncDim101);
+      FuncDim00, FuncDim01,
+      FuncDim10, FuncDim11,
+      FuncDim20, FuncDim21);
   }
 
 
@@ -176,19 +169,46 @@ template <typename T>
   Heat_3D<T>::exchange_ping_pong_SR()
   {
 
+    Integer flag {0}; size_type dim {0};
+    auto n_size {in.topology().__local_shape[dim]};
+    MPI_Sendrecv( &in(1       , 1, 1), 1, in.topology().halos[dim], in.topology().nbr_src[dim],   flag,
+                  &in(n_size-1, 1, 1), 1, in.topology().halos[dim], in.topology().nbr_dest[dim],  flag,
+                  in.topology().comm_cart, MPI_STATUS_IGNORE);
+
+    MPI_Sendrecv( &in(n_size-2, 1, 1), 1, in.topology().halos[dim], in.topology().nbr_dest[dim],  flag,
+                  &in(0       , 1, 1), 1, in.topology().halos[dim], in.topology().nbr_src[dim],   flag,
+                  in.topology().comm_cart, MPI_STATUS_IGNORE);
+
+    flag = 1; dim = 1;
+    n_size = in.topology().__local_shape[dim];
+    MPI_Sendrecv( &in(1,        1, 1), 1, in.topology().halos[dim], in.topology().nbr_src[dim],   flag,
+                  &in(1, n_size-1, 1), 1, in.topology().halos[dim], in.topology().nbr_dest[dim],  flag,
+                  in.topology().comm_cart, MPI_STATUS_IGNORE);
+
+    MPI_Sendrecv( &in(1, n_size-2, 1), 1, in.topology().halos[dim], in.topology().nbr_dest[dim],  flag,
+                  &in(1, 0,        1), 1, in.topology().halos[dim], in.topology().nbr_src[dim],   flag,
+                  in.topology().comm_cart, MPI_STATUS_IGNORE);
+
+    flag = 2; dim = 2;
+    n_size = in.topology().__local_shape[dim];
+    MPI_Sendrecv( &in(1,        1, 1), 1, in.topology().halos[dim], in.topology().nbr_src[dim],   flag,
+                  &in(1, 1, n_size-1), 1, in.topology().halos[dim], in.topology().nbr_dest[dim],  flag,
+                  in.topology().comm_cart, MPI_STATUS_IGNORE);
+
+    MPI_Sendrecv( &in(1, 1, n_size-2), 1, in.topology().halos[dim], in.topology().nbr_dest[dim],  flag,
+                  &in(1, 1,        0), 1, in.topology().halos[dim], in.topology().nbr_src[dim],   flag,
+                  in.topology().comm_cart, MPI_STATUS_IGNORE);
   }
-
-
-
-
-
-
+  
 /// @brief 
 /// @tparam T 
 template <typename T>
   inline void 
   Heat_3D<T>::exchange_ping_pong_I()
   {
+
+
+
 
   }
 
@@ -200,7 +220,31 @@ template <typename T>
   inline T 
   Heat_3D<T>::update_ping_pong(const T time)
   {
-    return 0;
+    T diff {0.0};
+    size_type i {1}, j {1}, k {1};
+    for ( i = 1; i < in.topology().__local_shape[0] - 1; ++i )
+    {
+      for ( j = 1; j < in.topology().__local_shape[1] - 1; ++j )
+      {
+        for ( k = 1; k < in.topology().__local_shape[2] - 1; ++k )
+        {
+          T current { in(i,j,k) };
+          out(i,j,k) = 
+            this->weights[0] * ( in(i-1, j, k) + in(i+1, j, k) )
+          + this->weights[1] * ( in(i, j-1, k) + in(i, j+1, k) )
+          + this->weights[2] * ( in(i, j, k-1) + in(i, j, k+1) )
+          + current * (
+              this->diags[0] * this->weights[0]
+            + this->diags[1] * this->weights[1]
+            + this->diags[2] * this->weights[2]
+          );
+
+          diff += std::pow(current - out(i,j,k), 2);
+        }
+      }
+    }
+
+    return diff;
   }
 
 /// @brief 
@@ -247,10 +291,10 @@ template <typename T>
     T ldiff {0.0}, gdiff {0.0}, time {0.0}; MPI_Datatype DiffType {mpi::get_mpi_type<T>()};
     Integer iter {1};
 
-// #ifndef DEBUG
-// FINAL_PROJECT_MPI_ASSERT((BC_3D != nullptr && IC_3D != nullptr));
-// FINAL_PROJECT_ASSERT(BC_3D->isSetUpBC && IC_3D->isSetUpInit);
-// #endif
+#ifndef DEBUG
+FINAL_PROJECT_MPI_ASSERT((BC_3D != nullptr && IC_3D != nullptr));
+FINAL_PROJECT_ASSERT(BC_3D->isSetUpBC && IC_3D->isSetUpInit);
+#endif
 
 #ifndef NDEBUG
 {
@@ -271,7 +315,7 @@ template <typename T>
     std::cout << "\tCoefficient: "      << this->coff       << "\n"
               << "\tTime resolution: "  << this->dt         << "\n"
               << "\tWeights: "          << this->weights[0] << ", " 
-                                        << this->weights[1] << "\n"
+                                        << this->weights[1] << ", "
                                         << this->weights[2] << "\n"
               << "\tdxs: "              << this->dxs[0]     << ", " 
                                         << this->dxs[1]     << ", "
@@ -285,10 +329,11 @@ template <typename T>
     for (iter = 1; iter < nsteps; ++iter)
     {
       time = iter*this->dt;
-      // exchange_ping_pong_SR();
-      // ldiff = update_ping_pong(time);
-      // BC_3D->UpdateBC(*this, time);
-      // MPI_Allreduce(&ldiff, &gdiff, 1, DiffType, MPI_SUM, in.topology().comm_cart);
+
+      exchange_ping_pong_SR();
+      ldiff = update_ping_pong(time);
+      BC_3D->UpdateBC(*this, time);
+      MPI_Allreduce(&ldiff, &gdiff, 1, DiffType, MPI_SUM, in.topology().comm_cart);
 
 #ifndef NDEBUG
 mpi::Gather(gather, in, root);
@@ -307,7 +352,6 @@ if (in.topology().rank == root)
       }
     }
     Double t1 { MPI_Wtime() - t0 };
-
 
     if (converge)
     {
