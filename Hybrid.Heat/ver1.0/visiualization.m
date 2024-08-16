@@ -17,7 +17,7 @@ imagesc(A');
 colormap(jet);
 
 colorbar;
-saveas(gcf, 'main2.png')
+% saveas(gcf, 'main2.png')
 caxis([-20 +20]);
 % pause(0.05);
 

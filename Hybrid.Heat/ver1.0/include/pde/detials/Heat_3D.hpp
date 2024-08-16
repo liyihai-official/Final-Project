@@ -46,10 +46,10 @@ template <typename T>
     void exchange_ping_pong_SR()  override;
     void exchange_ping_pong_I()   override;
 
-    T update_ping_pong(const T)       override;
-    T update_ping_pong_omp(const T)   override;
+    T update_ping_pong()       override;
+    T update_ping_pong_omp()   override;
     T update_ping_pong_bulk()         override;
-    T update_ping_pong_edge(const T)  override;
+    T update_ping_pong_edge()         override;
     void switch_in_out();
 
     private: // RAII design
@@ -218,7 +218,7 @@ template <typename T>
 /// @return 
 template <typename T>
   inline T 
-  Heat_3D<T>::update_ping_pong(const T time)
+  Heat_3D<T>::update_ping_pong()
   {
     T diff {0.0};
     size_type i {1}, j {1}, k {1};
@@ -253,9 +253,34 @@ template <typename T>
 /// @return 
 template <typename T>
   inline T 
-  Heat_3D<T>::update_ping_pong_omp(const T time)
+  Heat_3D<T>::update_ping_pong_omp()
   {
-    return 0;
+    T diff {0.0};
+    
+    #pragma omp for collapse(3)
+    for ( size_type i = 1; i < in.topology().__local_shape[0] - 1; ++i )
+    {
+      for ( size_type j = 1; j < in.topology().__local_shape[1] - 1; ++j )
+      {
+        for ( size_type k = 1; k < in.topology().__local_shape[2] - 1; ++k )
+        {
+          T current { in(i,j,k) };
+          out(i,j,k) = 
+            this->weights[0] * ( in(i-1, j, k) + in(i+1, j, k) )
+          + this->weights[1] * ( in(i, j-1, k) + in(i, j+1, k) )
+          + this->weights[2] * ( in(i, j, k-1) + in(i, j, k+1) )
+          + current * (
+              this->diags[0] * this->weights[0]
+            + this->diags[1] * this->weights[1]
+            + this->diags[2] * this->weights[2]
+          );
+
+          diff += std::pow(current - out(i,j,k), 2);
+        }
+      }
+    }
+
+    return diff;
   }
 
 
@@ -267,6 +292,28 @@ template <typename T>
   Heat_3D<T>::update_ping_pong_bulk( )
   {
     T diff {0.0};
+    #pragma omp for collapse(3)
+    for ( size_type i = 2; i < in.topology().__local_shape[0] - 2; ++i )
+    {
+      for ( size_type j = 2; j < in.topology().__local_shape[1] - 2; ++j )
+      {
+        for ( size_type k = 2; k < in.topology().__local_shape[2] - 2; ++k )
+        {
+          T current { in(i,j,k) };
+          out(i,j,k) = 
+            this->weights[0] * ( in(i-1, j, k) + in(i+1, j, k) )
+          + this->weights[1] * ( in(i, j-1, k) + in(i, j+1, k) )
+          + this->weights[2] * ( in(i, j, k-1) + in(i, j, k+1) )
+          + current * (
+              this->diags[0] * this->weights[0]
+            + this->diags[1] * this->weights[1]
+            + this->diags[2] * this->weights[2]
+          );
+
+          diff += std::pow(current - out(i,j,k), 2);
+        }
+      }
+    }
     return diff;
   }
 
@@ -276,10 +323,93 @@ template <typename T>
 /// @return 
 template <typename T>
   inline T 
-  Heat_3D<T>::update_ping_pong_edge(const T time)
+  Heat_3D<T>::update_ping_pong_edge()
   {
+    auto compute_next = [&](size_type i, size_type j, size_type k)
+      {
+        T current { in(i,j,k) };
+        return out(i,j,k) = 
+            this->weights[0] * ( in(i-1, j, k) + in(i+1, j, k) )
+          + this->weights[1] * ( in(i, j-1, k) + in(i, j+1, k) )
+          + this->weights[2] * ( in(i, j, k-1) + in(i, j, k+1) )
+          + current * (
+              this->diags[0] * this->weights[0]
+            + this->diags[1] * this->weights[1]
+            + this->diags[2] * this->weights[2]
+          );
+      };
 
-    return 0; 
+    T diff {0.0};
+  
+  #pragma omp for collapse(2)
+  for (size_type j = 1; j < in.topology().__local_shape[1] - 1; ++j)
+  {
+    for (size_type k = 1; k < in.topology().__local_shape[2] - 1; ++k)
+    {
+      size_type i = 1;
+      out(i,j,k) = compute_next(i,j,k);
+      diff += std::pow(in(i,j,k) - out(i,j,k), 2);
+    }
+  }
+
+  #pragma omp for collapse(2)
+  for (size_type j = 1; j < in.topology().__local_shape[1] - 1; ++j)
+  {
+    for (size_type k = 1; k < in.topology().__local_shape[2] - 1; ++k)
+    {
+      size_type i = in.topology().__local_shape[0]-2;
+      out(i,j,k) = compute_next(i,j,k);
+      diff += std::pow(in(i,j,k) - out(i,j,k), 2);
+    }
+  }
+
+  #pragma omp for collapse(2)
+  for (size_type i = 2; i < in.topology().__local_shape[0] - 2; ++i)
+  {
+    for (size_type j = 1; j < in.topology().__local_shape[1] - 1; ++j)
+    {
+      size_type k = 1;
+      out(i,j,k) = compute_next(i,j,k);
+      diff += std::pow(in(i,j,k) - out(i,j,k), 2);
+    }
+  }
+
+  #pragma omp for collapse(2)
+  for (size_type i = 2; i < in.topology().__local_shape[0] - 2; ++i)
+  {
+    for (size_type j = 1; j < in.topology().__local_shape[1] - 1; ++j)
+    {
+      size_type k = in.topology().__local_shape[2]-2;
+      out(i,j,k) = compute_next(i,j,k);
+      diff += std::pow(in(i,j,k) - out(i,j,k), 2);
+    }
+  }
+
+  #pragma omp for collapse(2)
+  for (size_type i = 2; i < in.topology().__local_shape[0]-2; ++i)
+  {
+    for (size_type k = 2; k < in.topology().__local_shape[2]-2; ++k)
+    {
+      size_type j = 1; 
+      out(i,j,k) = compute_next(i,j,k);
+      diff += std::pow(in(i,j,k) - out(i,j,k), 2);
+    }
+  }
+
+  #pragma omp for collapse(2)
+  for (size_type i = 2; i < in.topology().__local_shape[0]-2; ++i)
+  {
+    for (size_type k = 2; k < in.topology().__local_shape[2]-2; ++k)
+    {
+      size_type j = in.topology().__local_shape[1]-2; 
+      out(i,j,k) = compute_next(i,j,k);
+      diff += std::pow(in(i,j,k) - out(i,j,k), 2);
+    }
+  }
+// 0.0001000253178
+// 0.0000998815522
+
+    return diff; 
   }
 
 
@@ -331,7 +461,7 @@ FINAL_PROJECT_ASSERT(BC_3D->isSetUpBC && IC_3D->isSetUpInit);
       time = iter*this->dt;
 
       exchange_ping_pong_SR();
-      ldiff = update_ping_pong(time);
+      ldiff = update_ping_pong();
       BC_3D->UpdateBC(*this, time);
       MPI_Allreduce(&ldiff, &gdiff, 1, DiffType, MPI_SUM, in.topology().comm_cart);
 
@@ -365,12 +495,9 @@ if (in.topology().rank == root)
       if (in.topology().rank == root) std::cout << "Fail to converge" << std::endl;
     }
 
-
-
 #ifndef NDEBUG // Gather 
 mpi::Gather(gather, in, root);
 #endif
-
 
     return iter;
   }
@@ -379,8 +506,306 @@ mpi::Gather(gather, in, root);
 
 
 
+template <typename T>
+  Integer 
+  Heat_3D<T>::solve_hybrid_mpi_omp(const T tol, const Integer nsteps, const Integer root)
+  {
+    T ldiff {0.0}, gdiff {0.0}; MPI_Datatype DiffType { mpi::get_mpi_type<T>() };
+    Integer num_threads {1} /* omp threads */, iter {1};
+
+#ifndef DEBUG
+FINAL_PROJECT_MPI_ASSERT((BC_3D != nullptr && IC_3D != nullptr));
+FINAL_PROJECT_ASSERT(BC_3D->isSetUpBC && IC_3D->isSetUpInit);
+#endif
 
 
+    #pragma omp parallel num_threads(2)
+    {
+      T omp_ldiff {0.0}, time {0.0};
+      Integer omp_iter = 1;
+
+#ifdef _OPENMP
+  #pragma omp master
+  num_threads = omp_get_num_threads();
+#endif // end _OPENMP
+
+#ifndef NDEBUG
+{
+  #pragma omp single
+  {
+    if (root == in.topology().rank)
+    {
+      std::cout << 3 << " Dimension Simulation Parameters: " << std::endl;
+      std::cout << "\tDepth: "        << in.topology().__local_shape[0]-2 
+                << "\n\tRow: "        << in.topology().__local_shape[1]-2 
+                << "\n\tColumn: "     << in.topology().__local_shape[2]-2     << std::endl;
+      std::cout << "\tTime steps: " << nsteps << std::endl;
+      std::cout << "\tTolerance: "  << tol    << std::endl;
+
+      std::cout << "MPI Parameters: "             << std::endl;
+      std::cout << "\tNumber of MPI Processes: "  << in.topology().num_procs  << std::endl;
+      std::cout << "\tRoot Process: "             << root                     << std::endl;
+      std::cout << "\tNumber of Threads: "        << num_threads              << std::endl;
+
+      std::cout << "Heat Parameters: "    << std::endl;
+      std::cout << "\tCoefficient: "      << this->coff       << "\n"
+                << "\tTime resolution: "  << this->dt         << "\n"
+                << "\tWeights: "          << this->weights[0] << ", " 
+                                          << this->weights[1] << ", "
+                                          << this->weights[2] << "\n"
+                << "\tdxs: "              << this->dxs[0]     << ", " 
+                                          << this->dxs[1]     << ", "
+                                          << this->dxs[2]     << std::endl;
+    }
+  }
+} 
+#endif // end NDEBUG
+
+
+      Double t0 { MPI_Wtime() };
+      for (omp_iter = 1; omp_iter <= nsteps; ++omp_iter)
+      {
+        #pragma omp single
+        exchange_ping_pong_SR();
+        #pragma omp barrier
+
+        ldiff = 0;
+        time = omp_iter * this->dt;
+
+        omp_ldiff = update_ping_pong_omp();
+
+        #pragma omp critical 
+        ldiff += omp_ldiff;
+        #pragma omp barrier
+
+        #pragma omp single
+        {
+          BC_3D->UpdateBC(*this, time);
+          MPI_Allreduce(&ldiff, &gdiff, 1, DiffType, MPI_SUM, in.topology().comm_cart);
+
+#ifndef NDEBUG
+mpi::Gather(gather, in, root);
+if (in.topology().rank == root) 
+{
+  std::cout << std::fixed << std::setprecision(13) << std::setw(15) << gdiff 
+            << std::endl;
+}
+#endif 
+
+          switch_in_out();
+
+          if (gdiff <= tol) { converge = true; }
+        } // omp single 
+      
+        if (converge) break;
+      }
+      Double t1 { MPI_Wtime() - t0 };
+
+#pragma omp master
+{
+    if (converge)
+    {
+      iter = omp_iter;
+      Double total {0.0};
+      mpi::Gather(gather, in, root);
+      MPI_Reduce(&t1, &total, 1, MPI_DOUBLE, MPI_MAX, root, in.topology().comm_cart);
+      if (root == in.topology().rank)
+          std::cout << "Total Converge time: " << total << "\n" 
+                    << "Iterations: " << iter << std::endl;
+    } else {
+      if (in.topology().rank == root) std::cout << "Fail to converge" << std::endl;
+    }
+
+#ifndef NDEBUG // Gather 
+mpi::Gather(gather, in, root);
+#endif
+}
+
+    } // end omp parallel
+
+    return iter;
+  }
+
+
+
+
+template <typename T>
+  Integer
+  Heat_3D<T>::solve_hybrid2_mpi_omp(const T tol, const Integer nsteps, const Integer root)
+  {
+    T ldiff {0.0}, gdiff {0.0}; MPI_Datatype DiffType { mpi::get_mpi_type<T>() };
+    Integer num_threads {1} /* omp threads */, iter {1};
+
+    MPI_Request reqs[12];
+
+#ifndef DEBUG
+FINAL_PROJECT_MPI_ASSERT((BC_3D != nullptr && IC_3D != nullptr));
+FINAL_PROJECT_ASSERT(BC_3D->isSetUpBC && IC_3D->isSetUpInit);
+#endif
+
+    #pragma omp parallel num_threads(2)
+    {
+      T omp_ldiff_bulk {0.0}, omp_ldiff_edge {0.0}, time {0.0};
+      Integer omp_iter = 1;
+
+#ifdef _OPENMP
+  #pragma omp master
+  num_threads = omp_get_num_threads();
+#endif // end _OPENMP
+
+#ifndef NDEBUG
+{
+  #pragma omp single
+  {
+    if (root == in.topology().rank)
+    {
+      std::cout << 3 << " Dimension Simulation Parameters: " << std::endl;
+      std::cout << "\tDepth: "        << in.topology().__local_shape[0]-2 
+                << "\n\tRow: "        << in.topology().__local_shape[1]-2 
+                << "\n\tColumn: "     << in.topology().__local_shape[2]-2     << std::endl;
+      std::cout << "\tTime steps: " << nsteps << std::endl;
+      std::cout << "\tTolerance: "  << tol    << std::endl;
+
+      std::cout << "MPI Parameters: "             << std::endl;
+      std::cout << "\tNumber of MPI Processes: "  << in.topology().num_procs  << std::endl;
+      std::cout << "\tRoot Process: "             << root                     << std::endl;
+      std::cout << "\tNumber of Threads: "        << num_threads              << std::endl;
+
+      std::cout << "Heat Parameters: "    << std::endl;
+      std::cout << "\tCoefficient: "      << this->coff       << "\n"
+                << "\tTime resolution: "  << this->dt         << "\n"
+                << "\tWeights: "          << this->weights[0] << ", " 
+                                          << this->weights[1] << ", "
+                                          << this->weights[2] << "\n"
+                << "\tdxs: "              << this->dxs[0]     << ", " 
+                                          << this->dxs[1]     << ", "
+                                          << this->dxs[2]     << std::endl;
+    }
+  }
+} 
+#endif // end NDEBUG
+
+
+      Double t0 { MPI_Wtime() };
+      for (omp_iter = 1; omp_iter <= nsteps; ++omp_iter)
+      {
+        ldiff = 0;
+        time = omp_iter * this->dt;
+
+// ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#pragma omp single
+{
+  Integer req_cnt {0}, flag {0}; size_type dim {0};
+  auto n_size {in.topology().__local_shape[dim]};
+  // Send and receive for the first dimension
+  MPI_Irecv(&in(n_size-1, 1, 1), 1, in.topology().halos[dim], in.topology().nbr_dest[dim], flag, 
+              in.topology().comm_cart, &reqs[req_cnt++]);
+  MPI_Isend(&in(1       , 1, 1), 1, in.topology().halos[dim], in.topology().nbr_src[dim],  flag, 
+              in.topology().comm_cart, &reqs[req_cnt++]);
+
+  MPI_Irecv(&in(0       , 1, 1), 1, in.topology().halos[dim], in.topology().nbr_src[dim],  flag, 
+              in.topology().comm_cart, &reqs[req_cnt++]);
+  MPI_Isend(&in(n_size-2, 1, 1), 1, in.topology().halos[dim], in.topology().nbr_dest[dim], flag, 
+              in.topology().comm_cart, &reqs[req_cnt++]);
+
+
+  flag = 1; dim = 1;
+  n_size = in.topology().__local_shape[dim];
+  // Send and receive for the second dimension
+  MPI_Irecv(&in(1, n_size-1, 1), 1, in.topology().halos[dim], in.topology().nbr_dest[dim], flag, 
+              in.topology().comm_cart, &reqs[req_cnt++]);
+  MPI_Isend(&in(1,        1, 1), 1, in.topology().halos[dim], in.topology().nbr_src[dim],  flag, 
+              in.topology().comm_cart, &reqs[req_cnt++]);
+
+  MPI_Irecv(&in(1,        0, 1), 1, in.topology().halos[dim], in.topology().nbr_src[dim],  flag, 
+              in.topology().comm_cart, &reqs[req_cnt++]);
+  MPI_Isend(&in(1, n_size-2, 1), 1, in.topology().halos[dim], in.topology().nbr_dest[dim], flag, 
+              in.topology().comm_cart, &reqs[req_cnt++]);
+
+  flag = 2; dim = 2;
+  n_size = in.topology().__local_shape[dim];
+  // Send and receive for the second dimension
+  MPI_Irecv(&in(1, 1, n_size-1), 1, in.topology().halos[dim], in.topology().nbr_dest[dim], flag, 
+              in.topology().comm_cart, &reqs[req_cnt++]);
+  MPI_Isend(&in(1,        1, 1), 1, in.topology().halos[dim], in.topology().nbr_src[dim],  flag, 
+              in.topology().comm_cart, &reqs[req_cnt++]);
+
+  MPI_Irecv(&in(1,        1, 0), 1, in.topology().halos[dim], in.topology().nbr_src[dim],  flag, 
+              in.topology().comm_cart, &reqs[req_cnt++]);
+  MPI_Isend(&in(1, 1, n_size-2), 1, in.topology().halos[dim], in.topology().nbr_dest[dim], flag, 
+              in.topology().comm_cart, &reqs[req_cnt++]);
+
+} // omp single
+
+omp_ldiff_bulk = update_ping_pong_bulk();
+
+#pragma omp single
+MPI_Waitall(12, reqs, MPI_STATUS_IGNORE); 
+
+// ////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma omp barrier
+
+        omp_ldiff_edge = update_ping_pong_edge();
+
+        #pragma omp critical
+        {
+          // std::cout << std::fixed << std::setprecision(3) << std::setw(5) << omp_ldiff_edge << "\t" << omp_get_thread_num() << std::endl; 
+          ldiff += (omp_ldiff_bulk + omp_ldiff_edge);
+        }
+        #pragma omp barrier
+
+
+
+        #pragma omp single
+        {
+          MPI_Allreduce(&ldiff, &gdiff, 1, DiffType, MPI_SUM, in.topology().comm_cart);
+
+#ifndef NDEBUG
+mpi::Gather(gather, in, root);
+if (in.topology().rank == root) 
+{
+  std::cout << std::fixed << std::setprecision(13) << std::setw(15) << gdiff 
+            << std::endl;
+}
+#endif
+          BC_3D->UpdateBC(*this, time);
+          switch_in_out();
+
+          if (gdiff  <= tol) { converge = true; }
+        } // end single
+
+        if ( converge ) { break; }
+
+      }
+      Double t1 { MPI_Wtime() - t0 };
+
+
+#pragma omp master
+{
+    if (converge)
+    {
+      iter = omp_iter;
+      Double total {0.0};
+      mpi::Gather(gather, in, root);
+      MPI_Reduce(&t1, &total, 1, MPI_DOUBLE, MPI_MAX, root, in.topology().comm_cart);
+      if (root == in.topology().rank)
+          std::cout << "Total Converge time: " << total << "\n" 
+                    << "Iterations: " << iter << std::endl;
+    } else {
+      if (in.topology().rank == root) std::cout << "Fail to converge" << std::endl;
+    }
+
+#ifndef NDEBUG // Gather 
+mpi::Gather(gather, in, root);
+#endif
+}
+
+
+    } // omp parallel
+
+    return iter;
+  }
 
 
 

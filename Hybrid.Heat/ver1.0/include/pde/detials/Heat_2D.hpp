@@ -41,10 +41,10 @@ template <typename T>
     void exchange_ping_pong_SR()      override;
     void exchange_ping_pong_I()       override;
 
-    T update_ping_pong(const T)       override;
-    T update_ping_pong_omp(const T)   override;
+    T update_ping_pong()              override;
+    T update_ping_pong_omp()          override;
     T update_ping_pong_bulk()         override;
-    T update_ping_pong_edge(const T)  override;
+    T update_ping_pong_edge()         override;
     void switch_in_out();
 
     private:
@@ -158,7 +158,7 @@ template <typename T>
 /// @return Return the difference of each iteration.
 template <typename T>
   inline T 
-  Heat_2D<T>::update_ping_pong(const T time)
+  Heat_2D<T>::update_ping_pong()
   {
     T diff {0.0};
     size_type i {1}, j {1};
@@ -190,7 +190,7 @@ template <typename T>
 /// @return Return the difference of each iteration.
 template <typename T>
   inline T 
-  Heat_2D<T>::update_ping_pong_omp(const T time)
+  Heat_2D<T>::update_ping_pong_omp()
   {
     T diff {0.0};
 
@@ -252,131 +252,148 @@ template <typename T>
 /// @return Return the difference
 template <typename T>
   inline T
-  Heat_2D<T>::update_ping_pong_edge(const T time)
+  Heat_2D<T>::update_ping_pong_edge()
   { 
+    auto compute_next = [&](size_type i, size_type j)
+    {
+      T current {in(i,j)};
+      return out(i,j) =
+          this->weights[0] * (in(i-1,j) + in(i+1,j))
+        + this->weights[1] * (in(i,j-1) + in(i,j+1))
+        + current * (
+            this->diags[0]*this->weights[0] 
+          + this->diags[1]*this->weights[1]
+          );
+    };
+
     T diff {0.0};
-    // auto local_shape {in.topology().__local_shape};
-    // size_type i, j;
-    #pragma omp single
-    {
-      size_type i = 1; size_type j = 1;
-      T current {in(i,j)};
-      out(i,j) =
-          this->weights[0] * (in(i-1,j) + in(i+1,j))
-        + this->weights[1] * (in(i,j-1) + in(i,j+1))
-        + current * (
-            this->diags[0]*this->weights[0] 
-          + this->diags[1]*this->weights[1]
-          );
-      diff += std::pow(current - out(i,j), 2); 
-    }
 
-    #pragma omp single
-    {
-      size_type i = 1; size_type j = in.topology().__local_shape[1] - 2;
-      T current {in(i,j)};
-      out(i,j) =
-          this->weights[0] * (in(i-1,j) + in(i+1,j))
-        + this->weights[1] * (in(i,j-1) + in(i,j+1))
-        + current * (
-            this->diags[0]*this->weights[0] 
-          + this->diags[1]*this->weights[1]
-          );
-      diff += std::pow(current - out(i,j), 2); 
-    }
-
-    #pragma omp single
-    {
-    size_type i = in.topology().__local_shape[0] - 2; size_type j = 1;
-      T current {in(i,j)};
-      out(i,j) =
-          this->weights[0] * (in(i-1,j) + in(i+1,j))
-        + this->weights[1] * (in(i,j-1) + in(i,j+1))
-        + current * (
-            this->diags[0]*this->weights[0] 
-          + this->diags[1]*this->weights[1]
-          );
-      diff += std::pow(current - out(i,j), 2); 
-    }
-
-    #pragma omp single
-    {
-      size_type i = in.topology().__local_shape[0] - 2; size_type j = in.topology().__local_shape[1] - 2;
-      T current {in(i,j)};
-      out(i,j) =
-          this->weights[0] * (in(i-1,j) + in(i+1,j))
-        + this->weights[1] * (in(i,j-1) + in(i,j+1))
-        + current * (
-            this->diags[0]*this->weights[0] 
-          + this->diags[1]*this->weights[1]
-          );
-      diff += std::pow(current - out(i,j), 2); 
-    }
-
-
-
-    
     #pragma omp for
-    for (size_type i = 2; i <in.topology().__local_shape[0]-2; ++i)
-    {
-      size_type j = 1;
-      T current {in(i,j)};
-      out(i,j) =
-          this->weights[0] * (in(i-1,j) + in(i+1,j))
-        + this->weights[1] * (in(i,j-1) + in(i,j+1))
-        + current * (
-            this->diags[0]*this->weights[0] 
-          + this->diags[1]*this->weights[1]
-          );
-      diff += std::pow(current - out(i,j), 2); 
-    }
-
-    
-    #pragma omp for
-    for (size_type i = 2; i < in.topology().__local_shape[0]-2; ++i)
-    {
-      size_type j = in.topology().__local_shape[1] - 2;
-      T current {in(i,j)};
-      out(i,j) =
-          this->weights[0] * (in(i-1,j) + in(i+1,j))
-        + this->weights[1] * (in(i,j-1) + in(i,j+1))
-        + current * (
-            this->diags[0]*this->weights[0] 
-          + this->diags[1]*this->weights[1]
-          );
-      diff += std::pow(current - out(i,j), 2);
-    }
-
-    
-    #pragma omp for
-    for (size_type j = 2; j < in.topology().__local_shape[1]-2; ++j)
+    for (size_type j = 1; j < in.topology().__local_shape[1]-2; ++j)
     {
       size_type i = 1;
-      T current {in(i,j)};
-      out(i,j) =
-          this->weights[0] * (in(i-1,j) + in(i+1,j))
-        + this->weights[1] * (in(i,j-1) + in(i,j+1))
-        + current * (
-            this->diags[0]*this->weights[0] 
-          + this->diags[1]*this->weights[1]
-          );
-      diff += std::pow(current - out(i,j), 2);
+      out(i,j) = compute_next(i,j);
+      diff += std::pow(in(i,j) - out(i,j), 2); 
     }
 
-    #pragma omp for
-    for (size_type j = 2; j < in.topology().__local_shape[1]-2; ++j)
+    #pragma omp for 
+    for (size_type j = 2; j < in.topology().__local_shape[1]-1; ++j)
     {
       size_type i = in.topology().__local_shape[0] - 2;
-      T current {in(i,j)};
-      out(i,j) =
-          this->weights[0] * (in(i-1,j) + in(i+1,j))
-        + this->weights[1] * (in(i,j-1) + in(i,j+1))
-        + current * (
-            this->diags[0]*this->weights[0] 
-          + this->diags[1]*this->weights[1]
-          );
-      diff += std::pow(current - out(i,j), 2);
+      out(i,j) = compute_next(i,j);
+      diff += std::pow(in(i,j) - out(i,j), 2); 
     }
+
+
+    #pragma omp for 
+    for (size_type i = 1; i < in.topology().__local_shape[0]-2; ++i)
+    {
+      size_type j = in.topology().__local_shape[1] - 2;
+      out(i,j) = compute_next(i,j);
+      diff += std::pow(in(i,j) - out(i,j), 2); 
+    }
+
+
+    #pragma omp for 
+    for (size_type i = 2; i < in.topology().__local_shape[0]-1; ++i)
+    {
+      size_type j = 1;
+      out(i,j) = compute_next(i,j);
+      diff += std::pow(in(i,j) - out(i,j), 2); 
+    }
+
+    // #pragma omp single
+    // {
+    //   size_type i = 1; size_type j = 1;
+    //   out(i,j) = compute_next(i,j);
+    //   diff += std::pow(in(i,j) - out(i,j), 2); 
+    // }
+
+    // #pragma omp single
+    // {
+    //   size_type i = 1; size_type j = in.topology().__local_shape[1] - 2;
+    //   out(i,j) = compute_next(i,j);
+    //   diff += std::pow(in(i,j) - out(i,j), 2); 
+    // }
+
+    // #pragma omp single
+    // {
+    //   size_type i = in.topology().__local_shape[0] - 2; size_type j = 1;
+    //   out(i,j) = compute_next(i,j);
+    //   diff += std::pow(in(i,j) - out(i,j), 2); 
+    // }
+
+    // #pragma omp single
+    // {
+    //   size_type i = in.topology().__local_shape[0] - 2; size_type j = in.topology().__local_shape[1] - 2;
+    //   out(i,j) = compute_next(i,j);
+    //   diff += std::pow(in(i,j) - out(i,j), 2); 
+    // }
+
+
+
+    
+    // #pragma omp for
+    // for (size_type i = 2; i <in.topology().__local_shape[0]-2; ++i)
+    // {
+    //   size_type j = 1;
+    //   T current {in(i,j)};
+    //   out(i,j) =
+    //       this->weights[0] * (in(i-1,j) + in(i+1,j))
+    //     + this->weights[1] * (in(i,j-1) + in(i,j+1))
+    //     + current * (
+    //         this->diags[0]*this->weights[0] 
+    //       + this->diags[1]*this->weights[1]
+    //       );
+    //   diff += std::pow(current - out(i,j), 2); 
+    // }
+
+    
+    // #pragma omp for
+    // for (size_type i = 2; i < in.topology().__local_shape[0]-2; ++i)
+    // {
+    //   size_type j = in.topology().__local_shape[1] - 2;
+    //   T current {in(i,j)};
+    //   out(i,j) =
+    //       this->weights[0] * (in(i-1,j) + in(i+1,j))
+    //     + this->weights[1] * (in(i,j-1) + in(i,j+1))
+    //     + current * (
+    //         this->diags[0]*this->weights[0] 
+    //       + this->diags[1]*this->weights[1]
+    //       );
+    //   diff += std::pow(current - out(i,j), 2);
+    // }
+
+    
+    // #pragma omp for
+    // for (size_type j = 2; j < in.topology().__local_shape[1]-2; ++j)
+    // {
+    //   size_type i = 1;
+    //   T current {in(i,j)};
+    //   out(i,j) =
+    //       this->weights[0] * (in(i-1,j) + in(i+1,j))
+    //     + this->weights[1] * (in(i,j-1) + in(i,j+1))
+    //     + current * (
+    //         this->diags[0]*this->weights[0] 
+    //       + this->diags[1]*this->weights[1]
+    //       );
+    //   diff += std::pow(current - out(i,j), 2);
+    // }
+
+    // #pragma omp for
+    // for (size_type j = 2; j < in.topology().__local_shape[1]-2; ++j)
+    // {
+    //   size_type i = in.topology().__local_shape[0] - 2;
+    //   T current {in(i,j)};
+    //   out(i,j) =
+    //       this->weights[0] * (in(i-1,j) + in(i+1,j))
+    //     + this->weights[1] * (in(i,j-1) + in(i,j+1))
+    //     + current * (
+    //         this->diags[0]*this->weights[0] 
+    //       + this->diags[1]*this->weights[1]
+    //       );
+    //   diff += std::pow(current - out(i,j), 2);
+    // }
 
     return diff;
   }
@@ -499,7 +516,7 @@ FINAL_PROJECT_ASSERT(BC_2D->isSetUpBC && IC_2D->isSetUpInit);
       {
         time = iter*this->dt; 
         exchange_ping_pong_SR();
-        ldiff = update_ping_pong(time);
+        ldiff = update_ping_pong();
         BC_2D->UpdateBC(*this, time);
         MPI_Allreduce(&ldiff, &gdiff, 1, DiffType, MPI_SUM, in.topology().comm_cart);
 
@@ -610,7 +627,7 @@ FINAL_PROJECT_ASSERT(BC_2D->isSetUpBC == true && IC_2D->isSetUpInit == true);
       ldiff = 0; 
       time = iter*this->dt;
 
-      omp_ldiff = update_ping_pong_omp(time);
+      omp_ldiff = update_ping_pong_omp();
       
       #pragma omp critical 
       ldiff += omp_ldiff;
@@ -783,7 +800,7 @@ FINAL_PROJECT_ASSERT(BC_2D->isSetUpBC == true && IC_2D->isSetUpInit == true);
 
 #pragma omp barrier
 
-        omp_ldiff_edge = update_ping_pong_edge(time);
+        omp_ldiff_edge = update_ping_pong_edge();
 
         #pragma omp critical
         {

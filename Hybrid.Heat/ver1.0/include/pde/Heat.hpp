@@ -33,10 +33,10 @@ template <typename T, size_type NumD>
 
     // Updates
     public: 
-    virtual T update_ping_pong(const T)         = 0;
-    virtual T update_ping_pong_omp(const T)     = 0;
+    virtual T update_ping_pong()                = 0;
+    virtual T update_ping_pong_omp()            = 0;
     virtual T update_ping_pong_bulk()           = 0;
-    virtual T update_ping_pong_edge(const T)    = 0;
+    virtual T update_ping_pong_edge()           = 0;
       
   }; 
 

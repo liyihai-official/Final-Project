@@ -35,7 +35,7 @@ Integer
 
   constexpr Integer root_proc {0};
   constexpr Float tol {1E-4};
-  constexpr size_type nsteps {100'000'000};
+  constexpr size_type nsteps {10000};
   constexpr size_type numDim {2}, nx {NX}, ny {NY};
 
   auto mpi_world {final_project::mpi::environment(argc, argv)};
@@ -57,8 +57,8 @@ Integer
   obj.SetHeatInitC(IC);
 
   // auto iter = obj.solve_pure_mpi(tol, nsteps, root_proc);
-  // auto iter = obj.solve_hybrid_mpi_omp(tol, nsteps, root_proc);
-  auto iter = obj.solve_hybrid2_mpi_omp(tol, nsteps, root_proc);
+  auto iter = obj.solve_hybrid_mpi_omp(tol, nsteps, root_proc);
+  // auto iter = obj.solve_hybrid2_mpi_omp(tol, nsteps, root_proc);
 
   obj.SaveToBinary("test.bin");
 
