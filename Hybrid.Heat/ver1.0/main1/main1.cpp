@@ -38,7 +38,7 @@ Integer
 {
 
   constexpr Integer root_proc {0};
-  constexpr maintype tol {1E-1};
+  constexpr maintype tol {1E0};
   constexpr size_type nsteps {100'000'000};
   constexpr size_type numDim {2}, nx {NX}, ny {NY};
 
@@ -61,13 +61,13 @@ Integer
   obj.SetHeatBC(BC, Dim00, Dim01, Dim10, Dim11);
   obj.SetHeatInitC(IC);
 
-  iter = obj.solve_pure_mpi(tol, nsteps, root_proc);
+  iter = obj.solve_hybrid2_mpi_omp(tol, nsteps, root_proc);
 
   obj.reset();
   iter = obj.solve_hybrid_mpi_omp(tol, nsteps, root_proc);
 
   obj.reset();
-  iter = obj.solve_hybrid2_mpi_omp(tol, nsteps, root_proc);
+  iter = obj.solve_pure_mpi(tol, nsteps, root_proc);
 
   obj.SaveToBinary("test.bin");
   return 0;

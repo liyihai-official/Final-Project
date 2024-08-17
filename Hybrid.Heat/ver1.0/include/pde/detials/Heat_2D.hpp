@@ -513,6 +513,7 @@ FINAL_PROJECT_ASSERT(BC_2D->isSetUpBC == true && IC_2D->isSetUpInit == true);
 #ifdef _OPENMP
   #pragma omp master
   num_threads = omp_get_num_threads();
+  #pragma omp barrier
 #endif // end _OPENMP
       
 #ifndef NDEBUG
@@ -641,10 +642,11 @@ FINAL_PROJECT_ASSERT(BC_2D->isSetUpBC == true && IC_2D->isSetUpInit == true);
       T omp_ldiff_bulk {0.0}, omp_ldiff_edge {0.0}, time {0.0};
       Integer omp_iter {1};
 
-    #ifdef _OPENMP
-      #pragma omp master
-      num_threads = omp_get_num_threads();
-    #endif // end _OPENMP
+#ifdef _OPENMP
+  #pragma omp master
+  num_threads = omp_get_num_threads();
+  #pragma omp barrier
+#endif // end _OPENMP
       
 #ifndef NDEBUG
 {
