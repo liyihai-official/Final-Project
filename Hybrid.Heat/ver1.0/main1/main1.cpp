@@ -36,11 +36,6 @@ using ICFunction = std::function<maintype(maintype, maintype)>;
 Integer 
   main( Integer argc, Char ** argv)
 {
-  #pragma omp parallel
-  {
-    #pragma omp master
-    std::cout << omp_get_num_threads() << std::endl;
-  }
 
   constexpr Integer root_proc {0};
   constexpr maintype tol {1E1};
@@ -48,6 +43,23 @@ Integer
   constexpr size_type numDim {2}, nx {NX}, ny {NY};
 
   auto mpi_world {final_project::mpi::environment(argc, argv)};
+
+  #pragma omp parallel
+  {
+    #pragma omp master
+    {
+      if (mpi_world.rank() == 0)
+      {
+        std::cout << "Problem size: " 
+                  << "\n\tRows: "     << nx-2 
+                  << "\n\tColumns: "  << ny-2       << std::endl;
+        std::cout << "MPI Parameters: "             << std::endl;
+        std::cout << "\tNumber of MPI Processes: "  << mpi_world.size()  << std::endl;
+        std::cout << "OpenMP Threads: " << omp_get_num_threads()         << std::endl;
+      }
+    }
+  }
+
 
   Integer iter {0};
   final_project::pde::Heat_2D<maintype> obj (mpi_world, nx, ny);
