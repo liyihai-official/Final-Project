@@ -36,6 +36,7 @@ template <typename T>
     Integer solve_hybrid2_mpi_omp(const T, const Integer=100, const Integer=0);
 
     void SaveToBinary(const String);
+    void reset();
 
     private:
     void exchange_ping_pong_SR()      override;
@@ -59,6 +60,17 @@ template <typename T>
     friend InitialConditions::Init_2D<T>;
     friend BoundaryConditions_2D<T>;
 
+    std::function<T(size_type, size_type)> compute_next {
+      [&](size_type i, size_type j) {
+        return out(i,j) =
+            this->weights[0] * (in(i-1,j) + in(i+1,j))
+          + this->weights[1] * (in(i,j-1) + in(i,j+1))
+          + in(i,j) * (
+              this->diags[0]*this->weights[0] 
+            + this->diags[1]*this->weights[1]
+            );
+      }
+    };
   }; // class Heat_2D
 
 }}
@@ -98,6 +110,25 @@ template <typename T>
     out.array().__loc_array.fill(0);    
   }
 
+
+template <typename T>
+  inline void
+  Heat_2D<T>::reset()
+  {
+    gather = multi_array::array_base<T, 2>(gather.shape());
+
+    in.array().__loc_array.fill(0);
+    out.array().__loc_array.fill(0);    
+
+    IC_2D->isSetUpInit = false;
+    IC_2D->SetUpInit(*this);
+
+    BC_2D->UpdateBC(*this, 0);
+
+    converge = false;
+  }
+
+
 /// @brief Save gather.data to given filename.
 /// @tparam T Value type
 /// @param filename String, filename 
@@ -105,8 +136,8 @@ template <typename T>
   inline void 
   Heat_2D<T>::SaveToBinary(const String filename)
   {
-      if (in.topology().rank == 0)
-        gather.saveToBinary(filename);
+    if (in.topology().rank == 0)
+      gather.saveToBinary(filename);
   }
 
 
@@ -254,18 +285,6 @@ template <typename T>
   inline T
   Heat_2D<T>::update_ping_pong_edge()
   { 
-    auto compute_next = [&](size_type i, size_type j)
-    {
-      T current {in(i,j)};
-      return out(i,j) =
-          this->weights[0] * (in(i-1,j) + in(i+1,j))
-        + this->weights[1] * (in(i,j-1) + in(i,j+1))
-        + current * (
-            this->diags[0]*this->weights[0] 
-          + this->diags[1]*this->weights[1]
-          );
-    };
-
     T diff {0.0};
 
     #pragma omp for
@@ -301,99 +320,6 @@ template <typename T>
       out(i,j) = compute_next(i,j);
       diff += std::pow(in(i,j) - out(i,j), 2); 
     }
-
-    // #pragma omp single
-    // {
-    //   size_type i = 1; size_type j = 1;
-    //   out(i,j) = compute_next(i,j);
-    //   diff += std::pow(in(i,j) - out(i,j), 2); 
-    // }
-
-    // #pragma omp single
-    // {
-    //   size_type i = 1; size_type j = in.topology().__local_shape[1] - 2;
-    //   out(i,j) = compute_next(i,j);
-    //   diff += std::pow(in(i,j) - out(i,j), 2); 
-    // }
-
-    // #pragma omp single
-    // {
-    //   size_type i = in.topology().__local_shape[0] - 2; size_type j = 1;
-    //   out(i,j) = compute_next(i,j);
-    //   diff += std::pow(in(i,j) - out(i,j), 2); 
-    // }
-
-    // #pragma omp single
-    // {
-    //   size_type i = in.topology().__local_shape[0] - 2; size_type j = in.topology().__local_shape[1] - 2;
-    //   out(i,j) = compute_next(i,j);
-    //   diff += std::pow(in(i,j) - out(i,j), 2); 
-    // }
-
-
-
-    
-    // #pragma omp for
-    // for (size_type i = 2; i <in.topology().__local_shape[0]-2; ++i)
-    // {
-    //   size_type j = 1;
-    //   T current {in(i,j)};
-    //   out(i,j) =
-    //       this->weights[0] * (in(i-1,j) + in(i+1,j))
-    //     + this->weights[1] * (in(i,j-1) + in(i,j+1))
-    //     + current * (
-    //         this->diags[0]*this->weights[0] 
-    //       + this->diags[1]*this->weights[1]
-    //       );
-    //   diff += std::pow(current - out(i,j), 2); 
-    // }
-
-    
-    // #pragma omp for
-    // for (size_type i = 2; i < in.topology().__local_shape[0]-2; ++i)
-    // {
-    //   size_type j = in.topology().__local_shape[1] - 2;
-    //   T current {in(i,j)};
-    //   out(i,j) =
-    //       this->weights[0] * (in(i-1,j) + in(i+1,j))
-    //     + this->weights[1] * (in(i,j-1) + in(i,j+1))
-    //     + current * (
-    //         this->diags[0]*this->weights[0] 
-    //       + this->diags[1]*this->weights[1]
-    //       );
-    //   diff += std::pow(current - out(i,j), 2);
-    // }
-
-    
-    // #pragma omp for
-    // for (size_type j = 2; j < in.topology().__local_shape[1]-2; ++j)
-    // {
-    //   size_type i = 1;
-    //   T current {in(i,j)};
-    //   out(i,j) =
-    //       this->weights[0] * (in(i-1,j) + in(i+1,j))
-    //     + this->weights[1] * (in(i,j-1) + in(i,j+1))
-    //     + current * (
-    //         this->diags[0]*this->weights[0] 
-    //       + this->diags[1]*this->weights[1]
-    //       );
-    //   diff += std::pow(current - out(i,j), 2);
-    // }
-
-    // #pragma omp for
-    // for (size_type j = 2; j < in.topology().__local_shape[1]-2; ++j)
-    // {
-    //   size_type i = in.topology().__local_shape[0] - 2;
-    //   T current {in(i,j)};
-    //   out(i,j) =
-    //       this->weights[0] * (in(i-1,j) + in(i+1,j))
-    //     + this->weights[1] * (in(i,j-1) + in(i,j+1))
-    //     + current * (
-    //         this->diags[0]*this->weights[0] 
-    //       + this->diags[1]*this->weights[1]
-    //       );
-    //   diff += std::pow(current - out(i,j), 2);
-    // }
 
     return diff;
   }
@@ -579,7 +505,7 @@ FINAL_PROJECT_ASSERT(BC_2D->isSetUpBC == true && IC_2D->isSetUpInit == true);
 #endif 
 
 
-    #pragma omp parallel num_threads(2)
+    #pragma omp parallel
     {
       Integer omp_iter = 1;
       T omp_ldiff {0.0}, time {0};
@@ -709,7 +635,7 @@ FINAL_PROJECT_ASSERT(BC_2D->isSetUpBC == true && IC_2D->isSetUpInit == true);
 
 
   MPI_Request reqs[8];
-    #pragma omp parallel num_threads(4)
+    #pragma omp parallel
     {
       Integer omp_id { omp_get_thread_num() };
       T omp_ldiff_bulk {0.0}, omp_ldiff_edge {0.0}, time {0.0};

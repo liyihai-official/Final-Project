@@ -17,7 +17,7 @@ y = linspace(0,1,Col);
 % 计算解析解 u(x, y)
 U = X + Y - X .* Y;
 
-A = fread(fid, [Row * Col], 'double');
+A = fread(fid, [Row * Col], 'float32');
 A = reshape(A, [Col, Row]);
 A = permute(A, [2,1]);
 
@@ -47,7 +47,7 @@ ylabel('Col-axis Label'); % 替换为你想要的 Y 轴标签
 % title('解析解 u(x, y) = x + 2y + xy 的二维热分布图');
 
 
-% mean(A(2:Row-2, 2:Col-2)' - U(2:Col-2, 2:Row-2).^2, 'all')
+% mean((A(2:Row-2, 2:Col-2)' - U(2:Col-2, 2:Row-2)).^2, 'all')
 
 
 

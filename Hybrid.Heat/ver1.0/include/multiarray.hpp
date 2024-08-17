@@ -79,15 +79,16 @@ template <class T, size_type NumD>
     array_base()    =     default;
     template <typename ... Exts>
     array_base( Exts ... );
-    array_base( array_shape & );
+    array_base( array_shape const & );
 
     template <typename ... Args>
     T& operator()(Args ... args) { return (*body)(args...); }
 
     public:
-    array&      data()                        { return *body; }
-    array&      data()                  const { return *body; }
-    size_type&  shape(size_type index)  const { return body->__shape[index]; }
+    array&       data()                        { return *body; }
+    array&       data()                  const { return *body; }
+    array_shape& shape()                 const { return body->__shape; }
+    size_type&   shape(size_type index)  const { return body->__shape[index]; }
 
     void saveToBinary(const String &)   const;
 
@@ -172,7 +173,7 @@ namespace multi_array {
 
 template <class T, size_type NumD>
   inline
-  array_base<T, NumD>::array_base(array_shape & shape)
+  array_base<T, NumD>::array_base(array_shape const & shape)
 : body (std::make_unique<array>(shape))
   { FINAL_PROJECT_ASSERT_MSG((NumD < 4), "Invalid Dimension of Array."); }
 
@@ -205,14 +206,6 @@ template <class T, size_type NumD>
   ofs.write(reinterpret_cast<const Char*>(
     body->begin()), body->size() * sizeof(T)
   );
-
-
-      // for (size_type i = 0; i < NumDims; ++i) {
-      //   auto temp {body->__shape[i]};
-      //   ofs.write(reinterpret_cast<const char*>(&temp), sizeof((temp)));
-      // }
-      
-      // ofs.write(reinterpret_cast<const char*>(body->begin()), body->size() * sizeof(T));
       
 }
 

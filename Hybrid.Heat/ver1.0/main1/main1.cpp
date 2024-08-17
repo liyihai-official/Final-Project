@@ -15,8 +15,8 @@
 
 
 #if !defined(NX) || !defined(NY)
-#define NX 80+2
-#define NY 100+2
+#define NX 10+2
+#define NY 8+2
 #endif
 
 
@@ -27,7 +27,7 @@ using Float   = final_project::Float;
 using size_type = final_project::Dworld;
 
 
-using maintype  = Double;
+using maintype  = Float;
 
 
 using BCFunction = std::function<maintype(maintype, maintype, maintype)>;
@@ -38,12 +38,13 @@ Integer
 {
 
   constexpr Integer root_proc {0};
-  constexpr maintype tol {1E-8};
+  constexpr maintype tol {1E-1};
   constexpr size_type nsteps {100'000'000};
   constexpr size_type numDim {2}, nx {NX}, ny {NY};
 
   auto mpi_world {final_project::mpi::environment(argc, argv)};
 
+  Integer iter {0};
   final_project::pde::Heat_2D<maintype> obj (mpi_world, nx, ny);
 
   ICFunction InitCond {[](maintype x, maintype y) { return 0; }};
@@ -60,12 +61,14 @@ Integer
   obj.SetHeatBC(BC, Dim00, Dim01, Dim10, Dim11);
   obj.SetHeatInitC(IC);
 
-  auto iter = obj.solve_pure_mpi(tol, nsteps, root_proc);
-  // auto iter = obj.solve_hybrid_mpi_omp(tol, nsteps, root_proc);
-  // auto iter = obj.solve_hybrid2_mpi_omp(tol, nsteps, root_proc);
+  iter = obj.solve_pure_mpi(tol, nsteps, root_proc);
+
+  obj.reset();
+  iter = obj.solve_hybrid_mpi_omp(tol, nsteps, root_proc);
+
+  obj.reset();
+  iter = obj.solve_hybrid2_mpi_omp(tol, nsteps, root_proc);
 
   obj.SaveToBinary("test.bin");
-
-  std::cout << iter << std::endl;
   return 0;
 }

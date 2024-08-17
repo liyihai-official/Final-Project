@@ -39,8 +39,8 @@ Integer
 {
 
   constexpr Integer root_proc {0};
-  constexpr maintype tol {1E-4};
-  constexpr size_type nsteps {1'000'000'000};
+  constexpr maintype tol {1E-1};
+  constexpr size_type nsteps {10};
   constexpr size_type numDim {3}, nx {NX}, ny {NY}, nz {NZ};
 
   auto mpi_world {final_project::mpi::environment(argc, argv)};
@@ -51,6 +51,7 @@ Integer
   final_project::pde::Heat_3D<maintype> obj (mpi_world, nx, ny, nz);
   ICFunction InitCond { [](maintype x, maintype y, maintype z) { return 0; }};
 
+  Integer iter {0};
   /// FINISH 
   /// TODO: 
   ///   Complete Init_3D<T> class
@@ -73,12 +74,14 @@ Integer
   obj.SetHeatInitC(IC);
   obj.SetHeatBC(BC, Dim000, Dim001, Dim010, Dim011, Dim100, Dim101);
 
-  // auto iter = obj.solve_pure_mpi(tol, nsteps, root_proc);
-  // auto iter = obj.solve_hybrid_mpi_omp(tol, nsteps, root_proc);
-  auto iter = obj.solve_hybrid2_mpi_omp(tol, nsteps, root_proc);
 
-  std::cout << iter << std::endl;
-  obj.SaveToBinary("test_3d.bin");
+  iter = obj.solve_pure_mpi(tol, nsteps, root_proc);
+
+  obj.reset();
+  iter = obj.solve_hybrid_mpi_omp(tol, nsteps, root_proc);
+
+  obj.reset();
+  iter = obj.solve_hybrid2_mpi_omp(tol, nsteps, root_proc);
 
   return 0;
 }

@@ -41,13 +41,15 @@ template <typename T>
     Integer solve_hybrid2_mpi_omp(const T, const Integer=100, const Integer=0);
 
     void SaveToBinary( const String );
+    void reset();
+
 
     private:
     void exchange_ping_pong_SR()  override;
     void exchange_ping_pong_I()   override;
 
-    T update_ping_pong()       override;
-    T update_ping_pong_omp()   override;
+    T update_ping_pong()              override;
+    T update_ping_pong_omp()          override;
     T update_ping_pong_bulk()         override;
     T update_ping_pong_edge()         override;
     void switch_in_out();
@@ -63,6 +65,19 @@ template <typename T>
     friend InitialConditions::Init_3D<T>;
     friend BoundaryConditions_3D<T>;
 
+    std::function<T(size_type, size_type, size_type)> compute_next {
+      [&](size_type i, size_type j, size_type k) {
+        return out(i,j,k) = 
+            this->weights[0] * ( in(i-1, j, k) + in(i+1, j, k) )
+          + this->weights[1] * ( in(i, j-1, k) + in(i, j+1, k) )
+          + this->weights[2] * ( in(i, j, k-1) + in(i, j, k+1) )
+          + in(i, j, k) * (
+              this->diags[0] * this->weights[0]
+            + this->diags[1] * this->weights[1]
+            + this->diags[2] * this->weights[2]
+          );
+      }
+    };
   }; // class Heat_3D
 
 
@@ -110,6 +125,24 @@ template <typename T>
 
     in.array().__loc_array.fill(0);
     out.array().__loc_array.fill(0);    
+  }
+
+
+template <typename T>
+  inline void 
+  Heat_3D<T>::reset()
+  {
+    gather = multi_array::array_base<T, 3>(gather.shape());
+
+    in.array().__loc_array.fill(0);
+    out.array().__loc_array.fill(0);    
+
+    IC_3D->isSetUpInit = false;
+    IC_3D->SetUpInit(*this);
+
+    BC_3D->UpdateBC(*this, 0);
+
+    converge = false;
   }
 
 
@@ -206,10 +239,49 @@ template <typename T>
   inline void 
   Heat_3D<T>::exchange_ping_pong_I()
   {
+    MPI_Request reqs[12];
+    Integer req_cnt {0}, flag {0}; size_type dim {0};
+
+    auto n_size {in.topology().__local_shape[dim]};
+    // Send and receive for the first dimension
+    MPI_Irecv(&in(n_size-1, 1, 1), 1, in.topology().halos[dim], in.topology().nbr_dest[dim], flag, 
+                in.topology().comm_cart, &reqs[req_cnt++]);
+    MPI_Isend(&in(1       , 1, 1), 1, in.topology().halos[dim], in.topology().nbr_src[dim],  flag, 
+                in.topology().comm_cart, &reqs[req_cnt++]);
+
+    MPI_Irecv(&in(0       , 1, 1), 1, in.topology().halos[dim], in.topology().nbr_src[dim],  flag, 
+                in.topology().comm_cart, &reqs[req_cnt++]);
+    MPI_Isend(&in(n_size-2, 1, 1), 1, in.topology().halos[dim], in.topology().nbr_dest[dim], flag, 
+                in.topology().comm_cart, &reqs[req_cnt++]);
 
 
+    flag = 1; dim = 1;
+    n_size = in.topology().__local_shape[dim];
+    // Send and receive for the second dimension
+    MPI_Irecv(&in(1, n_size-1, 1), 1, in.topology().halos[dim], in.topology().nbr_dest[dim], flag, 
+                in.topology().comm_cart, &reqs[req_cnt++]);
+    MPI_Isend(&in(1,        1, 1), 1, in.topology().halos[dim], in.topology().nbr_src[dim],  flag, 
+                in.topology().comm_cart, &reqs[req_cnt++]);
 
+    MPI_Irecv(&in(1,        0, 1), 1, in.topology().halos[dim], in.topology().nbr_src[dim],  flag, 
+                in.topology().comm_cart, &reqs[req_cnt++]);
+    MPI_Isend(&in(1, n_size-2, 1), 1, in.topology().halos[dim], in.topology().nbr_dest[dim], flag, 
+                in.topology().comm_cart, &reqs[req_cnt++]);
 
+    flag = 2; dim = 2;
+    n_size = in.topology().__local_shape[dim];
+    // Send and receive for the second dimension
+    MPI_Irecv(&in(1, 1, n_size-1), 1, in.topology().halos[dim], in.topology().nbr_dest[dim], flag, 
+                in.topology().comm_cart, &reqs[req_cnt++]);
+    MPI_Isend(&in(1,        1, 1), 1, in.topology().halos[dim], in.topology().nbr_src[dim],  flag, 
+                in.topology().comm_cart, &reqs[req_cnt++]);
+
+    MPI_Irecv(&in(1,        1, 0), 1, in.topology().halos[dim], in.topology().nbr_src[dim],  flag, 
+                in.topology().comm_cart, &reqs[req_cnt++]);
+    MPI_Isend(&in(1, 1, n_size-2), 1, in.topology().halos[dim], in.topology().nbr_dest[dim], flag, 
+                in.topology().comm_cart, &reqs[req_cnt++]);
+
+    MPI_Waitall(req_cnt, reqs, MPI_STATUS_IGNORE);
   }
 
 /// @brief 
@@ -325,87 +397,73 @@ template <typename T>
   inline T 
   Heat_3D<T>::update_ping_pong_edge()
   {
-    auto compute_next = [&](size_type i, size_type j, size_type k)
-      {
-        T current { in(i,j,k) };
-        return out(i,j,k) = 
-            this->weights[0] * ( in(i-1, j, k) + in(i+1, j, k) )
-          + this->weights[1] * ( in(i, j-1, k) + in(i, j+1, k) )
-          + this->weights[2] * ( in(i, j, k-1) + in(i, j, k+1) )
-          + current * (
-              this->diags[0] * this->weights[0]
-            + this->diags[1] * this->weights[1]
-            + this->diags[2] * this->weights[2]
-          );
-      };
-
     T diff {0.0};
   
-  #pragma omp for collapse(2)
-  for (size_type j = 1; j < in.topology().__local_shape[1] - 1; ++j)
-  {
-    for (size_type k = 1; k < in.topology().__local_shape[2] - 1; ++k)
-    {
-      size_type i = 1;
-      out(i,j,k) = compute_next(i,j,k);
-      diff += std::pow(in(i,j,k) - out(i,j,k), 2);
-    }
-  }
-
-  #pragma omp for collapse(2)
-  for (size_type j = 1; j < in.topology().__local_shape[1] - 1; ++j)
-  {
-    for (size_type k = 1; k < in.topology().__local_shape[2] - 1; ++k)
-    {
-      size_type i = in.topology().__local_shape[0]-2;
-      out(i,j,k) = compute_next(i,j,k);
-      diff += std::pow(in(i,j,k) - out(i,j,k), 2);
-    }
-  }
-
-  #pragma omp for collapse(2)
-  for (size_type i = 2; i < in.topology().__local_shape[0] - 2; ++i)
-  {
+    #pragma omp for collapse(2)
     for (size_type j = 1; j < in.topology().__local_shape[1] - 1; ++j)
     {
-      size_type k = 1;
-      out(i,j,k) = compute_next(i,j,k);
-      diff += std::pow(in(i,j,k) - out(i,j,k), 2);
+      for (size_type k = 1; k < in.topology().__local_shape[2] - 1; ++k)
+      {
+        size_type i = 1;
+        out(i,j,k) = compute_next(i,j,k);
+        diff += std::pow(in(i,j,k) - out(i,j,k), 2);
+      }
     }
-  }
 
-  #pragma omp for collapse(2)
-  for (size_type i = 2; i < in.topology().__local_shape[0] - 2; ++i)
-  {
+    #pragma omp for collapse(2)
     for (size_type j = 1; j < in.topology().__local_shape[1] - 1; ++j)
     {
-      size_type k = in.topology().__local_shape[2]-2;
-      out(i,j,k) = compute_next(i,j,k);
-      diff += std::pow(in(i,j,k) - out(i,j,k), 2);
+      for (size_type k = 1; k < in.topology().__local_shape[2] - 1; ++k)
+      {
+        size_type i = in.topology().__local_shape[0]-2;
+        out(i,j,k) = compute_next(i,j,k);
+        diff += std::pow(in(i,j,k) - out(i,j,k), 2);
+      }
     }
-  }
 
-  #pragma omp for collapse(2)
-  for (size_type i = 2; i < in.topology().__local_shape[0]-2; ++i)
-  {
-    for (size_type k = 2; k < in.topology().__local_shape[2]-2; ++k)
+    #pragma omp for collapse(2)
+    for (size_type i = 2; i < in.topology().__local_shape[0] - 2; ++i)
     {
-      size_type j = 1; 
-      out(i,j,k) = compute_next(i,j,k);
-      diff += std::pow(in(i,j,k) - out(i,j,k), 2);
+      for (size_type j = 1; j < in.topology().__local_shape[1] - 1; ++j)
+      {
+        size_type k = 1;
+        out(i,j,k) = compute_next(i,j,k);
+        diff += std::pow(in(i,j,k) - out(i,j,k), 2);
+      }
     }
-  }
 
-  #pragma omp for collapse(2)
-  for (size_type i = 2; i < in.topology().__local_shape[0]-2; ++i)
-  {
-    for (size_type k = 2; k < in.topology().__local_shape[2]-2; ++k)
+    #pragma omp for collapse(2)
+    for (size_type i = 2; i < in.topology().__local_shape[0] - 2; ++i)
     {
-      size_type j = in.topology().__local_shape[1]-2; 
-      out(i,j,k) = compute_next(i,j,k);
-      diff += std::pow(in(i,j,k) - out(i,j,k), 2);
+      for (size_type j = 1; j < in.topology().__local_shape[1] - 1; ++j)
+      {
+        size_type k = in.topology().__local_shape[2]-2;
+        out(i,j,k) = compute_next(i,j,k);
+        diff += std::pow(in(i,j,k) - out(i,j,k), 2);
+      }
     }
-  }
+
+    #pragma omp for collapse(2)
+    for (size_type i = 2; i < in.topology().__local_shape[0]-2; ++i)
+    {
+      for (size_type k = 2; k < in.topology().__local_shape[2]-2; ++k)
+      {
+        size_type j = 1; 
+        out(i,j,k) = compute_next(i,j,k);
+        diff += std::pow(in(i,j,k) - out(i,j,k), 2);
+      }
+    }
+
+    #pragma omp for collapse(2)
+    for (size_type i = 2; i < in.topology().__local_shape[0]-2; ++i)
+    {
+      for (size_type k = 2; k < in.topology().__local_shape[2]-2; ++k)
+      {
+        size_type j = in.topology().__local_shape[1]-2; 
+        out(i,j,k) = compute_next(i,j,k);
+        diff += std::pow(in(i,j,k) - out(i,j,k), 2);
+      }
+    }
 
     return diff; 
   }
@@ -454,11 +512,11 @@ FINAL_PROJECT_ASSERT(BC_3D->isSetUpBC && IC_3D->isSetUpInit);
 
 
     Double t0 { MPI_Wtime() };
-    for (iter = 1; iter < nsteps; ++iter)
+    for (iter = 1; iter <= nsteps; ++iter)
     {
       time = iter*this->dt;
 
-      exchange_ping_pong_SR();
+      exchange_ping_pong_I();
       ldiff = update_ping_pong();
       BC_3D->UpdateBC(*this, time);
       MPI_Allreduce(&ldiff, &gdiff, 1, DiffType, MPI_SUM, in.topology().comm_cart);
@@ -517,7 +575,7 @@ FINAL_PROJECT_ASSERT(BC_3D->isSetUpBC && IC_3D->isSetUpInit);
 #endif
 
 
-    #pragma omp parallel num_threads(2)
+    #pragma omp parallel
     {
       T omp_ldiff {0.0}, time {0.0};
       Integer omp_iter = 1;
@@ -641,7 +699,7 @@ FINAL_PROJECT_MPI_ASSERT((BC_3D != nullptr && IC_3D != nullptr));
 FINAL_PROJECT_ASSERT(BC_3D->isSetUpBC && IC_3D->isSetUpInit);
 #endif
 
-    #pragma omp parallel num_threads(4)
+    #pragma omp parallel
     {
       T omp_ldiff_bulk {0.0}, omp_ldiff_edge {0.0}, time {0.0};
       Integer omp_iter = 1;
@@ -748,7 +806,6 @@ MPI_Waitall(12, reqs, MPI_STATUS_IGNORE);
 
         #pragma omp critical
         {
-          // std::cout << std::fixed << std::setprecision(3) << std::setw(5) << omp_ldiff_edge << "\t" << omp_get_thread_num() << std::endl; 
           ldiff += (omp_ldiff_bulk + omp_ldiff_edge);
         }
         #pragma omp barrier
