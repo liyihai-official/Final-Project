@@ -15,8 +15,8 @@
 
 
 #if !defined(NX) || !defined(NY)
-#define NX 20000+2
-#define NY 200000+2
+#define NX 10000+2
+#define NY 10000+2
 #endif
 
 
