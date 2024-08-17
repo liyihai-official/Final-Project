@@ -86,6 +86,6 @@ Integer
   obj.reset();
   iter = obj.solve_pure_mpi(tol, nsteps, root_proc);
 
-  obj.SaveToBinary("test.bin");
+  // obj.SaveToBinary("test.bin");
   return 0;
 }
