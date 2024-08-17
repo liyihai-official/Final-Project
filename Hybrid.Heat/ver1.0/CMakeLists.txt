@@ -32,7 +32,6 @@ file(GLOB_RECURSE PROJECT_SOURCES
 
 # 添加可执行文件，并链接所有源文件
 add_executable(main2 main2/main2.cpp ${PROJECT_SOURCES})
-add_executable(test test/test.cc ${PROJECT_SOURCES})
 add_executable(main1 main1/main1.cpp ${PROJECT_SOURCES})
 add_executable(main1_3d main1/main1_3d.cpp ${PROJECT_SOURCES})
 
@@ -40,7 +39,6 @@ add_executable(main1_3d main1/main1_3d.cpp ${PROJECT_SOURCES})
 target_link_libraries(main2 "${TORCH_LIBRARIES}")
 
 # 链接 MPI 库
-target_link_libraries(test ${MPI_LIBRARIES})
 target_link_libraries(main1 ${MPI_LIBRARIES})
 target_link_libraries(main1_3d ${MPI_LIBRARIES})
 
@@ -60,7 +58,6 @@ endif (MSVC)
 # 如果是发布模式，则启用 NDEBUG 宏
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
   target_compile_definitions(main2 PRIVATE NDEBUG)
-  target_compile_definitions(test PRIVATE NDEBUG)
   target_compile_definitions(main1 PRIVATE NDEBUG)
   target_compile_definitions(main1_3d PRIVATE NDEBUG)
 endif()
