@@ -15,9 +15,9 @@
 #include <mpi/environment.hpp>
 
 #if !defined(NX) || !defined (NY) || !defined(NZ)
-#define NX 100+2
-#define NY 100+2
-#define NZ 100+2
+#define NX 2000+2
+#define NY 2000+2
+#define NZ 2000+2
 #endif
 
 using Integer = final_project::Integer;
@@ -39,11 +39,28 @@ Integer
 {
 
   constexpr Integer root_proc {0};
-  constexpr maintype tol {1E-1};
-  constexpr size_type nsteps {10};
+  constexpr maintype tol {1E1};
+  constexpr size_type nsteps {100'000'000};
   constexpr size_type numDim {3}, nx {NX}, ny {NY}, nz {NZ};
 
   auto mpi_world {final_project::mpi::environment(argc, argv)};
+
+  #pragma omp parallel
+  {
+    #pragma omp master
+    {
+      if (mpi_world.rank() == 0)
+      {
+        std::cout << "Problem size: " 
+                  << "\n\tRows: "     << nx-2 
+                  << "\n\tColumns: "  << ny-2       << std::endl;
+        std::cout << "MPI Parameters: "             << std::endl;
+        std::cout << "\tNumber of MPI Processes: "  << mpi_world.size()  << std::endl;
+        std::cout << "OpenMP Threads: " << omp_get_num_threads()         << std::endl;
+      }
+    }
+  }
+
   ///
   /// TODO:
   ///   Complete Heat_3D<T> class
@@ -77,11 +94,11 @@ Integer
 
   iter = obj.solve_pure_mpi(tol, nsteps, root_proc);
 
-  obj.reset();
-  iter = obj.solve_hybrid_mpi_omp(tol, nsteps, root_proc);
+  // obj.reset();
+  // iter = obj.solve_hybrid_mpi_omp(tol, nsteps, root_proc);
 
-  obj.reset();
-  iter = obj.solve_hybrid2_mpi_omp(tol, nsteps, root_proc);
+  // obj.reset();
+  // iter = obj.solve_hybrid2_mpi_omp(tol, nsteps, root_proc);
 
   return 0;
 }
