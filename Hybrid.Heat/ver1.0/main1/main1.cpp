@@ -15,8 +15,8 @@
 
 
 #if !defined(NX) || !defined(NY)
-#define NX 10000+2
-#define NY 10000+2
+#define NX 20000+2
+#define NY 200000+2
 #endif
 
 
@@ -36,9 +36,14 @@ using ICFunction = std::function<maintype(maintype, maintype)>;
 Integer 
   main( Integer argc, Char ** argv)
 {
+  #pragma omp parallel
+  {
+    #pragma omp master
+    std::cout << omp_get_num_threads() << std::endl;
+  }
 
   constexpr Integer root_proc {0};
-  constexpr maintype tol {1E0};
+  constexpr maintype tol {1E1};
   constexpr size_type nsteps {100'000'000};
   constexpr size_type numDim {2}, nx {NX}, ny {NY};
 

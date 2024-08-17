@@ -291,16 +291,36 @@ template <typename T>
     for (size_type j = 1; j < in.topology().__local_shape[1]-2; ++j)
     {
       size_type i = 1;
-      out(i,j) = compute_next(i,j);
-      diff += std::pow(in(i,j) - out(i,j), 2); 
+      // out(i,j) = compute_next(i,j);
+      // diff += std::pow(in(i,j) - out(i,j), 2); 
+        T current {in(i,j)};
+        out(i,j) =
+            this->weights[0] * (in(i-1,j) + in(i+1,j))
+          + this->weights[1] * (in(i,j-1) + in(i,j+1))
+          + current * (
+              this->diags[0]*this->weights[0] 
+            + this->diags[1]*this->weights[1]
+            );
+
+        diff += std::pow(current - out(i,j), 2);
     }
 
     #pragma omp for 
     for (size_type j = 2; j < in.topology().__local_shape[1]-1; ++j)
     {
       size_type i = in.topology().__local_shape[0] - 2;
-      out(i,j) = compute_next(i,j);
-      diff += std::pow(in(i,j) - out(i,j), 2); 
+      // out(i,j) = compute_next(i,j);
+      // diff += std::pow(in(i,j) - out(i,j), 2); 
+        T current {in(i,j)};
+        out(i,j) =
+            this->weights[0] * (in(i-1,j) + in(i+1,j))
+          + this->weights[1] * (in(i,j-1) + in(i,j+1))
+          + current * (
+              this->diags[0]*this->weights[0] 
+            + this->diags[1]*this->weights[1]
+            );
+
+        diff += std::pow(current - out(i,j), 2);
     }
 
 
@@ -308,8 +328,18 @@ template <typename T>
     for (size_type i = 1; i < in.topology().__local_shape[0]-2; ++i)
     {
       size_type j = in.topology().__local_shape[1] - 2;
-      out(i,j) = compute_next(i,j);
-      diff += std::pow(in(i,j) - out(i,j), 2); 
+      // out(i,j) = compute_next(i,j);
+      // diff += std::pow(in(i,j) - out(i,j), 2); 
+        T current {in(i,j)};
+        out(i,j) =
+            this->weights[0] * (in(i-1,j) + in(i+1,j))
+          + this->weights[1] * (in(i,j-1) + in(i,j+1))
+          + current * (
+              this->diags[0]*this->weights[0] 
+            + this->diags[1]*this->weights[1]
+            );
+
+        diff += std::pow(current - out(i,j), 2);
     }
 
 
@@ -317,8 +347,18 @@ template <typename T>
     for (size_type i = 2; i < in.topology().__local_shape[0]-1; ++i)
     {
       size_type j = 1;
-      out(i,j) = compute_next(i,j);
-      diff += std::pow(in(i,j) - out(i,j), 2); 
+      // out(i,j) = compute_next(i,j);
+      // diff += std::pow(in(i,j) - out(i,j), 2); 
+        T current {in(i,j)};
+        out(i,j) =
+            this->weights[0] * (in(i-1,j) + in(i+1,j))
+          + this->weights[1] * (in(i,j-1) + in(i,j+1))
+          + current * (
+              this->diags[0]*this->weights[0] 
+            + this->diags[1]*this->weights[1]
+            );
+
+        diff += std::pow(current - out(i,j), 2);
     }
 
     return diff;
