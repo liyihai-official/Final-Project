@@ -1,8 +1,8 @@
 #!/bin/bash
-#SBATCH --nodes=4
+#SBATCH --nodes=2
 #SBATCH -t 24:00:00
-#SBATCH -o output/second.o.%j
-#SBATCH -e error/second.e.%j
+#SBATCH -o output/third.o.%j
+#SBATCH -e error/third.e.%j
 #SBATCH --mail-user=liy35@tcd.ie
 #SBATCH --mail-type=ALL
 

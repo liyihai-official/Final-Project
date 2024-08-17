@@ -1,5 +1,7 @@
 #!/bin/bash
 #SBATCH --nodes=2
+#SBATCH --ntasks-per-node=2  # 每个节点启动2个MPI进程
+#SBATCH --cpus-per-task=32    # 每个MPI进程分配32个CPU核心
 #SBATCH -t 24:00:00
 #SBATCH -o output/first.o.%j
 #SBATCH -e error/first.e.%j
