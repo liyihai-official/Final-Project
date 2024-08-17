@@ -1,0 +1,102 @@
+Problem size: 
+	Rows: 10000
+	Columns: 10000
+MPI Parameters: 
+	Number of MPI Processes: 2
+OpenMP Threads: 32
+Total Converge time: 1.93278
+Iterations: 27
+Total Converge time: 1.24723
+Iterations: 27
+Total Converge time: 6.80656
+Iterations: 27
+
+
+###############################################################################
+TCHPC Cluster: callan
+Job 18087 (second.sh) for User 'liy35' in Account 'callan_liy35'
+Finished at: Sat Aug 17 09:00:42 IST 2024
+
+Job efficiency estimates:
+=========================
+
+Job ID: 18087
+Cluster: callan
+User/Group: liy35/liy35
+State: COMPLETED (exit code 0)
+Nodes: 4
+Cores per node: 1
+CPU Utilized: 00:02:17
+CPU Efficiency: 285.42% of 00:00:48 core-walltime
+Job Wall-clock time: 00:00:12
+Memory Utilized: 0.00 MB (estimated maximum)
+Memory Efficiency: 0.00% of 15.62 GB (3.91 GB/core)
+
+Job completion status:
+======================
+
+JobID           JobName AllocCPUS NTasks NNodes     MaxRSS    MaxRSSNode  MaxDiskRead MaxDiskWrite    Elapsed      State ExitCode 
+------------ ---------- --------- ------ ------ ---------- ------------- ------------ ------------ ---------- ---------- -------- 
+18087         second.sh         4             4                                                      00:00:12  COMPLETED      0:0 
+18087.batch       batch         1      1      1          0    callan-n01            0        0.00M   00:00:12  COMPLETED      0:0 
+18087.extern     extern         4      4      4        84K    callan-n11        0.00M        0.00M   00:00:12  COMPLETED      0:0 
+
+
+Job details:
+============
+
+JobId=18087 JobName=second.sh
+   UserId=liy35(60743) GroupId=liy35(60747) MCS_label=N/A
+   Priority=359818 Nice=0 Account=callan_liy35 QOS=normal
+   JobState=COMPLETING Reason=None Dependency=(null)
+   Requeue=0 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   DerivedExitCode=0:0
+   RunTime=00:00:12 TimeLimit=1-00:00:00 TimeMin=N/A
+   SubmitTime=2024-08-17T08:53:25 EligibleTime=2024-08-17T08:53:25
+   AccrueTime=2024-08-17T08:53:25
+   StartTime=2024-08-17T09:00:30 EndTime=2024-08-17T09:00:42 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2024-08-17T09:00:30 Scheduler=Backfill
+   Partition=compute AllocNode:Sid=localhost:2323977
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=callan-n[01,08-09,11]
+   BatchHost=callan-n01
+   NumNodes=4 NumCPUs=4 NumTasks=4 CPUs/Task=1 ReqB:S:C:T=0:0:*:*
+   ReqTRES=cpu=4,mem=16000M,node=4,billing=4
+   AllocTRES=cpu=4,mem=16000M,node=4,billing=4
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   JOB_GRES=(null)
+     Nodes=callan-n01 CPU_IDs=16 Mem=4000 GRES=
+     Nodes=callan-n08 CPU_IDs=0 Mem=4000 GRES=
+     Nodes=callan-n09 CPU_IDs=54 Mem=4000 GRES=
+     Nodes=callan-n11 CPU_IDs=6 Mem=4000 GRES=
+   MinCPUsNode=1 MinMemoryCPU=4000M MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=/home/users/mschpc/2023/liy35/Final-Project/Benchmarks/second.sh
+   WorkDir=/home/users/mschpc/2023/liy35/Final-Project/Benchmarks
+   StdErr=/home/users/mschpc/2023/liy35/Final-Project/Benchmarks/error/second.e.18087
+   StdIn=/dev/null
+   StdOut=/home/users/mschpc/2023/liy35/Final-Project/Benchmarks/output/second.o.18087
+   Power=
+   MailUser=liy35@tcd.ie MailType=INVALID_DEPEND,BEGIN,END,FAIL,REQUEUE,STAGE_OUT
+   
+
+
+SLURM Bank Statement:
+=====================
+
+User           Usage |        Account     Usage | Account Limit Available (CPU hrs)
+---------- --------- + -------------- --------- + ------------- ---------
+liy35            311 |   CALLAN_LIY35       311 |       300,000   299,689
+
+
+Acknowledgements:
+=================
+
+Note that usage of TCHPC Resources *must* be acknowledged in all publications.
+
+Please see this page for details relevant to this cluster:
+
+http://www.tchpc.tcd.ie/resources/acknowledgementpolicy
+
+################################################################################
