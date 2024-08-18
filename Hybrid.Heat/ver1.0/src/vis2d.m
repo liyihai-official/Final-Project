@@ -1,4 +1,4 @@
-fid = fopen('build/test.bin', 'rb');
+fid = fopen('../build/test.bin', 'rb');
 
 Row = fread(fid, 1, 'uint32');
 Col = fread(fid, 1, 'uint32');
@@ -29,7 +29,7 @@ contourf(x, y, U, 10);
 colormap(jet);
 
 colorbar;
-saveas(gcf, 'main2.png')
+saveas(gcf, '../out/main2.png')
 % caxis([-20 +20]);
 % pause(0.05);
 

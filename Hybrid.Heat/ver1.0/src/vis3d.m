@@ -1,4 +1,4 @@
-fid = fopen('build/test_3d.bin', 'rb');
+fid = fopen('../build/test_3d.bin', 'rb');
 
 Row = fread(fid, 1, 'uint32');
 Col = fread(fid, 1, 'uint32');
@@ -36,7 +36,7 @@ slice(X_norm, Y_norm, Z_norm, A, [0.5 1], [0.5 1], [0 1]);
 
 % % 绘制函数 F 的切片图
 % slice(X_norm, Y_norm, Z_norm, F, [0.5 1], [0.5 1], [0 0.5 1]);
-
+% saveas(gcf, '../out/main2.png')
 colormap(jet);
 colorbar;
 
