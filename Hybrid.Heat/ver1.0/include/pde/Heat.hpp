@@ -61,9 +61,10 @@ template <typename ... Exts>
   inline
   Heat_Base<T, NumD>::Heat_Base(mpi::environment & env, Exts ... exts)
   {
-    #ifndef NDEBUG
-    std::cout << "Constructor from Heat_Base" << std::endl;
-    #endif
+    
+#ifndef NDEBUG
+std::cout << "Constructor from Heat_Base" << std::endl;
+#endif
 
     multi_array::__detail::__multi_array_shape<NumD> shape(exts...);
 
