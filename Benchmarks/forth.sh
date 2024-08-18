@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -N 1
 #SBATCH -n 64
-#SBATCH -t 24:00:00
+#SBATCH -t 48:00:00
 #SBATCH -o output/forth.o.%j
 #SBATCH -e error/forth.e.%j
 #SBATCH --mail-user=liy35@tcd.ie
@@ -14,7 +14,7 @@ export OMP_NUM_THREADS=1
 echo "Strong Scalling Tests, NO OpenMP, 3D, Pure MPI"
 echo ""
 
-for PROC in 1 2 4 8 16 32 64; do
+for PROC in 64 32 16 8 4 2 1; do
   mpirun -np ${PROC} ../Hybrid.Heat/ver1.0/build/main1_3d
 done
 
