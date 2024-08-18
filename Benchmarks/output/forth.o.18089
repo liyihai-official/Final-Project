@@ -1,0 +1,8 @@
+Strong Scalling Tests, NO OpenMP, 3D, Pure MPI
+
+Problem size: 
+	Rows: 2000
+	Columns: 2000
+MPI Parameters: 
+	Number of MPI Processes: 1
+OpenMP Threads: 1

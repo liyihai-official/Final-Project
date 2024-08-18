@@ -17,4 +17,98 @@ mpirun --bind-to core --map-by ppr:4:node:pe=32 ../Hybrid.Heat/ver1.0/build/main
 git add output/*
 git add error/*
 git commit -m "Second.2D.Hybrid.Test"
-git push
+git push[main 93543c4] Second.2D.Hybrid.Test
+ 2 files changed, 32 insertions(+)
+ create mode 100644 Benchmarks/error/second.e.18090
+ create mode 100644 Benchmarks/output/second.o.18090
+
+
+###############################################################################
+TCHPC Cluster: callan
+Job 18090 (second.sh) for User 'liy35' in Account 'callan_liy35'
+Finished at: Sat Aug 17 09:36:04 IST 2024
+
+Job efficiency estimates:
+=========================
+
+Job ID: 18090
+Cluster: callan
+User/Group: liy35/liy35
+State: RUNNING
+Nodes: 4
+Cores per node: 1
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 00:08:44 core-walltime
+Job Wall-clock time: 00:02:11
+Memory Utilized: 0.00 MB (estimated maximum)
+Memory Efficiency: 0.00% of 15.62 GB (3.91 GB/core)
+WARNING: Efficiency statistics may be misleading for RUNNING jobs.
+
+Job completion status:
+======================
+
+JobID           JobName AllocCPUS NTasks NNodes     MaxRSS    MaxRSSNode  MaxDiskRead MaxDiskWrite    Elapsed      State ExitCode 
+------------ ---------- --------- ------ ------ ---------- ------------- ------------ ------------ ---------- ---------- -------- 
+18090         second.sh         4             4                                                      00:02:12     FAILED      0:0 
+18090.batch       batch         1      1      1      2580K    callan-n04        7.59M        0.10M   00:02:12     FAILED      0:0 
+18090.extern     extern         4      4      4                                                      00:02:12     FAILED      0:0 
+
+
+Job details:
+============
+
+JobId=18090 JobName=second.sh
+   UserId=liy35(60743) GroupId=liy35(60747) MCS_label=N/A
+   Priority=359875 Nice=0 Account=callan_liy35 QOS=normal
+   JobState=COMPLETING Reason=NonZeroExitCode Dependency=(null)
+   Requeue=0 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=128:0
+   DerivedExitCode=0:0
+   RunTime=00:02:12 TimeLimit=1-00:00:00 TimeMin=N/A
+   SubmitTime=2024-08-17T09:14:52 EligibleTime=2024-08-17T09:14:52
+   AccrueTime=2024-08-17T09:14:52
+   StartTime=2024-08-17T09:33:52 EndTime=2024-08-17T09:36:04 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2024-08-17T09:33:52 Scheduler=Backfill
+   Partition=compute AllocNode:Sid=localhost:2323977
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=callan-n[04,08-09,11]
+   BatchHost=callan-n04
+   NumNodes=4 NumCPUs=4 NumTasks=4 CPUs/Task=1 ReqB:S:C:T=0:0:*:*
+   ReqTRES=cpu=4,mem=16000M,node=4,billing=4
+   AllocTRES=cpu=4,mem=16000M,node=4,billing=4
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   JOB_GRES=(null)
+     Nodes=callan-n04 CPU_IDs=16 Mem=4000 GRES=
+     Nodes=callan-n08 CPU_IDs=0 Mem=4000 GRES=
+     Nodes=callan-n09 CPU_IDs=54 Mem=4000 GRES=
+     Nodes=callan-n11 CPU_IDs=6 Mem=4000 GRES=
+   MinCPUsNode=1 MinMemoryCPU=4000M MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=/home/users/mschpc/2023/liy35/Final-Project/Benchmarks/second.sh
+   WorkDir=/home/users/mschpc/2023/liy35/Final-Project/Benchmarks
+   StdErr=/home/users/mschpc/2023/liy35/Final-Project/Benchmarks/error/second.e.18090
+   StdIn=/dev/null
+   StdOut=/home/users/mschpc/2023/liy35/Final-Project/Benchmarks/output/second.o.18090
+   Power=
+   MailUser=liy35@tcd.ie MailType=INVALID_DEPEND,BEGIN,END,FAIL,REQUEUE,STAGE_OUT
+   
+
+
+SLURM Bank Statement:
+=====================
+
+User           Usage |        Account     Usage | Account Limit Available (CPU hrs)
+---------- --------- + -------------- --------- + ------------- ---------
+liy35            311 |   CALLAN_LIY35       311 |       300,000   299,689
+
+
+Acknowledgements:
+=================
+
+Note that usage of TCHPC Resources *must* be acknowledged in all publications.
+
+Please see this page for details relevant to this cluster:
+
+http://www.tchpc.tcd.ie/resources/acknowledgementpolicy
+
+################################################################################
