@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
-project(FinalProject VERSION 6.0)
+project(MAP55640_Final_Project VERSION 6.0)
+
+set(PROJECT_AUTHOR "LI Yihai")
 
 # Find Libtorch and MPI
 find_package(Torch REQUIRED)
@@ -26,16 +28,17 @@ file(GLOB_RECURSE PROJECT_SOURCES
 )
 
 # Add executable files and source files
-add_executable(main2 main2/main2.cpp ${PROJECT_SOURCES})
 add_executable(main1 main1/main1.cpp ${PROJECT_SOURCES})
 add_executable(main1_3d main1/main1_3d.cpp ${PROJECT_SOURCES})
+add_executable(main2 main2/main2.cpp ${PROJECT_SOURCES})
 
-# Linking to Libtorch
-target_link_libraries(main2 "${TORCH_LIBRARIES}")
 
 # Linking to MPI
 target_link_libraries(main1 ${MPI_LIBRARIES})
 target_link_libraries(main1_3d ${MPI_LIBRARIES})
+
+# Linking to Libtorch
+target_link_libraries(main2 "${TORCH_LIBRARIES}")
 
 # Add Optimization flag 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
@@ -51,3 +54,5 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release")
   target_compile_definitions(main1_3d PRIVATE NDEBUG NX=${NX} NY=${NY} NZ=${NZ})
   target_compile_definitions(main2 PRIVATE NDEBUG)
 endif()
+
+configure_file(config.h.in config.h)

@@ -8,9 +8,11 @@
 #ifndef FINAL_PROJECT_TYPES_HPP_LIYIHAI
 #define FINAL_PROJECT_TYPES_HPP_LIYIHAI
 
+
 #include <cstdint>  // Standard integer types
 #include <string>   // Include 'std::string' type
-
+#include <unordered_map>
+#include <iostream>
 
 namespace final_project 
 {
@@ -35,12 +37,6 @@ namespace final_project
   typedef Dworld    size_type;
   typedef Qworld    super_size_type;
 
-  // Parallel Strategy
-  enum Strategy {
-    PURE_MPI,
-    HYBRID_0,
-    HYBRID_1
-  };
 
 } // end of namespace final_project
 
