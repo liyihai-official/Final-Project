@@ -35,6 +35,12 @@ namespace final_project
   typedef Dworld    size_type;
   typedef Qworld    super_size_type;
 
+  // Parallel Strategy
+  enum Strategy {
+    PURE_MPI,
+    HYBRID_0,
+    HYBRID_1
+  };
 
 } // end of namespace final_project
 

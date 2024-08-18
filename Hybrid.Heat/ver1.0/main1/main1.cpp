@@ -13,12 +13,14 @@
 #include <pde/detials/InitializationsC.hpp>
 #include <pde/detials/BoundaryConditions/BoundaryConditions_2D.hpp>
 
+#if !defined(STRATEGY)
+#define STRATEGY final_project::PURE_MPI
+#endif
 
 #if !defined(NX) || !defined(NY)
 #define NX 10000+2
 #define NY 10000+2
 #endif
-
 
 using Integer = final_project::Integer;
 using Char    = final_project::Char;
@@ -33,9 +35,12 @@ using maintype  = Float;
 using BCFunction = std::function<maintype(maintype, maintype, maintype)>;
 using ICFunction = std::function<maintype(maintype, maintype)>;
 
+#include <unistd.h>
+
 Integer 
   main( Integer argc, Char ** argv)
 {
+  // constexpr final_project::Strategy strategy {final_project::PURE_MPI};
 
   constexpr Integer root_proc {0};
   constexpr maintype tol {1E1};
@@ -43,6 +48,32 @@ Integer
   constexpr size_type numDim {2}, nx {NX}, ny {NY};
 
   auto mpi_world {final_project::mpi::environment(argc, argv)};
+
+  int opt;
+  while ((opt = getopt(argc, argv, "hvf:")) != -1) 
+  {
+    switch (opt) {
+        case 'h':
+            // print_help();
+                std::cout << "Program version 1.0\n";
+            exit(0);
+        case 'v':
+            // print_version();
+                std::cout << "Program version 2.0\n";
+            exit(0);
+        case 'f':
+            // print_version();
+                std::cout << "Program version f.0\n " << optarg << "\n";
+            // exit(0);
+            break;
+        default:
+            std::cerr << "Invalid option: -" << static_cast<char>(opt) << "\n";
+                std::cout << "Program version HELP\n";
+            exit(EXIT_FAILURE);
+    }
+  }
+
+
 
   #pragma omp parallel
   {
@@ -59,7 +90,6 @@ Integer
       }
     }
   }
-
 
   Integer iter {0};
   final_project::pde::Heat_2D<maintype> obj (mpi_world, nx, ny);
@@ -78,13 +108,25 @@ Integer
   obj.SetHeatBC(BC, Dim00, Dim01, Dim10, Dim11);
   obj.SetHeatInitC(IC);
 
-  iter = obj.solve_hybrid2_mpi_omp(tol, nsteps, root_proc);
 
-  obj.reset();
-  iter = obj.solve_hybrid_mpi_omp(tol, nsteps, root_proc);
-
-  obj.reset();
-  iter = obj.solve_pure_mpi(tol, nsteps, root_proc);
+  switch (STRATEGY)
+  {
+    case final_project::PURE_MPI:
+      iter = obj.solve_pure_mpi(tol, nsteps, root_proc);
+      obj.reset();
+      break;
+    case final_project::HYBRID_0:
+      iter = obj.solve_hybrid_mpi_omp(tol, nsteps, root_proc);
+      obj.reset();
+      break;
+    case final_project::HYBRID_1:
+      iter = obj.solve_hybrid2_mpi_omp(tol, nsteps, root_proc);
+      obj.reset();
+      break;
+    default:
+      std::cerr << "Undefined Parallel Strategy" << std::endl;
+      break;
+  }
 
   // obj.SaveToBinary("test.bin");
   return 0;

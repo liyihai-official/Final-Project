@@ -38,7 +38,7 @@ ylabel('Col-axis Label'); % 替换为你想要的 Y 轴标签
 
 
 % figure;
-% imagesc(x, y, U);  % 绘制热图，使用指定的 X 和 Y 坐标
+% imagesc(x, y, U);6  % 绘制热图，使用指定的 X 和 Y 坐标
 % colormap(jet);
 
 % colorbar;

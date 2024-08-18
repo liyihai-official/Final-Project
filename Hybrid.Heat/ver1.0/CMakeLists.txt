@@ -44,6 +44,7 @@ set(NX 100 CACHE STRING "Grid dimension NX")
 set(NY 100 CACHE STRING "Grid dimension NY")
 set(NZ 50 CACHE STRING "Grid dimension NY")
 
+
 # Release mode, set to No Debug
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
   target_compile_definitions(main1 PRIVATE NDEBUG NX=${NX} NY=${NY})
