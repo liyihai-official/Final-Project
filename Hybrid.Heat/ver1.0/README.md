@@ -1,39 +1,51 @@
 ```
 .
 ├── CMakeLists.txt
+├── Doxyfile
 ├── README.md
+├── config.h.in
 ├── include
 │   ├── assert.hpp
+│   ├── helper.hpp
 │   ├── mpi
 │   │   ├── assert.hpp
 │   │   ├── environment.hpp
+│   │   ├── multiarray.hpp
 │   │   ├── topology.hpp
 │   │   └── types.hpp
 │   ├── multiarray
 │   │   ├── base.hpp
 │   │   └── types.hpp
-│   ├── solver
-│   │   ├── boundaryconditions
-│   │   │   ├── DirchletBC.hpp
-│   │   │   └── NeumannBC.hpp
+│   ├── multiarray.hpp
+│   ├── pde
+│   │   ├── Heat.hpp
 │   │   ├── detials
-│   │   │   ├── evolve_hybrid.hpp
-│   │   │   └── evolve_pure_mpi.hpp
-│   │   ├── evolve.hpp
-│   │   ├── gather.hpp
-│   │   └── mpi_distribute_array.hpp
+│   │   │   ├── BoundaryConditions
+│   │   │   │   ├── BoundaryConditions_2D.hpp
+│   │   │   │   └── BoundaryConditions_3D.hpp
+│   │   │   ├── Heat_2D.hpp
+│   │   │   ├── Heat_3D.hpp
+│   │   │   └── InitializationsC.hpp
+│   │   └── pde.hpp
+│   ├── pinn
+│   │   ├── dataset.hpp
+│   │   └── pinn.hpp
 │   └── types.hpp
+├── main1
+│   ├── main1.cpp
+│   └── main1_3d.cpp
+├── main2
+│   └── main2.cpp
+├── out
+│   ├── Strong_main1.png
+│   ├── main1.png
+│   └── main2.png
 ├── src
-│   ├── assert.cpp
-│   ├── mpi
-│   │   ├── environment.cpp
-│   │   └── types.cpp
-│   ├── multiarray
-│   │   └── types.cpp
-│   ├── solver
-│   └── types.cpp
+│   ├── helper.cpp
+│   ├── vis2d.m
+│   └── vis3d.m
 └── test
     └── test.cc
 
-12 directories, 23 files
+13 directories, 34 files
 ```

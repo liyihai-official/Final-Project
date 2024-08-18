@@ -722,12 +722,6 @@ FINAL_PROJECT_ASSERT(BC_2D->isSetUpBC == true && IC_2D->isSetUpInit == true);
       {
         ldiff = 0; time = omp_iter*this->dt;
 
-        // omp_ldiff_bulk = update_ping_pong_bulk();
-
-        // #pragma omp single 
-        // exchange_ping_pong_I();
-        // #pragma omp barrier
-
 // ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   #pragma omp single

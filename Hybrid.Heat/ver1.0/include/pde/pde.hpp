@@ -14,16 +14,8 @@
 #pragma once
 #include <functional>
 
-
 #include <types.hpp>
 #include <multiarray.hpp>
-
-#include <pde/Heat.hpp>
-
-// #include <pde/detials/Heat_2D.hpp>
-// #include <pde/detials/Heat_3D.hpp>
-
-// #include <pde/detials/InitializationsC.hpp>
 
 namespace final_project { 
     
