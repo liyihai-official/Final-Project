@@ -43,6 +43,15 @@ target_link_libraries(main2 "${TORCH_LIBRARIES}")
 # Add Optimization flag 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 
+if (MSVC)
+  file(GLOB TORCH_DLLS "${TORCH_INSTALL_PREFIX}/lib/*.dll")
+  add_custom_command(TARGET main
+                     POST_BUILD
+                     COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                     ${TORCH_DLLS}
+                     $<TARGET_FILE_DIR:main>)
+endif (MSVC)
+
 set(NX 100 CACHE STRING "Grid dimension NX")
 set(NY 100 CACHE STRING "Grid dimension NY")
 set(NZ 50 CACHE STRING "Grid dimension NY")
