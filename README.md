@@ -43,13 +43,13 @@ This is a visualization plot of randomly generated 3D dataset,
 
 
 #### FDM 
-<img src="Hybrid.Heat/ver1.0/main1.png" alt="Heat_2D" height="400">
+<img src="Hybrid.Heat/ver1.0/out/main1.png" alt="Heat_2D" height="400">
 
 #### PINN
-<img src="Hybrid.Heat/ver1.0/main2.png" alt="Heat_2D" height="400">
+<img src="Hybrid.Heat/ver1.0/out/main2.png" alt="Heat_2D" height="400">
+<img src="Hybrid.Heat/ver1.0/out/main2_3d.png" alt="Heat_2D" height="400">
 
-
-<img src="Hybrid.Heat/ver1.0/Strong_main1.png" alt="Heat_2D" height="400">
+<img src="Hybrid.Heat/ver1.0/out/Strong_main1.png" alt="Heat_2D" height="400">
 ```mpiexec -np [n] ./main1```
 
 #### Jun, 18- Jul, 8 2024
