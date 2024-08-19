@@ -17,7 +17,7 @@ int main ()
   Integer iter {1};
   final_project::String filename {""};        // default empty filename (not saving results).
 
-  constexpr maintype tol {1E-2};
+  constexpr maintype tol {1E-3};
   constexpr size_type nsteps {10000};
   constexpr size_type numDim {IN_SIZE_3D}, nx {NX}, ny {NY}, nz {NZ};
 

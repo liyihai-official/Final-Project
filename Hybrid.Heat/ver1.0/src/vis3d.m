@@ -25,10 +25,10 @@ F = X_norm + Y_norm + Z_norm ...
 
 figure;
 h = gcf;
-title("TEST");
+
 
 % max((A(2:Row-2, 2:Col-2,2:Dep-2) - F(2:Row-2, 2:Col-2,2:Dep-2)).^2, [], 'all')
-% mean((A(2:Row-2, 2:Col-2,2:Dep-2) - F(2:Row-2, 2:Col-2,2:Dep-2)).^2, 'all')
+diff = mean((A(2:Row-2, 2:Col-2,2:Dep-2) - F(2:Row-2, 2:Col-2,2:Dep-2)).^2, 'all');
 
 % 绘制数据 A 的切片图
 slice(X_norm, Y_norm, Z_norm, A, [0.5 1], [0.5 1], [0 1]);
@@ -36,12 +36,13 @@ slice(X_norm, Y_norm, Z_norm, A, [0.5 1], [0.5 1], [0 1]);
 
 % % 绘制函数 F 的切片图
 % slice(X_norm, Y_norm, Z_norm, F, [0.5 1], [0.5 1], [0 0.5 1]);
-saveas(gcf, '../out/main2_3d.png')
 colormap(jet);
 colorbar;
 
 xlabel('Row-axis Label'); % 替换为你想要的 X 轴标签
 ylabel('Col-axis Label'); % 替换为你想要的 Y 轴标签
 zlabel('Depth-axis Label'); % 替换为你想要的 Z 轴标签
+title("MSE = " +diff);
+saveas(gcf, '../out/main2_3d.png')
 
 % legend('Data A', 'Function F'); % 添加图例区分两者
