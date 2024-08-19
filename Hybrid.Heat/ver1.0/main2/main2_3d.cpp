@@ -17,8 +17,8 @@ int main ()
   Integer iter {1};
   final_project::String filename {""};        // default empty filename (not saving results).
 
-  constexpr maintype tol {1E-1};
-  constexpr size_type nsteps {1'000};
+  constexpr maintype tol {1E-2};
+  constexpr size_type nsteps {10000};
   constexpr size_type numDim {IN_SIZE_3D}, nx {NX}, ny {NY}, nz {NZ};
 
   torch::Device device { torch::cuda::is_available() ? torch::kCUDA : torch::kCPU };
@@ -37,24 +37,24 @@ int main ()
   auto net { final_project::PINN::HeatPINN(IN_SIZE_3D, OUT_SIZE, /*hsize*/ 20) };
   net->to(device);
 
-
   torch::Tensor loss_sum;
 
   torch::optim::Adam adam_optim( net->parameters(), torch::optim::AdamOptions(1E-3) );
-
 
   while (iter <= nsteps)
   { 
     auto closure = [&](){
       adam_optim.zero_grad();
+      
       loss_sum = final_project::PINN::get_total_loss(
         net, dataset.X_internal, dataset.X_boundary, dataset.Y_boundary, device);
+
       loss_sum.backward();
+
       return loss_sum;
     };
 
     adam_optim.step(closure);
-
     if (iter % 30 == 0)
     {
       std::cout 
@@ -79,13 +79,13 @@ std::cout
     }
   }
 
+  torch::save(net, "../out/model_3d.pt");
 
 
 
-  torch::save(net, "model_3d.pt");
 
 
-  Integer pNX {100}, pNY {100},  pNZ {100};
+  Integer pNX {20}, pNY {20},  pNZ {20};
   final_project::PINN::dataset_3d valset (numDim, OUT_SIZE, pNX, pNY, pNZ, device);
   auto out = net->forward(valset.X_internal);
 
@@ -94,11 +94,10 @@ std::cout
   for (Integer x = 0; x < pNX; ++x)
     for (Integer y = 0; y < pNY; ++y)
       for (Integer z = 0; z < pNZ; ++z)
-        gather(x,y,z) = out.index({x * pNY * pNZ + y * pNZ}).item<maintype>();
-
-
-  std::cout << gather.data() << std::endl;
+        gather(x,y,z) = out.index({x * pNY * pNZ + y * pNZ + z}).item<maintype>();
+  // std::cout << gather.data() << std::endl;
   gather.saveToBinary("test_3d.bin");
+
 
   return 0;
 

@@ -31,12 +31,12 @@ title("TEST");
 % mean((A(2:Row-2, 2:Col-2,2:Dep-2) - F(2:Row-2, 2:Col-2,2:Dep-2)).^2, 'all')
 
 % 绘制数据 A 的切片图
-slice(X_norm, Y_norm, Z_norm, F, [0.5 1], [0.5 1], [0 1]);
+slice(X_norm, Y_norm, Z_norm, A, [0.5 1], [0.5 1], [0 1]);
 % hold on; % 保持当前图形
 
 % % 绘制函数 F 的切片图
 % slice(X_norm, Y_norm, Z_norm, F, [0.5 1], [0.5 1], [0 0.5 1]);
-% saveas(gcf, '../out/main2.png')
+saveas(gcf, '../out/main2_3d.png')
 colormap(jet);
 colorbar;
 

@@ -43,6 +43,9 @@ int main ()
 
   torch::optim::Adam adam_optim( net->parameters(), torch::optim::AdamOptions(1E-3) );
 
+  std::cout << dataset.X_boundary.sizes() << std::endl;
+  std::cout << dataset.X_internal.sizes() << std::endl;
+  std::cout << dataset.Y_boundary.sizes() << std::endl;
 
   while (iter <= nsteps)
   { 

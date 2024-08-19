@@ -74,10 +74,9 @@ dataset::dataset(
   torch::load(X_boundary, dataset_X_boundary);
   torch::load(Y_boundary, dataset_Y_boundary);
 
-
   in_size = X_boundary.size(1);
   out_size = Y_boundary.size(1);
-
+  
   FINAL_PROJECT_ASSERT_MSG(
     (
       ((nx-2+ny-2)*2      == X_boundary.size(0))
@@ -148,7 +147,7 @@ dataset::dataset(
   X_boundary = torch::from_blob(boundary_Xobj.data(),
     {num_rows,  in_size}                         ).to(device);
 
-  num_rows = boundary_Yobj.size() / static_cast<size_type>(in_size);
+  num_rows = boundary_Yobj.size() / static_cast<size_type>(out_size);
   Y_boundary = torch::from_blob(boundary_Yobj.data(),
     {num_rows, out_size}                         ).to(device);
 }
@@ -156,7 +155,7 @@ dataset::dataset(
 
 
 dataset_3d::dataset_3d(
-  const Integer in_size /*IN_SIZE*/,  const Integer out_size/*OUT_SIZE*/,
+  const Integer in_size /*IN_SIZE*/,  const Integer out_size /*OUT_SIZE*/,
   const Integer nx /*NX*/,            const Integer ny /*NY*/,      const Integer nz /*NZ*/,
   const torch::Device & device)
 : in_size {in_size}, out_size {out_size}, 
@@ -170,7 +169,7 @@ dataset_3d::dataset_3d(
     {
       for (size_type z = 0; z < nz; ++z)
       {
-        size_type idx_base { 3 * (x * ny * nz + y * nz) };
+        size_type idx_base { 3 * (x * ny * nz + y * nz + z) };
         internal_Xobj_full[idx_base]   = x * (1.0  / (nx - 1));
         internal_Xobj_full[idx_base+1] = y * (1.0  / (ny - 1));
         internal_Xobj_full[idx_base+2] = z * (1.0  / (nz - 1));
@@ -308,8 +307,6 @@ dataset_3d::dataset_3d(
   X_internal = torch::from_blob(internal_Xobj.data(), 
     {num_rows, in_size}, torch::requires_grad()  ).to(device);
 
-
-  std::cout << boundary_Xobj.size() << "\t" << boundary_Yobj.size() << std::endl;
   num_rows = boundary_Xobj.size() / static_cast<size_type>(in_size);
   X_boundary = torch::from_blob(boundary_Xobj.data(),
     {num_rows,  in_size}                         ).to(device);
