@@ -30,7 +30,11 @@ file(GLOB_RECURSE PROJECT_SOURCES
 # Add executable files and source files
 add_executable(main1 main1/main1.cpp ${PROJECT_SOURCES})
 add_executable(main1_3d main1/main1_3d.cpp ${PROJECT_SOURCES})
+
 add_executable(main2 main2/main2.cpp ${PROJECT_SOURCES})
+add_executable(main2_3d main2/main2_3d.cpp ${PROJECT_SOURCES})
+
+add_executable(datagen main2/datagen.cpp ${PROJECT_SOURCES})
 
 
 # Linking to MPI
@@ -39,18 +43,12 @@ target_link_libraries(main1_3d ${MPI_LIBRARIES})
 
 # Linking to Libtorch
 target_link_libraries(main2 "${TORCH_LIBRARIES}")
+target_link_libraries(main2_3d "${TORCH_LIBRARIES}")
+target_link_libraries(datagen "${TORCH_LIBRARIES}")
 
 # Add Optimization flag 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 
-if (MSVC)
-  file(GLOB TORCH_DLLS "${TORCH_INSTALL_PREFIX}/lib/*.dll")
-  add_custom_command(TARGET main
-                     POST_BUILD
-                     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                     ${TORCH_DLLS}
-                     $<TARGET_FILE_DIR:main>)
-endif (MSVC)
 
 set(NX 100 CACHE STRING "Grid dimension NX")
 set(NY 100 CACHE STRING "Grid dimension NY")
@@ -62,6 +60,8 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release")
   target_compile_definitions(main1 PRIVATE NDEBUG NX=${NX} NY=${NY})
   target_compile_definitions(main1_3d PRIVATE NDEBUG NX=${NX} NY=${NY} NZ=${NZ})
   target_compile_definitions(main2 PRIVATE NDEBUG)
+  target_compile_definitions(main2_3d PRIVATE NDEBUG)
+  target_compile_definitions(datagen  PRIVATE NDEBUG)
 endif()
 
 configure_file(config.h.in config.h)

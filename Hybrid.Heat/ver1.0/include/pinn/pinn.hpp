@@ -17,13 +17,13 @@
 /////
 
 #include <types.hpp>
+#include <pinn/types.hpp>
 #include <multiarray.hpp>
 
 /////
 
 namespace final_project { namespace PINN {
 
-typedef Float value_type;
 
 struct HeatPINNImpl
   : torch::nn::Module
@@ -37,7 +37,6 @@ struct HeatPINNImpl
 }; // struct HeatPINNImpl
 
 TORCH_MODULE(HeatPINN);
-
 
 torch::Tensor get_pde_loss(torch::Tensor &, torch::Tensor &, torch::Device &);
 torch::Tensor get_total_loss(HeatPINN &, torch::Tensor &, torch::Tensor &, torch::Tensor &, torch::Device &);
@@ -104,6 +103,7 @@ inline
 /// @param u 
 /// @param X 
 /// @param device 
+inline 
 torch::Tensor get_pde_loss(torch::Tensor & u, torch::Tensor & X, torch::Device & device)
 {
   torch::Tensor du_dX {
@@ -144,6 +144,7 @@ torch::Tensor get_pde_loss(torch::Tensor & u, torch::Tensor & X, torch::Device &
 /// @param X_train 
 /// @param Y_train 
 /// @param device 
+inline 
 torch::Tensor get_total_loss(HeatPINN & net, 
   torch::Tensor & X, torch::Tensor & X_train, torch::Tensor & Y_train, 
   torch::Device & device)

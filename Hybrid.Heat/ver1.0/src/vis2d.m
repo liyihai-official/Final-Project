@@ -23,13 +23,13 @@ A = permute(A, [2,1]);
 
 figure;
 h = gcf;
-title("TEST");
-contourf(x, y, U, 10);
-% contourf(x, y, A', 10);
+title("PINN");
+% contourf(x, y, U, 10);
+contourf(x, y, A', 10);
 colormap(jet);
 
 colorbar;
-saveas(gcf, '../out/main2.png')
+saveas(gcf, '../out/main3.png')
 % caxis([-20 +20]);
 % pause(0.05);
 

@@ -31,8 +31,8 @@
 
 /// Problem Size + Boundaries
 #if !defined(NX) || !defined(NY)
-#define NX 10000+2
-#define NY 10000+2
+#define NX 100+2
+#define NY 100+2
 #endif
 
 /// Using datatypes
@@ -56,7 +56,7 @@ Integer
   final_project::String filename {""};        // default empty filename (not saving results).
 
   constexpr Integer root_proc {0};
-  constexpr maintype tol {1E1};
+  constexpr maintype tol {1E-1};
   constexpr size_type nsteps {100'000'000};
   constexpr size_type numDim {2}, nx {NX}, ny {NY};
 
@@ -87,6 +87,7 @@ switch (opt)
     break;
   case 'F': case 'f':
     filename = optarg;
+    if (mpi_world.rank() == 0)
     std::cout 
       << "This program will store results to the file: " 
       << filename << std::endl;

@@ -8,29 +8,9 @@
 #include <types.hpp>
 
 #include <pinn/pinn.hpp>
+#include <pinn/types.hpp>
 #include <pinn/dataset.hpp>
 
-/// Problem Size + Boundaries
-#if !defined(NX) || !defined (NY) || !defined(NZ)
-#define NX 200+2
-#define NY 200+2
-#endif
-
-#if !defined (IN_SIZE) || !defined (OUT_SIZE)
-#define IN_SIZE 2
-#define OUT_SIZE 1
-#endif 
-
-/// Using datatypes
-using Integer = final_project::Integer;
-using Char    = final_project::Char;
-using Double  = final_project::Double;
-using Float   = final_project::Float;
-using size_type = final_project::Dworld;
-
-using maintype  = Float;
-
-using BCFunction = std::function<maintype(maintype, maintype)>;
 
 int main ()
 {
@@ -38,40 +18,31 @@ int main ()
   constexpr size_type nsteps {1'000};
   constexpr size_type numDim {2}, nx {NX}, ny {NY};
 
-  torch::DeviceType dp { torch::cuda::is_available() ? torch::kCUDA : torch::kCPU };
   torch::Device device { torch::cuda::is_available() ? torch::kCUDA : torch::kCPU };
 
-  std::cout << "Problem size: " 
-            << "\n\tRows: "     << nx-2 
-            << "\n\tColumns: "  << ny-2       << std::endl;
-  std::cout << "Running ON: "   << dp         << std::endl;
+  final_project::PINN::dataset dataset (nx, ny, DATASET_X_INTERNAL, DATASET_X_BOUNDARY, DATASET_Y_BOUNDARY, device);
 
-
-  std::mt19937 rde {std::random_device{}()};
-  std::uniform_real_distribution<Float> rng(0.0, 1.0);
-
-  BCFunction Dim00 {[](maintype x, maintype y){ return y;}};
-  BCFunction Dim01 {[](maintype x, maintype y){ return 1;}};
-
-  BCFunction Dim10 {[](maintype x, maintype y){ return x;}};
-  BCFunction Dim11 {[](maintype x, maintype y){ return 1;}};
-
-
-  final_project::PINN::dataset dataset (IN_SIZE, OUT_SIZE, NX, NY, rde, rng, Dim00, Dim01, Dim10, Dim11, device);
-
+#ifndef NDEBUG
   // dataset.show_Y_boundary();
   // dataset.show_X_internal();
   // dataset.show_X_boundary();
+#endif
 
-  auto net { final_project::PINN::HeatPINN(IN_SIZE, OUT_SIZE, /*hsize*/ 20) };
+  // Predefined Arguments
+  std::cout << "Problem size: "           << "\n"
+            << "\tRows: "       << nx-2   << "\n"
+            << "\tColumns: "    << ny-2       << std::endl;
+  std::cout << "Running ON: "   << device     << std::endl;
+
+  auto net { final_project::PINN::HeatPINN(IN_SIZE_2D, OUT_SIZE, /*hsize*/ 20) };
   net->to(device);
+
+
 
   torch::Tensor loss_sum;
 
-  torch::optim::Adam adam_optim(
-    net->parameters(), 
-    torch::optim::AdamOptions(1E-3)
-  );
+  torch::optim::Adam adam_optim( net->parameters(), torch::optim::AdamOptions(1E-3) );
+
 
   while (iter <= nsteps)
   { 
@@ -85,17 +56,17 @@ int main ()
 
     adam_optim.step(closure);
 
-    // if (iter % 300 == 0)
-    // {
-    //   std::cout 
-    //     << "Iteration = " << iter << "\t"
-    //     << "Loss = " << std::fixed << std::setprecision(4) << std::setw(8) << loss_sum.item<Float>() << "\t"
-    //     << "Loss.Device.Type = " << loss_sum.device().type() 
-    //     << std::endl; 
-    // }
+    if (iter % 30 == 0)
+    {
+      std::cout 
+        << "Iteration = " << iter << "\t"
+        << "Loss = " << std::fixed << std::setprecision(4) << std::setw(8) << loss_sum.item<Float>() << "\t"
+        << "Loss.Device.Type = " << loss_sum.device().type() 
+        << std::endl; 
+    }
 
     ++iter;
-    if (loss_sum.item<Float>() < 1E-2) break;
+    if (loss_sum.item<Float>() < 1E-4) break;
   }
 
 
@@ -107,25 +78,25 @@ int main ()
   //   << "loss.device().type()=" << loss_sum.device().type() 
   //   << std::endl;
 
-  // torch::save(net, "model.pt");
+  torch::save(net, "model.pt");
 
-
-  // final_project::PINN::dataset valset (IN_SIZE, OUT_SIZE, NX, NY, device);
-  // auto out = net->forward(valset.X_internal);
+  Integer pNX {100}, pNY {100};
+  final_project::PINN::dataset valset (IN_SIZE_2D, OUT_SIZE, pNX, pNY, device);
+  auto out = net->forward(valset.X_internal);
   // std::cout << out << std::endl;
 
-  // final_project::multi_array::array_base<Float, 2> gather (NX, NY);
+  final_project::multi_array::array_base<Float, 2> gather (pNX, pNY);
 
-  // for (Integer x = 0; x < NX; ++x)
-  // {
-  //   for (Integer y = 0; y < NY; ++y)
-  //   {
-  //     gather(x,y) = out.index({x * NY + y}).item<Float>();
-  //   }
-  // }
+  for (Integer x = 0; x < pNX; ++x)
+  {
+    for (Integer y = 0; y < pNY; ++y)
+    {
+      gather(x,y) = out.index({x * pNY + y}).item<Float>();
+    }
+  }
 
   // std::cout << gather.data() << std::endl;
-  // gather.saveToBinary("test.bin");
+  gather.saveToBinary("test.bin");
 
   return 0;
 

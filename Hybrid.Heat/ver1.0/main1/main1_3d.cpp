@@ -87,6 +87,7 @@ switch (opt)
     break;
   case 'F': case 'f':
     filename = optarg;
+    if (mpi_world.rank() == 0)
     std::cout 
       << "This program will store results to the file: " 
       << filename << std::endl;
