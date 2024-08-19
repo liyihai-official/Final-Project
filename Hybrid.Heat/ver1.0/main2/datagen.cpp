@@ -53,5 +53,21 @@ Integer
 
   dataset_3d.save(DATASET_X_INTERNAL, DATASET_X_BOUNDARY, DATASET_Y_BOUNDARY);
 
+
+  // final_project::multi_array::array_base<Float, 2> in (dataset.X_boundary.size(0), numDim);
+  // final_project::multi_array::array_base<Float, 1> u  (dataset.X_boundary.size(0));
+
+  // for (auto i = 0; i < dataset.X_boundary.size(0); ++i)
+  // {
+  //   in(i,0) = dataset.X_boundary.index({i, 0}).item<Float>();
+  //   in(i,1) = dataset.X_boundary.index({i, 1}).item<Float>();
+  //   in(i,2) = dataset.X_boundary.index({i, 2}).item<Float>();
+  //   u(i)    = dataset.Y_boundary.index({i, 0}).item<Float>();
+  // }
+
+
+  // in.saveToBinary("X.bin");
+  // u.saveToBinary("u.bin");
+
   return 0;
 }

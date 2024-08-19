@@ -27,14 +27,26 @@ file(GLOB_RECURSE PROJECT_SOURCES
   ${PROJECT_SOURCE_DIR}/src/*.cpp
 )
 
+# Remove files under src/pinn
+foreach(file ${PROJECT_SOURCES})
+  if("${file}" MATCHES "${PROJECT_SOURCE_DIR}/src/pinn/.*")
+    list(REMOVE_ITEM PROJECT_SOURCES ${file})
+  endif()
+endforeach()
+
+# PINN SOURCE files under src/pinn
+file(GLOB_RECURSE PINN_SOURCES
+  ${PROJECT_SOURCE_DIR}/src/pinn/*cpp
+)
+
 # Add executable files and source files
 add_executable(main1 main1/main1.cpp ${PROJECT_SOURCES})
 add_executable(main1_3d main1/main1_3d.cpp ${PROJECT_SOURCES})
 
-add_executable(main2 main2/main2.cpp ${PROJECT_SOURCES})
-add_executable(main2_3d main2/main2_3d.cpp ${PROJECT_SOURCES})
+add_executable(main2 main2/main2.cpp ${PROJECT_SOURCES} ${PINN_SOURCES})
+add_executable(main2_3d main2/main2_3d.cpp ${PROJECT_SOURCES} ${PINN_SOURCES})
 
-add_executable(datagen main2/datagen.cpp ${PROJECT_SOURCES})
+add_executable(datagen main2/datagen.cpp ${PROJECT_SOURCES} ${PINN_SOURCES})
 
 
 # Linking to MPI
@@ -52,16 +64,15 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 
 set(NX 100 CACHE STRING "Grid dimension NX")
 set(NY 100 CACHE STRING "Grid dimension NY")
-set(NZ 50 CACHE STRING "Grid dimension NY")
-
+set(NZ 50  CACHE STRING "Grid dimension NY")
 
 # Release mode, set to No Debug
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
   target_compile_definitions(main1 PRIVATE NDEBUG NX=${NX} NY=${NY})
   target_compile_definitions(main1_3d PRIVATE NDEBUG NX=${NX} NY=${NY} NZ=${NZ})
+  target_compile_definitions(datagen  PRIVATE NDEBUG)
   target_compile_definitions(main2 PRIVATE NDEBUG)
   target_compile_definitions(main2_3d PRIVATE NDEBUG)
-  target_compile_definitions(datagen  PRIVATE NDEBUG)
 endif()
 
 configure_file(config.h.in config.h)

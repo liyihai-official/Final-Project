@@ -31,7 +31,7 @@ struct HeatPINNImpl
   HeatPINNImpl() = default;
   HeatPINNImpl(Integer, Integer, Integer);
 
-  torch::Tensor forward(torch::Tensor);
+  torch::Tensor forward(torch::Tensor &);
 
   torch::nn::Linear input, h0, h1, h2, output;
 }; // struct HeatPINNImpl
@@ -85,7 +85,7 @@ inline
 /// @return 
 inline 
   torch::Tensor 
-  HeatPINNImpl::forward(torch::Tensor x)
+  HeatPINNImpl::forward(torch::Tensor & x)
 {
   x = torch::tanh(input(x));
   x = torch::tanh(h0(x));
