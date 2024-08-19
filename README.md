@@ -36,6 +36,12 @@ $$ -->
 
 ### Development Note
 
+#### PINN
+This is a visualization plot of randomly generated 3D dataset,
+<img src="Hybrid.Heat/ver1.0/out/main2_dataset.png" alt="Heat_2D" height="400">
+
+
+
 #### FDM 
 <img src="Hybrid.Heat/ver1.0/main1.png" alt="Heat_2D" height="400">
 
