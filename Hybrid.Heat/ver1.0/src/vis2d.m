@@ -21,21 +21,24 @@ A = fread(fid, [Row * Col], 'float32');
 A = reshape(A, [Col, Row]);
 A = permute(A, [2,1]);
 
+diff = mean((A(2:Row-2, 2:Col-2)' - U(2:Col-2, 2:Row-2)).^2, 'all');
+
 figure;
 h = gcf;
-title("PINN");
+
 % contourf(x, y, U, 10);
 contourf(x, y, A', 10);
 colormap(jet);
 
 colorbar;
-saveas(gcf, '../out/main3.png')
+
 % caxis([-20 +20]);
 % pause(0.05);
 
 xlabel('Row-axis Label'); % 替换为你想要的 X 轴标签
 ylabel('Col-axis Label'); % 替换为你想要的 Y 轴标签
-
+title("PINN-2D MSE =" + diff);
+saveas(gcf, '../out/main3.png')
 
 % figure;
 % imagesc(x, y, U);6  % 绘制热图，使用指定的 X 和 Y 坐标

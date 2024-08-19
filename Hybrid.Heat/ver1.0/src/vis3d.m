@@ -42,7 +42,7 @@ colorbar;
 xlabel('Row-axis Label'); % 替换为你想要的 X 轴标签
 ylabel('Col-axis Label'); % 替换为你想要的 Y 轴标签
 zlabel('Depth-axis Label'); % 替换为你想要的 Z 轴标签
-title("MSE = " +diff);
+title("PINN-3D MSE = " +diff);
 saveas(gcf, '../out/main2_3d.png')
 
 % legend('Data A', 'Function F'); % 添加图例区分两者
