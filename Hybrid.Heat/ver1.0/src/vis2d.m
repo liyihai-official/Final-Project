@@ -38,7 +38,7 @@ colorbar;
 xlabel('Row-axis Label'); % 替换为你想要的 X 轴标签
 ylabel('Col-axis Label'); % 替换为你想要的 Y 轴标签
 title("PINN-2D MSE =" + diff);
-saveas(gcf, '../out/main3.png')
+saveas(gcf, '../out/main2.png')
 
 % figure;
 % imagesc(x, y, U);6  % 绘制热图，使用指定的 X 和 Y 坐标
