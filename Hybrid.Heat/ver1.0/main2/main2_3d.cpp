@@ -4,6 +4,7 @@
 #include <numbers>
 #include <random>
 #include <vector>
+#include <chrono>
 
 #include <types.hpp>
 
@@ -41,6 +42,7 @@ int main ()
 
   torch::optim::Adam adam_optim( net->parameters(), torch::optim::AdamOptions(1E-3) );
 
+  auto start = std::chrono::high_resolution_clock::now();
   while (iter <= nsteps)
   { 
     auto closure = [&](){
@@ -78,7 +80,10 @@ std::cout
       break;
     }
   }
-
+  auto end = std::chrono::high_resolution_clock::now();
+  
+  std::chrono::duration<double, std::milli> duration = end - start;
+  std::cout << "Execution time: " << duration.count() << " ms" << std::endl;
   torch::save(net, "../out/model_3d.pt");
 
 
