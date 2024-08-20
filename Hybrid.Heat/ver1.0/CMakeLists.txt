@@ -20,7 +20,8 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 
 # Compile Flags
 set(OpenMP_CXX_FLAGS "-fopenmp")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS} ${OpenMP_CXX_FLAGS} -O3")
+set(CMAKE_CXX_FLAGS "-O0")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 
 
 # Collect Source Files
@@ -60,17 +61,20 @@ target_link_libraries(main2_3d "${TORCH_LIBRARIES}")
 target_link_libraries(datagen "${TORCH_LIBRARIES}")
 
 # Add Optimization flag 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
-
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 
 set(NX 100 CACHE STRING "Grid dimension NX")
 set(NY 100 CACHE STRING "Grid dimension NY")
 set(NZ 50  CACHE STRING "Grid dimension NY")
 
+
+target_compile_definitions(main1 PRIVATE NX=${NX} NY=${NY})
+target_compile_definitions(main1_3d PRIVATE NX=${NX} NY=${NY} NZ=${NZ})
+
 # Release mode, set to No Debug
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
-  target_compile_definitions(main1 PRIVATE NDEBUG NX=${NX} NY=${NY})
-  target_compile_definitions(main1_3d PRIVATE NDEBUG NX=${NX} NY=${NY} NZ=${NZ})
+  target_compile_definitions(main1 PRIVATE NDEBUG)
+  target_compile_definitions(main1_3d PRIVATE NDEBUG)
   target_compile_definitions(datagen  PRIVATE NDEBUG)
   target_compile_definitions(main2 PRIVATE NDEBUG)
   target_compile_definitions(main2_3d PRIVATE NDEBUG)

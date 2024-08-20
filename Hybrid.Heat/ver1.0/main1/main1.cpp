@@ -31,8 +31,8 @@
 
 /// Problem Size + Boundaries
 #if !defined(NX) || !defined(NY)
-#define NX 100+2
-#define NY 100+2
+#define NX 8000+2
+#define NY 8000+2
 #endif
 
 /// Using datatypes
@@ -56,7 +56,7 @@ Integer
   final_project::String filename {""};        // default empty filename (not saving results).
 
   constexpr Integer root_proc {0};
-  constexpr maintype tol {1E-1};
+  constexpr maintype tol {1E0};
   constexpr size_type nsteps {100'000'000};
   constexpr size_type numDim {2}, nx {NX}, ny {NY};
 

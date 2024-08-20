@@ -30,9 +30,9 @@
 
 /// Problem Size + Boundaries
 #if !defined(NX) || !defined (NY) || !defined(NZ)
-#define NX 2000+2
-#define NY 2000+2
-#define NZ 2000+2
+#define NX 200+2
+#define NY 200+2
+#define NZ 200+2
 #endif
 
 /// Using datatypes

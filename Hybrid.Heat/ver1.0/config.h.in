@@ -32,9 +32,6 @@
 #cmakedefine TORCH_FOUND
 #define TORCH_LIBRARIES "@TORCH_LIBRARIES@"
 
-/* Optimization flag */
-#define OPTIMIZATION_LEVEL "-O3"
-
 /* Include paths */
 #define INCLUDE_PATHS "@PROJECT_SOURCE_DIR@/include"
 

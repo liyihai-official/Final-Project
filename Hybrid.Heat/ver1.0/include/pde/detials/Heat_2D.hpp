@@ -481,7 +481,7 @@ FINAL_PROJECT_ASSERT(BC_2D->isSetUpBC && IC_2D->isSetUpInit);
       for (iter = 1; iter < nsteps; ++iter)
       {
         time = iter*this->dt; 
-        exchange_ping_pong_SR();
+        exchange_ping_pong_I();
         ldiff = update_ping_pong();
         BC_2D->UpdateBC(*this, time);
         MPI_Allreduce(&ldiff, &gdiff, 1, DiffType, MPI_SUM, in.topology().comm_cart);
