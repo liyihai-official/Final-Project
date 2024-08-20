@@ -13,6 +13,7 @@ endif()
 # C++ Standard Required, C++ 20
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CXX_COMPILER_PATH ${CMAKE_CXX_COMPILER})
 
 # include path
 include_directories(${PROJECT_SOURCE_DIR}/include)

@@ -21,6 +21,9 @@
 /* Compiler flags */
 #define CXX_FLAGS "@CMAKE_CXX_FLAGS@"
 
+/* Compiler information */
+#define CXX_COMPILER_PATH "@CXX_COMPILER_PATH@"
+
 /* MPI Information */
 #cmakedefine01 MPI_FOUND
 #cmakedefine MPI_CXX_COMPILER "@MPI_CXX_COMPILER@"
