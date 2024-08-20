@@ -24,22 +24,25 @@ To this end, consider the previously discussed form of PDEs shown in
 equation \ref{EQ_General_PDEs} which parametrized by number $\lambda$ and an operator $\mathcal{N}[\cdot; \lambda]$.
 Moreover, we assume the variable $x$ is a 2D or 3D spatio vector which is written in 
 $\vec{x} \in \mathbb{R}^d$, $d = 2, 3$.
-The domain of this PDE system is considered between $0$ and $1$, where is denoted with $\Omega = [0, 1]^d$, $d = 2,3$.
-To these setups, we have the general form of the PDEs we are going to investigated, shown in equations \ref{EQ_General_Form_PDE}
 \begin{align}\label{EQ_General_Form_PDE}
   &\frac{\partial u}{\partial t}\left(t,\vec{x}\right) + \mathcal{N}\left[u(t,\vec{x});\lambda\right] = 0, &\vec{x}\in\Omega, &t\in[0, +\infty) \nonumber\\
   &u\left(0,\vec{x}\right) = \varphi (\vec{x}), &\vec{x}\in\Omega & \\
   &u\left(t,\vec{x}\right) = g (t,\vec{x}),     &\vec{x}\in \overline{\Omega}, &t\in[0, +\infty) \nonumber
 \end{align}
+The domain of this PDE system is considered between $0$ and $1$, where is denoted with $\Omega = [0, 1]^d$, $d = 2,3$.
+To these setups, we have the general form of the PDEs we are going to investigated, shown in equations \ref{EQ_General_Form_PDE}
 The boundary condition shown in E.q. \ref{EQ_General_Form_PDE} is Dirichlet Condition known as first type boundary condition, where as the 
 second type boundary condition (Von Neumman) [E.q. \ref{EQ_Von_Neumman_BC}] gives the other form of $u(t,\vec{x})$ at the boundary $\overline{\Omega}$.
 \begin{equation}\label{EQ_Von_Neumman_BC}
   \frac{\partial u}{\partial \vec{x}} = g(t, \vec{x}),\:\: \vec{x}\in \overline{\Omega}, \:\:t\in[0, +\infty)
 \end{equation}
 
+
 \subsection{Computiational Topology}
 The computational topology is critically important when we are programming parallel PDEs solver softwares.
 Put the strongly speed-dependent data into the slow memory could make entire program slower.
+
+\paragraph{Callan}
 The cluster we are using for this project is \texttt{Callan} \cite{Callan_TCD} which has 
 $2$ CPUs per compute node, and each CPU has $32$ cores with single thread. 
 The Non-Uniform Memory Access (NUMA) nodes are layout as following 
@@ -52,76 +55,38 @@ The Non-Uniform Memory Access (NUMA) nodes are layout as following
 Accessing the other NUMA node's memory reduces the bandwidth and also the latency,
 though the bandwidth is commonly high enough, the latency can increase by 
 $~30\%$ to $~400\%$ \cite{NUMA_Latency_TCD}. 
-This latency becomes dangerous when writing shared memory parallel programms.
+This latency becomes dangerous when writing shared memory parallel programs.
 
 
+\subsection{Accuracy}
+When we tried to represent numbers using arithmetic in binary, decimal or hexadecimal, truncation always affects the precision of every number, 
+or so called as 
+round-off-error.
 
+\subsubsection{Round-off Error}
+In IEEE-754 \cite{IEEE_754} standards, a $32$-bit floating pointer number, single precision, obligatorily represented with $23$-bit mantissa, 
+$8$-bit exponent and $1$-bit for sign. 
+Where as $64$-bit floating number, double precision, also ubiquitous used, which has $11$-bit exponent and $52$-bit mantissa.
+After almost three decades development, not only single and double precisions (float32, float64) are ubiquitously in use, 
+also more formats such as fp4, fp8, and fp16 etc. Both of them follows the simple form of exponent $k$, sign $n$ and mantissa $N$. 
+\cite{IEEE_754_p2_eq1}
+\begin{equation*}
+  2^{k+1-N}n
+\end{equation*}
+Round-off errors are a manifestation of the fact that on a digital computer, which is unavoidable in numerical computations.
+In such case, the precision of the number depends on how many bytes are used to store single number. 
+For instance, a float32 number provides $2^{-23} \approx 1.2\times10^{-7}$, and a double precision number gives $2^{-53} \approx 2.2\times10^{-16}$, 
+such number is called machine $\epsilon$ which is the smallest number the machine can represent with given format.
 
-% In this project, I chose to use various numerical approaches to approximate the solutions.
-% It begins with Finite Difference Methods(FDM) and an other method employed by deep neural 
-% networks which leverage by their capability as universal function approximators
-% \cite{DNN-HORNIK1989359}. 
+In numerical methods I investigated, the FDTDs are conventionally using double precision number so that the programs can treat extreamly large and small 
+numbers simultaneously in the same computation, without worring about the round-off errors.
+However, as mentioned, fp32 and fp16 are also popular use in scientific computing, especially in machine learning training process. 
+While the lasted training GPUs are integrated compute accelarate unit for low precision floating numbers. \cite{NVIDIA_HB200_PAPER}.
 
-% The Kormoglov PDEs are series of equations which describe the motions of Brownian Motions
-% \cite{SolveKorPDE}.
-% In general, 
-% let $T \in (0, +\infty)$, $d \in \mathbb{N}$, 
-% let $\mu : \mathbb{R}^d \rightarrow \mathbb{R}^d$ 
-% and $\sigma: \mathbb{R}^d \rightarrow \mathbb{R}^{d \times d}$ be the Lipschitz continuous fucntions.
-% Let $\varphi : \mathbb{R}^d \rightarrow \mathbb{R}$ be a function, 
-% and $u$ be a function from Hilbert Space 
-% $[0, T] \times \mathbb{R}^d$ to $\mathbb{R}$
-% \begin{align*}
-%   u : [0, T] \times \mathbb{R}^d & \longrightarrow \mathbb{R} \\
-%       (t, x) & \longmapsto u 
-% \end{align*}
-% with at most polynomially growing partial derivatives.
-% The problem is that $u$ satisfied a below system on $D = [0, T] \times \left[a, b \right]^d $ and 
-% $a, b \in \mathbb{R}^d$ with $a < b$,
-% \begin{align}
-%   & \frac{\partial u}{
-%     \partial t} 
-%   = \frac{1}{2}
-%   \text{Trace}_{\mathbb{R}^d}
-%   \left[
-%     \sigma(x) \sigma^{*}(x)
-%     \left(\text{Hess}_x u\right)
-%   \right]
-%   +
-%   \langle 
-%     \mu, 
-%     \nabla _x u
-%   \rangle_{
-%     \mathbb{R}^d
-%   } \\
-%  & u(0, x) = \varphi(x), 
-%  \:\:\:\: 
-%  x \in \left[a, b \right]^d
-%  \\
-%  & \left.
-%  \left(
-%   \frac{\partial u}{\partial \vec{n}}  + \lambda u 
-%  \right)
-%  \right|_{x \in \varGamma}
-%  = g(t, x) 
-%  \:\:\:\: 
-%  \forall t \in [0, T],\: x \in \mathbb{R}^d
-% \end{align}
-
-% The goal is to numerically appriximate the stablized state $u(T, x)$ of the system in the fureture time $T$,
-% and in the hypercude space $\left[a, b\right]\in \mathbb{R}^d$ with various boundary conditions $g$.
-
-% Reprompt problem, this work aimed at solving this problem in a bigger picture which requires a more general 
-% form. 
-% In this project, I consider the parametrized and nonliner PDEs of the general form
-% \begin{align}
-%   \frac{\partial u}{\partial t}
-%   + \mathcal{N} 
-%   \left[
-%     u; \lambda
-%   \right] 
-%   = 0
-%   \:\:\:\: 
-%   t \in \left[0. T\right], x \in D
-% \end{align}
-% where $\mathcal{N}\left[\cdot; \lambda \right]$ stands for a nonlinear operator parametrized by $\lambda$.
+\subsubsection{Floating-point Arithmetic}
+The other type loss comes from the arithmetic operations on two numbers $x$, $y$. 
+The standard model holds that 
+\begin{equation}
+  fl(x \:\text{op}\: y) = (x \: \text{op} \: y) (1+\delta), \:\:\: \left|\delta\right| < \epsilon
+\end{equation}
+where the op stands for the four elementary operations: $+, -, \times, /$. \cite{Germund,NMSC,V1,P112}.
