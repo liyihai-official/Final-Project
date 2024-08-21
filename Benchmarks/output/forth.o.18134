@@ -56,3 +56,91 @@ Problem size:
 MPI Parameters: 
 	Number of MPI Processes: 1
 OpenMP Threads: 1
+
+
+###############################################################################
+TCHPC Cluster: callan
+Job 18134 (forth.sh) for User 'liy35' in Account 'callan_liy35'
+Finished at: Tue Aug 20 16:03:58 IST 2024
+
+Job efficiency estimates:
+=========================
+
+Job ID: 18134
+Cluster: callan
+User/Group: liy35/liy35
+State: RUNNING
+Nodes: 1
+Cores per node: 64
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 128-00:03:12 core-walltime
+Job Wall-clock time: 2-00:00:03
+Memory Utilized: 0.00 MB (estimated maximum)
+Memory Efficiency: 0.00% of 250.00 GB (3.91 GB/core)
+WARNING: Efficiency statistics may be misleading for RUNNING jobs.
+
+Job completion status:
+======================
+
+JobID           JobName AllocCPUS NTasks NNodes     MaxRSS    MaxRSSNode  MaxDiskRead MaxDiskWrite    Elapsed      State ExitCode 
+------------ ---------- --------- ------ ------ ---------- ------------- ------------ ------------ ---------- ---------- -------- 
+18134          forth.sh        64             1                                                    2-00:00:04    TIMEOUT      0:0 
+18134.batch       batch        64      1      1                                                    2-00:00:04    TIMEOUT      0:0 
+18134.extern     extern        64      1      1          0    callan-n08        0.00M        0.00M 2-00:00:04  COMPLETED      0:0 
+
+
+Job details:
+============
+
+JobId=18134 JobName=forth.sh
+   UserId=liy35(60743) GroupId=liy35(60747) MCS_label=N/A
+   Priority=254648 Nice=0 Account=callan_liy35 QOS=normal
+   JobState=COMPLETING Reason=TimeLimit Dependency=(null)
+   Requeue=0 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   DerivedExitCode=0:0
+   RunTime=2-00:00:04 TimeLimit=2-00:00:00 TimeMin=N/A
+   SubmitTime=2024-08-18T04:26:12 EligibleTime=2024-08-18T04:26:12
+   AccrueTime=2024-08-18T04:26:12
+   StartTime=2024-08-18T16:03:54 EndTime=2024-08-20T16:03:58 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2024-08-18T16:03:54 Scheduler=Main
+   Partition=compute AllocNode:Sid=localhost:984248
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=callan-n08
+   BatchHost=callan-n08
+   NumNodes=1 NumCPUs=64 NumTasks=64 CPUs/Task=1 ReqB:S:C:T=0:0:*:*
+   ReqTRES=cpu=64,mem=250G,node=1,billing=64
+   AllocTRES=cpu=64,mem=250G,node=1,billing=64
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   JOB_GRES=(null)
+     Nodes=callan-n08 CPU_IDs=0-63 Mem=256000 GRES=
+   MinCPUsNode=1 MinMemoryCPU=4000M MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=/home/users/mschpc/2023/liy35/Final-Project/Benchmarks/forth.sh
+   WorkDir=/home/users/mschpc/2023/liy35/Final-Project/Benchmarks
+   StdErr=/home/users/mschpc/2023/liy35/Final-Project/Benchmarks/error/forth.e.18134
+   StdIn=/dev/null
+   StdOut=/home/users/mschpc/2023/liy35/Final-Project/Benchmarks/output/forth.o.18134
+   Power=
+   MailUser=liy35@tcd.ie MailType=INVALID_DEPEND,BEGIN,END,FAIL,REQUEUE,STAGE_OUT
+   
+
+
+SLURM Bank Statement:
+=====================
+
+User           Usage |        Account     Usage | Account Limit Available (CPU hrs)
+---------- --------- + -------------- --------- + ------------- ---------
+liy35          4,547 |   CALLAN_LIY35     4,547 |       300,000   295,453
+
+
+Acknowledgements:
+=================
+
+Note that usage of TCHPC Resources *must* be acknowledged in all publications.
+
+Please see this page for details relevant to this cluster:
+
+http://www.tchpc.tcd.ie/resources/acknowledgementpolicy
+
+################################################################################

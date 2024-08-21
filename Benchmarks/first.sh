@@ -13,7 +13,7 @@ module load openmpi/4.1.6-gcc-13.1.0-kzjsbji
 
 
 # This is the Benchmarks for Hybrid
-
+# export LIBTORCH_PATH=/home/users/mschpc/2023/liy35/libtorch # Callan
 
 
 export OMP_NUM_THREADS=32
