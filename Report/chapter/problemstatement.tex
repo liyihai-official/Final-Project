@@ -17,7 +17,7 @@ These two methodologies broadly represent the current approaches to
 handling PDEs, specifically 
 CPU-based parallelization and GPU-based parallelization.
 
-\subsection{General Form}
+\subsection{General Form}\label{SEC_General_Form}
 Starting with the general form of the PDEs, rather than the specific euqations, is because 
 different equations give perform differently on the same compute system.
 To this end, consider the previously discussed form of PDEs shown in 
@@ -37,25 +37,98 @@ second type boundary condition (Von Neumman) [E.q. \ref{EQ_Von_Neumman_BC}] give
   \frac{\partial u}{\partial \vec{x}} = g(t, \vec{x}),\:\: \vec{x}\in \overline{\Omega}, \:\:t\in[0, +\infty)
 \end{equation}
 
+\subsection{Specific Form}
+With general form proposed in section \ref{SEC_General_Form}[E.q. \ref{EQ_General_Form_PDE}],
+I specify a particular form of this heat problem to help us to have better understand the quality of our 
+solutions and programs.
+In $2$ dimension space, the domain $\Omega = \left[ 0, 1\right] ^2 \in \mathbb{R}^2$ and its boundary
+denoted with $\overline{\Omega}$, the initial condition $\varphi(x,y) = 0$.
+such problem has the certain form below
+\begin{align}
+  &\frac{\partial u}{\partial t} = \alpha \left(
+    \frac{\partial u^2}{\partial^2 x}
+    +
+    \frac{\partial u^2}{\partial^2 y}
+  \right) &(x,y) \in \Omega, \: t \in \left[0, +\infty\right)  \nonumber\\
+  &u(0,x,y)  = \varphi(x,y) = 0 &(x,y) \in \Omega\\
+  &u(t,x,y)
+   = g(x,y)
+   = \begin{cases}
+    y, \:\: x=0, y\in\left(0,1\right)\\
+    1, \:\: x=1, y\in\left(0,1\right)\\
+    x, \:\: y=0, x\in\left(0,1\right)\\
+    1, \:\: y =1, x\in\left(0,1\right)
+  \end{cases}
+  &t \in \left[0, +\infty\right) \nonumber
+\end{align}
+With given format, and $\alpha = 1$, we have the analytical solution of this equations, where is 
+\begin{equation}\label{EQ_SOLUTION_2D}
+  u(t,x,y) = x + y - xy, \:\:(x,y) \in \Omega,\: t \in \left[0, +\infty\right)
+\end{equation}
+In 3 dimension space, similarly, with identical initial condition set up to $0$, coefficient $\alpha = 1$,
+the boundaries are 
+\begin{equation}
+  u(t,x,y,z) = g(x,y,z) = 
+  \begin{cases}
+    y+z -2yz        , \:\: &x=0,\\
+    1 - y - z + 2yz , \:\: &x=1,\\
+    x+z - 2xz       , \:\: &y=0,\\
+    1 - x - z + 2xz , \:\: &y =1,\\
+    x+y - 2xy       , \:\: &z=0,\\
+    1 - x - y + 2xy , \:\: &z=1
+  \end{cases}
+  \:\:, t \in \left[0, +\infty\right)
+\end{equation}
+In such case, the analytical solution has for form below 
+\begin{equation}
+  u(t,x,y,z) = x + y + z - 2xy - 2xz - 2yz + 4xyz, \:\:(x,y,z) \in \Omega,\: t \in \left[0, +\infty\right)
+\end{equation}
 
-\subsection{Computiational Topology}
-The computational topology is critically important when we are programming parallel PDEs solver softwares.
-Put the strongly speed-dependent data into the slow memory could make entire program slower.
 
-\paragraph{Callan}
-The cluster we are using for this project is \texttt{Callan} \cite{Callan_TCD} which has 
-$2$ CPUs per compute node, and each CPU has $32$ cores with single thread. 
-The Non-Uniform Memory Access (NUMA) nodes are layout as following 
+\subsection{Discretization}
+To begin with discretizing the objects or regions we intend to 
+evaluate via matrices, we consider a straightforward approach: 
+using the coordinates in $d=2,3$ dimensional spaces and the function 
+values at those points to simplify the objects. 
+This naive approach works well for investigating objects with regular shapes, such as a cube.
+
+For the FDTD (Finite-Difference Time-Domain) method, we use a finely 
+generated $d$-cube with shape $\left\{n_i\right\}_i^{d}$. Including 
+the boundary conditions, the cube has $\prod_i (n_i+2)$ nodes. 
+It requires $4\prod_i (n_i+2)$ bytes for float32 or $8\prod_i (n_i+2)$ bytes 
+for float64 to store in memory. 
+With this setup, for equally spaced nodes, we have:
+\begin{equation}
+  \Delta x_i = \frac{1}{n_i-1}
+\end{equation}
+
+Unlike the previously generated regular grid of 
+points with dimensions $n_xn_yn_z$, 
+another strategy is to randomly generate the same number of points based on the same known conditions, 
+covering both the central part and the boundary. 
+In this scenario, 
+shown in figure, 
+there are $n_x n_yn_z$ central points, 
+with function values set according to the boundary conditions, 
+and $2 \times(n_xn_y + n_yn_z + n_zn_x)$ boundary points to be solved. 
+This set of points can be used for training a PINN model.
+
+% 不同于之前生成规则的nx * ny * nz的点阵，另一种策略是对于与先前同样的已知条件随机生成同样数量的点，用于中心的部分以及边界部分。
+% 这种情况下一共有nx * ny * nz个中心部分，根据边界条件设置函数值，以及(nx * ny + ny * nz + nz * nx)*2个边界点，需要求解的部分。
+% 这种方式生成的点集用于训练PINN模型。
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.5\textwidth]{figure/FIG_Topology_Callan.jpg}
-  \caption{NUMA topology of single node on Callan}
+  \includegraphics[width=0.5\textwidth]{figure/FIG_main2_dataset.png}
+  \caption{Randomly general dataset for 3D PINN model training.}
   \label{FIG_Topology_Callan}
 \end{figure}
-Accessing the other NUMA node's memory reduces the bandwidth and also the latency,
-though the bandwidth is commonly high enough, the latency can increase by 
-$~30\%$ to $~400\%$ \cite{NUMA_Latency_TCD}. 
-This latency becomes dangerous when writing shared memory parallel programs.
+
+% \begin{figure}[htbp]
+%   \centering
+  
+%   \caption{Figure Shows the FDM idea, If NEED}
+%   \label{<label>}
+% \end{figure}
 
 
 \subsection{Accuracy}
@@ -90,3 +163,23 @@ The standard model holds that
   fl(x \:\text{op}\: y) = (x \: \text{op} \: y) (1+\delta), \:\:\: \left|\delta\right| < \epsilon
 \end{equation}
 where the op stands for the four elementary operations: $+, -, \times, /$. \cite{Germund,NMSC,V1,P112}.
+
+
+\subsection{Computiational Topology}
+The computational topology is critically important when we are programming parallel PDEs solver softwares.
+Put the strongly speed-dependent data into the slow memory could make entire program slower.
+
+\paragraph{Callan}
+The cluster we are using for this project is \texttt{Callan} \cite{Callan_TCD} which has 
+$2$ CPUs per compute node, and each CPU has $32$ cores with single thread. 
+The Non-Uniform Memory Access (NUMA) nodes are layout as following 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figure/FIG_Topology_Callan.jpg}
+  \caption{NUMA topology of single node on Callan}
+  \label{FIG_Topology_Callan}
+\end{figure}
+Accessing the other NUMA node's memory reduces the bandwidth and also the latency,
+though the bandwidth is commonly high enough, the latency can increase by 
+$~30\%$ to $~400\%$ \cite{NUMA_Latency_TCD}. 
+This latency becomes dangerous when writing shared memory parallel programs.
