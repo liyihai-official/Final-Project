@@ -106,7 +106,7 @@ switch (opt)
     exit(EXIT_FAILURE);
 }
   }
-
+  
   /// Heat Equation Object
   final_project::pde::Heat_2D<maintype> obj (mpi_world, nx, ny);
 
