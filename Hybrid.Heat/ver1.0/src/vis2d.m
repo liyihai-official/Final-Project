@@ -26,8 +26,9 @@ diff = mean((A(2:Row-2, 2:Col-2)' - U(2:Col-2, 2:Row-2)).^2, 'all');
 figure;
 h = gcf;
 
+
 % contourf(x, y, U, 10);
-contourf(x, y, A', 10);
+contourf(x, y, A', 1000);
 colormap(jet);
 
 colorbar;

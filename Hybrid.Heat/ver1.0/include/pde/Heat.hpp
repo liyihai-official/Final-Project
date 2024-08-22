@@ -67,7 +67,7 @@ std::cout << "Constructor from Heat_Base" << std::endl;
 #endif
 
     multi_array::__detail::__multi_array_shape<NumD> shape(exts...);
-
+    
     std::fill(minRange.begin(), minRange.end(), 0);
     std::fill(maxRange.begin(), maxRange.end(), 1);
 
@@ -86,6 +86,7 @@ std::cout << "Constructor from Heat_Base" << std::endl;
       weights[i] = coff * dt / (dxs[i] * dxs[i]);
       diags[i] = -2.0 + (dxs[i] * dxs[i]) / (NumD * coff * dt);
     }
+    
   }
 } // namespace pde
 } // namespace final_project

@@ -49,6 +49,10 @@ template <class __T, __size_type __NumD>
     template <typename ... Args>
     __T& operator()(Args ... args) { return __loc_array(args...); }
 
+          __T* data()       { return __loc_array.begin(); }
+    const __T* data() const { return __loc_array.cbegin(); }
+          Integer get_flat_index( std::array<Integer, __NumD> & indexes ) { return __loc_array.get_flat_index(indexes); }
+
     // Member Functions
     public:
     void swap(__array_Cart &);

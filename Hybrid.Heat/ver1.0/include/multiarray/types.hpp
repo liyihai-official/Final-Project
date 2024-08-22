@@ -37,6 +37,7 @@ template <__size_type __NumD>
   {
     // shape of array
     std::vector<__size_type> dims;
+    std::vector<__size_type> strides;
 
     // Operators
     __size_type& operator[] (__size_type);
@@ -55,6 +56,10 @@ template <__size_type __NumD>
     template <typename ... Exts>
     __multi_array_shape( Exts ... );
 
+    /// @brief Construct from given vector
+    /// @param  dims A std::vector of dimensions.
+    __multi_array_shape(std::vector<__size_type> &);
+
     /// @brief Construct dims from other one.
     __multi_array_shape(const __multi_array_shape& );
 
@@ -66,6 +71,15 @@ template <__size_type __NumD>
     /// @brief A helper Function for ensuring none-negative inputs
     template <typename __T>
     __size_type check_and_cast(__T);
+
+    /// @brief Determine the Strides
+    std::function<void()> compute_strides = [this]() {
+      this->strides.resize(this->dims.size());
+      this->strides[this->dims.size() - 1] = 1;
+
+      for (__size_type i = __NumD - 1; i > 0; --i)
+        this->strides[i-1] = this->strides[i] * this->dims[i];
+    };
   };
   
 
@@ -106,10 +120,19 @@ template <typename ... Exts>
   FINAL_PROJECT_ASSERT_MSG(
     (sizeof...(exts) == __NumD),
     "Number of Arguments must Match the dimension."
-  );
+  );  
 
   // cast the inputs (non-negative) into __size_type (uint64_t)
   dims = { check_and_cast(exts)... };
+  compute_strides();
+}
+
+template <__size_type __NumD>
+  inline 
+  __multi_array_shape<__NumD>::__multi_array_shape(std::vector<__size_type> & dimensions)
+{
+  dims.swap(dimensions);
+  compute_strides();
 }
 
 template <__size_type __NumD>
@@ -118,6 +141,7 @@ template <__size_type __NumD>
     const __multi_array_shape & other)
 { 
   dims = other.dims;
+  compute_strides();
 }
 
 template <__size_type __NumD>

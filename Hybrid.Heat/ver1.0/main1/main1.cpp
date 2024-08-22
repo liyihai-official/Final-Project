@@ -56,7 +56,7 @@ Integer
   final_project::String filename {""};        // default empty filename (not saving results).
 
   constexpr Integer root_proc {0};
-  constexpr maintype tol {1E0};
+  constexpr maintype tol {1E-8};
   constexpr size_type nsteps {100'000'000};
   constexpr size_type numDim {2}, nx {NX}, ny {NY};
 
@@ -106,7 +106,7 @@ switch (opt)
     exit(EXIT_FAILURE);
 }
   }
-  
+
   /// Heat Equation Object
   final_project::pde::Heat_2D<maintype> obj (mpi_world, nx, ny);
 
@@ -150,6 +150,7 @@ final_project::helper_message(mpi_world);
   /// Save if needs
   if (!filename.empty()) obj.SaveToBinary(filename);
   obj.reset();
+
 
   return 0;
 }

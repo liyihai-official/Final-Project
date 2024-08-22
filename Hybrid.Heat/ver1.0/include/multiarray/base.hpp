@@ -49,6 +49,24 @@ template <class __T, __size_type __NumD>
     __array();
     __array(__array_shape );
 
+    __array(const __array & other)
+    : __shape(other.__shape),
+      __data(std::make_unique<value_type[]>(other.size()))
+    {
+      std::copy(other.__data.get(), other.__data.get() + other.size(), __data.get()); // Copy data
+    }
+
+    __array& operator=(const __array& other)
+    {
+      if (this != &other)
+      {
+        __shape = other.__shape;
+        __data = std::make_unique<value_type[]>(other.size());
+        std::copy(other.__data.get(), other.__data.get()+other.size(), __data.get());
+      }
+      return *this;
+    }
+
     ~__array() = default;
 
 
@@ -56,7 +74,7 @@ template <class __T, __size_type __NumD>
     template <typename ... Exts>
     reference operator()(Exts ...);
     reference operator[](__size_type);
-  
+
     iterator          begin()       { return __data.get(); }
     const_iterator    begin() const { return __data.get(); }
     const_iterator   cbegin() const { return __data.get(); }
@@ -67,6 +85,7 @@ template <class __T, __size_type __NumD>
 
   public: // Member Functions
     __super_size_type size() const { return __shape.size(); }
+    Integer       get_flat_index( std::array<Integer, __NumD> & );
 
   public: // Member Functions for Features
     
@@ -140,6 +159,23 @@ multiplier *= __shape[__NumD - 1 - i];
     return __data[index];
   }
 
+template <class __T, __size_type __NumD>
+  inline 
+  Integer
+  __array<__T, __NumD>::get_flat_index(std::array<Integer, __NumD> & indexes)
+  {
+    Integer index {0}, i {0};
+    Integer multiplier {1};
+
+    for (; i < __NumD; ++i)
+    {
+FINAL_PROJECT_ASSERT_MSG((indexes[__NumD - 1 - i] >= 0), "Indexing must be none-negative number.\n");
+      index += indexes[__NumD - 1 - i] * multiplier;
+      multiplier *= __shape[__NumD - 1 - i];
+    }
+    return index;
+  }
+
 
 template <class __T, __size_type __NumD>
   inline 
@@ -170,45 +206,36 @@ template <class __T, __size_type __NumD>
 /// @param os std::ostream
 /// @param in Input multi_array
 template <class __U, __size_type __Dims>
-std::ostream& operator<<(std::ostream& os, const __array<__U, __Dims>& in) {
-
+std::ostream& operator<<(std::ostream& os, const __array<__U, __Dims>& in) 
+{
   // Helper Function to print multi-dimensional array
   auto print_recursive = [&](
-    auto&& self, const __array<__U, __Dims>& arr, 
-    __size_type current_dim, 
-    __size_type offset) -> void 
+      auto&& self, const __array<__U, __Dims>& arr, 
+      __size_type current_dim, 
+      __size_type offset) -> void 
   {
-if (current_dim == __Dims - 1) 
+    if (current_dim == __Dims - 1) 
+    {
+os << "|";
+for (__size_type i = 0; i < arr.__shape[current_dim]; ++i)
 {
-  os << "|";
-  for (__size_type i = 0; i < arr.__shape[current_dim]; ++i) 
-{
-os << std::fixed << std::setprecision(5) << std::setw(9) << (arr.__data[offset + i]);
-  }
-  os << " |\n";
-} 
-else 
-{
-  for (__size_type i = 0; i < arr.__shape[current_dim]; ++i) 
-  {
-    __size_type next_offset = offset;
-    for (__size_type j = current_dim + 1; j < __Dims; ++j) {
-      next_offset *= arr.__shape[j];
-    }
-    next_offset += i * arr.__shape[current_dim + 1];
-
-    self(self, arr, current_dim + 1, next_offset);
-  }
-  os << "\n";
+  os << std::fixed << std::setprecision(5) << std::setw(12) << (arr.__data[offset + i]);
 }
+os << " |\n";
+        } else {
+for (__size_type i = 0; i < arr.__shape[current_dim]; ++i) 
+{
+  self(self, arr, current_dim + 1, offset + i * arr.__shape.strides[current_dim]);
+}
+os << "\n";
+    }
   }; // End of Helper Function
 
-
-  print_recursive(print_recursive, in, 0, 0);  // Print Recursively
+  // Start recursive printing
+  print_recursive(print_recursive, in, 0, 0);
 
   return os;
 }
-
 
 
 

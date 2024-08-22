@@ -58,6 +58,7 @@ template <typename T>
     std::unique_ptr<BoundaryConditions_3D<T>>       BC_3D;
     std::unique_ptr<InitialConditions::Init_3D<T>>  IC_3D;
 
+    public:
     mpi::array_Cart<T, 3>       in, out;
     multi_array::array_base<T, 3> gather;
     Bool converge;

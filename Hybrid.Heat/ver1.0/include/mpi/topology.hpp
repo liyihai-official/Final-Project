@@ -140,7 +140,7 @@ template <typename T, size_type NumD>
   Cartesian<T, NumD>::Cartesian( __array_shape & global_shape, environment & env )
 : __global_shape(global_shape), __local_shape(global_shape)
   {
-    FINAL_PROJECT_ASSERT_MSG((NumD < 4), "Number of dimension if out of range.");
+    FINAL_PROJECT_ASSERT_MSG((NumD <= 4), "Number of dimension if out of range.");
 
 /// @brief Helper Function, provides the decomposition routine.
 auto Decomp = [](

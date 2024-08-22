@@ -51,10 +51,8 @@ template <typename T>
     private:
     std::unique_ptr<BoundaryConditions_2D<T>>       BC_2D;
     std::unique_ptr<InitialConditions::Init_2D<T>>  IC_2D;
-    
     mpi::array_Cart<T, 2>         in, out;
     multi_array::array_base<T, 2> gather;
-
     Bool converge;
 
     friend InitialConditions::Init_2D<T>;

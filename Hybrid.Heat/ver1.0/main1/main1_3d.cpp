@@ -56,7 +56,7 @@ Integer
   final_project::String filename {""};        // default empty filename (not saving results).
 
   constexpr Integer root_proc {0};
-  constexpr maintype tol {1E1};
+  constexpr maintype tol {1E-8};
   constexpr size_type nsteps {100'000'000};
   constexpr size_type numDim {3}, nx {NX}, ny {NY}, nz {NZ};
 
@@ -69,8 +69,9 @@ Integer
 if (mpi_world.rank() == 0)
 {
   std::cout << "Problem size: " 
-            << "\n\tRows: "     << nx-2 
-            << "\n\tColumns: "  << ny-2       << std::endl;
+            << "\n\tDepth: "     << nx-2 
+            << "\n\tColumns: "   << ny-2       
+            << "\n\tRows: "      << nz-2      << std::endl;
   std::cout << "MPI Parameters: "             << std::endl;
   std::cout << "\tNumber of MPI Processes: "  << mpi_world.size()  << std::endl;
   std::cout << "OpenMP Threads: " << omp_get_num_threads() << "\n" << std::endl;
@@ -127,6 +128,8 @@ switch (opt)
   BCFunction Dim101 {[](maintype x, maintype y, maintype z, maintype t){ return 1 - x - y + 2 * x * y; }};
   obj.SetHeatBC(BC, Dim000, Dim001, Dim010, Dim011, Dim100, Dim101);
 
+  std::cout << obj.out.array() << std::endl;
+
   /// Solving with Specified Strategy
   switch (strategy)
   {
@@ -152,6 +155,7 @@ final_project::helper_message(mpi_world);
   /// Save if needs
   if (!filename.empty()) obj.SaveToBinary(filename);
   obj.reset();
+
 
   return 0;
 }
