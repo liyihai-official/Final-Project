@@ -136,9 +136,6 @@ template <class T, size_type NumD>
 
     topology_Cart& topology() const { return body->__loc_Cart; }
 
-    // friend final_project::PDE::Heat<T, NumD>;
-    // friend final_project::PDE::Naiver_Stokes<T, NumD>;
-
     private:
     std::unique_ptr<loc_array> body;
   }; // class array_Cart
