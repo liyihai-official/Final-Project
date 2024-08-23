@@ -128,7 +128,7 @@ switch (opt)
   BCFunction Dim101 {[](maintype x, maintype y, maintype z, maintype t){ return 1 - x - y + 2 * x * y; }};
   obj.SetHeatBC(BC, Dim000, Dim001, Dim010, Dim011, Dim100, Dim101);
 
-  std::cout << obj.out.array() << std::endl;
+  // std::cout << obj.out.array() << std::endl;
 
   /// Solving with Specified Strategy
   switch (strategy)
@@ -155,7 +155,5 @@ final_project::helper_message(mpi_world);
   /// Save if needs
   if (!filename.empty()) obj.SaveToBinary(filename);
   obj.reset();
-
-
   return 0;
 }

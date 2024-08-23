@@ -67,10 +67,15 @@ namespace multi_array {
 template <class T, size_type NumD>
   class array_base 
   {
-    private:
-    using value_type  = T;
-    using array       = __detail::__array<T, NumD>;
-    using array_shape = __detail::__multi_array_shape<NumD>;
+    private:    
+    using array           = __detail::__array<T, NumD>;
+    using array_shape     = array::__array_shape;
+
+    using value_type      = array::value_type;
+    using reference       = array::reference;
+    using const_reference = array::const_reference;
+    using iterator        = array::iterator;
+    using const_iterator  = array::const_iterator;
 
     private:
     std::unique_ptr<array> body;
@@ -85,11 +90,15 @@ template <class T, size_type NumD>
     T& operator()(Args ... args) { return (*body)(args...); }
 
     public:
-    T*           begin()                       { return body->begin(); }
-    const T*     cbegin()                      { return body->cbegin(); }
+    iterator           begin()            { return body->begin(); }
+    const_iterator     begin()   const    { return body->begin(); }
+    const_iterator    cbegin()   const    { return body->cbegin(); }
+    iterator           end()              { return body->end();}
+    const_iterator     end()     const    { return body->end();}
+    const_iterator    cend()     const    { return body->cend();}
 
-    array&       data()                        { return *body; }
-    array&       data()                  const { return *body; }
+    // array&       data()                        { return *body; }
+    // array&       data()                  const { return *body; }
     array_shape& shape()                 const { return body->__shape; }
     size_type&   shape(size_type index)  const { return body->__shape[index]; }
     Integer get_flat_index(std::array<Integer, NumD> & indexes ) { return body->get_flat_index(indexes); }

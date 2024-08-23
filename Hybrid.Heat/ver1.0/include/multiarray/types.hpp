@@ -66,20 +66,24 @@ template <__size_type __NumD>
     bool operator==(__multi_array_shape &);
     bool operator!=(__multi_array_shape &);
 
-    void swap(__multi_array_shape &);
+    /// @brief Swap with given other
+    /// @param other Other shape.
+    void swap(__multi_array_shape &) noexcept;
 
     /// @brief A helper Function for ensuring none-negative inputs
     template <typename __T>
     __size_type check_and_cast(__T);
 
     /// @brief Determine the Strides
-    std::function<void()> compute_strides = [this]() {
+    std::function<void()> compute_strides = [this]() 
+    {
       this->strides.resize(this->dims.size());
       this->strides[this->dims.size() - 1] = 1;
 
       for (__size_type i = __NumD - 1; i > 0; --i)
         this->strides[i-1] = this->strides[i] * this->dims[i];
     };
+    
   };
   
 
@@ -156,6 +160,15 @@ const
   }
   return total;
 }
+
+template <__size_type __NumD>
+  inline void 
+  __multi_array_shape<__NumD>::swap( __multi_array_shape & other) noexcept
+  {
+    dims.swap(other.dims);
+    strides.swap(other.strides);
+  }
+
 
 template <__size_type __NumD>
   inline 
