@@ -30,13 +30,44 @@ I followed standard library conventions for naming.
 This includes using the \texttt{\_\_detail} namespace within namespace \texttt{multi\_array} to 
 hide objects and features that are not intended for direct use by the end user.
 
-\subsubsection{Template Object Design of \_\_multi\_array\_shape}
-The \_\_multi\_array\_shape object is encapsulated within the \texttt{\_\_detail} namespace and serves as a member variable of the later template object for the multi-dimensional matrix. 
+\subsubsection{Template Object Design of Matrix Shape}
+
+\paragraph{Strides} 
+Besides that, in the multidimensional cases, the size in each dimension is not enough for accessing 
+variables, this is where we need the \texttt{strides} member variable, which stores the 
+number of element the operator needs to skip in each dimension.
+The \texttt{\_\_multi\_array\_shape} object is encapsulated within the \texttt{\_\_detail} namespace and serves as a member variable of the later template object for the multi-dimensional matrix. 
 This object includes a member variable defined using the STL vector, as the shape object primarily stores the sizes for each dimension, which typically requires only a small amount of space. 
 Additionally, this object provides member functions to access the size of a given dimension. 
+\begin{algorithm}
+  \caption{Stride implementation}
+  \begin{algorithmic}[1]
+    \STATE \texttt{dims}    \hfill \# STL vector, stores the matrix's size in each dimension.
+    \STATE \texttt{strides} \hfill \# STL vector, has the same size with dims.
+    \STATE n = dims.size()  \hfill \# Store the dimension of matrix.
+    \STATE strides[d-1] = 1; \hfill \# Stride is 1 in the first dimension.
+    \FOR{ d = n - 1; d > 0; --d }     
+      \STATE strides[d-1] = strides[d] * dims[d] \hfill \# Determine stride in the latter dimension.
+    \ENDFOR
+    \RETURN \texttt{strides}
+  \end{algorithmic}
+\end{algorithm}
 
-Moreover, it includes check and cast functions that allow the user to verify if the template data type \texttt{\_\_T} is signed using \texttt{constexpr}. 
+
+\paragraph{Performace Balancing}
+In certain scenarios, 
+we only require the shape information of a matrix without needing to access the entire matrix object. 
+Accessing the shape information through well-defined operators is a more efficient way to 
+handle multidimensional matrices. 
+This is particularly crucial in parallel programming, where understanding 
+the shape of a matrix is of critical importance. 
+Sometimes, a process may need to know the shape of matrices stored on other processes. 
+In such cases, using this matrix object as a local variable within functions increases the 
+likelihood that the compiler will store it in a register, 
+which is generally faster than using heap or stack memory.
+In addition, it includes check and cast functions that allow the user to verify if the template data type \texttt{\_\_T} is signed using \texttt{constexpr}. 
 The \texttt{constexpr} keyword ensures that this check occurs at compile time, and if the data type is not legal, the program will assert and provide a message indicating that the indexing value must be a non-negative number. 
+
 
 \subsubsection{Template of Multi-dimensional Matrix Implementation}
 The Matrix in this project is designed to support various data types in C++. 
@@ -96,10 +127,37 @@ recursively print all dimensions.
 \end{algorithm}
 
 
-\subsection{Multi-dimension Matrix Design of User}
+
+\subsection{Template Multi-dimension Matrix Design of User}
 With contiguity of safety, this object of multi-dimension array is accessible to users without 
 direct visit to the memory space where store values of matrix.
 
+\subsubsection{Resource Acquisition Is Initialization}
+This object has only a member variable, a unique pointer to the template \texttt{\_\_array}, 
+and other member function provide necessary features to operating on it.
+
+
+\subsubsection{Template Multi-dimension IO for writing to/reading from file}
+Initially, the multi-dimension matrix has variables shape, 
+and values which given dimension and size in each dimension.
+This template design end up with these variable can be stored in given data types also leads with lower 
+portability.
+To avoid such problems and from other point of views, I chose to store the matrices in binary format, 
+rather than other type files.
+There are couple benefits of doing so,
+\begin{enumerate}
+  \item 	Compatibility and Portability: The format of binary files is relatively 
+  stable and can be easily used in different programming environments or applications. 
+  Unlike \texttt{.txt} files, \texttt{.mat} files those has less compatibility across different platforms.
+  \item I/O Performance: Binary files can perform block-level I/O operations directly 
+  without needing to parse text formats or convert data types. 
+  This usually makes reading and writing binary files much faster than \texttt{.txt} files, 
+  especially when dealing with large-scale multidimensional matrix data.
+  \item Support MPI IO: Binary files support the MPI IO, which provides a significant reduction in the 
+  cost of communication, when storing and reading the large scale matrices. 
+\end{enumerate}
+However, the IO does not play a critical role in effects performance of FDTD algorithms, if and only if 
+we need to store or load the data during evolving the arrays.
 
 \subsubsection{Pure Message Passing Parallel}
 \subsubsection{Hybrid Parallel}
