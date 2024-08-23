@@ -56,7 +56,7 @@ Integer
   final_project::String filename {""};        // default empty filename (not saving results).
 
   constexpr Integer root_proc {0};
-  constexpr maintype tol {1E-8};
+  constexpr maintype tol {1E-1};
   constexpr size_type nsteps {100'000'000};
   constexpr size_type numDim {3}, nx {NX}, ny {NY}, nz {NZ};
 
@@ -128,7 +128,7 @@ switch (opt)
   BCFunction Dim101 {[](maintype x, maintype y, maintype z, maintype t){ return 1 - x - y + 2 * x * y; }};
   obj.SetHeatBC(BC, Dim000, Dim001, Dim010, Dim011, Dim100, Dim101);
 
-  // std::cout << obj.out.array() << std::endl;
+  // std::cout << "\n\n" << std::endl;
 
   /// Solving with Specified Strategy
   switch (strategy)
@@ -155,5 +155,28 @@ final_project::helper_message(mpi_world);
   /// Save if needs
   if (!filename.empty()) obj.SaveToBinary(filename);
   obj.reset();
+
+
+  // std::cout << "\n" << std::endl;
+  // final_project::multi_array::__detail::__multi_array_shape<2> shape(4,3), shape2(5,5), shape3(4,3);
+  // std::cout << (shape != shape2) << std::endl;
+  // final_project::multi_array::__detail::__multi_array_shape<2> other;
+  // other = std::move(shape);
+  // std::cout << other[0] << ", " << other[1] << std::endl;
+
+
+  // final_project::multi_array::__detail::__array<Double, 2> array (shape), other (shape2);
+  // array.fill(1); other.fill(2);
+
+  // final_project::multi_array::__detail::__array<Double, 2> move = std::move(array);
+
+  // std::cout << move << std::endl;
+
+  // std::cout << move.__shape[0] << ", " << move.__shape[1] << std::endl;
+  // std::cout << array.__shape[0] << std::endl;
+  // std::cout << array << "\n" << other << std::endl;
+  // array.swap(other);
+  // std::cout << array << std::endl;
+  // std::cout << array << "\n" << other << std::endl;
   return 0;
 }

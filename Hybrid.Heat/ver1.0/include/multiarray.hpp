@@ -81,7 +81,7 @@ template <class T, size_type NumD>
     std::unique_ptr<array> body;
 
     public:
-    array_base()    =     default;
+    array_base()          = default;
     template <typename ... Exts>
     array_base( Exts ... );
     array_base( array_shape const & );
@@ -89,16 +89,15 @@ template <class T, size_type NumD>
     template <typename ... Args>
     T& operator()(Args ... args) { return (*body)(args...); }
 
-    public:
-    iterator           begin()            { return body->begin(); }
-    const_iterator     begin()   const    { return body->begin(); }
+    public: // Iterators
+    iterator           begin()            { return body->begin();  }
+    const_iterator     begin()   const    { return body->begin();  }
     const_iterator    cbegin()   const    { return body->cbegin(); }
-    iterator           end()              { return body->end();}
-    const_iterator     end()     const    { return body->end();}
-    const_iterator    cend()     const    { return body->cend();}
+    iterator           end()              { return body->end();    }
+    const_iterator     end()     const    { return body->end();    }
+    const_iterator    cend()     const    { return body->cend();   }
 
-    // array&       data()                        { return *body; }
-    // array&       data()                  const { return *body; }
+
     array_shape& shape()                 const { return body->__shape; }
     size_type&   shape(size_type index)  const { return body->__shape[index]; }
     Integer get_flat_index(std::array<Integer, NumD> & indexes ) { return body->get_flat_index(indexes); }

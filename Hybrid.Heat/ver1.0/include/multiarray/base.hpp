@@ -31,7 +31,6 @@ template <class __T, __size_type __NumD>
   class __array {
 
   public: // Member Datatypes
-
     typedef       __T         value_type;
     typedef const __T         const_value_type;
     typedef       __T&        reference;
@@ -48,18 +47,21 @@ template <class __T, __size_type __NumD>
     static constexpr __size_type  __dimension {__NumD};
 
   public: // Cons & Decons 
-    __array();
+    __array()                               noexcept;
+    __array(const __array &)                noexcept;
+    __array(__array&&)                      noexcept;
+    __array& operator=(__array&&)           noexcept;
+    __array& operator=(const __array&)      noexcept;
     __array(__array_shape);
-    __array(const __array &);
-    __array& operator=(const __array&);
     ~__array() = default;
 
 
-  public: // Operators
+  public: // Member Access
     template <typename ... Exts>
     reference operator()(Exts ...);
     reference operator[](__size_type);
-
+  
+  public: // Iterators
     iterator          begin()       noexcept { return __data.get(); }
     const_iterator    begin() const noexcept { return __data.get(); }
     const_iterator   cbegin() const noexcept { return __data.get(); }
@@ -68,12 +70,12 @@ template <class __T, __size_type __NumD>
     const_iterator      end() const noexcept { return __data.get() + this->size(); }
     const_iterator     cend() const noexcept { return __data.get() + this->size(); }
 
-  public: // Member Functions
+  public: // Capacity
     __super_size_type size()  const noexcept { return __shape.size(); }
     Integer       get_flat_index( std::array<Integer, __NumD> & );
 
-  public: // Member Functions for Features
-    
+  
+  public: // Modifiers
     void swap(__array &)          noexcept;
     void fill(const_reference)    noexcept;
     void assign(const_reference)  noexcept;
@@ -107,9 +109,60 @@ namespace __detail {
 
 template <class __T, __size_type __NumD>
   inline
-  __array<__T, __NumD>::__array()
+  __array<__T, __NumD>::__array() noexcept
 : __shape(), __data(nullptr) 
   {}
+
+template <class __T, __size_type __NumD>
+  inline 
+  __array<__T, __NumD>::__array(__array && other) noexcept
+: __shape(std::move(other.__shape)),
+  __data(std::move(other.__data))
+{
+  std::cout << "Move Constructor __array" << std::endl;
+  other.__shape = __array_shape{};
+  other.__data = nullptr;
+}
+
+template <class __T, __size_type __NumD>
+  inline __array<__T, __NumD>&
+  __array<__T, __NumD>::operator=(__array && other) noexcept
+{
+  std::cout << "Move Assignment __array" << std::endl;
+  if (this != &other)
+  {
+    __shape = std::move(other.__shape);
+    __data = std::move(other.__data);
+
+    other.__data = nullptr;
+    other.__shape = __array_shape{};
+  }
+  return *this;
+} 
+
+template <class __T, __size_type __NumD>
+  inline 
+   __array<__T, __NumD>::__array(const __array & other) noexcept
+: __shape(other.__shape),
+  __data(std::make_unique<value_type[]>(other.size()))
+{
+  std::cout << "Copy Constructor __array" << std::endl;
+  std::copy(other.__data.get(), other.__data.get() + other.size(), __data.get()); // Copy data
+}
+
+template <class __T, __size_type __NumD>
+  inline __array<__T, __NumD>& 
+  __array<__T, __NumD>::operator=(const __array& other) noexcept
+{
+  std::cout << "Copy Assignment __array" << std::endl;
+  if (this != &other)
+  {
+__shape = other.__shape;
+__data = std::make_unique<value_type[]>(other.size());
+std::copy(other.__data.get(), other.__data.get()+other.size(), __data.get());
+  }
+  return *this;
+}
 
 template <class __T, __size_type __NumD>
   inline
@@ -117,15 +170,6 @@ template <class __T, __size_type __NumD>
 : __shape {__in_shape},
   __data {std::make_unique<value_type[]>(__in_shape.size())}
   {}
-
-template <class __T, __size_type __NumD>
-  inline 
-   __array<__T, __NumD>::__array(const __array & other)
-: __shape(other.__shape),
-  __data(std::make_unique<value_type[]>(other.size()))
-{
-  std::copy(other.__data.get(), other.__data.get() + other.size(), __data.get()); // Copy data
-}
 
 // Operators
 template <class __T, __size_type __NumD>
@@ -179,19 +223,6 @@ template <class __T, __size_type __NumD>
     "Index out of range."
   );
   return __data[index];   
-}
-
-template <class __T, __size_type __NumD>
-  inline __array<__T, __NumD>& 
-  __array<__T, __NumD>::operator=(const __array& other)
-{
-  if (this != &other)
-  {
-__shape = other.__shape;
-__data = std::make_unique<value_type[]>(other.size());
-std::copy(other.__data.get(), other.__data.get()+other.size(), __data.get());
-  }
-  return *this;
 }
 
 template <class __T, __size_type __NumD>

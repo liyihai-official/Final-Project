@@ -133,7 +133,7 @@ template <typename T>
   inline void 
   Heat_3D<T>::reset()
   {
-    gather = multi_array::array_base<T, 3>(gather.shape());
+    std::fill(gather.begin(), gather.end(), 0);
 
     in.array().__loc_array.fill(0);
     out.array().__loc_array.fill(0);    

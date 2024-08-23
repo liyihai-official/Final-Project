@@ -8,7 +8,8 @@
 #define FINAL_PROJECT_MULTIARRAY_TYPES_HPP_LIYIHAI
 
 #pragma once
-#include <vector>       // Standard Libraries
+// Standard Libraries
+#include <vector>       
 #include <types.hpp>    // Final Project Header Files
 
 namespace final_project { namespace multi_array {
@@ -20,14 +21,10 @@ namespace __detail {
   template <__size_type __NumD>
     struct __multi_array_shape;
 }
-
-
-}}
-
+}} 
 
 
 namespace final_project { namespace multi_array {
-
 namespace __detail {
 
 /// @brief A shape viewer of multi-array which is __NumD dimension(s).
@@ -35,40 +32,41 @@ namespace __detail {
 template <__size_type __NumD>
   struct __multi_array_shape
   {
-    // shape of array
-    std::vector<__size_type> dims;
-    std::vector<__size_type> strides;
+    typedef const __size_type       __const_size_type__;
+    typedef       __size_type&      __reference__;
+    typedef const __size_type&      __const_reference__;
 
-    // Operators
-    __size_type& operator[] (__size_type);
-    const __size_type& operator[] (__size_type) const;
+    // Member Variables
+    std::vector<__size_type> dims, strides;
 
-    // Member Functions 
-    __size_type dim() const;
-    __size_type dim(__size_type) const;
-    __super_size_type size() const; // Using Super for avoiding overflow
+    // Cons & Decons
+    __multi_array_shape()                                       noexcept; 
+    __multi_array_shape(const __multi_array_shape&)             noexcept;
+    __multi_array_shape(__multi_array_shape &&)                 noexcept;
+    __multi_array_shape& operator=(const __multi_array_shape&)  noexcept;
+    __multi_array_shape& operator=(__multi_array_shape &&)      noexcept;
 
-    // Constructors
-    /// @brief Init an Empty dims.
-    __multi_array_shape(); 
+    /// @brief Construct from given vector
+    /// @param  dims A std::vector of dimensions.
+    __multi_array_shape(const std::vector<__size_type> &)       noexcept;
 
     /// @brief Construct dims from packed arguments.
     template <typename ... Exts>
     __multi_array_shape( Exts ... );
 
-    /// @brief Construct from given vector
-    /// @param  dims A std::vector of dimensions.
-    __multi_array_shape(std::vector<__size_type> &);
+    // Operators
+    Bool operator==(const __multi_array_shape &)                noexcept;
+    Bool operator!=(const __multi_array_shape &)                noexcept;
 
-    /// @brief Construct dims from other one.
-    __multi_array_shape(const __multi_array_shape& );
+    // Member Access
+    reference       operator[] (__size_type);
+    const_reference operator[] (__size_type) const;
 
-    bool operator==(__multi_array_shape &);
-    bool operator!=(__multi_array_shape &);
+    // Capacity
+    __super_size_type size() const; // Using Super for avoiding overflow
 
-    /// @brief Swap with given other
-    /// @param other Other shape.
-    void swap(__multi_array_shape &) noexcept;
+    // Modifiers 
+    void swap(__multi_array_shape &)                            noexcept;
 
     /// @brief A helper Function for ensuring none-negative inputs
     template <typename __T>
@@ -83,15 +81,13 @@ template <__size_type __NumD>
       for (__size_type i = __NumD - 1; i > 0; --i)
         this->strides[i-1] = this->strides[i] * this->dims[i];
     };
-    
+
   };
   
 
 
 
 } // end of namespace __detail
-
-
 } // end of namespace multi_array
 } // end of final_project
 
@@ -103,18 +99,74 @@ template <__size_type __NumD>
 ///
 /// Definition of inline member functions
 ///
-
+#include <algorithm>
 #include <assert.hpp>
+
 namespace final_project { namespace multi_array {
 
 
 namespace __detail { 
 
+template <__size_type __NumD>
+  inline
+  __multi_array_shape<__NumD>::__multi_array_shape() noexcept
+{ dims.resize(0); }
 
 template <__size_type __NumD>
   inline
-  __multi_array_shape<__NumD>::__multi_array_shape()
-{ dims.resize(0); }
+  __multi_array_shape<__NumD>::__multi_array_shape(
+    const __multi_array_shape & other
+  ) noexcept
+{ 
+  dims = other.dims;
+  compute_strides();
+}
+
+template <__size_type __NumD>
+  inline 
+  __multi_array_shape<__NumD>::__multi_array_shape(
+    __multi_array_shape && other
+  )  noexcept
+: dims(std::move(other.dims)), 
+  strides(std::move(other.strides))
+  {}
+
+
+template <__size_type __NumD>
+  inline __multi_array_shape<__NumD>&
+  __multi_array_shape<__NumD>::operator=(
+    const __multi_array_shape & other
+  ) noexcept
+{
+  if (this != &other)
+  {
+dims.resize(other.dims.size());
+strides.resize(other.strides.size());
+std::copy(other.dims.cbegin(), other.dims.cend(), dims.begin());
+std::copy(other.strides.cbegin(), other.strides.cend(), strides.begin());
+  }
+  return *this;
+}
+
+
+template <__size_type __NumD>
+  inline __multi_array_shape<__NumD>&
+  __multi_array_shape<__NumD>::operator=(
+    __multi_array_shape && other
+  )  noexcept
+{
+  if (this != &other)
+  {
+    dims = std::move(other.dims);
+    strides = std::move(other.strides);
+
+    other.dims.clear();
+    other.strides.clear();
+  } 
+  return *this;
+}
+
+
 
 template <__size_type __NumD>
 template <typename ... Exts>
@@ -133,18 +185,12 @@ template <typename ... Exts>
 
 template <__size_type __NumD>
   inline 
-  __multi_array_shape<__NumD>::__multi_array_shape(std::vector<__size_type> & dimensions)
-{
-  dims.swap(dimensions);
-  compute_strides();
-}
-
-template <__size_type __NumD>
-  inline
   __multi_array_shape<__NumD>::__multi_array_shape(
-    const __multi_array_shape & other)
-{ 
-  dims = other.dims;
+    const std::vector<__size_type> & dimensions
+  ) noexcept
+{
+  dims.resize(dimensions.size());
+  std::copy(dimensions.cbegin(), dimensions.cend(), dims.begin());
   compute_strides();
 }
 
@@ -152,22 +198,24 @@ template <__size_type __NumD>
   inline 
   __super_size_type
   __multi_array_shape<__NumD>::size()
-const
+  const
 { 
   __super_size_type total {1};
-  for (auto & elem : dims) { 
-    total *= static_cast<__super_size_type>(elem); 
-  }
+  for (auto & elem : dims) 
+  { total *= static_cast<__super_size_type>(elem); }
+
   return total;
 }
 
 template <__size_type __NumD>
   inline void 
-  __multi_array_shape<__NumD>::swap( __multi_array_shape & other) noexcept
-  {
-    dims.swap(other.dims);
-    strides.swap(other.strides);
-  }
+  __multi_array_shape<__NumD>::swap(
+    __multi_array_shape & other
+  )   noexcept
+{
+  dims.swap(other.dims);
+  strides.swap(other.strides);
+}
 
 
 template <__size_type __NumD>
@@ -183,25 +231,38 @@ template <__size_type __NumD>
 const
 { return dims[index]; }
 
+template <__size_type __NumD>
+  inline 
+  Bool 
+  __multi_array_shape<__NumD>::operator==(
+    const __multi_array_shape & other
+  ) noexcept
+{ return (other.dims == dims && other.strides == strides); }
+
+template <__size_type __NumD>
+  inline 
+  Bool 
+  __multi_array_shape<__NumD>::operator!=(
+    const __multi_array_shape & other
+  ) noexcept
+{ return (other.dims != dims || other.strides != strides); }
+
 
 template <__size_type __NumD>
 template <typename __T>
   inline
   __size_type 
   __multi_array_shape<__NumD>::check_and_cast(__T value )
-  {
-    if constexpr (std::is_signed_v<__T>) {
-FINAL_PROJECT_ASSERT_MSG((value >= 0), "Negative value provided for an unsigned type.");
-    }
-return static_cast<__size_type>(value);
-  }
+{
+  if constexpr (std::is_signed_v<__T>) 
+{ FINAL_PROJECT_ASSERT_MSG((value >= 0), "Negative value provided for an unsigned type."); }
+  return static_cast<__size_type>(value);
+}
 
 
 
 
 } // end of namespace __detail
-
-
 } // end of namespace multi_array
 } // end of final_project
 
