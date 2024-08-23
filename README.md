@@ -1,6 +1,4 @@
-# Final-Project
-
-[Report](https://github.com/liyihai-official/Final-Project/blob/main/Report/main.pdf)
+# Final-Project [Report](https://github.com/liyihai-official/Final-Project/blob/main/Report/main.pdf)
 
 <!-- ![Animated GIF](Heat3D/Heat_3D.gif) -->
 This is the final project of M.Sc in High Performance Computing program.
