@@ -87,12 +87,11 @@ the operator of access element is designed by following algorithm
     \STATE \texttt{\_\_NumD}, \texttt{\_\_T};                   \hfill \# Template variables: dimension, data type.
     \STATE \texttt{FINAL\_PROJECT\_ASSERT\_MSE}                 \hfill \# Number of Arguments must Match the dimension.
     \STATE \texttt{index} = 0, \texttt{i} = 1                \hfill \# Initialize variables in advance.
-    \STATE \texttt{multiplier} = 1                            \hfill \# Store the size of indices.
     \STATE \texttt{indices[] = \_\_shape.check\_and\_cast(ext)}          \hfill \# The indexes number must none-negative number.
-    \FOR{i < \texttt{\_\_NumD}}
-      \STATE \texttt{index += indices[\_\_NumD - 1 - i] * multiplier}
-      \STATE \texttt{multiplier *= \_\_shape[\_\_NumD -1 -i]}
+    \FOR{i < \texttt{\_\_NumD}; ++i}
+      \STATE \texttt{index += indices[i] * \_\_shape.strides[i]} 
     \ENDFOR
+    \STATE \texttt{FINAL\_PROJECT\_ASSERT\_MSE}           \hfill \# Boundary checking.
     \RETURN \texttt{\_\_data[index]}
   \end{algorithmic}
 \end{algorithm}
@@ -132,9 +131,14 @@ recursively print all dimensions.
 With contiguity of safety, this object of multi-dimension array is accessible to users without 
 direct visit to the memory space where store values of matrix.
 
-\subsubsection{Resource Acquisition Is Initialization}
-This object has only a member variable, a unique pointer to the template \texttt{\_\_array}, 
+\subsubsection{Resource Acquisition Is Initialization (RAII)}
+This private object has only a member variable, a unique pointer to the template \texttt{\_\_array}, 
 and other member function provide necessary features to operating on it.
+Smart pointers acquire resources in their constructor and automatically release them in their destructor, 
+which is the essence of RAII. 
+By releasing resources in the destructor, smart pointers help prevent resource leaks.
+When an exception occurs, smart pointers automatically release resources, preventing resource leaks,
+thus it enhanced the safety level of using resources, reduce the potential memory leak problems.
 
 
 \subsubsection{Template Multi-dimension IO for writing to/reading from file}
