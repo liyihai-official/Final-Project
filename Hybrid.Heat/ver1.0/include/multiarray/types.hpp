@@ -32,9 +32,9 @@ namespace __detail {
 template <__size_type __NumD>
   struct __multi_array_shape
   {
-    typedef const __size_type       __const_size_type__;
-    typedef       __size_type&      __reference__;
-    typedef const __size_type&      __const_reference__;
+    typedef const __size_type       const_size_type;
+    typedef       __size_type&      reference;
+    typedef const __size_type&      const_reference;
 
     // Member Variables
     std::vector<__size_type> dims, strides;

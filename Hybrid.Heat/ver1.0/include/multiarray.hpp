@@ -81,13 +81,18 @@ template <class T, size_type NumD>
     std::unique_ptr<array> body;
 
     public:
-    array_base()          = default;
+    array_base()                            noexcept;
+    array_base(array_base &&)               noexcept   = default;
+    array_base & operator=(array_base &&)   noexcept   = default;
+    array_base(const array_base &);
+    array_base & operator=(const array_base &);
+
     template <typename ... Exts>
     array_base( Exts ... );
     array_base( array_shape const & );
 
     template <typename ... Args>
-    T& operator()(Args ... args) { return (*body)(args...); }
+    reference operator()(Args ... args) { return (*body)(args...); }
 
     public: // Iterators
     iterator           begin()            { return body->begin();  }
@@ -183,6 +188,28 @@ template <class T, size_type NumD>
 namespace final_project { 
 namespace multi_array {
   
+template <class T, size_type NumD>
+  inline
+  array_base<T, NumD>::array_base() noexcept
+: body {nullptr}
+  {}  
+
+
+template <class T, size_type NumD>
+  inline
+  array_base<T, NumD>::array_base(const array_base & other)
+: body (other.body ? std::make_unique<array>(*other.body) : nullptr)
+  {}
+
+template <class T, size_type NumD>
+  inline 
+  array_base<T, NumD> &
+  array_base<T, NumD>::operator=(const array_base & other)
+{
+  if (this != &other)
+  { body = other.body ? std::make_unique<array>(*other.body) : nullptr; }
+  return *this;
+}
 
 
 template <class T, size_type NumD>
@@ -190,6 +217,7 @@ template <class T, size_type NumD>
   array_base<T, NumD>::array_base(array_shape const & shape)
 : body (std::make_unique<array>(shape))
   { FINAL_PROJECT_ASSERT_MSG((NumD <= 4), "Invalid Dimension of Array."); }
+
 
 template <class T, size_type NumD>
 template <typename ... Args>

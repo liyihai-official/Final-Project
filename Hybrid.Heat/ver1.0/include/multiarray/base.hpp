@@ -52,14 +52,15 @@ template <class __T, __size_type __NumD>
     __array(__array&&)                      noexcept;
     __array& operator=(__array&&)           noexcept;
     __array& operator=(const __array&)      noexcept;
-    __array(__array_shape);
-    ~__array() = default;
+    __array(__array_shape)                  noexcept;
+    ~__array()                              noexcept = default;
 
 
-  public: // Member Access
+  public: // Element access
     template <typename ... Exts>
     reference operator()(Exts ...);
     reference operator[](__size_type);
+    reference operator[](Integer);
   
   public: // Iterators
     iterator          begin()       noexcept { return __data.get(); }
@@ -166,9 +167,9 @@ std::copy(other.__data.get(), other.__data.get()+other.size(), __data.get());
 
 template <class __T, __size_type __NumD>
   inline
-  __array<__T, __NumD>::__array(__array_shape __in_shape)
+  __array<__T, __NumD>::__array(__array_shape __in_shape) noexcept
 : __shape {__in_shape},
-  __data {std::make_unique<value_type[]>(__in_shape.size())}
+  __data {std::make_unique<value_type[]>(__in_shape.size())} 
   {}
 
 // Operators
@@ -184,14 +185,14 @@ template <typename ... Exts>
   );
 
   __size_type index {0}, i {0};
-  __size_type multiplier {1};
   __size_type indices[] = { __shape.check_and_cast(exts) ... };
 
-  for (; i < __NumD; ++i)
-  {
-index += indices[__NumD - 1 - i] * multiplier;
-multiplier *= __shape[__NumD - 1 - i];
-  }
+  for (; i < __NumD; ++i) index += __shape.strides[i] * indices[i];
+
+  FINAL_PROJECT_ASSERT_MSG(
+    (index < __shape.size()), 
+    "Index is out of range."
+  );
 
   return __data[index];
 }
@@ -202,13 +203,10 @@ template <class __T, __size_type __NumD>
   __array<__T, __NumD>::get_flat_index(std::array<Integer, __NumD> & indexes)
 {
   Integer index {0}, i {0};
-  Integer multiplier {1};
-
   for (; i < __NumD; ++i)
   {
 FINAL_PROJECT_ASSERT_MSG((indexes[__NumD - 1 - i] >= 0), "Indexing must be none-negative number.\n");
-    index += indexes[__NumD - 1 - i] * multiplier;
-    multiplier *= __shape[__NumD - 1 - i];
+    index += __shape.strides[i] * indexes[i];
   }
   return index;
 }
@@ -220,7 +218,19 @@ template <class __T, __size_type __NumD>
 {
   FINAL_PROJECT_ASSERT_MSG(
     (index < __shape.size()), 
-    "Index out of range."
+    "Index is out of range."
+  );
+  return __data[index];   
+}
+
+template <class __T, __size_type __NumD>
+  inline 
+  __T& __array<__T, __NumD>::operator[](Integer index) 
+{
+  index = __shape.check_and_cast(index);
+  FINAL_PROJECT_ASSERT_MSG(
+    (index < __shape.size()), 
+    "Index is out of range."
   );
   return __data[index];   
 }

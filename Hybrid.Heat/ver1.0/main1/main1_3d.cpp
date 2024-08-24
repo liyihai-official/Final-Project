@@ -159,13 +159,23 @@ final_project::helper_message(mpi_world);
 
   // std::cout << "\n" << std::endl;
   // final_project::multi_array::__detail::__multi_array_shape<2> shape(4,3), shape2(5,5), shape3(4,3);
+  final_project::multi_array::__detail::__multi_array_shape<4> shape(6,5,4,3);
+  std::cout << shape.strides[0] <<  ", " << shape.strides[1] <<  ", " <<  shape.strides[2] << ", " << shape.strides[3] << std::endl;
+
   // std::cout << (shape != shape2) << std::endl;
   // final_project::multi_array::__detail::__multi_array_shape<2> other;
   // other = std::move(shape);
   // std::cout << other[0] << ", " << other[1] << std::endl;
 
 
-  // final_project::multi_array::__detail::__array<Double, 2> array (shape), other (shape2);
+  final_project::multi_array::__detail::__array<Double, 4> array (shape);//, other (shape2);
+  std::array<Integer, 4> indexes {1,0,0,0};
+  Integer idx {array.get_flat_index(indexes)};
+  // std::cout << &array[array.get_flat_index(indexes)] << "\t" << array.begin() + 60 << "\t" << &array(9,9,9,9) << "\n" << array[-1] << std::endl;
+  std::cout << array(9,9,9,9) << std::endl;
+
+
+
   // array.fill(1); other.fill(2);
 
   // final_project::multi_array::__detail::__array<Double, 2> move = std::move(array);
