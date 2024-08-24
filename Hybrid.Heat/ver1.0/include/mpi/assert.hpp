@@ -76,12 +76,6 @@
     FINAL_PROJECT_MPI_ASSERT(finalized); \
   }
 
-
-// #define FINAL_PROJECT_SEND()
-// #define FINAL_PROJECT_RECV()
-
-
-
 #if defined(NDEBUG)
 #define FINAL_PROJECT_MPI_ASSERT_IS_VOID
 #endif

@@ -7,7 +7,7 @@ These features can also be disabled in the release version for performance optim
 Such details are defined in the \texttt{assert.hpp}, \texttt{helper.hpp}, 
 and other related header files located in the subfolder.
 
-\subsection{Multi-dimension Matrix Design Detail}
+\subsection{Template Multi-dimension Matrix Detail Design}
 The FDTD method is a type of FDM. 
 The main idea behind FDM is briefly outlined in Section \ref{SEC:FDM}. 
 The challenge lies in implementing it in a computer system to ensure it runs both correctly and efficiently.
@@ -15,7 +15,20 @@ Also, the data types I am using for storing sizes are unit32\_t and unit64\_t wh
 as Dworld and Qworld respectively, also are defined as size\_type and super\_size\_type in \_\_detail namespace.
 
 \subsubsection{Performance Balancing}
-To achieve this, it is crucial to develop an efficient Matrix object. 
+\paragraph{Template Class}
+Instead of doing this by using hierarchy in C++, which will cause the memory of object becomes complicated and unpredictable,
+and leading to scattered data members between base and derived class objects.
+This scattering can increase the cache misses which accessing these members, as the data might not be contiguous in memory.
+Also, with deep inheritance hierarchies, program has higher change to occur diamond problems, since it increases the code complexity.
+In detail, the diamond problem leads the duplicate inheritance and ambiguity in the method resolution, which will drop performance down again.
+Although, it is solvable by using \texttt{virtual} inheritance, but again, it increase the complexity.
+
+In such case, I chose to use template class to design the matrix object, which implement compile-time polymorphism as opposed runtime polymorphism
+provided by inheritance and virtual functions. 
+With such template design, the compiler makes the decisions about which function or class instantiate is made at compile time, eliminating 
+the need for \texttt{vtable}s and indirect function calls, which leads to more efficient code. 
+
+\paragraph{Memory Management}
 Rather than using the standard library's (STL) vector module, 
 which can be slower due to the overhead of row pointers, 
 I opted to build the Matrix object using a unique pointer 
@@ -36,8 +49,10 @@ hide objects and features that are not intended for direct use by the end user.
 Besides that, in the multidimensional cases, the size in each dimension is not enough for accessing 
 variables, this is where we need the \texttt{strides} member variable, which stores the 
 number of element the operator needs to skip in each dimension.
-The \texttt{\_\_multi\_array\_shape} object is encapsulated within the \texttt{\_\_detail} namespace and serves as a member variable of the later template object for the multi-dimensional matrix. 
-This object includes a member variable defined using the STL vector, as the shape object primarily stores the sizes for each dimension, which typically requires only a small amount of space. 
+The \texttt{\_\_multi\_array\_shape} object is encapsulated within 
+the \texttt{\_\_detail} namespace and serves as a member variable of the later template object for the multi-dimensional matrix. 
+This object includes a member variable defined using the STL vector, as the shape object primarily stores the sizes for each dimension, 
+which typically requires only a small amount of space. 
 Additionally, this object provides member functions to access the size of a given dimension. 
 \begin{algorithm}
   \caption{Stride implementation}
@@ -66,7 +81,8 @@ In such cases, using this matrix object as a local variable within functions inc
 likelihood that the compiler will store it in a register, 
 which is generally faster than using heap or stack memory.
 In addition, it includes check and cast functions that allow the user to verify if the template data type \texttt{\_\_T} is signed using \texttt{constexpr}. 
-The \texttt{constexpr} keyword ensures that this check occurs at compile time, and if the data type is not legal, the program will assert and provide a message indicating that the indexing value must be a non-negative number. 
+The \texttt{constexpr} keyword ensures that this check occurs at compile time, and if the data type is not legal, 
+the program will assert and provide a message indicating that the indexing value must be a non-negative number. 
 
 
 \subsubsection{Template of Multi-dimensional Matrix Implementation}
@@ -127,7 +143,7 @@ recursively print all dimensions.
 
 
 
-\subsection{Template Multi-dimension Matrix Design of User}
+\subsection{Template Multi-dimension Matrix Interface Design}
 With contiguity of safety, this object of multi-dimension array is accessible to users without 
 direct visit to the memory space where store values of matrix.
 
@@ -163,9 +179,42 @@ There are couple benefits of doing so,
 However, the IO does not play a critical role in effects performance of FDTD algorithms, if and only if 
 we need to store or load the data during evolving the arrays.
 
-\subsubsection{Pure Message Passing Parallel}
-\subsubsection{Hybrid Parallel}
+\subsection{MPI Parallel Environment Design}
+\subsubsection{MPI Setups}
+\paragraph{Environment}
+Similar to how malloc in C and new in C++ require manual memory management, 
+the MPI environment also necessitates explicit initialization and finalization. 
+However, unlike the efficient implementation of smart pointers in the STL, 
+Boost.MPI\cite{BOOST_MPI}
+-a high-level parallelism library—may not be the optimal choice for high-performance applications. 
+Therefore, I opted to design a custom MPI environment that encapsulates the necessary features specific to this project.
 
+The \texttt{mpi} namespace, a sub-namespace of \texttt{final\_project}, provides the \texttt{environment} class. 
+This class integrates MPI initialization using the constructor, which invokes \texttt{MPI\_Init\_thread}, 
+and MPI finalization through the destructor, which calls \texttt{MPI\_Finalize} . 
+It also offers direct access to the rank and the number of processors within the MPI communicator.
+Furthermore, I have explicitly deleted the copy and move assignment operators to enhance safety. 
+This design decision aligns with the RAII principle, 
+ensuring that MPI environment resources are automatically managed, thereby preventing leaking and 
+using-uninitialized problems.
+
+\paragraph{Types and Assertions} 
+Aligned with polymorphism principles, I designed a template function to retrieve the corresponding MPI basic data types, 
+respecting the fundamental data types I defined as traits at the outset.
+Besides, I provides some MPI macros in assert file, they provide a unified interface for dealing with MPI-related errors,
+ensuring that MPI errors are handling consistently, safely. 
+
+
+\subsubsection{MPI Topology}
+
+
+\subsection{Template Distributed Multi-dimension Matrix Design}
+\subsubsection{Detail Design}
+\subsubsection{User Interface Design}
+
+
+% \subsubsection{Pure Message Passing Parallel}
+% \subsubsection{Hybrid Parallel}
 
 \subsection{Physics Informed Neural Networks}
 \subsubsection{CUDA parallel}

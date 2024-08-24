@@ -108,33 +108,8 @@ Physics-Informed Neural Networks on CUDA Systems}
 \maketitle
 
 % ------------------------------------------------------------------------------------------------
-\section{Introduction}
-Numerical methods of solving partial differential equations (PDE) have 
-demonstrate far better performance than many other methods such as finite 
-difference methods (FDM) \cite{},
-finite element methods (FEM) \cite{}, 
-Lattice Boltzmann Method (LBM) \cite{}
-and Monte Carlo Method (MC) \cite{}.
-In recent years, researchers in the field of deep learning have mainly focused 
-on how to develop more powerful system architectures and learning methods such 
-as convolution neural networks (CNNs) \cite{}, 
-Transformers \cite{} 
-and Perceivers \cite{} .
-In addition, more researchers have tried to develop more powerful models specifically 
-for numerical simulations. 
-Despite of the relentless progress, modeling and predicting the evolution of nonlinear 
-multiscale systems which has inhomogeneous cascades-scales by using classical analytical 
-or computational tools inevitably encounts severe challanges and comes with prohibitive
-cost and multiple sources of uncertainty.
 
-This project focuses on the promotions on performance gained from the parallel compute systems, 
-in general, the FDMs and Neural Networks (NNs) are evaluated.
-Moreover, it prompted series Message Passing and Shared Memory hybrid parallel strategies using 
-Message Passing Interface (MPI) \cite{MPI}
-and
-Open Multi-processing (OpenMP) \cite{OpenMP}.
-
-
+\include{chapter/introduction}
 \include{chapter/relatedwork}
 \include{chapter/problemstatement}
 \include{chapter/methedology}
