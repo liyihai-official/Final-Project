@@ -46,7 +46,7 @@ add_executable(main1 main1/main1.cpp ${PROJECT_SOURCES})
 add_executable(main1_3d main1/main1_3d.cpp ${PROJECT_SOURCES})
 
 add_executable(main2 main2/main2.cpp ${PROJECT_SOURCES} ${PINN_SOURCES})
-add_executable(main2_3d main2/main2_3d.cpp ${PROJECT_SOURCES} ${PINN_SOURCES})
+add_executable(pred main2/pred.cpp ${PROJECT_SOURCES} ${PINN_SOURCES})
 
 add_executable(datagen main2/datagen.cpp ${PROJECT_SOURCES} ${PINN_SOURCES})
 
@@ -57,7 +57,7 @@ target_link_libraries(main1_3d ${MPI_LIBRARIES})
 
 # Linking to Libtorch
 target_link_libraries(main2 "${TORCH_LIBRARIES}")
-target_link_libraries(main2_3d "${TORCH_LIBRARIES}")
+target_link_libraries(pred "${TORCH_LIBRARIES}")
 target_link_libraries(datagen "${TORCH_LIBRARIES}")
 
 # Add Optimization flag 
@@ -77,7 +77,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release")
   target_compile_definitions(main1_3d PRIVATE NDEBUG)
   target_compile_definitions(datagen  PRIVATE NDEBUG)
   target_compile_definitions(main2 PRIVATE NDEBUG)
-  target_compile_definitions(main2_3d PRIVATE NDEBUG)
+  target_compile_definitions(pred PRIVATE NDEBUG)
 endif()
 
 configure_file(config.h.in config.h)
