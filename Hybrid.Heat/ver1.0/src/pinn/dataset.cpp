@@ -191,29 +191,6 @@ dataset::dataset(
 }
 
 
-
-// void dataset_3d::save(  
-//   const String dataset_X_internal,
-//   const String dataset_X_boundary,
-//   const String dataset_Y_boundary)
-// {
-//   torch::save(X_internal, dataset_X_internal);
-//   torch::save(X_boundary, dataset_X_boundary);
-//   torch::save(Y_boundary, dataset_Y_boundary);
-// }
-
-// dataset_3d& dataset_3d::operator=( dataset_3d && other) noexcept
-// {
-//   if (this != &other)
-//   {
-//     X_boundary = std::move(other.X_boundary);
-//     X_internal = std::move(other.X_internal);
-//     Y_boundary = std::move(other.Y_boundary);
-//   }
-//   return *this;
-// }
-
-
 dataset::dataset(
   const Integer nx, const Integer ny, const Integer nz,
   const String dataset_X_internal,

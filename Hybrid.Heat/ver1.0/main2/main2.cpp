@@ -16,17 +16,17 @@
 Integer 
   main( Integer argc, Char ** argv)
 {
-  constexpr maintype tol {1E-3};
-  constexpr size_type nsteps {10000};
+  constexpr maintype tol {1E-4};
+  constexpr size_type nsteps {10000000};
   final_project::PINN::Dimension Dimension {final_project::PINN::Dimension::UNKNOWN};
   final_project::String filename {""};
   Integer opt {0}, iter {1};  
 
-  while ((opt = getopt(argc, argv, "HhD:d:F:f:")) != -1)  // Command Line Arguments
+  while ((opt = getopt(argc, argv, "HhD:d:L:l:")) != -1)  // Command Line Arguments
   {
 switch (opt)
 {
-  case 'F': case 'f':
+  case 'L': case 'l':
     filename = optarg;
     std::cout 
       << "This program will trained model to the file: " 
@@ -92,8 +92,8 @@ switch (opt)
     if (iter % 30 == 0)
     {
       std::cout 
-        << "Iteration = "           << iter << "\t"
-        << "Loss = " << std::fixed  << std::setprecision(4) << std::setw(8) << loss_sum.item<maintype>() << "\t"
+        << "Iteration = "           << std::fixed << std::setw(8) << iter << "\t"
+        << "Loss = " << std::fixed  << std::setprecision(8) << std::setw(12) << loss_sum.item<maintype>() << "\t"
         << "Loss.Device.Type = "    << loss_sum.device().type() 
         << std::endl; 
     }

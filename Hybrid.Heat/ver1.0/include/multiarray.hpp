@@ -87,6 +87,7 @@ template <class T, size_type NumD>
     array_base(const array_base &);
     array_base & operator=(const array_base &);
 
+
     template <typename ... Exts>
     array_base( Exts ... );
     array_base( array_shape const & );
@@ -107,6 +108,8 @@ template <class T, size_type NumD>
     size_type&   shape(size_type index)  const { return body->__shape[index]; }
     Integer get_flat_index(std::array<Integer, NumD> & indexes ) { return body->get_flat_index(indexes); }
 
+    void fill(iterator, iterator);
+    void fill(const_reference);
     void saveToBinary(const String &)   const;
     void loadFromBinary(const String &);
 
@@ -212,6 +215,22 @@ template <class T, size_type NumD>
   if (this != &other)
   { body = other.body ? std::make_unique<array>(*other.body) : nullptr; }
   return *this;
+}
+
+template <class T, size_type NumD>
+  inline void
+  array_base<T, NumD>::fill(array::iterator first, array::iterator last)
+{
+  Integer i {0};
+  while ((first+i) != last)
+  {
+    // std::cout << first + i << " " << *(first+i)
+    //           << "\t" << last 
+    //           << std::endl;
+
+    *(this->begin()+i) = *(first+i);
+    ++i;
+  }
 }
 
 

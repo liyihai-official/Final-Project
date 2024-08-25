@@ -28,7 +28,7 @@ h = gcf;
 
 
 % contourf(x, y, U, 10);
-contourf(x, y, A', 1000);
+contourf(x, y, A', 10);
 colormap(jet);
 
 colorbar;
