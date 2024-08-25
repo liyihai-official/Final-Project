@@ -31,6 +31,16 @@ void dataset::save(
   torch::save(X_internal, dataset_X_internal);
 }
 
+dataset& dataset::operator=( dataset && other) noexcept
+{
+  if (this != &other)
+  {
+    X_boundary = std::move(other.X_boundary);
+    X_internal = std::move(other.X_internal);
+    Y_boundary = std::move(other.Y_boundary);
+  }
+  return *this;
+}
 
 dataset::dataset(
   const Integer in_size /*IN_SIZE*/,  const Integer out_size  /*OUT_SIZE*/,
@@ -50,7 +60,6 @@ dataset::dataset(
       internal_Xobj[idx_base+1] = y * (1.0  / (ny - 1));
     }
   }
-
 
   X_internal = torch::from_blob(
     internal_Xobj.data(), 
@@ -154,7 +163,7 @@ dataset::dataset(
 
 
 
-dataset_3d::dataset_3d(
+dataset::dataset(
   const Integer in_size /*IN_SIZE*/,  const Integer out_size /*OUT_SIZE*/,
   const Integer nx /*NX*/,            const Integer ny /*NY*/,      const Integer nz /*NZ*/,
   const torch::Device & device)
@@ -183,20 +192,29 @@ dataset_3d::dataset_3d(
 
 
 
-void dataset_3d::save(  
-  const String dataset_X_internal,
-  const String dataset_X_boundary,
-  const String dataset_Y_boundary)
-{
-  torch::save(X_internal, dataset_X_internal);
-  torch::save(X_boundary, dataset_X_boundary);
-  torch::save(Y_boundary, dataset_Y_boundary);
-}
+// void dataset_3d::save(  
+//   const String dataset_X_internal,
+//   const String dataset_X_boundary,
+//   const String dataset_Y_boundary)
+// {
+//   torch::save(X_internal, dataset_X_internal);
+//   torch::save(X_boundary, dataset_X_boundary);
+//   torch::save(Y_boundary, dataset_Y_boundary);
+// }
+
+// dataset_3d& dataset_3d::operator=( dataset_3d && other) noexcept
+// {
+//   if (this != &other)
+//   {
+//     X_boundary = std::move(other.X_boundary);
+//     X_internal = std::move(other.X_internal);
+//     Y_boundary = std::move(other.Y_boundary);
+//   }
+//   return *this;
+// }
 
 
-
-
-dataset_3d::dataset_3d(
+dataset::dataset(
   const Integer nx, const Integer ny, const Integer nz,
   const String dataset_X_internal,
   const String dataset_X_boundary,
@@ -229,14 +247,14 @@ dataset_3d::dataset_3d(
 }
 
 
-dataset_3d::dataset_3d(
+dataset::dataset(
   const Integer in_size, const Integer out_size, 
   const Integer nx, const Integer ny, const Integer nz,
   std::mt19937 & rde,
   std::uniform_real_distribution<value_type> & rng,
-  BCFunction & FuncDim00, BCFunction &  FuncDim01, 
-  BCFunction & FuncDim10, BCFunction &  FuncDim11, 
-  BCFunction & FuncDim20, BCFunction &  FuncDim21,
+  BCFunction3D & FuncDim00, BCFunction3D &  FuncDim01, 
+  BCFunction3D & FuncDim10, BCFunction3D &  FuncDim11, 
+  BCFunction3D & FuncDim20, BCFunction3D &  FuncDim21,
   const torch::Device & device)
 : in_size {in_size}, out_size {out_size}, nx {nx}, ny {ny}, nz {nz}
 {

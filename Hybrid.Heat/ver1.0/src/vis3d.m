@@ -1,10 +1,10 @@
-fid = fopen('../build/test.bin', 'rb');
+fid = fopen('../build/test_3d.bin', 'rb');
 
 Row = fread(fid, 1, 'uint32');
 Col = fread(fid, 1, 'uint32');
 Dep = fread(fid, 1, 'uint32');
 
-A = fread(fid, [Row * Col * Dep], 'double'); 
+A = fread(fid, [Row * Col * Dep], 'float32'); 
 A = reshape(A, [Dep, Col, Row]);
 A = permute(A, [2,3,1]);
 A = A(2:Row-2, 2:Col-2,2:Dep-2);

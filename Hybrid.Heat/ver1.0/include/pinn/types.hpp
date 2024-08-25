@@ -22,9 +22,9 @@
 #endif 
 
 #if !defined(NX) || !defined (NY) || !defined(NZ)
-#define NX 60+2
-#define NY 60+2
-#define NZ 50+2
+#define NX 6+2
+#define NY 6+2
+#define NZ 5+2
 #endif
 
 #if !defined(DATASET_X_BOUNDARY) || !defined(DATASET_X_INTERNAL) || !defined(DATASET_Y_BOUNDARY)

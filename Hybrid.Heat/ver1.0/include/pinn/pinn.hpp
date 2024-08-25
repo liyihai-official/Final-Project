@@ -34,8 +34,6 @@ struct HeatPINNImpl
   torch::Tensor forward(torch::Tensor &);
 
   torch::nn::Linear input, h0, h1, h2, output;
-  // torch::nn::Conv1d conv0, conv1,
-  // torch::nn::Dropout drop0;
 }; // struct HeatPINNImpl
 
 TORCH_MODULE(HeatPINN);
@@ -154,8 +152,6 @@ torch::Tensor get_pde_loss(torch::Tensor & u, torch::Tensor & X, torch::Device &
   {
     return torch::mean(torch::square(du_dxx + du_dyy));
   }
-  // torch::Tensor f_X { torch::zeros_like(du_dxx) };
-  // return torch::mse_loss( du_dxx + du_dyy, f_X );
 }
 
 

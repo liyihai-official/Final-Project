@@ -111,6 +111,9 @@ template <class T, size_type NumD>
     void loadFromBinary(const String &);
 
     friend mpi::array_Cart<T, NumD>;
+    
+    template <class U, size_type Dims>
+    friend std::ostream & operator<<(std::ostream &, const array_base<U, Dims> &);
 
   }; // class array_base
 } // namespace multi_array
@@ -153,7 +156,7 @@ template <class T, size_type NumD>
 
     loc_array& array()              { return *body; }
     loc_array& array()        const { return *body; }
-    T* data() {return body->data(); }
+    T* data()                       { return body->data(); }
     const T* data() const {return body->data(); }
 
     topology_Cart& topology() const { return body->__loc_Cart; }
@@ -282,6 +285,12 @@ template <class T, size_type NumD>
 
   }
 
+template <class U, size_type Dims>
+std::ostream & operator<<(std::ostream & os, const array_base<U, Dims> & in)
+{
+  os << *(in.body);
+  return os;
+}
 
 } // namespace multi_array
 
