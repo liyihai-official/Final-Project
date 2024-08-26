@@ -33,8 +33,15 @@ $$ -->
 
 
 <!-- <img src="Heat3D/Heat_3D.gif" alt="Animated GIF" height="200"> -->
+## Results
+
+### PURE MPI
+### 2D Heat Equation
+<img src="Benchmarks/Strong_2048_2048.png" alt="Heat_2D" height="400">
 
 ### Development Note
+
+
 
 #### PINN
 This is a visualization plot of randomly generated 3D dataset,
