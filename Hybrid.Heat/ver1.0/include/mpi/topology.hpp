@@ -20,7 +20,7 @@
 #include <types.hpp>
 #include <multiarray/types.hpp>
 #include <mpi/environment.hpp>
-
+#include <mpi/types.hpp>
 
 
 namespace final_project { namespace mpi {
@@ -32,7 +32,7 @@ namespace topology
   ///         and also creates the basic routines of halo @c MPI_Datatype for communicating.
   ///         
   /// @tparam T The value type of topology structure members.
-  /// @tparam NumD Number of dimensions, ranging from 0 to 3.
+  /// @tparam NumD Number of dimensions.
   template <typename T, size_type NumD>
     struct Cartesian 
     {
@@ -91,9 +91,6 @@ namespace topology
 {
 
 
-// typedef Dworld size_type;
-
-
 
 /// @brief Default Constructor, fill with {0} value
 /// @tparam T The value type
@@ -128,7 +125,6 @@ template <typename T, size_type NumD>
       MPI_Comm_free(&comm_cart);
   }
 
-typedef Dworld size_type;
 
 /// @brief Constructor Cartesian Topology,
 /// @tparam T 
