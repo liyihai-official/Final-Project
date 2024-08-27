@@ -40,6 +40,7 @@ $$ -->
 <img src="Benchmarks/Strong_2048_2048.png" alt="Heat_2D" width="600">
 <img src="Benchmarks/Strong_2048_2048_zoomin.png" alt="Heat_2D" width="600">
 <img src="Benchmarks/Weak_2048_2048.png" alt="Heat_2D" width="600">
+<img src="Benchmarks/Weak_2048vs1024.png" alt="Heat_2D" width="600">
 
 ### Development Note
 
