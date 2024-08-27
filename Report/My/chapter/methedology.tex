@@ -179,7 +179,7 @@ There are couple benefits of doing so,
 However, the IO does not play a critical role in effects performance of FDTD algorithms, if and only if 
 we need to store or load the data during evolving the arrays.
 
-\subsection{MPI Parallel Environment Design}
+\subsection{MPI Parallel Environment Design Scheme}
 \subsubsection{MPI Setups}
 \paragraph{Environment}
 Similar to how malloc in C and new in C++ require manual memory management, 
@@ -206,6 +206,16 @@ ensuring that MPI errors are handling consistently, safely.
 
 
 \subsubsection{MPI Topology}
+The MPI topology structure Cartesian contains a MPI Communicator and MPI value data type, halo data type,
+also, includes a multi-dimension matrix shape object for storing global shape and local shape.
+In addition, it has the neighbors' rank in the source and dest sites.
+The copy and move constructors, assignment operators are manually removed,
+the destructor is customized for free halo data type and cartesian communicator 
+due to the MPI security routines.
+
+\paragraph{Determine the local matrix's localtion}
+In order to split the $n$ tasks evenly across all $p$ processes.
+
 
 
 \subsection{Template Distributed Multi-dimension Matrix Design}
