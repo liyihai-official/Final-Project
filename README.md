@@ -38,6 +38,7 @@ $$ -->
 ### PURE MPI
 ### 2D Heat Equation
 <img src="Benchmarks/Strong_2048_2048.png" alt="Heat_2D" height="400">
+<img src="Benchmarks/Weak_2048_2048.png" alt="Heat_2D" height="400">
 
 ### Development Note
 
