@@ -147,7 +147,7 @@ recursively print all dimensions.
 With contiguity of safety, this object of multi-dimension array is accessible to users without 
 direct visit to the memory space where store values of matrix.
 
-\subsubsection{Resource Acquisition Is Initialization (RAII)}
+\subsubsection{Resource Acquisition Is Initialization (RAII)}\label{SEC:RAII}
 This private object has only a member variable, a unique pointer to the template \texttt{\_\_array}, 
 and other member function provide necessary features to operating on it.
 Smart pointers acquire resources in their constructor and automatically release them in their destructor, 
@@ -392,6 +392,7 @@ Since it is internal and not exposed from users, I decided to directly use other
 smart pointers.
 In this context, Cartesian matrix has public member variables \texttt{\_\_array} and \texttt{topology::Cartesian},
 and provides memory operations. 
+But the copy, move constructors and assignment operators are removed.
 This approach enhances both performance both performance and simplicity by avoiding unnecessary abstractions in the internal design 
 while maintain a robust memory management.
 
@@ -400,10 +401,20 @@ The STL os stream operator \texttt{<<} prints the matrices of all processes in s
 Thus the Unix standard \texttt{fflush} function is utilized for flushing the cache in terminal, to ensure the stdout is print immediately.
 
 \subsubsection{User Interface Design}
-The \texttt{array\_Cart<class T, size\_type NumD>} is an object exposed to users, whereas only provides limited access to member variables.
+The \texttt{array\_Cart<class T, size\_type NumD>} is an object exposed to users, whereas only provides limited access to member variables by smart pointer.
+As the size of matrices stored, it becomes clear that memory management is critically important. 
+Secondly, especially in MPI distributed matrices, exposing direct memory access by set it to public member is dangerous. 
+With the profits mentioned in Section \ref{SEC:RAII}, using unique pointer brings more benefits in this scenario, 
+\begin{enumerate}
+  \item MPI program memory management has higher complexity level. 
+  Adhering RAII routines, the resources are bind with object, including MPI objects, and will be deleted as the object destructed. 
+  \item Simplifying Concurrency Control. Synchronization between processes is a critical issue. 
+  By using the RAII, user could unsure the resources are locked or released automatically, preventing the risk of deadlocks and resource contention.
+\end{enumerate}
 
 
 
+\subsection{Template Function Gather of Cartesian Distributed Multi-dimension Matrix}
 % \subsubsection{Pure Message Passing Parallel}
 % \subsubsection{Hybrid Parallel}
 
