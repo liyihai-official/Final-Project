@@ -182,16 +182,19 @@ we need to store or load the data during evolving the arrays.
 \subsection{MPI Parallel Environment Design Scheme}
 \subsubsection{MPI Setups}
 \paragraph{Environment}
-Similar to how malloc in C and new in C++ require manual memory management, 
+Similar to how \texttt{malloc} in C and \texttt{new} in C++ require manual memory management, 
 the MPI environment also necessitates explicit initialization and finalization. 
 However, unlike the efficient implementation of smart pointers in the STL, 
 Boost.MPI\cite{BOOST_MPI}
--a high-level parallelism library—may not be the optimal choice for high-performance applications. 
-Therefore, I opted to design a custom MPI environment that encapsulates the necessary features specific to this project.
+-a high-level parallelism library—
+may not be the optimal choice for high-performance programs. 
+Therefore, I chose to design a custom MPI environment that encapsulates the necessary features specific to this project.
 
 The \texttt{mpi} namespace, a sub-namespace of \texttt{final\_project}, provides the \texttt{environment} class. 
-This class integrates MPI initialization using the constructor, which invokes \texttt{MPI\_Init\_thread}, 
-and MPI finalization through the destructor, which calls \texttt{MPI\_Finalize} . 
+This class integrates MPI initialization using the constructor, which invokes \texttt{MPI\_Init\_thread},
+provides multi-threading shared memory parallelism in MPI, 
+and MPI finalization through the destructor, which calls \texttt{MPI\_Finalize}.
+
 It also offers direct access to the rank and the number of processors within the MPI communicator.
 Furthermore, I have explicitly deleted the copy and move assignment operators to enhance safety. 
 This design decision aligns with the RAII principle, 
@@ -199,28 +202,206 @@ ensuring that MPI environment resources are automatically managed, thereby preve
 using-uninitialized problems.
 
 \paragraph{Types and Assertions} 
-Aligned with polymorphism principles, I designed a template function to retrieve the corresponding MPI basic data types, 
-respecting the fundamental data types I defined as traits at the outset.
-Besides, I provides some MPI macros in assert file, they provide a unified interface for dealing with MPI-related errors,
+Aligned meta-programming with polymorphism principles, 
+I designed a template function to retrieve the corresponding MPI basic data types, 
+leveraging the fundamental data types I defined as traits at the outset.
+Moreover, I provides some MPI macros in assert file, 
+these macros provide a unified interface for dealing with MPI-related errors,
 ensuring that MPI errors are handling consistently, safely. 
 
+\subsubsection{MPI Topology (\texttt{Cartesian})}
+The namespace \texttt{topology} is a sub-namespace of \texttt{mpi}, 
+the template Cartesian structure is the mainly used object in following 
+problems.
+To optimize memory usage, this object maintains only essential multi-dimension matrices' global and local shape member variables.
+It also contains a MPI Communicator and MPI value data type, halo data type along with the neighbors' rank in the source and dest sites.
+To ensure the MPI security, the copy and move constructors as well as assignment operators are manually removed.
+Additionally, the destructor is customized for properly release halo data type and Cartesian communicator. 
 
-\subsubsection{MPI Topology}
-The MPI topology structure Cartesian contains a MPI Communicator and MPI value data type, halo data type,
-also, includes a multi-dimension matrix shape object for storing global shape and local shape.
-In addition, it has the neighbors' rank in the source and dest sites.
-The copy and move constructors, assignment operators are manually removed,
-the destructor is customized for free halo data type and cartesian communicator 
-due to the MPI security routines.
 
 \paragraph{Determine the local matrix's localtion}
-In order to split the $n$ tasks evenly across all $p$ processes.
+Evenly distributing tasks across processes is of critical importance.
+To address this, I designed an algorithm to divide an integer $N$ evenly to $n$ clients, where I could put it in use in 
+many cases.
+Rather than implementing a standalone function, I chose to implement a lambda function, which is a feature in C++ that do not significantly 
+impact the performance.
+It allows me to design a small function which is not frequently use or play a key role in performance.
+\begin{algorithm}
+  \caption{Lambda Function (decomposition): Split tasks evenly to $n$ processes evenly}
+  \begin{algorithmic}[1]
+    \STATE \texttt{n, rank} \hfill \# const Integers, total number and current rank of Processor.
+    \STATE \texttt{N} \hfill \# constant Integer, Problem size.
+    \STATE \texttt{s, e} \hfill \# Integer, start, end indexes.
+    \STATE \texttt{n\_loc = n / N} \hfill \# Divide the problem evenly.
+    \STATE \texttt{remain = n \% N} \hfill \# Get the remaining tasks.
+    \STATE \texttt{s = rank * n\_loc + 1} \hfill \# Calculate the start indexes.
+    \IF{\texttt{rank < remain}}      
+      \STATE \texttt{s += rank}      \hfill \# Give a task to process the rank is smaller than remain.
+      \STATE \texttt{++n\_loc}       \hfill \# Update local number of tasks.
+    \ELSE 
+      \STATE \texttt{s += remain}   \hfill \# Add the remain to start index, after split remains.
+    \ENDIF
+    \STATE \texttt{e = s + n\_loc + 1}  \hfill \# Get the ending indexes
+    \IF{\texttt{e > n} \OR \texttt{rank == N - 1}} 
+      \STATE \texttt{e = n}           \hfill \# If it is the end of all.
+    \ENDIF
+  \end{algorithmic}
+\end{algorithm}
+Ideally, this function will be only called when I construct the MPI topology based multi-dimension array, where I 
+need cut the global matrix's shape evenly and create local matrices with local shape.
+Using local shape to create local matrices is obviously a memory-saving techniques when the problem size gets larger.
+Eventually, the lambda function is only applied in constructor of template Cartesian structure, which constructed from 
+an input global and a MPI topology environment. 
 
+Moreover, the topology information is determined by \texttt{MPI\_Cart\_coords} for the coordinates and \texttt{MPI\_Cart\_shift} 
+the neighbors of each process in all dimension. 
+Below is a example [Fig. \ref{FIG_MPI_TOPOLOGY_24_PROCS}] of cartesian topology of $24$ processors, with no period in all dimensions.
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}
+    \draw[help lines, step=1em] (0,0) grid (-20em, -20em);
+    \draw[thick, ->] (0,0) -- (-20em, 0) node[left] {$x$};
+    \draw[thick, ->] (0,0) -- (0, -20em) node[below] {$y$};
+    
+    \def\xsize{2};
+    \def\ysize{3};
+    \def\zsize{4};
+  
+    \begin{scope}[shift={(-15em, -15em)}, x={(2em,-0.25em)},y={(0em,2em)}, , z={(-1.25em,-0.5em)}]
+      % Draw the front face
+      \fill[blue!20] (0,0,0) -- (0,\ysize,0) -- (\zsize, \ysize,0) -- (\zsize,0,0) -- cycle;
+      % Draw the top face
+      \fill[blue!40] (0,\ysize,0) -- (0,\ysize,-\xsize) -- (\zsize, \ysize, -\xsize) -- (\zsize, \ysize,0) -- cycle;
+      % Draw the right face
+      \fill[blue!60] (\zsize,0,0) -- (\zsize,0,-\xsize) -- (\zsize, \ysize, -\xsize) -- (\zsize, \ysize,0) -- cycle;
+  
+      \foreach \x in {0,1, ..., \xsize}
+      {
+        \draw[black] (0, \ysize, -\x/\xsize * \xsize) -- (\zsize, \ysize, -\x/\xsize * \xsize);
+        \draw[black] (\zsize,0,-\x/\xsize * \xsize) -- (\zsize, \ysize,-\x/\xsize * \xsize);
+      }
+  
+      \foreach \y in {0, 1, ..., \ysize}
+      {
+        \draw[black] (0,\y/\ysize * \ysize,0) -- (\zsize,\y/\ysize * \ysize,0);
+        \draw[black] (\zsize,\y/\ysize * \ysize,0) -- (\zsize,\y/\ysize * \ysize,-\xsize);
+      }
+  
+      \foreach \z in {0, 1, ..., \zsize}
+      {
+        \draw[black] (\z/\zsize * \zsize,\ysize,0) -- (\z/\zsize * \zsize,\ysize,-\xsize);
+        \draw[black] (\z/\zsize * \zsize,0,0) -- (\z/\zsize * \zsize,\ysize,0);
+      }
+    \end{scope}
+  \end{tikzpicture}
+  \caption{An example of MPI Cartesian topology Scheme of $24$ processors.}
+  \label{FIG_MPI_TOPOLOGY_24_PROCS}
+\end{figure}
+
+\paragraph{Determine MPI datatypes for communication}
+In order to do MPI communications, the source and the destination of every process are necessary, also the datatype.
+When working with the meta-designed multidimensional matrix, we need to utilize the function \texttt{MPI\_Type\_Create\_subarray} to 
+create essential halo datatypes.
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \STATE \texttt{array\_size}, \texttt{array\_subsize}, \texttt{array\_starts=\{0\}} \hfill \#\texttt{std::array<Integer, NumD>}, the information of matrix.
+    \FOR {i = 0 : NumD}
+      \STATE Split tasks in dimension \texttt{i} by calling \texttt{decomposition}
+      \STATE \texttt{array\_size = }local shape
+      \STATE \texttt{array\_subsize = array\_size - 2}
+    \ENDFOR
+    \FOR {i=0 : NumD}
+      \STATE \texttt{temp = array\_subsize[i]} \hfill \# Store the number temporally.
+      \STATE \texttt{array\_subsize[i] = 1}
+      \STATE \texttt{MPI\_Type\_Create\_subarray
+      } and \texttt{MPI\_Type\_commit()} \hfill \# Create halo in dimension \texttt{i} and commit.
+      \STATE Restore temporal array sub-size.
+    \ENDFOR
+  \end{algorithmic}
+\end{algorithm}
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}
+    % Draw a grid with steps of 1 cm
+    \draw[help lines, step=1em] (-10em,-10em) grid (30em,30em);
+  
+    % Draw axes
+    \draw[dashed,->] (-10em,0) -- (30em,0) node[right] {x};
+    \draw[dashed,->] (0,-10em) -- (0,30em) node[above] {y};
+  
+    \draw[thick,->] (5em, 28em) -- (-5em, 23em) node[pos=0, above] {$source$} node[pos=0.5, above] {$dim_0$} node[pos=1, above] {$dest$};
+    \draw[thick,->] (-3em, 18em) -- (-3em, 4em) node[pos=0, above] {$source$} node[pos=0.5, left] {$dim_1$} node[pos=1, below] {$dest$};
+    \draw[thick,->] (14em, 28.5em) -- (28em, 27em) node[pos=0, above] {$source$} node[pos=0.5, above] {$dim_2$} node[pos=1, above] {$dest$};
+  
+      % Define a local macro to draw a cube at a given position
+      \def\drawcube#1#2{
+        \begin{scope}[shift={#1}, x={(0.8em,-0.1em)}, y={(0em,0.8em)}, z={(0.4em,0.20em)}]
+          \def\size{#2}
+          % Draw the front face
+          \fill[blue!20] (0,0,0) -- (0,\size,0) -- (\size, \size,0) -- (\size,0,0) -- cycle;
+          % Draw the top face
+          \fill[blue!40] (0,\size,0) -- (0,\size,\size) -- (\size, \size, \size) -- (\size, \size,0) -- cycle;
+          % Draw the right face
+          \fill[blue!60] (\size,0,0) -- (\size,0,\size) -- (\size, \size, \size) -- (\size, \size,0) -- cycle;
+  
+          \fill[red!30] (1,1,0) -- (1,\size-1,0) -- (\size-1, \size-1,0) -- (\size-1,1,0) -- cycle;
+          \fill[red!40] (1,\size,1) -- (1,\size,\size-1) -- (\size-1, \size, \size-1) -- (\size-1, \size,1) -- cycle;
+          \fill[red!45] (\size,1,1) -- (\size,1,\size-1) -- (\size, \size-1, \size-1) -- (\size, \size-1,1) -- cycle;
+  
+          % Draw the grid
+          \foreach \x in {0,1,...,\size} {
+            \draw[black] (\x,0,0) -- (\x,\size,0);
+            \draw[black] (0,\x,0) -- (\size,\x,0);
+
+            \draw[black] (\size,\x,0) -- (\size,\x,\size);
+            \draw[black] (\size,0,\x) -- (\size, \size,\x);
+
+            \draw[black] (\x,\size,0) -- (\x,\size,\size);
+            \draw[black] (0,\size,\x) -- (\size, \size,\x);
+          }
+        \end{scope}
+      }
+  
+      % Draw the first cube at (0,0) with size 8
+      \drawcube{(0em, 0em)}{10}
+      \drawcube{(18em, 0em)}{10}
+      \drawcube{(0em, 15em)}{10}
+      \drawcube{(18em, 15em)}{10}
+        
+      \node[draw, minimum width = 3em, minimum height = 1.5em, align=center] at (14em,12em) {MPI Communications};
+    
+      \fill[red] (14em,12em) circle (3pt);
+      \fill[red] (14em,4em) circle (3pt);
+      \fill[red] (14em,20em) circle (3pt);
+
+      \fill[red] (4em,12em) circle (3pt);
+      \fill[red] (22em,12em) circle (3pt);
+    \end{tikzpicture}  
+  \caption{A 3D MPI Communication Scheme of $8$ processors between $3$ dimension matrices.}
+  \label{FIG_MPI_3D_Example_SCHEME}
+\end{figure}
 
 
 \subsection{Template Distributed Multi-dimension Matrix Design}
-\subsubsection{Detail Design}
+\subsubsection{Detail Object Design}
+Adhering to the STL safety routines, I chose to create detail template class object, hidden from users,
+named \texttt{\_\_array\_Cart<class \_\_T, \_\_size\_type \_\_NumD>}.
+Here, the \texttt{\_\_T} represents the value type, \texttt{\_\_size\_type} specifies the type of number of dimensions.
+Since it is internal and not exposed from users, I decided to directly use other detail objects as member variables rather than 
+smart pointers.
+In this context, Cartesian matrix has public member variables \texttt{\_\_array} and \texttt{topology::Cartesian},
+and provides memory operations. 
+This approach enhances both performance both performance and simplicity by avoiding unnecessary abstractions in the internal design 
+while maintain a robust memory management.
+
+\paragraph{Distributed operator <<}
+The STL os stream operator \texttt{<<} prints the matrices of all processes in sequence which build on multidimensional matrix's. 
+Thus the Unix standard \texttt{fflush} function is utilized for flushing the cache in terminal, to ensure the stdout is print immediately.
+
 \subsubsection{User Interface Design}
+The \texttt{array\_Cart<class T, size\_type NumD>} is an object exposed to users, whereas only provides limited access to member variables.
+
 
 
 % \subsubsection{Pure Message Passing Parallel}

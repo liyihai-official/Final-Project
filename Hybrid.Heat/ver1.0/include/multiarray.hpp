@@ -70,6 +70,7 @@ template <class T, size_type NumD>
     private:    
     using array           = __detail::__array<T, NumD>;
     using array_shape     = array::__array_shape;
+    using std_array_idx   = array::__std_array_idx;
 
     using value_type      = array::value_type;
     using reference       = array::reference;
@@ -106,7 +107,7 @@ template <class T, size_type NumD>
 
     array_shape& shape()                 const { return body->__shape; }
     size_type&   shape(size_type index)  const { return body->__shape[index]; }
-    Integer get_flat_index(std::array<Integer, NumD> & indexes ) { return body->get_flat_index(indexes); }
+    Integer get_flat_index(std_array_idx & indexes ) { return body->get_flat_index(indexes); }
 
     void fill(iterator, iterator);
     void fill(const_reference);
@@ -129,13 +130,18 @@ namespace mpi {
 template <class T, size_type NumD>
   class array_Cart {
     public:
-    typedef T                                       value_type;
-    typedef topology::Cartesian<T, NumD>            topology_Cart;
-
+    typedef topology::Cartesian<T, NumD>                        topology_Cart;
     typedef mpi::__detail::__array_Cart<T, NumD>                loc_array;    // mpi details
-
     typedef multi_array::array_base<T, NumD>                    super_array;  
-    typedef multi_array::__detail::__multi_array_shape<NumD>    array_shape;  // multi_array details
+
+    using array_shape     = topology_Cart::__array_shape;
+    using std_array_idx   = loc_array::__array::__std_array_idx;
+    
+    using value_type      = loc_array::__array::value_type;
+    using reference       = loc_array::__array::reference;
+    using const_reference = loc_array::__array::const_reference;
+    using iterator        = loc_array::__array::iterator;
+    using const_iterator  = loc_array::__array::const_iterator;
 
     public:
     array_Cart()                                                  = default;
@@ -150,17 +156,17 @@ template <class T, size_type NumD>
     array_Cart(environment &, array_shape &); // initialize from extent
 
     template <typename ... Args>
-    T& operator()(Args ... args) { return (*body)(args...); }
+    reference operator()(Args ... args) { return (*body)(args...); }
 
-    Integer get_flat_index(std::array<Integer, NumD> & indexes ) { return body->get_flat_index(indexes); }
+    Integer get_flat_index(std_array_idx & indexes ) { return body->get_flat_index(indexes); }
 
     public:
     void swap(array_Cart &);
 
     loc_array& array()              { return *body; }
     loc_array& array()        const { return *body; }
-    T* data()                       { return body->data(); }
-    const T* data() const {return body->data(); }
+    iterator       data()       { return body->data(); }
+    const_iterator data() const { return body->data(); }
 
     topology_Cart& topology() const { return body->__loc_Cart; }
 

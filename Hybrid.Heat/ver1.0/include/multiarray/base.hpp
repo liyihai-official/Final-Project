@@ -39,6 +39,7 @@ template <class __T, __size_type __NumD>
     typedef const __T*        const_iterator;
 
     typedef __multi_array_shape<__NumD> __array_shape;
+    typedef std::array<Integer, __NumD> __std_array_idx;
 
   public: // Member Variables
     __array_shape                 __shape;
@@ -73,7 +74,7 @@ template <class __T, __size_type __NumD>
 
   public: // Capacity
     __super_size_type size()  const noexcept { return __shape.size(); }
-    Integer       get_flat_index( std::array<Integer, __NumD> & );
+    Integer       get_flat_index( __std_array_idx & );
 
   
   public: // Modifiers

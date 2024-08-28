@@ -37,7 +37,8 @@ namespace topology
     struct Cartesian 
     {
       typedef multi_array::__detail::__multi_array_shape<NumD>    __array_shape;
-
+      typedef std::array<Integer, NumD>                           __std_array_idx;
+      typedef std::array<MPI_Datatype, NumD>                      __std_array_halos;
 
       // ------------------------- Global Entities ------------------------- //
       public:
@@ -51,24 +52,25 @@ namespace topology
       public: 
       __array_shape __local_shape;
 
+      __std_array_idx   starts, ends, dims = {0}, periods = {0};
+      __std_array_idx   nbr_src, nbr_dest, coordinates;
+      __std_array_halos halos;
       Integer rank;
-      std::array<Integer, NumD> starts, ends, dims = {0}, periods = {0};
-      std::array<Integer, NumD> nbr_src, nbr_dest, coordinates;
-      std::array<MPI_Datatype, NumD> halos;
-
 
       // -------------------------- Cons & Decons ------------------------- //
       public:
       Cartesian();
       Cartesian(__array_shape &, environment &);
+      Cartesian(const Cartesian &)              = delete;
+      Cartesian(Cartesian &&)                   = delete;
+
+      Cartesian& operator=(const Cartesian &)   = delete;
+      Cartesian& operator=(Cartesian &&)        = delete; 
       ~Cartesian();
 
-      // --------------------------- Operators --------------------------- //
-      bool operator==(const Cartesian &) const;
-      bool operator!=(const Cartesian &) const;
-
-      
-
+      // 
+      // Bool operator==(const Cartesian &);
+      // Bool operator!=(const Cartesian &);
     }; // struct Cartesian
 
 
@@ -90,7 +92,13 @@ namespace final_project { namespace mpi {
 namespace topology 
 {
 
+// template <typename T, size_type NumD>
+//   inline Bool
+//   Cartesian<T, NumD>::operator==(const Cartesian<T, NumD> & other)
+// {
+//   if (*this = &other) return true;
 
+// }
 
 /// @brief Default Constructor, fill with {0} value
 /// @tparam T The value type
@@ -143,12 +151,12 @@ auto Decomp = [](
   const Integer n, const Integer prob_size, const Integer rank, 
   Integer & s, Integer & e)
 {
-  Integer n_loc {n / prob_size}, deficit {n % prob_size};
+  Integer n_loc {n / prob_size}, remain {n % prob_size};
 
   s = rank * n_loc + 1;
-  s += ((rank < deficit) ? rank : deficit);
+  s += ((rank < remain) ? rank : remain);
 
-  if (rank < deficit) ++n_loc;
+  if (rank < remain) ++n_loc;
   e = s + n_loc - 1;
 
   if (e > n || rank == prob_size - 1) e = n;
@@ -156,8 +164,8 @@ auto Decomp = [](
 };
 
     Integer i {0};
-    dimension = static_cast<Integer>(NumD); // 0 < Num < 4
-    std::array<Integer, NumD> array_size, array_sub_size, array_starts = {0};
+    dimension = static_cast<Integer>(NumD); // 0 <= Num < 4
+    __std_array_idx array_size, array_sub_size, array_starts = {0};
 
     MPI_Dims_create(env.size(), dimension, dims.data());
     MPI_Cart_create(env.comm(), dimension, dims.data(), periods.data(), 1, &comm_cart);
@@ -169,7 +177,6 @@ auto Decomp = [](
     for (i = 0; i < dimension; ++i)
     {
       MPI_Cart_shift(comm_cart, i, 1, &nbr_src[i], &nbr_dest[i]);
-
 
       Decomp(__global_shape[i]-2, dims[i], coordinates[i], starts[i], ends[i]);
       __local_shape[i] = ends[i] - starts[i] + 1 + 2; // Include halos

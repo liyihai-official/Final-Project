@@ -34,10 +34,16 @@ template <class __T, __size_type __NumD>
   class __array_Cart {
     public:
     typedef topology::Cartesian<__T, __NumD>                   __Cart;
+    typedef multi_array::__detail::__array<__T, __NumD>        __array;
+
+    using __shape         = __Cart::__array_shape;
+    using __std_array_idx = __array::__std_array_idx;
     
-    typedef multi_array::__detail::__array<__T, __NumD>         __array;
-    typedef multi_array::__detail::__multi_array_shape<__NumD>  __shape;
-    
+    using value__type     = __array::value_type;
+    using reference       = __array::reference;
+    using const_reference = __array::const_reference;
+    using iterator        = __array::iterator;
+    using const_iterator  = __array::const_iterator;
 
     public:
     __Cart  __loc_Cart;
@@ -45,17 +51,19 @@ template <class __T, __size_type __NumD>
 
     public:
     __array_Cart(__shape &, environment &);
+    
 
     template <typename ... Args>
-    __T& operator()(Args ... args) { return __loc_array(args...); }
+    reference operator()(Args ... args) { return __loc_array(args...); }
 
-          __T* data()       { return __loc_array.begin(); }
-    const __T* data() const { return __loc_array.cbegin(); }
-          Integer get_flat_index( std::array<Integer, __NumD> & indexes ) { return __loc_array.get_flat_index(indexes); }
+    iterator       data()               { return __loc_array.begin();  }
+    const_iterator data()         const { return __loc_array.cbegin(); }
+    Integer get_flat_index( __std_array_idx & indexes ) 
+                          { return __loc_array.get_flat_index(indexes); }
 
     // Member Functions
     public:
-    void swap(__array_Cart &);
+    // void swap(__array_Cart &);
 
     public: // friend Functions
     template <class __U, __size_type __Dims>
@@ -96,16 +104,17 @@ template <class __T, __size_type __NumD>
 : __loc_Cart(__glob_shape, env), 
   __loc_array(__loc_Cart.__local_shape) {}
 
-template <class __T, __size_type __NumD>
-  inline
-  void __array_Cart<__T, __NumD>::swap(__array_Cart & other)
-  {
-    FINAL_PROJECT_ASSERT_MSG(
-      (__loc_Cart == other.__loc_Cart),
-      "Match MPI Topology Structure required for swapping array_Cart."
-    );
-    __loc_array.swap(other.__loc_array);
-  }
+
+// template <class __T, __size_type __NumD>
+//   inline
+//   void __array_Cart<__T, __NumD>::swap(__array_Cart & other)
+//   {
+//     FINAL_PROJECT_ASSERT_MSG(
+//       (__loc_Cart == other.__loc_Cart),
+//       "Match MPI Topology Structure required for swapping array_Cart."
+//     );
+//     __loc_array.swap(other.__loc_array);
+//   }
 
 
 
@@ -117,7 +126,7 @@ template <class __U, __size_type __Dims>
   os << "Attempting to print array in order \n";
   MPI_Barrier(in.__loc_Cart.comm_cart);
 
-  for (int i = 0; i < in.__loc_Cart.num_procs; ++i)
+  for (Integer i = 0; i < in.__loc_Cart.num_procs; ++i)
   {
     if ( i == in.__loc_Cart.rank )
     {
