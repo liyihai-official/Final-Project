@@ -50,7 +50,7 @@ template <class __T, __size_type __NumD>
     __array __loc_array;
 
     public:
-    __array_Cart(__shape &, environment &);
+    __array_Cart(__shape &, environment &) noexcept;
     
 
     template <typename ... Args>
@@ -100,7 +100,7 @@ namespace __detail {
 
 template <class __T, __size_type __NumD>
   inline
-  __array_Cart<__T, __NumD>::__array_Cart(__shape & __glob_shape, environment & env)
+  __array_Cart<__T, __NumD>::__array_Cart(__shape & __glob_shape, environment & env) noexcept
 : __loc_Cart(__glob_shape, env), 
   __loc_array(__loc_Cart.__local_shape) {}
 

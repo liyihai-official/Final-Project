@@ -154,13 +154,20 @@ final_project::helper_message(mpi_world);
 
   /// Save if needs
   if (!filename.empty()) obj.SaveToBinary(filename);
+  MPI_Barrier(MPI_COMM_WORLD);
+  // if (mpi_world.rank() == 0)
+  // std::cout << obj.gather << std::endl;
+  final_project::mpi::MPI_SaveToBinary(obj.in, "test.bin");
+  
   obj.reset();
 
 
+
   // std::cout << "\n" << std::endl;
-  // final_project::multi_array::__detail::__multi_array_shape<2> shape(4,3), shape2(5,5), shape3(4,3);
-  final_project::multi_array::__detail::__multi_array_shape<4> shape(6,5,4,3);
-  std::cout << shape.strides[0] <<  ", " << shape.strides[1] <<  ", " <<  shape.strides[2] << ", " << shape.strides[3] << std::endl;
+  // final_project::multi_array::__detail::__multi_array_shape<2> shape(22,22), shape2(5,5), shape3(4,3);
+  // std::cout << shape.strides[0] << ", " << shape.strides[1] << std::endl;
+  // final_project::multi_array::__detail::__multi_array_shape<4> shape(6,5,4,3);
+  // std::cout << shape.strides[0] <<  ", " << shape.strides[1] <<  ", " <<  shape.strides[2] << ", " << shape.strides[3] << std::endl;
 
   // std::cout << (shape != shape2) << std::endl;
   // final_project::multi_array::__detail::__multi_array_shape<2> other;
@@ -168,12 +175,11 @@ final_project::helper_message(mpi_world);
   // std::cout << other[0] << ", " << other[1] << std::endl;
 
 
-  final_project::multi_array::__detail::__array<Double, 4> array (shape);//, other (shape2);
-  std::array<Integer, 4> indexes {1,0,0,0};
-  Integer idx {array.get_flat_index(indexes)};
-  // std::cout << &array[array.get_flat_index(indexes)] << "\t" << array.begin() + 60 << "\t" << &array(9,9,9,9) << "\n" << array[-1] << std::endl;
-  std::cout << array(9,9,9,9) << std::endl;
-
+  // final_project::multi_array::__detail::__array<Double, 4> array (shape);//, other (shape2);
+  // std::array<Integer, 4> indexes {1,0,0,0};
+  // Integer idx {array.get_flat_index(indexes)};
+  // // std::cout << &array[array.get_flat_index(indexes)] << "\t" << array.begin() + 60 << "\t" << &array(9,9,9,9) << "\n" << array[-1] << std::endl;
+  // std::cout << array(9,9,9,9) << std::endl;
 
 
   // array.fill(1); other.fill(2);
@@ -188,5 +194,52 @@ final_project::helper_message(mpi_world);
   // array.swap(other);
   // std::cout << array << std::endl;
   // std::cout << array << "\n" << other << std::endl;
+
+  // std::array<Integer, 3> Ns, starts_cpy, array_sizes, array_subsizes, array_starts, indexes;
+  // // 定义全局三维数组的大小
+  // array_sizes = {16, 18, 19};
+  // // int gsizes[3] = {16, 18, 19}; // 全局数组大小为 16x16x16
+  // // // 定义数据在每个维度的分布方式
+  // // int distribs[3] = {MPI_DISTRIBUTE_BLOCK, MPI_DISTRIBUTE_BLOCK, MPI_DISTRIBUTE_BLOCK};
+  // // // 默认块大小
+  // // int dargs[3] = {MPI_DISTRIBUTE_DFLT_DARG, MPI_DISTRIBUTE_DFLT_DARG, MPI_DISTRIBUTE_DFLT_DARG};
+  // // 每个维度上用于分布的进程数
+  
+  // int psizes[3] = {2, 2, 2}; // 2x2x2的进程网格
+  // MPI_Datatype dtype;
+
+  // // 创建三维分布式数组类型
+  // MPI_Type_create_darray(mpi_world.size(), mpi_world.rank(), 3, gsizes, distribs, dargs, psizes, MPI_ORDER_C, MPI_DOUBLE, &dtype);
+  // MPI_Type_commit(&dtype);
+
+  // // 获取本地数组的大小
+  // int local_size;
+  // MPI_Type_size(dtype, &local_size);
+  // local_size /= sizeof(double); // 得到的是字节数，除以 sizeof(double) 转化为元素个数
+
+  // // 分配本地数组
+  // double *local_array = new double[local_size];
+  
+  // // 初始化本地数组
+  // for (int i = 0; i < local_size; i++) {
+  //     local_array[i] = mpi_world.rank() + 1; // 每个进程填充不同的值
+  // }
+
+  // // 输出每个进程上的本地数组信息
+  // std::cout << "Process " << mpi_world.rank() << " has local array of size " << local_size / 8 << std::endl;
+
+  // 进行一些计算或通信操作...
+
+
+
+  // std::cout << shape.dims[0] << std::endl;
+
+
+  // 释放资源
+  // MPI_Type_free(&dtype);
+  // delete[] local_array;
+
+
+  
   return 0;
 }

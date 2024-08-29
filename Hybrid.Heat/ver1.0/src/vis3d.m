@@ -4,7 +4,7 @@ Row = fread(fid, 1, 'uint32');
 Col = fread(fid, 1, 'uint32');
 Dep = fread(fid, 1, 'uint32');
 
-A = fread(fid, [Row * Col * Dep], 'float32'); 
+A = fread(fid, [Row * Col * Dep], 'double'); 
 A = reshape(A, [Dep, Col, Row]);
 A = permute(A, [2,3,1]);
 % A = A(2:Row-2, 2:Col-2,2:Dep-2);
@@ -51,3 +51,9 @@ zlabel('Depth-axis Label'); % 替换为你想要的 Z 轴标签
 % saveas(gcf, '../out/main2_3d.png')
 
 % legend('Data A', 'Function F'); % 添加图例区分两者
+
+
+% fid = fopen('../build/test.bin', 'rb');
+% A = fread(fid, [(Dep-2)*(Col-2)*(Row-2)], 'double');       
+% A = reshape(A, [Dep-2, Col-2, Row-2]);       
+% A = permute(A, [2,3,1]);        

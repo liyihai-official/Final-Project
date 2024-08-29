@@ -117,12 +117,10 @@ namespace final_project { namespace pde {
 template <typename T>
   inline 
   Heat_3D<T>::Heat_3D(mpi::environment & env, size_type nx, size_type ny, size_type nz)
-: Heat_Base<T, 3>(env, nx, ny, nz), BC_3D {nullptr}, IC_3D {nullptr}, converge {false}
+: Heat_Base<T, 3>(env, nx, ny, nz), BC_3D {nullptr}, IC_3D {nullptr}, converge {false}, gather {}
   {
     in  = mpi::array_Cart<T, 3>(env, nx, ny, nz);
     out = mpi::array_Cart<T, 3>(env, nx, ny, nz);
-
-    gather = multi_array::array_base<T, 3>(nx, ny, nz);
 
     in.array().__loc_array.fill(0);
     out.array().__loc_array.fill(0);    
@@ -133,7 +131,7 @@ template <typename T>
   inline void 
   Heat_3D<T>::reset()
   {
-    std::fill(gather.begin(), gather.end(), 0);
+    gather = multi_array::array_base<T, 3>();
 
     in.array().__loc_array.fill(0);
     out.array().__loc_array.fill(0);    

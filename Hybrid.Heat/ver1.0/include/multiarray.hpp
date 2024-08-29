@@ -87,10 +87,13 @@ template <class T, size_type NumD>
     array_base & operator=(array_base &&)   noexcept   = default;
     array_base(const array_base &);
     array_base & operator=(const array_base &);
-
+    ~array_base()                           noexcept   = default;
 
     template <typename ... Exts>
+    explicit 
     array_base( Exts ... );
+
+    explicit 
     array_base( array_shape const & );
 
     template <typename ... Args>
@@ -136,7 +139,7 @@ template <class T, size_type NumD>
 
     using array_shape     = topology_Cart::__array_shape;
     using std_array_idx   = loc_array::__array::__std_array_idx;
-    
+
     using value_type      = loc_array::__array::value_type;
     using reference       = loc_array::__array::reference;
     using const_reference = loc_array::__array::const_reference;
@@ -144,15 +147,17 @@ template <class T, size_type NumD>
     using const_iterator  = loc_array::__array::const_iterator;
 
     public:
-    array_Cart()                                                  = default;
-    array_Cart(array_Cart<T, NumD> &&)                            = default; // move
-    array_Cart<T, NumD> & operator=(array_Cart<T,NumD> &&)        = default;
-    array_Cart(const array_Cart<T, NumD> &)                       = default;
-    array_Cart<T, NumD> & operator=(const array_Cart<T, NumD> &)  = default; // copy
+    array_Cart()                                                  noexcept;
+    array_Cart(array_Cart<T, NumD> &&)                            noexcept = default; // move
+    array_Cart<T, NumD> & operator=(array_Cart<T,NumD> &&)        noexcept = default;
+    array_Cart(const array_Cart<T, NumD> &);
+    array_Cart<T, NumD> & operator=(const array_Cart<T, NumD> &); // copy
     ~array_Cart() = default;
     
     template <typename ... Exts>
+    explicit 
     array_Cart(environment &, Exts ...);      // specify the extents
+
     array_Cart(environment &, array_shape &); // initialize from extent
 
     template <typename ... Args>
@@ -163,10 +168,10 @@ template <class T, size_type NumD>
     public:
     void swap(array_Cart &);
 
-    loc_array& array()              { return *body; }
-    loc_array& array()        const { return *body; }
-    iterator       data()       { return body->data(); }
-    const_iterator data() const { return body->data(); }
+    loc_array&     array()              { return *body; }
+    loc_array&     array()        const { return *body; }
+    iterator       data()        { return body->data(); }
+    const_iterator data() const  { return body->data(); }
 
     topology_Cart& topology() const { return body->__loc_Cart; }
 
@@ -230,12 +235,8 @@ template <class T, size_type NumD>
   Integer i {0};
   while ((first+i) != last)
   {
-    // std::cout << first + i << " " << *(first+i)
-    //           << "\t" << last 
-    //           << std::endl;
-
-    *(this->begin()+i) = *(first+i);
-    ++i;
+  *(this->begin()+i) = *(first+i);
+  ++i;
   }
 }
 
@@ -244,7 +245,7 @@ template <class T, size_type NumD>
   inline
   array_base<T, NumD>::array_base(array_shape const & shape)
 : body (std::make_unique<array>(shape))
-  { FINAL_PROJECT_ASSERT_MSG((NumD <= 4), "Invalid Dimension of Array."); }
+{ FINAL_PROJECT_ASSERT_MSG((NumD <= 4), "Invalid Dimension of Array."); }
 
 
 template <class T, size_type NumD>
@@ -252,7 +253,8 @@ template <typename ... Args>
   inline 
   array_base<T, NumD>::array_base(Args ... args)
 : body(std::make_unique<array>(array_shape(args ...)))
-  { FINAL_PROJECT_ASSERT_MSG((NumD <= 4), "Invalid Dimension of Array."); }
+{ FINAL_PROJECT_ASSERT_MSG((NumD <= 4), "Invalid Dimension of Array."); }
+
 
 /// @brief Save the array to given file in binary mode
 /// @tparam T The value type
@@ -276,6 +278,8 @@ template <class T, size_type NumD>
   ofs.write(reinterpret_cast<const Char*>(
     body->begin()), body->size() * sizeof(T)
   );
+
+  ofs.close();
 }
 
 /// @brief Load the array from given file in binary mode.
@@ -286,29 +290,28 @@ template <class T, size_type NumD>
   inline 
   void 
   array_base<T, NumD>::loadFromBinary(const String & filename)
+{
+  std::ifstream ifs(filename, std::ios::binary);
+  FINAL_PROJECT_ASSERT_MSG(ifs, "Cannot Open File");
+
+  std::vector<size_type> shape_loader(NumD);
+
+  for (size_type i = 0; i < NumD; ++i)
   {
-    std::ifstream ifs(filename, std::ios::binary);
-    FINAL_PROJECT_ASSERT_MSG(ifs, "Cannot Open File");
-
-    std::vector<size_type> shape_loader(NumD);
-
-    for (size_type i = 0; i < NumD; ++i)
-    {
-      Dworld temp {0};
-      ifs.read(reinterpret_cast<Char*>(&temp), sizeof(temp));
-      shape_loader[i] = temp;
-    }
-
-    std::unique_ptr<array> loader { std::make_unique<array>(array_shape(shape_loader))};
-
-    size_type total_size {1};
-    for (size_type i = 0; i < NumD; ++i)
-      total_size *= loader->__shape[i];
-
-    ifs.read(reinterpret_cast<Char*>(loader->begin()), total_size * sizeof(T));
-    body.swap(loader);
-
+  Dworld temp {0};
+  ifs.read(reinterpret_cast<Char*>(&temp), sizeof(temp));
+  shape_loader[i] = temp;
   }
+
+  std::unique_ptr<array> loader { std::make_unique<array>(array_shape(shape_loader))};
+
+  size_type total_size {1};
+  for (size_type i = 0; i < NumD; ++i)
+    total_size *= loader->__shape[i];
+
+  ifs.read(reinterpret_cast<Char*>(loader->begin()), total_size * sizeof(T));
+  body.swap(loader);
+}
 
 template <class U, size_type Dims>
 std::ostream & operator<<(std::ostream & os, const array_base<U, Dims> & in)
@@ -321,7 +324,30 @@ std::ostream & operator<<(std::ostream & os, const array_base<U, Dims> & in)
 
 
 
+
+
 namespace mpi {
+
+template <class T, size_type NumD>
+  inline 
+  array_Cart<T, NumD>::array_Cart() noexcept
+: body {nullptr}
+  {}
+
+template <class T, size_type NumD>
+  inline 
+  array_Cart<T, NumD>::array_Cart(const array_Cart<T, NumD> & other)
+: body (other.body ? std::make_unique<loc_array>(*other.body) : nullptr)
+  {}
+
+template <class T, size_type NumD>
+  inline array_Cart<T, NumD> & 
+  array_Cart<T, NumD>::operator=(const array_Cart<T, NumD> & other)
+{
+  if (this != &other)
+  { body = other.body ? std::make_unique<loc_array>(*other.body) : nullptr; }
+  return *this;
+}
 
 template <class T, size_type NumD>
   inline
@@ -333,7 +359,7 @@ template <class T, size_type NumD>
 template <class T, size_type NumD>
   inline void
   array_Cart<T, NumD>::swap(array_Cart & out) 
-  { std::swap(body, out.body); }
+{ std::swap(body, out.body); }
 
 template <class T, size_type NumD>
 template <typename ... Args>
@@ -345,6 +371,262 @@ template <typename ... Args>
     return std::make_unique<loc_array>(shape, env);
   }())
 { FINAL_PROJECT_ASSERT((NumD <= 4)); }
+
+
+
+/// @brief 
+/// @tparam T 
+/// @tparam NumD 
+/// @param gather 
+/// @param loc 
+/// @param root 
+template <typename T, size_type NumD>
+void Gather(
+    multi_array::array_base<T, NumD> &gather,
+    array_Cart<T, NumD> &loc,
+    const Integer root)
+{
+  gather = std::move(multi_array::array_base<T, NumD>(loc.topology().__global_shape));
+
+  MPI_Datatype buf_block, value_type {get_mpi_type<T>()};
+  const Integer num_procs{loc.topology().num_procs}, dimension {loc.topology().dimension};
+
+  Integer pid, dim, back{0};
+  Integer s_list[NumD][num_procs], n_list[NumD][num_procs];
+  std::array<Integer, NumD> Ns, starts_cpy, array_sizes, array_subsizes, array_starts, indexes;
+
+  // Gather basic information of sending entities
+  if (num_procs == 1)
+  {
+    ++back;
+  } // For handling the special case that there is only 1 process.
+  array_starts.fill(0), indexes.fill(1);
+
+  for (dim = 0; dim < dimension; ++dim)
+  {
+    Ns[dim] = loc.topology().__local_shape[dim] - 2;
+    starts_cpy[dim] = loc.topology().starts[dim];
+
+    if (starts_cpy[dim] == 1)
+    {
+      --starts_cpy[dim];
+      --indexes[dim];
+      ++Ns[dim];
+    }
+
+    if (loc.topology().ends[dim] == loc.topology().__global_shape[dim] - 2)
+      ++Ns[dim];
+
+    MPI_Datatype gtype{get_mpi_type<Integer>()};
+    MPI_Gather(&starts_cpy[dim], 1, gtype, s_list[dim], 1, gtype, root, loc.topology().comm_cart);
+    MPI_Gather(&Ns[dim], 1, gtype, n_list[dim], 1, gtype, root, loc.topology().comm_cart);
+  }
+
+  // ------------------- Local Proc Sending to ROOT Proc ------------------- /
+  if (loc.topology().rank != root)
+  {
+
+    // - -  - - - - begin of create sending buffer datatypes - - - - - - - - //
+    for (dim = 0; dim < dimension; ++dim)
+    {
+        array_sizes[dim] = loc.topology().__local_shape[dim];
+        array_subsizes[dim] = Ns[dim];
+    }
+
+    MPI_Type_create_subarray(dimension,
+                              array_sizes.data(), 
+                              array_subsizes.data(),
+                              array_starts.data(),
+                              MPI_ORDER_C, value_type, &buf_block);
+    MPI_Type_commit(&buf_block);
+    // - -  - - - - end of create sending buffer datatypes - - - - - - - - //
+
+    MPI_Send(loc.data() + loc.get_flat_index(indexes), 1,
+              buf_block, root, loc.topology().rank, loc.topology().comm_cart);
+
+    MPI_Type_free(&buf_block);
+  }
+
+
+  // // ============= ROOT Gathering Information other Processes ============= //
+  if (loc.topology().rank == root)
+  {
+    for (pid = 0; pid < num_procs; ++pid)
+    {
+      std::array<Integer, NumD> loc_starts;
+      // ------------------- At the ROOT process ------------------- //
+      if (pid == root) // Local Memory Copy
+      {
+        std::array<Integer, NumD> local_indexes;
+        for (dim = 0; dim < dimension; ++dim)
+        {
+          local_indexes[dim] = starts_cpy[dim];
+        }
+
+        std::vector<Integer> s_list_cpy[NumD];
+        std::vector<Integer> n_list_cpy[NumD];
+
+        for (size_type i = 0; i < NumD; ++i) {
+          s_list_cpy[i].resize(num_procs);
+          n_list_cpy[i].resize(num_procs);
+
+          for (size_type j = 0; j < num_procs; ++j) {
+            s_list_cpy[i][j] = s_list[i][j];
+            n_list_cpy[i][j] = n_list[i][j];
+          }
+        }
+
+        std::function<void(size_type)> copy_recursive = [&](size_type dim)
+        {
+          if (dim == NumD - 1)
+          {
+            memcpy(
+              gather.begin() + gather.get_flat_index(local_indexes),
+              loc.data() + loc.get_flat_index(local_indexes),
+              n_list_cpy[dim][pid] * sizeof(T)
+            );
+          } else {
+            for (Integer i = starts_cpy[dim]; i <= loc.topology().ends[dim] + back; ++i) 
+            {
+              local_indexes[dim] = i;
+              copy_recursive(dim + 1);
+            }
+          }
+        };
+
+        copy_recursive(0);
+      }
+      // ------------------- At the Other processes ------------------- //
+      else // Recv From others
+      {
+        if (pid != root)
+        {// - -  - - - - begin of create receiving buffer datatypes - - - - - - - - //
+        for (dim = 0; dim < dimension; ++dim)
+        {
+          array_sizes[dim] = loc.topology().__global_shape[dim];
+          array_subsizes[dim] = n_list[dim][pid];
+          loc_starts[dim] =  s_list[dim][pid];
+        }
+
+        MPI_Type_create_subarray( dimension,
+                                  array_sizes.data(),
+                                  array_subsizes.data(),
+                                  array_starts.data(),
+                                  MPI_ORDER_C, value_type, &buf_block);
+        MPI_Type_commit(&buf_block);
+        // - -  - - - - end of create receiving buffer datatypes - - - - - - - - //
+
+        MPI_Recv(gather.begin() + gather.get_flat_index(loc_starts), 1,
+                  buf_block, pid, pid, loc.topology().comm_cart, MPI_STATUS_IGNORE);
+
+        MPI_Type_free(&buf_block);
+        }
+      } // end of Recv From others
+    }
+  }
+}
+
+
+template <typename T, size_type NumD>
+void MPI_SaveToBinary(array_Cart<T, NumD> &loc, const String filename)
+{
+  if (loc.topology().rank == 0)
+  {
+    std::ofstream ofs(filename, std::ios::binary);
+    FINAL_PROJECT_ASSERT_MSG(ofs, "Cannot Open File");
+
+    for (size_type i = 0 ; i < NumD; ++i)
+    {
+      Dworld temp {loc.topology().__global_shape[i] - 2};
+      ofs.write(reinterpret_cast<const Char*>(&temp), sizeof((temp)));
+    }
+
+    ofs.close();
+  }
+  MPI_Barrier(loc.topology().comm_cart);
+
+
+  MPI_File fh;
+  MPI_Datatype filetype, memtype, value_type { get_mpi_type<T>() };
+  MPI_Offset offset { NumD * sizeof(size_type) };
+
+  std::array<Integer, NumD> gsizes, psizes, lsizes, start_indices, memsizes;
+
+  for (Integer d = 0; d < loc.topology().dimension; ++d)
+  {
+    psizes[d] = loc.topology().dims[d];
+    gsizes[d] = loc.topology().__global_shape[d] - 2;
+    lsizes[d] = loc.topology().__local_shape[d] - 2;
+    start_indices[d] = loc.topology().starts[d] - 1;
+  }
+
+  MPI_Type_create_subarray(
+    loc.topology().dimension, 
+    gsizes.data(), 
+    lsizes.data(), 
+    start_indices.data(), 
+    MPI_ORDER_C, value_type, &filetype);
+
+  MPI_Type_commit(&filetype);
+
+  MPI_File_open(loc.topology().comm_cart, filename.c_str(), 
+                MPI_MODE_CREATE | MPI_MODE_WRONLY, 
+                MPI_INFO_NULL, &fh);
+  MPI_File_set_view(fh, offset, value_type, filetype, "native", 
+                MPI_INFO_NULL);
+
+  for (Integer d = 0; d < loc.topology().dimension; ++d)
+  {
+    memsizes[d] = lsizes[d] + 2;
+    start_indices[d] = 1;
+  }
+
+  MPI_Type_create_subarray(
+    loc.topology().dimension,
+    memsizes.data(),
+    lsizes.data(),
+    start_indices.data(),
+    MPI_ORDER_C, 
+    value_type,
+    &memtype);
+
+  MPI_Type_commit(&memtype);
+
+  MPI_File_write_all(fh, loc.data(), 1, memtype, MPI_STATUS_IGNORE);
+  
+  MPI_Type_free(&memtype);
+  MPI_Type_free(&filetype);
+  MPI_File_close(&fh);
+}
+
+
+} // namespace mpi
+} // namespace final_project
+
+
+
+
+#endif // end of define FINAL_PROJECT_MULTI_ARRAY_HPP_LIYIHAI
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // template <typename T, size_type NumD>
@@ -492,162 +774,3 @@ template <typename ... Args>
 //     }
 
 //   }
-
-
-
-template <typename T, size_type NumD>
-void Gather(
-    multi_array::array_base<T, NumD> &gather,
-    array_Cart<T, NumD> &loc,
-    const Integer root)
-{
-  MPI_Datatype buf_block, value_type{get_mpi_type<T>()};
-  const Integer num_procs{loc.topology().num_procs}, dimension{loc.topology().dimension};
-
-  Integer pid, dim, back{0};
-  Integer s_list[NumD][num_procs], n_list[NumD][num_procs];
-  std::array<Integer, NumD> Ns, starts_cpy, array_sizes, array_subsizes, array_starts, indexes;
-
-  // Gather basic information of sending entities
-  if (num_procs == 1)
-  {
-    ++back;
-  } // For handling the special case that there is only 1 process.
-  array_starts.fill(0), indexes.fill(1);
-
-  for (dim = 0; dim < dimension; ++dim)
-  {
-    Ns[dim] = loc.topology().__local_shape[dim] - 2;
-    starts_cpy[dim] = loc.topology().starts[dim];
-
-    if (starts_cpy[dim] == 1)
-    {
-      --starts_cpy[dim];
-      --indexes[dim];
-      ++Ns[dim];
-    }
-
-    if (loc.topology().ends[dim] == loc.topology().__global_shape[dim] - 2)
-      ++Ns[dim];
-
-    MPI_Datatype gtype{get_mpi_type<Integer>()};
-    MPI_Gather(&starts_cpy[dim], 1, gtype, s_list[dim], 1, gtype, root, loc.topology().comm_cart);
-    MPI_Gather(&Ns[dim], 1, gtype, n_list[dim], 1, gtype, root, loc.topology().comm_cart);
-  }
-
-
-  // ------------------- Local Proc Sending to ROOT Proc ------------------- /
-  if (loc.topology().rank != root)
-  {
-    // - -  - - - - begin of create sending buffer datatypes - - - - - - - - //
-    for (dim = 0; dim < dimension; ++dim)
-    {
-        array_sizes[dim] = loc.topology().__local_shape[dim];
-        array_subsizes[dim] = Ns[dim];
-    }
-
-    MPI_Type_create_subarray(dimension,
-                              array_sizes.data(), 
-                              array_subsizes.data(),
-                              array_starts.data(),
-                              MPI_ORDER_C, value_type, &buf_block);
-    MPI_Type_commit(&buf_block);
-    // - -  - - - - end of create sending buffer datatypes - - - - - - - - //
-
-    
-    MPI_Send(loc.data() + loc.get_flat_index(indexes), 1,
-              buf_block, root, loc.topology().rank, loc.topology().comm_cart);
-
-    MPI_Type_free(&buf_block);
-  }
-
-  // // ============= ROOT Gathering Information other Processes ============= //
-  if (loc.topology().rank == root)
-  {
-    for (pid = 0; pid < num_procs; ++pid)
-    {
-      std::array<Integer, NumD> loc_starts;
-      // ------------------- At the ROOT process ------------------- //
-      if (pid == root) // Local Memory Copy
-      {
-        std::array<Integer, NumD> local_indexes;
-        for (dim = 0; dim < dimension; ++dim)
-        {
-          local_indexes[dim] = starts_cpy[dim];
-        }
-
-        std::vector<Integer> s_list_cpy[NumD];
-        std::vector<Integer> n_list_cpy[NumD];
-
-        for (size_type i = 0; i < NumD; ++i) {
-          s_list_cpy[i].resize(num_procs);
-          n_list_cpy[i].resize(num_procs);
-
-          for (size_type j = 0; j < num_procs; ++j) {
-            s_list_cpy[i][j] = s_list[i][j];
-            n_list_cpy[i][j] = n_list[i][j];
-          }
-        }
-
-        std::function<void(size_type)> copy_recursive = [&](size_type dim)
-        {
-          if (dim == NumD - 1)
-          {
-            memcpy(
-              gather.begin() + gather.get_flat_index(local_indexes),
-              loc.data() + loc.get_flat_index(local_indexes),
-              n_list_cpy[dim][pid] * sizeof(T)
-            );
-          } else {
-            for (Integer i = starts_cpy[dim]; i <= loc.topology().ends[dim] + back; ++i) 
-            {
-              local_indexes[dim] = i;
-              copy_recursive(dim + 1);
-            }
-          }
-        };
-
-        copy_recursive(0);
-      }
-      // ------------------- At the Other processes ------------------- //
-      else // Recv From others
-      {
-        // - -  - - - - begin of create receiving buffer datatypes - - - - - - - - //
-        for (dim = 0; dim < dimension; ++dim)
-        {
-          array_sizes[dim] = loc.topology().__global_shape[dim];
-          array_subsizes[dim] = n_list[dim][pid];
-          loc_starts[dim] =  s_list[dim][pid];
-        }
-
-        MPI_Type_create_subarray(dimension,
-                                  array_sizes.data(),
-                                  array_subsizes.data(),
-                                  array_starts.data(),
-                                  MPI_ORDER_C, value_type, &buf_block);
-        MPI_Type_commit(&buf_block);
-        // - -  - - - - end of create receiving buffer datatypes - - - - - - - - //
-
-      // std::cout << pid << "\t" <<  gather.get_flat_index(loc_starts) << std::endl;
-        MPI_Recv(gather.begin() + gather.get_flat_index(loc_starts), 1,
-                  buf_block, pid, pid, loc.topology().comm_cart, MPI_STATUS_IGNORE);
-
-        MPI_Type_free(&buf_block);
-      } // end of Recv From others
-    }
-  }
-}
-
-
-} // namespace mpi
-} // namespace final_project
-
-
-
-
-#endif // end of define FINAL_PROJECT_MULTI_ARRAY_HPP_LIYIHAI
-
-
-
-
-

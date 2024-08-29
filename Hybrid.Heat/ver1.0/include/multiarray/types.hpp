@@ -48,11 +48,11 @@ template <__size_type __NumD>
 
     /// @brief Construct from given vector
     /// @param  dims A std::vector of dimensions.
-    __multi_array_shape(const std::vector<__size_type> &)       noexcept;
+    explicit __multi_array_shape(const std::vector<__size_type> &)       noexcept;
 
     /// @brief Construct dims from packed arguments.
     template <typename ... Exts>
-    __multi_array_shape( Exts ... );
+    explicit __multi_array_shape( Exts ... );
 
     // Operators
     Bool operator==(const __multi_array_shape &)                noexcept;
@@ -110,7 +110,7 @@ namespace __detail {
 template <__size_type __NumD>
   inline
   __multi_array_shape<__NumD>::__multi_array_shape() noexcept
-{ dims.resize(0); }
+{ dims.resize(0); strides.resize(0); }
 
 template <__size_type __NumD>
   inline

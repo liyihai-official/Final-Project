@@ -148,7 +148,12 @@ final_project::helper_message(mpi_world);
   }
 
   /// Save if needs
+  // final_project::multi_array::__detail::__multi_array_shape<2> shape(2,3);
+  // final_project::multi_array::array_base<maintype, 2> array;
+  // array = std::move(final_project::multi_array::array_base<maintype, 2>(shape));
+
   if (!filename.empty()) obj.SaveToBinary(filename);
+  final_project::mpi::MPI_SaveToBinary(obj.in, "test.bin");
   obj.reset();
 
 

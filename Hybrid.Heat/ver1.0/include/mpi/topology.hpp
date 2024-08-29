@@ -60,12 +60,13 @@ namespace topology
       // -------------------------- Cons & Decons ------------------------- //
       public:
       Cartesian();
-      Cartesian(__array_shape &, environment &);
       Cartesian(const Cartesian &)              = delete;
       Cartesian(Cartesian &&)                   = delete;
 
       Cartesian& operator=(const Cartesian &)   = delete;
       Cartesian& operator=(Cartesian &&)        = delete; 
+
+      explicit Cartesian(__array_shape &, environment &);
       ~Cartesian();
 
       // 

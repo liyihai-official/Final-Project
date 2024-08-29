@@ -76,7 +76,6 @@ template <class __T, __size_type __NumD>
     __super_size_type size()  const noexcept { return __shape.size(); }
     Integer       get_flat_index( __std_array_idx & );
 
-  
   public: // Modifiers
     void swap(__array &)          noexcept;
     void fill(const_reference)    noexcept;
@@ -206,8 +205,8 @@ template <class __T, __size_type __NumD>
   Integer index {0}, i {0};
   for (; i < __NumD; ++i)
   {
-FINAL_PROJECT_ASSERT_MSG((indexes[__NumD - 1 - i] >= 0), "Indexing must be none-negative number.\n");
-    index += __shape.strides[i] * indexes[i];
+FINAL_PROJECT_ASSERT_MSG((indexes[i] >= 0), "Indexing must be none-negative number.\n");
+  index += __shape.strides[i] * indexes[i];
   }
   return index;
 }

@@ -1,4 +1,4 @@
-fid = fopen('../build/test.bin', 'rb');
+fid = fopen('../build/pred_2d.bin', 'rb');
 
 Row = fread(fid, 1, 'uint32');
 Col = fread(fid, 1, 'uint32');

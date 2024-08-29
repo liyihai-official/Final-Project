@@ -12,6 +12,7 @@
 #include <pde/Heat.hpp>
 
 
+
 namespace final_project {  namespace pde {
 
 /// @class Heat_2D<T>
@@ -51,8 +52,10 @@ template <typename T>
     private:
     std::unique_ptr<BoundaryConditions_2D<T>>       BC_2D;
     std::unique_ptr<InitialConditions::Init_2D<T>>  IC_2D;
+
+    public:
     mpi::array_Cart<T, 2>         in, out;
-    // multi_array::array_base<T, 2> gather;
+    multi_array::array_base<T, 2> gather;
     Bool converge;
 
     friend InitialConditions::Init_2D<T>;
@@ -97,12 +100,10 @@ namespace final_project { namespace pde {
 template <typename T>
   inline
   Heat_2D<T>::Heat_2D(mpi::environment & env, size_type nx, size_type ny)
-: Heat_Base<T, 2>(env, nx, ny), BC_2D {nullptr}, IC_2D {nullptr}, converge {false}
+: Heat_Base<T, 2>(env, nx, ny), BC_2D {nullptr}, IC_2D {nullptr}, converge {false}, gather {}
   {
     in  = mpi::array_Cart<T, 2>(env, nx, ny);
     out = mpi::array_Cart<T, 2>(env, nx, ny);
-
-    // gather = multi_array::array_base<T, 2>(nx, ny);
 
     in.array().__loc_array.fill(0);
     out.array().__loc_array.fill(0);    
@@ -113,7 +114,7 @@ template <typename T>
   inline void
   Heat_2D<T>::reset()
   {
-    // gather = multi_array::array_base<T, 2>(gather.shape());
+    gather = multi_array::array_base<T, 2>();
 
     in.array().__loc_array.fill(0);
     out.array().__loc_array.fill(0);    
@@ -133,13 +134,10 @@ template <typename T>
 template <typename T>
   inline void 
   Heat_2D<T>::SaveToBinary(const String filename)
-  {
-    if (in.topology().rank == 0)
-    {
-      auto gather = multi_array::array_base<T, 2>(in.topology().__global_shape);
-      gather.saveToBinary(filename);
-    }
-  }
+{
+  if (in.topology().rank == 0)
+    gather.saveToBinary(filename);
+}
 
 
 /// @brief Setup Boundary Conditions to this Object
@@ -488,7 +486,7 @@ FINAL_PROJECT_ASSERT(BC_2D->isSetUpBC && IC_2D->isSetUpInit);
         MPI_Allreduce(&ldiff, &gdiff, 1, DiffType, MPI_SUM, in.topology().comm_cart);
 
 #ifndef NDEBUG
-// mpi::Gather(gather, in, root);
+mpi::Gather(gather, in, root);
 if (in.topology().rank == root) 
 {
   std::cout << std::fixed << std::setprecision(13) << std::setw(15) << gdiff 
@@ -508,7 +506,7 @@ if (in.topology().rank == root)
       if (converge)
       {
         Double total {0};
-        // mpi::Gather(gather, in, root);
+        mpi::Gather(gather, in, root);
         MPI_Reduce(&t1, &total, 1, MPI_DOUBLE, MPI_MAX, root, in.topology().comm_cart);
         if (root == in.topology().rank)
           std::cout << "Total Converge time: " << total << "\n" 
@@ -518,7 +516,7 @@ if (in.topology().rank == root)
       }
     
 #ifndef NDEBUG // Gather 
-// mpi::Gather(gather, in, root);
+mpi::Gather(gather, in, root);
 #endif
 
       return iter;
@@ -609,7 +607,7 @@ FINAL_PROJECT_ASSERT(BC_2D->isSetUpBC == true && IC_2D->isSetUpInit == true);
         MPI_Allreduce(&ldiff, &gdiff, 1, DiffType, MPI_SUM, in.topology().comm_cart);
 
 #ifndef NDEBUG
-// mpi::Gather(gather, in, root);
+mpi::Gather(gather, in, root);
 if (in.topology().rank == root) 
 {
   std::cout << std::fixed << std::setprecision(13) << std::setw(15) << gdiff 
@@ -633,7 +631,7 @@ if (in.topology().rank == root)
     {
       Double total {0};
       iter = omp_iter;
-      // mpi::Gather(gather, in, root);
+      mpi::Gather(gather, in, root);
       MPI_Reduce(&t1, &total, 1, MPI_DOUBLE, MPI_MAX, root, in.topology().comm_cart);
       if (root == in.topology().rank)
         std::cout << "Total Converge time: " << total << "\n" 
@@ -643,7 +641,7 @@ if (in.topology().rank == root)
     }
   
 #ifndef NDEBUG // Gather 
-// mpi::Gather(gather, in, root);
+mpi::Gather(gather, in, root);
 #endif
 }
 
@@ -780,7 +778,7 @@ FINAL_PROJECT_ASSERT(BC_2D->isSetUpBC == true && IC_2D->isSetUpInit == true);
           MPI_Allreduce(&ldiff, &gdiff, 1, DiffType, MPI_SUM, in.topology().comm_cart);
 
 #ifndef NDEBUG
-// mpi::Gather(gather, in, root);
+mpi::Gather(gather, in, root);
 if (in.topology().rank == root) 
 {
   std::cout << std::fixed << std::setprecision(13) << std::setw(15) << gdiff 
@@ -803,7 +801,7 @@ if (in.topology().rank == root)
     {
       iter = omp_iter;
       Double total {0};
-      // mpi::Gather(gather, in, root);
+      mpi::Gather(gather, in, root);
       MPI_Reduce(&t1, &total, 1, MPI_DOUBLE, MPI_MAX, root, in.topology().comm_cart);
       if (root == in.topology().rank)
         std::cout << "Total Converge time: " << total << "\n" 
@@ -812,7 +810,7 @@ if (in.topology().rank == root)
       if (in.topology().rank == root) std::cout << "Fail to converge" << std::endl;
     }
 #ifndef NDEBUG // Gather 
-// mpi::Gather(gather, in, root);
+mpi::Gather(gather, in, root);
 #endif
 }
 
