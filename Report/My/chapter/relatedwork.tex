@@ -71,12 +71,12 @@ figure \ref{FIG_POSSION_2D_10_NODES}
   \begin{tikzpicture}
     \foreach \x/\y [count=\i from 1] in {
       1.6/1.4, %1
-      2.4/2.1, %2
+      2.3/2.4, %2
       4/0.8,  %3
       3.7/1.5, %4
       4.3/2.1, %5
       3.3/2.4, %6
-      1.8/3.2, %7
+      1.8/3.9, %7
       1.2/2.2, %8
       3.9/3.1, %9
       2.8/3.3, %10
@@ -140,8 +140,9 @@ figure \ref{FIG_POSSION_2D_10_NODES}
   \draw[thick,-] (P15) -- (P11);
   \draw[thick,-] (P15) -- (P14);
   \draw[thick,-] (P7) -- (P14);
+  \draw[thick,-] (P7) -- (P13);
 
-  \draw[thick,-] (P8) -- (P7);
+  \draw[thick,-] (P14) -- (P2);
   \draw[thick,-] (P8) -- (P14);
 
   \draw[thick,-] (P11) -- (P3);

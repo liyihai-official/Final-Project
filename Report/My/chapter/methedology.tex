@@ -179,7 +179,7 @@ There are couple benefits of doing so,
 However, the IO does not play a critical role in effects performance of FDTD algorithms, if and only if 
 we need to store or load the data during evolving the arrays.
 
-\subsection{MPI Parallel Environment Design Scheme}
+\subsection{MPI Parallel Environment Design Scheme}\label{SEC:SUB:MPI_Topology}
 \subsubsection{MPI Setups}
 \paragraph{Environment}
 Similar to how \texttt{malloc} in C and \texttt{new} in C++ require manual memory management, 
@@ -383,7 +383,7 @@ create essential halo datatypes.
 \end{figure}
 
 
-\subsection{Template Distributed Multi-dimension Matrix Design}
+\subsection{Template Distributed Multi-dimension Matrix Design}\label{SEC:SUB:Distributed_Matrix_Design}
 \subsubsection{Detail Object Design}
 Adhering to the STL safety routines, I chose to create detail template class object, hidden from users,
 named \texttt{\_\_array\_Cart<class \_\_T, \_\_size\_type \_\_NumD>}.
@@ -415,6 +415,175 @@ With the profits mentioned in Section \ref{SEC:RAII}, using unique pointer bring
 
 
 \subsection{Template Function Gather of Cartesian Distributed Multi-dimension Matrix}
+The inverse of distributing multidimensional matrices 
+[Sec. \ref{SEC:SUB:Distributed_Matrix_Design}]
+based on MPI Topology 
+[Sec. \ref{SEC:SUB:MPI_Topology}] 
+is gather all distributed matrices to root from all processes.
+Unlike operating on ordinary objects, gather function is operating on template objects which makes MPI operations harder.
+Rather than applying full specialization for each dimension, continuing using meta-programming skills on this brings couple promotions
+\begin{enumerate}
+  \item Meta-programming, significantly reduce the redundancy of code, where I found the gathering operations on each dimension are highly repeatable. 
+  \item Creating MPI Datatype also can be simplified due to the benefits of polymorphism. Especially when handling the high-dimension matrices.
+  \item Using template makes the function is eligible to apply on various value basic data types, \texttt{Float}, \texttt{Double} etc, and provides consistency when handling uncompatible data type.
+  \item Meta-polymorphism is more likely to have better performance, the initializations of template function are completed in compile time, which means there will be no run-time type-checking or type-casting.
+\end{enumerate}
+
+
+\subsubsection{Implement of Gather}
+The \texttt{Gather} has following prototype, with the value type of entities of matrices and number of dimension as \texttt{size\_type},
+\begin{lstlisting}[
+  style=customCpp,
+  caption={Prototypee of \texttt{final\_project::mpi::Gather}}]
+  template <typename T, size_type NumD> 
+  void Gather(gather, loc, root);
+\end{lstlisting}
+where:
+\begin{itemize}
+  \item \texttt{gather} is a reference of \texttt{multi\_array::array\_base<T, NumD>}, which will collect local data and store as the global matrices.
+  \item \texttt{loc}    is a constant reference of the local matrices of \texttt{const array\_Cart<T, NumD>}, which holds local values and will sending data to root process.
+  \item \texttt{root}   is a constant \texttt{Integer}, stands for the rank of root process.
+\end{itemize}
+The main idea of this function follows the following algorithm
+\begin{algorithm}
+  \caption{Scheme of Gather local matrices to Root process.}
+  \begin{algorithmic}[1]
+    \STATE Create gather object.
+    \STATE Determine the sending address and sizes on each dimension, considering the boundary.
+    \STATE Send the local size, starts information to root process.
+    \IF{rank != root}
+      \STATE Create local sub-array MPI Datatype, send to root.
+    \ELSE  
+      \FOR{pid = 0 : number process}
+        \IF {pid != root}
+          \STATE Root creates MPI Datatype using received local size information.
+          \STATE Root receives data from others.
+        \ELSE 
+          \STATE Move the values by recursively applying local memory copy.
+        \ENDIF
+      \ENDFOR
+    \ENDIF
+  \end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Determine Local Information}
+Initially, the matrix object is designed on compatibility, it can read/load data from binary \texttt{.bin} files.
+Thus the distributed matrices are saving  on the root process, by iterating through all processes, calculating the sizes 
+and start indices on each dimension. Receiving them using \texttt{MPI\_Recv} from other processes send by \texttt{MPI\_Send}.
+
+Considering boundaries, given a $D$ dimensional matrices, with global size $\mathcal{N}_{glob} = \{N_{glob}^d + 2\}_{d = 0}^{D-1}$.
+The local matrices has shape $\mathcal{N}_{loc} = \{N_{loc}^d+2\}_{d=0}^{D-1}$, starts from $\mathcal{S} = \{s_d\}$ and ends from $\mathcal{E} = \{e_d\}$ globally.
+In the $d$ dimension, as long as the matrix starts $s_d$ equals to $1$, it aligns the global boundary from source site which means the index should step back to $0$ to 
+include the boundary. 
+In other side, the global boundary locates at the contiguous address in $d$ dimension, 
+the matrix should send a more dice in this dimension, which means the sending size $N_{loc}^{d} + 1$.
+Moreover, for the special case when there is only one process. 
+
+Adhering the RAII design, Gather function is exposed to user, thus I have not apply \texttt{swap} memory operation between Cartesian distributed matrices and none-distributed matrix just 
+for handling the corner case. 
+Eventually, I solve this by introducing an additional variable called \texttt{back}, which means the Root will copy for layer of data to another matrix. 
+By default, \texttt{back} is $0$, and will be set to $1$ if and only if the number of process is $1$. 
+
+With above analysis, the scheme of find local information follows 
+\begin{algorithm}
+  \caption{Scheme of Finding Local Sending Information: starts, shapes, indexes.}
+  \label{ALG:SCHEME:Find_LOCAL_SEND_INFO}
+  \begin{algorithmic}[1]
+    \STATE Make copies of local shape \texttt{N\_cpy}, starts \texttt{starts\_cpy}.
+    \STATE \texttt{back = 0}                           \hfill \# For handling $1$ process case.
+    \IF{number process == 1}
+      \STATE \texttt{++back}
+    \ENDIF
+    \STATE \texttt{index = \{1, 1, ..., 1\};}  \hfill \# Default sending index of local matrices.
+    \FOR{d = 0 : NumD}
+      \IF{starts[d] == 1}
+        \STATE \texttt{-- starts\_cpy[d], --index[d]}
+        \STATE \texttt{++ N\_cpy[d]}
+      \ENDIF
+      \IF{ends[d] == global\_shape[d] - 2}
+        \STATE \texttt{++N\_cpy[d]}
+      \ENDIF
+      \STATE \texttt{MPI\_Gather( ..., Root)}  \hfill \# Send \texttt{starts\_cpy}, \texttt{N\_cpy} to Root;
+    \ENDFOR
+  \end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Creating Send/Recv MPI Datatype}\label{SEC:Creating_Send/Recv_MPI_Datatype}
+Local MPI communications are low efficient operations comparing to local memory copy operation, \texttt{memcpy} was used to 
+recursively copy contiguous data from local matrix to global matrix exclusively on root process.
+In a matrix with undefined dimension, creating data types for communicating is harder than in a specialized matrix.
+For the none-root processes, they should send their data without ghost values, thus 
+the \texttt{MPI\_Type\_create\_subarray} was used to create a sub-array \texttt{MPI\_Datatype} for sending message to root process.
+\begin{lstlisting}[
+  style=customCpp,
+  caption={Routine for creating sub-array \texttt{MPI\_Datatype} as send buffer.}, 
+  label={LST:mpi_subarray}]
+  MPI_Type_create_subarray( 
+      dimension,                     /// Dimension of this array  : NumD
+      array_sizes.data(),            /// shape of local array     : local_shape
+      array_subsizes.data(),         /// shape of sub-array       : N_cpy
+      array_starts.data(),           /// starting coordinates     : {0, 0, ..., 0}
+      MPI_ORDER_C,                   /// Array storage order flag : Row major in C/C++
+      value_type,                    /// Old MPI Datatype         : get_mpi_type<T>()
+      &sbuf_block);                  /// New MPI Datatype
+\end{lstlisting}
+The local arrays have shape $\mathcal{N}_{loc}$, and the sub-arrays have shape $\{N\_{cpy}\}_{d=0}^{D-1}$ determined by above routines 
+                                            [Alg. \ref{ALG:SCHEME:Find_LOCAL_SEND_INFO}]
+respectively, the starts indexes are unified as $0$s.
+On the root process, the only difference is that the global shape of array \texttt{array\_sizes} are equal to the shape of global matrix.
+
+\subsubsection{Local Copy Recursive Function}
+The \texttt{memcpy} can only copy limited data to global matrix once,
+since the elements we want to gather are not aligning on contiguous memory, 
+but only a small amount of them - on the $0$ dimension - are continuously located.
+Dut to the dimension of matrix is polymorphic and from the efficiency concern mentioned above 
+            [Sec. \ref{SEC:Creating_Send/Recv_MPI_Datatype}],
+the smallest copy operation using \texttt{memcpy} was encapsulated in a lambda function for recursively call and only visible in limited scope.
+
+\begin{algorithm}
+  \caption{\texttt{copy\_recursive(size\_type)}: Copy data using \texttt{memcpy} on given dimension}
+  \label{}
+  \begin{algorithmic}[1]
+    \STATE Given current dimension \texttt{dim}.
+    \IF{\texttt{dim == Num - 1}} 
+      \STATE 
+          \texttt{memcpy(}                                                    \hfill \# Copy data from local to global.\\
+          \texttt{\: gather.begin() + gather.get\_flat\_index(loc\_idx),}     \hfill \# Get saving index in global matrix.\\
+          \texttt{\: loc.data() + loc.get\_flat\_index(loc\_idx),}            \hfill \# Get copy start address of local matrix.\\
+          \texttt{\: n\_list\_cpy[dim][pid] * sizeof(T) }                     \hfill \# Number of elements.\\
+          \texttt{);}
+    \ELSE 
+      \FOR{\texttt{i = start\_cpy[dim] : loc.ends[dim] + back}}
+        \STATE \texttt{local\_indexes[dim] = 1}     
+        \STATE \texttt{copy\_recursive(dim + 1)}                    \hfill \# Recursive calling, copy next dimension.
+      \ENDFOR
+    \ENDIF
+  \end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Performace}
+Gather function is a computationally expensive operation when the scale is large and runs across thousands of processes. 
+With this reason, gathering results is not a optimal choice for getting results in practical.
+However, the performance balancing is still important since helpful for debugging and stay a health routine of coding.
+In a brief, I specific designed some performance tunning features for following reasons
+\begin{enumerate}
+  \item Using lambda function can slow down the performance, however, gather operation is not always the core of a program since it's an IO operation for debugging or 
+  get the final results at the very end. 
+  Besides, it's only available when the root process is receiving data, which is a small scope compare to the other parts.
+  In all the drawback can be ignored in this case.
+  \item The gather matrix is only initialized when we need gather the results.
+  The reason for initializing gather object in this function, is that gather matrix is conventionally very large. 
+  If it is create in advance, it will consuming large amount of memory space, which will reduce the rate of memory hit rate, 
+  affect the speed of latter computing.
+  \item Adhering RAII routine, I chose to make an copy of each parameters of local and global metrics. 
+  While these objects are relatively short, creating them locally could help us make the original data safe, and make them have higher chance stored in register or cache 
+  which a lot faster than reading/writing from/to memory.
+\end{enumerate}
+
+\subsection{Parallel MPI-IO for Distributed Matrices}
+Building a gather function is convenient indeed, it allows us collecting data from all other processors.
+
+
 % \subsubsection{Pure Message Passing Parallel}
 % \subsubsection{Hybrid Parallel}
 

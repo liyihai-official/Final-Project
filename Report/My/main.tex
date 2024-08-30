@@ -30,6 +30,29 @@
   tabsize=3
 }
 
+\lstdefinestyle{customCpp}{
+  language=C++,                 % 使用C++语言高亮
+  frame=tb,                     % 代码块上下有边框
+  aboveskip=3mm,                % 代码块上方间距
+  belowskip=3mm,                % 代码块下方间距
+  showstringspaces=false,       % 不显示字符串中的空格
+  columns=flexible,             % 列宽度为可调节
+  basicstyle={\small\ttfamily}, % 基本样式为小号等宽字体
+  numbers=left,                 % 行号显示在左侧
+  numberstyle=\tiny\color{gray},% 行号的样式为灰色小号字体
+  keywordstyle=\color{blue},    % 关键字的颜色为蓝色
+  commentstyle=\color{dkgreen}, % 注释的颜色为深绿色
+  stringstyle=\color{mauve},    % 字符串的颜色为紫红色
+  breaklines=true,              % 代码过长时自动换行
+  breakatwhitespace=true,       % 只在空格处换行
+  tabsize=2,                    % 制表符宽度为4个空格
+  captionpos=b,                 % 标题位置在代码块底部
+  keepspaces=true,              % 保留空格
+  escapeinside={\%*}{*)},       % 可以在代码中插入LaTeX
+  morekeywords={constexpr, nullptr, size_type, Integer, \&, MPI_Type_create_subarray}, % 添加自定义关键字
+}
+
+
 \usepackage{tikz}
 
 %% \BibTeX command to typeset BibTeX logo in the docs
