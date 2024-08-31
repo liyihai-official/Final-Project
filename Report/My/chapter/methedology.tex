@@ -787,9 +787,9 @@ However, the side-effect of such blocking operation is limited for getting final
 
 
 
-
-
-
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 
 
 
@@ -811,6 +811,46 @@ This pattern has many advantages, such as
   \item More flexible for designing features specifically for each derived objects. Makes the programer truly focus on the features designed for each object, 
   with no need for worrying the general features of base object.
 \end{enumerate}
+
+
+\subsection{Initial/Boundary Condition Object Design}
+\subsubsection{Initial Condition Class}
+\texttt{InitialConditions} is the \texttt{namespace} where all initial condition classes located.
+In the long tern, this it will include initial conditions for heat equation in different dimension space, so as other type of PDEs.
+For this project, I implemented two classes, \texttt{Init\_2D} and \texttt{Init\_3D} for 2D and 3D heat equations.
+Both of the classes have private member \texttt{std::function} objects, 
+that store the function in mathematical form $\varphi(\vec{x})$ , such as the equation \ref{EQ:Heat2D}.
+Default constructors of them are set the $\varphi(\vec{x}) = 0$, once the classes are initialized, the 
+boolean value \texttt{isSetUpInit} will be set to \texttt{true}.
+Since inits objects are \texttt{friend} of the PDEs objects, user can apply this objects to PDEs objects by calling \texttt{SetUpInit}.
+The syntax \texttt{friend} brings several benefits
+\begin{enumerate}
+  \item It will enhance encapsulation, especially in this case, init objects and PDEs object don not need closely work together,
+  exposing internal implementation details to each other would violate the principles of encapsulation. 
+  \item Also, it helps keep the class interface clean, only
+  exposing the necessary members while keeping the rest the implementation details hidden.
+\end{enumerate}
+
+
+\subsubsection{Boundary Condition Class}
+Boundary Condition is \texttt{friend} class of PDE classes that located on cube domain, and can be a tedious and hard implementation, 
+due to there are $6$ functions in 3D space and $4$ in 2D space.
+Thus, I had not chose to use virtual inheritance pattern on this implementation.
+Moreover, there are mainly three type of boundary conditions, Dirichlet, Von Neumman and Robin, also known as first, second and third type 
+of boundary conditions.
+
+In this project, I chose to imply first and second type conditions, which denoted with 
+member variable \texttt{std::array<Bool, 2*NumD> isDirchletBC} and \texttt{std::array<Bool, 2*NumD> isNeumannBC}.
+Similarly to init classes, the \texttt{SetBC} is also a function for apply this boundary condition to PDE objects and the status of setup 
+is stored as a boolean \texttt{isSetUpBC}.
+However, unlike the initial condition, the Von Neumman boundary conditions need to be update during evolving processes.
+Thus, an additional member called \texttt{UpdateBC} is designed for handling this case.
+This member function will update the boundaries which is set as Von Neumman conditions and leave the Dirichlet conditions' alone.
+
+Implementing boundary conditions can be a tough task, since the domain of a problem commonly is commonly not regular shape such as cube or cylinder.
+Especially the derivatives are required in the Von Neumman and Robin conditions.
+
+
 
 
 
@@ -838,15 +878,50 @@ due to it is abstract base class and only provides a unified design.
 The constructor, member variables and virtual functions are set as protected, which can be accessed by derived classes exclusively.
 \paragraph{Constructor} 
 Constructor takes template arguments of extents as inputs, and using extents to determine domain and grid sizes.
-According to the general setups in section \ref{SEC_General_Form}, and CFL rules
-\begin{align}
- & \Delta t \leqslant \frac{\min\{\Delta x, \Delta y\}^2}{2\lambda2^2} \\
- & w_x = \frac{\lambda \Delta t}{\Delta x^2}, w_y = \frac{\lambda \Delta t}{\Delta y^2} \\
- & diag_x = -2 + \frac{\Delta x^2}{2\lambda\Delta t}, diag_y = -2 + \frac{\Delta y^2}{2\lambda\Delta t}
-\end{align}
+According to the general setups in section \ref{SEC:Specific_Form}, and CFL rules, the $D$ dimension heat equation has time step size
+\begin{equation}
+  \Delta t \leqslant \frac{1}{ 2 \lambda 
+    \sum_{i=1}^{D} \frac{1}{\Delta x_i ^2}
+  }
+\end{equation}
+Moreover, I chose to use the modified 
+                                          CFL \cite{CFL} 
+shown below 
+\begin{equation}
+  \Delta t 
+  \leqslant 
+  \frac{\min_{i=1}^{D} \{\Delta x_i\}^2}{2 D\lambda}
+  \leqslant 
+  \frac{1}{ 2 \lambda 
+    \sum_{i=1}^{D} \frac{1}{\Delta x_i ^2}}
+\end{equation}
+The weights and diagonal coefficients are 
+\begin{equation}
+  \begin{cases}
+    w_i = \frac{\lambda \Delta t}{\Delta x_i^2}               \\
+    diag_i = -2 + \frac{\Delta x_i^2}{2\lambda\Delta t}
+  \end{cases}
+\end{equation}
+
+\paragraph{Pure virtual functions}
+Virtual functions overcome the problems with type-field solution, which I used in earlier deprecated versions, 
+it allowing me to declare functions in the base class in advance, and redefined in each derived class.
+The compiler and linker will guarantee the correct correspondence between objects and the functions applied to them.
+The type-field solution has several drawbacks:
+\begin{enumerate}
+  \item Using constructs like \texttt{switch-case} and \texttt{if-else} requires frequent modifications to the conditional expressions whenever a new type is added.
+  \item The reliance on type casting increases the risk of errors, making the program more prone to runtime issues.
+  \item As the number of types increases, the codebase becomes increasingly redundant and difficult to maintain.
+\end{enumerate}
+
+The \texttt{virtual} functions in base class stands for
+\begin{itemize}
+  \item \texttt{virtual Exchanging} functions mean that the derived class will provide specific definition of different exchange strategies.
+  \item \texttt{virtual Evolving} functions shows the derived classes have $2$ different hybrid updating strategies.
+\end{itemize}
 
 
-
+\subsection{Parallel Strategies}
 \subsubsection{Pure Message Passing Parallel}
 \subsubsection{Hybrid Parallel}
 

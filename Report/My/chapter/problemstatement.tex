@@ -37,14 +37,14 @@ second type boundary condition (Von Neumman) [E.q. \ref{EQ_Von_Neumman_BC}] give
   \frac{\partial u}{\partial \vec{x}} = g(t, \vec{x}),\:\: \vec{x}\in \overline{\Omega}, \:\:t\in[0, +\infty)
 \end{equation}
 
-\subsection{Specific Form}
+\subsection{Specific Form}\label{SEC:Specific_Form}
 With general form proposed in section \ref{SEC_General_Form}[E.q. \ref{EQ_General_Form_PDE}],
 I specify a particular form of this heat problem to help us to have better understand the quality of our 
 solutions and programs.
 In $2$ dimension space, the domain $\Omega = \left[ 0, 1\right] ^2 \in \mathbb{R}^2$ and its boundary
 denoted with $\overline{\Omega}$, the initial condition $\varphi(x,y) = 0$.
 such problem has the certain form below
-\begin{align}
+\begin{align}\label{EQ:Heat2D}
   &\frac{\partial u}{\partial t} = \alpha \left(
     \frac{\partial u^2}{\partial^2 x}
     +
