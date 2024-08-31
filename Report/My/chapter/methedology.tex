@@ -1,4 +1,4 @@
-\section{Methedology}
+\section{N-Dimensional Matrix Implementation}
 \subsection{General Setups}
 Initially, we need to determine the data types to be used and define macros for 
 assertions and helper functions to ensure that the program can detect common bugs 
@@ -179,6 +179,64 @@ There are couple benefits of doing so,
 However, the IO does not play a critical role in effects performance of FDTD algorithms, if and only if 
 we need to store or load the data during evolving the arrays.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Parallelization of Multi-dimensional Matrices on Cartesian Topologies}
+
+
 \subsection{MPI Parallel Environment Design Scheme}\label{SEC:SUB:MPI_Topology}
 \subsubsection{MPI Setups}
 \paragraph{Environment}
@@ -228,6 +286,7 @@ impact the performance.
 It allows me to design a small function which is not frequently use or play a key role in performance.
 \begin{algorithm}
   \caption{Lambda Function (decomposition): Split tasks evenly to $n$ processes evenly}
+  \label{ALG:Determine_Start_End_Decomp}
   \begin{algorithmic}[1]
     \STATE \texttt{n, rank} \hfill \# const Integers, total number and current rank of Processor.
     \STATE \texttt{N} \hfill \# constant Integer, Problem size.
@@ -414,7 +473,7 @@ With the profits mentioned in Section \ref{SEC:RAII}, using unique pointer bring
 
 
 
-\subsection{Template Function Gather of Cartesian Distributed Multi-dimension Matrix}
+\subsection{Template Gather of Cartesian Distributed Multi-dimension Matrix}
 The inverse of distributing multidimensional matrices 
 [Sec. \ref{SEC:SUB:Distributed_Matrix_Design}]
 based on MPI Topology 
@@ -519,13 +578,13 @@ the \texttt{MPI\_Type\_create\_subarray} was used to create a sub-array \texttt{
   caption={Routine for creating sub-array \texttt{MPI\_Datatype} as send buffer.}, 
   label={LST:mpi_subarray}]
   MPI_Type_create_subarray( 
-      dimension,                     /// Dimension of this array  : NumD
-      array_sizes.data(),            /// shape of local array     : local_shape
-      array_subsizes.data(),         /// shape of sub-array       : N_cpy
-      array_starts.data(),           /// starting coordinates     : {0, 0, ..., 0}
-      MPI_ORDER_C,                   /// Array storage order flag : Row major in C/C++
-      value_type,                    /// Old MPI Datatype         : get_mpi_type<T>()
-      &sbuf_block);                  /// New MPI Datatype
+      dimension,                /// Dimension of this array  : NumD
+      array_sizes.data(),       /// shape of local array     : local_shape
+      array_subsizes.data(),    /// shape of sub-array       : N_cpy
+      array_starts.data(),      /// starting coordinates     : {0, 0, ..., 0}
+      MPI_ORDER_C,              /// Array storage order flag : Row major in C/C++
+      value_type,               /// Old MPI Datatype         : get_mpi_type<T>()
+      &sbuf_block);             /// New MPI Datatype
 \end{lstlisting}
 The local arrays have shape $\mathcal{N}_{loc}$, and the sub-arrays have shape $\{N\_{cpy}\}_{d=0}^{D-1}$ determined by above routines 
                                             [Alg. \ref{ALG:SCHEME:Find_LOCAL_SEND_INFO}]
@@ -561,14 +620,14 @@ the smallest copy operation using \texttt{memcpy} was encapsulated in a lambda f
   \end{algorithmic}
 \end{algorithm}
 
-\subsubsection{Performace}
+\subsubsection{Performace} \label{SEC:GATHER_PERFORMANCE}
 Gather function is a computationally expensive operation when the scale is large and runs across thousands of processes. 
 With this reason, gathering results is not a optimal choice for getting results in practical.
 However, the performance balancing is still important since helpful for debugging and stay a health routine of coding.
 In a brief, I specific designed some performance tunning features for following reasons
 \begin{enumerate}
-  \item Using lambda function can slow down the performance, however, gather operation is not always the core of a program since it's an IO operation for debugging or 
-  get the final results at the very end. 
+  \item Using lambda function can slow down the performance, however, gather operation is not always the core of a 
+  program since it's an IO operation for debugging or get the final results at the very end. 
   Besides, it's only available when the root process is receiving data, which is a small scope compare to the other parts.
   In all the drawback can be ignored in this case.
   \item The gather matrix is only initialized when we need gather the results.
@@ -576,17 +635,221 @@ In a brief, I specific designed some performance tunning features for following 
   If it is create in advance, it will consuming large amount of memory space, which will reduce the rate of memory hit rate, 
   affect the speed of latter computing.
   \item Adhering RAII routine, I chose to make an copy of each parameters of local and global metrics. 
-  While these objects are relatively short, creating them locally could help us make the original data safe, and make them have higher chance stored in register or cache 
-  which a lot faster than reading/writing from/to memory.
+  While these objects are relatively short, creating them locally could help us make the original data safe, 
+  and make them have higher chance stored in register or cache which a lot faster than reading/writing from/to memory.
 \end{enumerate}
 
 \subsection{Parallel MPI-IO for Distributed Matrices}
-Building a gather function is convenient indeed, it allows us collecting data from all other processors.
+
+Building a gather function is indeed convenient, as it allows us to collect data from all processors, 
+and just using IO features of N-Dimension matrix designed previously.
+However, as discussed in earlier section \ref{SEC:GATHER_PERFORMANCE},
+even with optimizations on resources usage and MPI performance, the gather function still becomes 
+increasingly inefficient as the problem scale grows.
+Also, the gather demands more memory space as it requires enough memory on the root processor to 
+store the full-scale final solution.
+Given that memory is often limited and highly expensive, it is more reasonable to use MPI-IO to implement the parallel I/O,
+where MPI-IO enables all processes to write results directly to disk.
+Using MPI-IO offers several significant advantages:
+\begin{enumerate}
+\item Significantly reduces the I/O and communication burden on the root processor, 
+as the root no longer needs to gather data from all other processors before performing I/O operations.
+\item Completely eliminates the overhead associated with the complexity of MPI communication, 
+which previously consumed substantial resources and execution time in the gather function. 
+By using all processors to perform I/O operations directly to disk, this overhead is entirely removed.
+\end{enumerate}
+From the other perspective, 
+applying MPI-IO will not improve performance of latter FDTD methods or PINNs, 
+but it is a good habit for meta-programming which allows us do debugging work conveniently on larger scale 
+problems.
+
+In order to do this, \texttt{MPI\_Win\_set\_view} will be used.
+Before that, the file data type (filetype) should be set first to facilitate non-contiguous memory access.
+I had not chose to use \texttt{MPI\_Type\_create\_darray}, since 
+it is used to generate the data types corresponding to the distribution of an N-dimensional array 
+of oldtype elements onto an N-dimensional grid of logical processes without considering ghost boundaries.
+
+Due to I have determine the start indexes using lambda function 
+                                  [Alg. \ref{ALG:Determine_Start_End_Decomp}],
+the \texttt{MPI\_Type\_create\_subarray} was used for creating newtype for creating file views.
+Displacement was the designed for holding size of N-dimension array, and it is read/write from/to root process.
+After the file view created, all processes write data into the file associated with file view collectively.
+Note that the \texttt{MPI\_File\_write\_all} and \texttt{MPI\_File\_read\_all} are collective 
+operations, which means the function will return only when all processes return.
+However, the side-effect of such blocking operation is limited for getting final results.
 
 
-% \subsubsection{Pure Message Passing Parallel}
-% \subsubsection{Hybrid Parallel}
 
-\subsection{Physics Informed Neural Networks}
-\subsubsection{CUDA parallel}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{PDE Solver Implementation}
+\subsection{General Setups}
+In general, the building a template solver is no longer a performance-efficient choice, since the 
+optimization of compiler more unpredictable and details across different dimensions are various, 
+especially for latter MPI/SMP hybrid solver implementation.
+However, for the same PDE, it is quite obvious that there are many commons among different dimensional version.
+If I design fully isolated objects for each dimension is an expensive idea, 
+which significantly increases the complexity, redundancy and makes the program harder to maintain the consistency.
+In this scenario, I chose to follow a pattern called template method pattern, which designed a base object,
+includes a framework of solving this PDE and basic features required. 
+This pattern has many advantages, such as 
+\begin{enumerate}
+  \item Significantly decrease redundancy, complexity of program, the repeated parts are extracted into base objects. 
+  \item More flexible for designing features specifically for each derived objects. Makes the programer truly focus on the features designed for each object, 
+  with no need for worrying the general features of base object.
+\end{enumerate}
+
+
+
+\subsection{PDE Solver Objects Design}
+For solving a PDE system, it's necessary to store the parameters of basic this PDE.
+Take Heat Equation [E.q. \ref{EQ_HEAT_EQ_EG}] as an example, the domain $\Omega = \left[0,1\right]^2$, and coefficient $\lambda = 1$.
+Besides that, there are extra setups needed for the FDTD methods' iteration, including 
+\begin{enumerate}
+  \item Determine time and space step sizes and other parameters needed from FDTD.
+  \item Exchanging (Communication) between different processors.
+  \begin{enumerate}
+    \item Using blocking MPI communication methods, \texttt{MPI\_Sendrecv}.
+    \item Using non-blocking MPI communication methods, \texttt{MPI\_Irecv}, \texttt{MPI\_Isend}.
+  \end{enumerate}
+  \item Updating (Evolving) function to compute the values of next status in time domain.
+  \begin{enumerate}
+    \item Purely MPI, no threading updating strategy.
+    \item Hybrid of MPI/OpenMP, MPI process's has threading.
+  \end{enumerate}
+\end{enumerate}
+
+\subsubsection{Abstract Base Class}
+The default copy/move constructors, copy/move assignment operators of base object are deleted 
+due to it is abstract base class and only provides a unified design.
+The constructor, member variables and virtual functions are set as protected, which can be accessed by derived classes exclusively.
+\paragraph{Constructor} 
+Constructor takes template arguments of extents as inputs, and using extents to determine domain and grid sizes.
+According to the general setups in section \ref{SEC_General_Form}, and CFL rules
+\begin{align}
+ & \Delta t \leqslant \frac{\min\{\Delta x, \Delta y\}^2}{2\lambda2^2} \\
+ & w_x = \frac{\lambda \Delta t}{\Delta x^2}, w_y = \frac{\lambda \Delta t}{\Delta y^2} \\
+ & diag_x = -2 + \frac{\Delta x^2}{2\lambda\Delta t}, diag_y = -2 + \frac{\Delta y^2}{2\lambda\Delta t}
+\end{align}
+
+
+
+\subsubsection{Pure Message Passing Parallel}
 \subsubsection{Hybrid Parallel}
+
+% \subsection{Physics Informed Neural Networks}
+% \subsection{CUDA parallel}
+% \subsection{Hybrid Parallel}
