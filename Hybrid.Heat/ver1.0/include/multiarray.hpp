@@ -107,7 +107,6 @@ template <class T, size_type NumD>
     const_iterator     end()     const    { return body->end();    }
     const_iterator    cend()     const    { return body->cend();   }
 
-
     array_shape& shape()                 const { return body->__shape; }
     size_type&   shape(size_type index)  const { return body->__shape[index]; }
     Integer get_flat_index(std_array_idx & indexes ) { return body->get_flat_index(indexes); }
@@ -598,6 +597,23 @@ void MPI_SaveToBinary(array_Cart<T, NumD> &loc, const String filename)
   MPI_File_close(&fh);
 }
 
+
+template <typename T, size_type NumD>
+void MPI_ReadToBinary(environment & env, array_Cart<T, NumD> &loc, const String filename)
+{
+  // if (loc.topology().rank == 0)
+  // {
+  //   std::istream ifs (filename, std::ios::binary);
+  //   FINAL_PROJECT_ASSERT_MSG(ifs, "Cannot Open File.");
+
+
+  //   for (size_type i = 0; i < NumD; ++i)
+  //   {
+  //     size_type temp {0};
+  //     ifs.read(reinterpret_cast<Char*>(&temp), sizeof((temp)));
+  //   }
+  // }
+}
 
 } // namespace mpi
 } // namespace final_project

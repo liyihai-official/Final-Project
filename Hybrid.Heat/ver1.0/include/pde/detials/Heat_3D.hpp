@@ -45,13 +45,13 @@ template <typename T>
 
 
     private:
-    void exchange_ping_pong_SR()  override;
-    void exchange_ping_pong_I()   override;
+    void exchange_ping_pong_SR()  override final;
+    void exchange_ping_pong_I()   override final;
 
-    T update_ping_pong()              override;
-    T update_ping_pong_omp()          override;
-    T update_ping_pong_bulk()         override;
-    T update_ping_pong_edge()         override;
+    T update_ping_pong()              override final;
+    T update_ping_pong_omp()          override final;
+    T update_ping_pong_bulk()         override final;
+    T update_ping_pong_edge()         override final;
     void switch_in_out();
 
     private: // RAII design
@@ -79,6 +79,8 @@ template <typename T>
           );
       }
     };
+
+    ~Heat_3D() = default;
   }; // class Heat_3D
 
 
@@ -117,32 +119,32 @@ namespace final_project { namespace pde {
 template <typename T>
   inline 
   Heat_3D<T>::Heat_3D(mpi::environment & env, size_type nx, size_type ny, size_type nz)
-: Heat_Base<T, 3>(env, nx, ny, nz), BC_3D {nullptr}, IC_3D {nullptr}, converge {false}, gather {}
-  {
-    in  = mpi::array_Cart<T, 3>(env, nx, ny, nz);
-    out = mpi::array_Cart<T, 3>(env, nx, ny, nz);
+: Heat_Base<T, 3>(nx, ny, nz), BC_3D {nullptr}, IC_3D {nullptr}, converge {false}, gather {}
+{
+  in  = mpi::array_Cart<T, 3>(env, nx, ny, nz);
+  out = mpi::array_Cart<T, 3>(env, nx, ny, nz);
 
-    in.array().__loc_array.fill(0);
-    out.array().__loc_array.fill(0);    
-  }
+  in.array().__loc_array.fill(0);
+  out.array().__loc_array.fill(0);    
+}
 
 
 template <typename T>
   inline void 
   Heat_3D<T>::reset()
-  {
-    gather = multi_array::array_base<T, 3>();
+{
+  gather = multi_array::array_base<T, 3>();
 
-    in.array().__loc_array.fill(0);
-    out.array().__loc_array.fill(0);    
+  in.array().__loc_array.fill(0);
+  out.array().__loc_array.fill(0);    
 
-    IC_3D->isSetUpInit = false;
-    IC_3D->SetUpInit(*this);
+  IC_3D->isSetUpInit = false;
+  IC_3D->SetUpInit(*this);
 
-    BC_3D->UpdateBC(*this, 0);
+  BC_3D->UpdateBC(*this, 0);
 
-    converge = false;
-  }
+  converge = false;
+}
 
 
 /// @brief Save gather.data to given filename.
@@ -151,10 +153,10 @@ template <typename T>
 template <typename T>
   inline void 
   Heat_3D<T>::SaveToBinary(const String filename)
-  {
-    if (in.topology().rank == 0)
-      gather.saveToBinary(filename);
-  }
+{
+  if (in.topology().rank == 0)
+    gather.saveToBinary(filename);
+}
 
 
 
@@ -166,14 +168,14 @@ template <typename T>
     BCFunction FuncDim00, BCFunction FuncDim01,
     BCFunction FuncDim10, BCFunction FuncDim11,
     BCFunction FuncDim20, BCFunction FuncDim21)
-  {
-    BC_3D = std::make_unique<BoundaryConditions_3D<T>>(BC);
+{
+  BC_3D = std::make_unique<BoundaryConditions_3D<T>>(BC);
 
-    BC_3D->SetBC(*this, 
-      FuncDim00, FuncDim01,
-      FuncDim10, FuncDim11,
-      FuncDim20, FuncDim21);
-  }
+  BC_3D->SetBC(*this, 
+    FuncDim00, FuncDim01,
+    FuncDim10, FuncDim11,
+    FuncDim20, FuncDim21);
+}
 
 
 /// @brief 

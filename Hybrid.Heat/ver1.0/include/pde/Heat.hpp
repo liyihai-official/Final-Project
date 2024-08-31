@@ -16,9 +16,9 @@ namespace final_project {  namespace pde {
 template <typename T, size_type NumD>
   class Heat_Base
   {
-    public:
+    protected:
     template <typename ... Exts>
-    Heat_Base(mpi::environment &, Exts ...);
+    Heat_Base(Exts ...);
 
     protected:
     // Coefficients of Heat Equation
@@ -27,17 +27,19 @@ template <typename T, size_type NumD>
     std::array<T, NumD> diags, weights, dxs;
 
     // Exchange 
-    public:
+    protected:
     virtual void exchange_ping_pong_SR()      = 0;
     virtual void exchange_ping_pong_I()       = 0;
 
     // Updates
-    public: 
+    protected: 
     virtual T update_ping_pong()                = 0;
     virtual T update_ping_pong_omp()            = 0;
     virtual T update_ping_pong_bulk()           = 0;
     virtual T update_ping_pong_edge()           = 0;
-      
+
+
+    virtual ~Heat_Base() {};
   }; 
 
 }}
@@ -59,7 +61,7 @@ namespace final_project { namespace pde {
 template <typename T, size_type NumD>
 template <typename ... Exts>
   inline
-  Heat_Base<T, NumD>::Heat_Base(mpi::environment & env, Exts ... exts)
+  Heat_Base<T, NumD>::Heat_Base(Exts ... exts)
   {
     
 #ifndef NDEBUG
@@ -77,7 +79,7 @@ std::cout << "Constructor from Heat_Base" << std::endl;
     }
 
     auto mmadr {std::min_element(dxs.begin(), dxs.end())};
-    dt = *mmadr * *mmadr / coff / std::pow(2, NumD);
+    dt = *mmadr * *mmadr / coff / (2 * NumD ); //std::pow(2, NumD));
     T mindt {0.1};
     dt = std::min(dt, mindt);
 

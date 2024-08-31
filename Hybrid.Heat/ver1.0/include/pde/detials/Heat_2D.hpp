@@ -29,7 +29,6 @@ template <typename T>
     Heat_2D(mpi::environment &, size_type, size_type);
 
     void SetHeatBC(BoundaryConditions_2D<T> &, BCFunction, BCFunction, BCFunction, BCFunction);
-
     void SetHeatInitC(InitialConditions::Init_2D<T> &     );
 
     Integer solve_pure_mpi(       const T, const Integer=100, const Integer=0);
@@ -40,13 +39,13 @@ template <typename T>
     void reset();
 
     private:
-    void exchange_ping_pong_SR()      override;
-    void exchange_ping_pong_I()       override;
+    void exchange_ping_pong_SR()  override final;
+    void exchange_ping_pong_I()   override final;
 
-    T update_ping_pong()              override;
-    T update_ping_pong_omp()          override;
-    T update_ping_pong_bulk()         override;
-    T update_ping_pong_edge()         override;
+    T update_ping_pong()              override final;
+    T update_ping_pong_omp()          override final;
+    T update_ping_pong_bulk()         override final;
+    T update_ping_pong_edge()         override final;
     void switch_in_out();
 
     private:
@@ -57,6 +56,8 @@ template <typename T>
     mpi::array_Cart<T, 2>         in, out;
     multi_array::array_base<T, 2> gather;
     Bool converge;
+
+    ~Heat_2D() = default;
 
     friend InitialConditions::Init_2D<T>;
     friend BoundaryConditions_2D<T>;
@@ -100,7 +101,7 @@ namespace final_project { namespace pde {
 template <typename T>
   inline
   Heat_2D<T>::Heat_2D(mpi::environment & env, size_type nx, size_type ny)
-: Heat_Base<T, 2>(env, nx, ny), BC_2D {nullptr}, IC_2D {nullptr}, converge {false}, gather {}
+: Heat_Base<T, 2>(nx, ny), BC_2D {nullptr}, IC_2D {nullptr}, converge {false}, gather {}
   {
     in  = mpi::array_Cart<T, 2>(env, nx, ny);
     out = mpi::array_Cart<T, 2>(env, nx, ny);
