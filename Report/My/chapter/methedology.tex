@@ -880,7 +880,9 @@ The constructor, member variables and virtual functions are set as protected, wh
 Constructor takes template arguments of extents as inputs, and using extents to determine domain and grid sizes.
 According to the general setups in section \ref{SEC:Specific_Form}, and CFL rules, the $D$ dimension heat equation has time step size
 \begin{equation}
-  \Delta t \leqslant \frac{1}{ 2 \lambda 
+  \Delta t \leqslant \frac{1}{ 
+    \displaystyle 
+    2 \lambda 
     \sum_{i=1}^{D} \frac{1}{\Delta x_i ^2}
   }
 \end{equation}
@@ -890,20 +892,23 @@ shown below
 \begin{equation}
   \Delta t 
   \leqslant 
-  \frac{\min_{i=1}^{D} \{\Delta x_i\}^2}{2 D\lambda}
+  \frac{ \min_{i=1}^{D} \{\Delta x_i\}^2}{2 D\lambda}
   \leqslant 
-  \frac{1}{ 2 \lambda 
-    \sum_{i=1}^{D} \frac{1}{\Delta x_i ^2}}
+  \frac{1}{ 
+    \displaystyle 
+    2 \lambda 
+    \sum_{i=1}^{D} \frac{1}{\Delta x_i ^2}
+  }
 \end{equation}
 The weights and diagonal coefficients are 
 \begin{equation}
   \begin{cases}
-    w_i = \frac{\lambda \Delta t}{\Delta x_i^2}               \\
-    diag_i = -2 + \frac{\Delta x_i^2}{2\lambda\Delta t}
+    \displaystyle w_i = \frac{\lambda \Delta t}{\Delta x_i^2}               \\
+    \displaystyle diag_i = -2 + \frac{\Delta x_i^2}{2\lambda\Delta t}
   \end{cases}
 \end{equation}
 
-\paragraph{Pure virtual functions}
+\paragraph{Pure virtual functions }
 Virtual functions overcome the problems with type-field solution, which I used in earlier deprecated versions, 
 it allowing me to declare functions in the base class in advance, and redefined in each derived class.
 The compiler and linker will guarantee the correct correspondence between objects and the functions applied to them.
@@ -920,10 +925,63 @@ The \texttt{virtual} functions in base class stands for
   \item \texttt{virtual Evolving} functions shows the derived classes have $2$ different hybrid updating strategies.
 \end{itemize}
 
+\subsubsection{PDE solver class}
+Derived template classes PDE solver objects are 
+\texttt{Heat\_2D<typename T>} and 
+\texttt{Heat\_3D<typename T>} inherit from 
+\texttt{Heat\_Base<typename T, size\_type NumD>} 
+with level 
+\texttt{protected}. 
+Each PDE solver class has integrated solver functions, and stands for two types of methods that are pure MPi parallelism 
+                                      [Sec. \ref{SEC:PURE_MPI}] and hybrid parallelism.
+Moreover, the hybrid parallelistic solver has two type of hybrid strategies which I will demonstrate in latter section and section
+                                       \ref{SEC:HYBRID_0} and \ref{SEC:HYBRID_1}.
+
+\paragraph{Safety}
+The PDE solvers are unified interface objects with integrated IO features, solvers and functions allow to interacting with boundary conditions and initial condition objects,
+same as previous sections, I chose to use unique pointer to create objects of boundary and initial conditions which adhere RAII protocol.
+Also, redefining \texttt{virtual} functions of base class using \texttt{override final} phrases that means these functions are not safe for overloading if latter program want to 
+override in second derived classes. 
+
+\paragraph{Performance}
+Every solver class has two objects of Cartesian distributed arrays, the updating strategy I was using is called ping-pong strategy or red-black strategy.
+This requires us to update values between two objects, one of which store the current status, the other for next status.
+Obviously, this is a memory-hungary strategy, which requires twice as much as the actual memory space needed for storing local array.
+However, due to our parallelistic topology, the local arrays are quite smaller than the actual scale of problem, more importantly, 
+it increase the efficiency of updating values in one CPU clockwise.
+
+
 
 \subsection{Parallel Strategies}
-\subsubsection{Pure Message Passing Parallel}
-\subsubsection{Hybrid Parallel}
+\subsubsection{Pure Message Passing Parallel} \label{SEC:PURE_MPI}
+Pure MPI parallelism is a type of strategy that do not take shared memory programming into considering.
+With no worry about NUMA structure, pure MPI only needs to determine what is the efficient way for communication,
+such as 
+\begin{enumerate}
+  \item Blocking communication, it is a type of communication with internal barrier, which is only favorable when we need to ensure the latter operations depend on this MPI communication,
+  such as reduction, gather, broadcasting and scattering.
+  \item Non-blocking communication, it is the other type of communication with no barrier. 
+  This is advantageous in scenarios where subsequent operations do not depend on the completion of the communication, 
+  allowing computation and communication to overlap, which can improve overall efficiency.
+  \item Remote memory access (RMA), the need for explicit send/receive pairs, RMA operation is directly access memory of other CPUs.
+  This can be very efficient, particularly on systems with hardware support like RDMA (Remote Direct Memory Access), 
+  However, on systems without such hardware support, 
+  RMA may not provide performance benefits and could be slower compared to traditional message-passing methods.
+\end{enumerate}
+Thus, this projects focused on blocking and non-blocking MPI communications, since RMA requires the hardware support to gain the benefits.
+In general, Pure MPI strategy follows algorithm
+\begin{algorithm}
+  \caption{}
+  \label{}
+  \begin{algorithmic}[1]
+    \STATE 
+  \end{algorithmic}
+\end{algorithm}
+
+
+
+\subsubsection{Hybrid Parallel}\label{SEC:HYBRID_0}
+\subsubsection{Hybrid Parallel}\label{SEC:HYBRID_1}
 
 % \subsection{Physics Informed Neural Networks}
 % \subsection{CUDA parallel}
