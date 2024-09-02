@@ -1222,6 +1222,54 @@ Thus, applying multiple overlapping hybrid method can be very hard to do even on
 % Thus, it is really hard 
 
 
-% \subsection{Physics Informed Neural Networks}
+\subsection{Physics Informed Neural Networks}
+The ideas of earlier neural networks mainly focus on multiplying matrices and compute the difference between the outputs and the given labels.
+AlexNet introduced the convolution product into neural networks since ImageNet Challenge 2014 
+                \cite{AlexNet}, 
+After that, the type of neurons in networks explosively emerged, including long-short term memory (LSTM) neuron, pooling neural and so on.
+In the recent years, Maziar, Paris and George 
+                \cite{FIRST_PINN}
+brings the differential operators into neural networks, which becomes the Physics Informed Neural Networks (PINN).
+
+In the latter years, many research team combined other type of networks with PINN, such as the transformer operator based PINN 
+                \cite{Transformer_PINN}.
+However, many papers were focusing on evaluate the quality of solution which is implemented by \texttt{Python} or \texttt{Julia}, rather than the speed of training.
+From the performance perspective, the interpreted programming languages like \texttt{Pyhon} have lower speed comparing to compiling languages such as \texttt{C/C++}.
+Thus, in this project, I chose to evaluate the training performance on CUDA device implemented by the \texttt{C/C++} \texttt{Pytorch} library called \texttt{Libtorch} 
+\cite{Libtorch}.
+
+
+\subsubsection{Dataset}
+The first part of training a neural network is getting dataset. 
+For the simple purpose, I chose to apply the PINN network for Dirichlet boundary condition which is 
+randomly generate the nodes on boundaries and set the value on that point using boundary condition.
+This implementation is integrated in to the class \texttt{dataset} under namespace \texttt{PINN},
+which can generate training datasets for 2D and 3D heat equation and send the data to a \texttt{torch::device}.
+Moreover, it can produce a validation grid for showing the outputs of trained network.
+
+\subsubsection{Structure}
+The network has the simplest structure, which is a sequential of multiplication of matrices and inputs plus bias (three hidden layers).
+The activation functions are $\tanh(\cdot)$, and the network loss function is mean square error (MSE).
+Totally, the loss function follows the setting in section \ref{SEC:PINN} which is the sumption of $loss_{PDE}$ and $loss_{NN}$ where 
+\begin{equation}
+  \begin{cases}
+    \displaystyle loss_{PDE} = \frac{\partial^2 \widehat{u}}{\partial x^2} + \frac{\partial^2 \widehat{u}}{\partial y^2} + \frac{\partial^2 \widehat{u}}{\partial z^2}  \\
+    \displaystyle loss_{NN} = MSE(\widehat{u}, u)    
+  \end{cases}
+\end{equation}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 % \subsection{CUDA parallel}
 % \subsection{Hybrid Parallel}
