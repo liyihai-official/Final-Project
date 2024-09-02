@@ -1,0 +1,19 @@
+<map id="final_project::pde::Heat_3D::solve_pure_mpi" name="final_project::pde::Heat_3D::solve_pure_mpi">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,179,186,219"/>
+<area shape="rect" id="Node000002" href="$namespacefinal__project_1_1mpi.html#a24b0b9de057dcb3bf7b6410f5c970225" title="Gather the distributed arrays on every processes in MPI_Comm environment." alt="" coords="234,179,354,219"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,196,218,196,218,202,186,202"/>
+<area shape="rect" id="Node000003" href="$classfinal__project_1_1multi__array_1_1array__base.html#a11bb092304d9b3e5941e29b849a11d3d" title=" " alt="" coords="408,5,576,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="304,177,341,118,369,86,400,57,408,52,411,56,404,61,373,89,346,121,308,180"/>
+<area shape="rect" id="Node000004" href="$classfinal__project_1_1mpi_1_1array___cart.html#aca3729e4643a875e5f886434e16aa7f6" title=" " alt="" coords="430,71,553,111"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="319,176,356,148,401,121,414,114,417,119,403,125,359,152,322,180"/>
+<area shape="rect" id="Node000005" href="$classfinal__project_1_1multi__array_1_1array__base.html#ae99cc0d7f450028f7fefb63ada651a36" title=" " alt="" coords="414,135,569,191"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="354,185,398,177,399,183,355,191"/>
+<area shape="rect" id="Node000006" href="$classfinal__project_1_1mpi_1_1array___cart.html#a10372791f0c9a7d7f834705c0c03f1b2" title=" " alt="" coords="402,215,581,255"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="355,207,387,213,386,218,354,213"/>
+<area shape="rect" id="Node000008" href="$namespacefinal__project_1_1mpi.html#a7c241ba61c322bd9b1972460d536110b" title=" " alt="" coords="406,280,577,321"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="326,217,403,265,417,271,415,276,401,269,323,222"/>
+<area shape="rect" id="Node000009" href="$classfinal__project_1_1mpi_1_1array___cart.html#aa58db48e046f18fb32da26e1b678a238" title=" " alt="" coords="418,345,565,386"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="309,218,347,274,373,304,404,330,412,336,409,340,400,334,370,308,343,277,305,221"/>
+<area shape="rect" id="Node000007" href="$classfinal__project_1_1mpi_1_1array___cart.html#a23536c2a1cca9897be842b2206f9e931" title=" " alt="" coords="629,215,757,255"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="582,232,614,232,614,238,582,238"/>
+</map>

@@ -1,0 +1,831 @@
+\doxysection{Heat\+\_\+3\+D.\+hpp}
+\hypertarget{_heat__3_d_8hpp_source}{}\label{_heat__3_d_8hpp_source}\index{include/pde/detials/Heat\_3D.hpp@{include/pde/detials/Heat\_3D.hpp}}
+\mbox{\hyperlink{_heat__3_d_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifndef\ FINAL\_PROJECT\_HEAT\_3D\_HPP}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ FINAL\_PROJECT\_HEAT\_3D\_HPP}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#pragma\ once\ }}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{_heat_8hpp}{pde/Heat.hpp}}>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacefinal__project}{final\_project}}\ \{\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacepde}{pde}}\ \{}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00023\ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d}{Heat\_3D}}\ :\ \textcolor{keyword}{protected}\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat___base}{Heat\_Base}}<T,\ 3>}
+\DoxyCodeLine{00024\ \ \ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a3b9613f7e318ee35ddd01977ef49e625}{ICFunction}}\ =\ std::function<T(T,\ T,\ T)>;}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_aafc11b61125a10445199ec72691c0354}{BCFunction}}\ =\ std::function<T(T,\ T,\ T,\ T)>;}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00029\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_aa1f716e8ec8d775ef4918b055ea19723}{Heat\_3D}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00030\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_aa1f716e8ec8d775ef4918b055ea19723}{Heat\_3D}}(\mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment}{mpi::environment}}\ \&,\ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}},\ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}},\ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}});}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a21fb09d947fbf901ab13761cfe10331d}{SetHeatBC}}(\mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d}{BoundaryConditions\_3D<T>}}\ \&,\ }
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_aafc11b61125a10445199ec72691c0354}{BCFunction}},\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_aafc11b61125a10445199ec72691c0354}{BCFunction}},\ }
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_aafc11b61125a10445199ec72691c0354}{BCFunction}},\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_aafc11b61125a10445199ec72691c0354}{BCFunction}},\ }
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_aafc11b61125a10445199ec72691c0354}{BCFunction}},\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_aafc11b61125a10445199ec72691c0354}{BCFunction}});}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a44ee41813c9aa5d7ce98b369add87bed}{SetHeatInitC}}(\mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__3_d}{InitialConditions::Init\_3D<T>}}\ \&\ );}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a53f3687163c0c32d71f46a67fdf2557c}{solve\_pure\_mpi}}(\ \ \ \ \ \ \ \textcolor{keyword}{const}\ T,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}=100,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}=0);}
+\DoxyCodeLine{00040\ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_ae0c569faebbf7b2b4757cbf3a3d9b23f}{solve\_hybrid\_mpi\_omp}}(\ \textcolor{keyword}{const}\ T,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}=100,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}=0);}
+\DoxyCodeLine{00041\ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a4aa83b2e905fcfc5f3ea1940fcf0da33}{solve\_hybrid2\_mpi\_omp}}(\textcolor{keyword}{const}\ T,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}=100,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}=0);}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_ae770dd0652b609f57e476c6ca802800b}{SaveToBinary}}(\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{String}}\ );}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_ad733cc5822b7e8582a0a02f9fa2c3e31}{reset}}();}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_ad6794ec1e2e14c83bb7326c42e18a1fa}{exchange\_ping\_pong\_SR}}()\ \ \textcolor{keyword}{override};}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_aa6d15ea752b200ba21d368b4f146297b}{exchange\_ping\_pong\_I}}()\ \ \ \textcolor{keyword}{override};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ T\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a81af79854e5f776b0179d037207d9b2a}{update\_ping\_pong}}()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{override};}
+\DoxyCodeLine{00052\ \ \ \ \ T\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a2697811f87ee54d4ae613d967047fe48}{update\_ping\_pong\_omp}}()\ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{override};}
+\DoxyCodeLine{00053\ \ \ \ \ T\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a538af13084ec0f621cb307b53c153178}{update\_ping\_pong\_bulk}}()\ \ \ \ \ \ \ \ \ \textcolor{keyword}{override};}
+\DoxyCodeLine{00054\ \ \ \ \ T\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_ac7b3b1f79661ae2b1f0b86aa7089c71e}{update\_ping\_pong\_edge}}()\ \ \ \ \ \ \ \ \ \textcolor{keyword}{override};}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_aaa988e60f372aba0d7388535e050645b}{switch\_in\_out}}();}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{private}:\ \textcolor{comment}{//\ RAII\ design}}
+\DoxyCodeLine{00058\ \ \ \ \ std::unique\_ptr<BoundaryConditions\_3D<T>>\ \ \ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_acec67ad96a152afc09155a8a892591ad}{BC\_3D}};}
+\DoxyCodeLine{00059\ \ \ \ \ std::unique\_ptr<InitialConditions::Init\_3D<T>>\ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a4308ff95b1cd96ca9567d4fd67542219}{IC\_3D}};}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00062\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1array___cart}{mpi::array\_Cart<T,\ 3>}}\ \ \ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a966e7064166200077349d8c90c77ef5f}{in}},\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a67cf34c89e120718dbf9dba01b57b56a}{out}};}
+\DoxyCodeLine{00063\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1array__base}{multi\_array::array\_base<T,\ 3>}}\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_aabdfe460c159bdfbbd2b82aebcff67c8}{gather}};}
+\DoxyCodeLine{00064\ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_ab8f3ebf8a3440235be1c17b6821b5d77}{Bool}}\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_aa8335825af5ddd1d2de1a80c8f70db54}{converge}};}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keyword}{friend}\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__3_d}{InitialConditions::Init\_3D<T>}};}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keyword}{friend}\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d}{BoundaryConditions\_3D<T>}};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ std::function<T(\mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}},\ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}},\ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}})>\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a8895950446f480a5af976f3360ee7b39}{compute\_next}}\ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ [\&](\mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ i,\ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ j,\ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ k)\ \{}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a67cf34c89e120718dbf9dba01b57b56a}{out}}(i,j,k)\ =\ }
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat___base_a277293c051369f2648954f9e016559d0}{weights}}[0]\ *\ (\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a966e7064166200077349d8c90c77ef5f}{in}}(i-\/1,\ j,\ k)\ +\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a966e7064166200077349d8c90c77ef5f}{in}}(i+1,\ j,\ k)\ )}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ +\ this-\/>\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat___base_a277293c051369f2648954f9e016559d0}{weights}}[1]\ *\ (\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a966e7064166200077349d8c90c77ef5f}{in}}(i,\ j-\/1,\ k)\ +\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a966e7064166200077349d8c90c77ef5f}{in}}(i,\ j+1,\ k)\ )}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ +\ this-\/>\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat___base_a277293c051369f2648954f9e016559d0}{weights}}[2]\ *\ (\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a966e7064166200077349d8c90c77ef5f}{in}}(i,\ j,\ k-\/1)\ +\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a966e7064166200077349d8c90c77ef5f}{in}}(i,\ j,\ k+1)\ )}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ +\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a966e7064166200077349d8c90c77ef5f}{in}}(i,\ j,\ k)\ *\ (}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat___base_aa4855e147f2a0c2939dcd49ca120b1d7}{diags}}[0]\ *\ this-\/>\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat___base_a277293c051369f2648954f9e016559d0}{weights}}[0]}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ +\ this-\/>\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat___base_aa4855e147f2a0c2939dcd49ca120b1d7}{diags}}[1]\ *\ this-\/>\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat___base_a277293c051369f2648954f9e016559d0}{weights}}[1]}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ +\ this-\/>\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat___base_aa4855e147f2a0c2939dcd49ca120b1d7}{diags}}[2]\ *\ this-\/>\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat___base_a277293c051369f2648954f9e016559d0}{weights}}[2]}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00081\ \ \ \ \ \};}
+\DoxyCodeLine{00082\ \ \ \};\ \textcolor{comment}{//\ class\ Heat\_3D}}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \}\ \textcolor{comment}{//\ namespace\ pde}}
+\DoxyCodeLine{00088\ \}\ \textcolor{comment}{//\ namespace\ final\_project}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \textcolor{comment}{//\ Standard\ Library}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#include\ <cmath>}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#include\ <algorithm>}}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#ifdef\ \_OPENMP}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#include\ <omp.h>}\ \textcolor{comment}{//\ OpenMP\ }}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ end\ define\ OpenMP}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacefinal__project}{final\_project}}\ \{\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacepde}{pde}}\ \{}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00117\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00118\ \ \ \textcolor{keyword}{inline}\ }
+\DoxyCodeLine{00119\ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_aa1f716e8ec8d775ef4918b055ea19723}{Heat\_3D<T>::Heat\_3D}}(\mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment}{mpi::environment}}\ \&\ env,\ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ nx,\ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ ny,\ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ nz)}
+\DoxyCodeLine{00120\ :\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat___base}{Heat\_Base}}<T,\ 3>(env,\ nx,\ ny,\ nz),\ BC\_3D\ \{nullptr\},\ IC\_3D\ \{nullptr\},\ converge\ \{false\}}
+\DoxyCodeLine{00121\ \ \ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a966e7064166200077349d8c90c77ef5f}{in}}\ \ =\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1array___cart}{mpi::array\_Cart<T,\ 3>}}(env,\ nx,\ ny,\ nz);}
+\DoxyCodeLine{00123\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a67cf34c89e120718dbf9dba01b57b56a}{out}}\ =\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1array___cart}{mpi::array\_Cart<T,\ 3>}}(env,\ nx,\ ny,\ nz);}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_aabdfe460c159bdfbbd2b82aebcff67c8}{gather}}\ =\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1array__base}{multi\_array::array\_base<T,\ 3>}}(nx,\ ny,\ nz);}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a966e7064166200077349d8c90c77ef5f}{in}}.\mbox{\hyperlink{classfinal__project_1_1mpi_1_1array___cart_a23536c2a1cca9897be842b2206f9e931}{array}}().\mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a453158f9c2479b0d94ab0b035089bd6a}{\_\_loc\_array}}.\mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a2cb702a125809541cf37d39952d10ecc}{fill}}(0);}
+\DoxyCodeLine{00128\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a67cf34c89e120718dbf9dba01b57b56a}{out}}.\mbox{\hyperlink{classfinal__project_1_1mpi_1_1array___cart_a23536c2a1cca9897be842b2206f9e931}{array}}().\mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a453158f9c2479b0d94ab0b035089bd6a}{\_\_loc\_array}}.\mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a2cb702a125809541cf37d39952d10ecc}{fill}}(0);\ \ \ \ }
+\DoxyCodeLine{00129\ \ \ \}}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00133\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ }
+\DoxyCodeLine{00134\ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_ad733cc5822b7e8582a0a02f9fa2c3e31}{Heat\_3D<T>::reset}}()}
+\DoxyCodeLine{00135\ \ \ \{}
+\DoxyCodeLine{00136\ \ \ \ \ std::fill(gather.begin(),\ gather.end(),\ 0);}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \ \ \ \ in.array().\_\_loc\_array.fill(0);}
+\DoxyCodeLine{00139\ \ \ \ \ out.array().\_\_loc\_array.fill(0);\ \ \ \ }
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \ \ \ \ IC\_3D-\/>isSetUpInit\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00142\ \ \ \ \ IC\_3D-\/>SetUpInit(*\textcolor{keyword}{this});}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \ BC\_3D-\/>UpdateBC(*\textcolor{keyword}{this},\ 0);}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \ \ \ \ converge\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00147\ \ \ \}}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00153\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00154\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ }
+\DoxyCodeLine{00155\ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_ae770dd0652b609f57e476c6ca802800b}{Heat\_3D<T>::SaveToBinary}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{String}}\ filename)}
+\DoxyCodeLine{00156\ \ \ \{}
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keywordflow}{if}\ (in.topology().rank\ ==\ 0)}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ gather.saveToBinary(filename);}
+\DoxyCodeLine{00159\ \ \ \}}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00165\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ }
+\DoxyCodeLine{00166\ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a21fb09d947fbf901ab13761cfe10331d}{Heat\_3D<T>::SetHeatBC}}(}
+\DoxyCodeLine{00167\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d}{BoundaryConditions\_3D<T>}}\ \&\ BC,\ }
+\DoxyCodeLine{00168\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_aafc11b61125a10445199ec72691c0354}{BCFunction}}\ FuncDim00,\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_aafc11b61125a10445199ec72691c0354}{BCFunction}}\ FuncDim01,}
+\DoxyCodeLine{00169\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_aafc11b61125a10445199ec72691c0354}{BCFunction}}\ FuncDim10,\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_aafc11b61125a10445199ec72691c0354}{BCFunction}}\ FuncDim11,}
+\DoxyCodeLine{00170\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_aafc11b61125a10445199ec72691c0354}{BCFunction}}\ FuncDim20,\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_aafc11b61125a10445199ec72691c0354}{BCFunction}}\ FuncDim21)}
+\DoxyCodeLine{00171\ \ \ \{}
+\DoxyCodeLine{00172\ \ \ \ \ BC\_3D\ =\ std::make\_unique<BoundaryConditions\_3D<T>>(BC);}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \ \ \ \ BC\_3D-\/>SetBC(*\textcolor{keyword}{this},\ }
+\DoxyCodeLine{00175\ \ \ \ \ \ \ FuncDim00,\ FuncDim01,}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ FuncDim10,\ FuncDim11,}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ FuncDim20,\ FuncDim21);}
+\DoxyCodeLine{00178\ \ \ \}}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00184\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00185\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ }
+\DoxyCodeLine{00186\ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a44ee41813c9aa5d7ce98b369add87bed}{Heat\_3D<T>::SetHeatInitC}}(\mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__3_d}{InitialConditions::Init\_3D<T>}}\ \&\ IC)}
+\DoxyCodeLine{00187\ \ \ \{}
+\DoxyCodeLine{00188\ \ \ \ \ IC\_3D\ =\ std::make\_unique<InitialConditions::Init\_3D<T>>(IC);}
+\DoxyCodeLine{00189\ \ \ \ \ IC\_3D-\/>SetUpInit(*\textcolor{keyword}{this});}
+\DoxyCodeLine{00190\ \ \ \}}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00194\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00195\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}}
+\DoxyCodeLine{00196\ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_aaa988e60f372aba0d7388535e050645b}{Heat\_3D<T>::switch\_in\_out}}()}
+\DoxyCodeLine{00197\ \{\ in.swap(out);\ \}}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00201\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00202\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ }
+\DoxyCodeLine{00203\ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_ad6794ec1e2e14c83bb7326c42e18a1fa}{Heat\_3D<T>::exchange\_ping\_pong\_SR}}()}
+\DoxyCodeLine{00204\ \ \ \{}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ flag\ \{0\};\ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ dim\ \{0\};}
+\DoxyCodeLine{00207\ \ \ \ \ \textcolor{keyword}{auto}\ n\_size\ \{in.topology().\_\_local\_shape[dim]\};}
+\DoxyCodeLine{00208\ \ \ \ \ MPI\_Sendrecv(\ \&in(1\ \ \ \ \ \ \ ,\ 1,\ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_src[dim],\ \ \ flag,}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&in(n\_size-\/1,\ 1,\ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_dest[dim],\ \ flag,}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ MPI\_STATUS\_IGNORE);}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \ \ \ \ MPI\_Sendrecv(\ \&in(n\_size-\/2,\ 1,\ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_dest[dim],\ \ flag,}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&in(0\ \ \ \ \ \ \ ,\ 1,\ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_src[dim],\ \ \ flag,}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ MPI\_STATUS\_IGNORE);}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \ \ \ \ flag\ =\ 1;\ dim\ =\ 1;}
+\DoxyCodeLine{00217\ \ \ \ \ n\_size\ =\ in.topology().\_\_local\_shape[dim];}
+\DoxyCodeLine{00218\ \ \ \ \ MPI\_Sendrecv(\ \&in(1,\ \ \ \ \ \ \ \ 1,\ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_src[dim],\ \ \ flag,}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&in(1,\ n\_size-\/1,\ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_dest[dim],\ \ flag,}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ MPI\_STATUS\_IGNORE);}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \ \ \ \ MPI\_Sendrecv(\ \&in(1,\ n\_size-\/2,\ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_dest[dim],\ \ flag,}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&in(1,\ 0,\ \ \ \ \ \ \ \ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_src[dim],\ \ \ flag,}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ MPI\_STATUS\_IGNORE);}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \ \ \ \ flag\ =\ 2;\ dim\ =\ 2;}
+\DoxyCodeLine{00227\ \ \ \ \ n\_size\ =\ in.topology().\_\_local\_shape[dim];}
+\DoxyCodeLine{00228\ \ \ \ \ MPI\_Sendrecv(\ \&in(1,\ \ \ \ \ \ \ \ 1,\ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_src[dim],\ \ \ flag,}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&in(1,\ 1,\ n\_size-\/1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_dest[dim],\ \ flag,}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ MPI\_STATUS\_IGNORE);}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \ \ \ \ MPI\_Sendrecv(\ \&in(1,\ 1,\ n\_size-\/2),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_dest[dim],\ \ flag,}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&in(1,\ 1,\ \ \ \ \ \ \ \ 0),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_src[dim],\ \ \ flag,}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ MPI\_STATUS\_IGNORE);}
+\DoxyCodeLine{00235\ \ \ \}}
+\DoxyCodeLine{00236\ \ \ }
+\DoxyCodeLine{00239\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00240\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ }
+\DoxyCodeLine{00241\ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_aa6d15ea752b200ba21d368b4f146297b}{Heat\_3D<T>::exchange\_ping\_pong\_I}}()}
+\DoxyCodeLine{00242\ \ \ \{}
+\DoxyCodeLine{00243\ \ \ \ \ MPI\_Request\ reqs[12];}
+\DoxyCodeLine{00244\ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ req\_cnt\ \{0\},\ flag\ \{0\};\ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ dim\ \{0\};}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ \ \ \ \ \textcolor{keyword}{auto}\ n\_size\ \{in.topology().\_\_local\_shape[dim]\};}
+\DoxyCodeLine{00247\ \ \ \ \ \textcolor{comment}{//\ Send\ and\ receive\ for\ the\ first\ dimension}}
+\DoxyCodeLine{00248\ \ \ \ \ MPI\_Irecv(\&in(n\_size-\/1,\ 1,\ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_dest[dim],\ flag,\ }
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ \&reqs[req\_cnt++]);}
+\DoxyCodeLine{00250\ \ \ \ \ MPI\_Isend(\&in(1\ \ \ \ \ \ \ ,\ 1,\ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_src[dim],\ \ flag,\ }
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ \&reqs[req\_cnt++]);}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00253\ \ \ \ \ MPI\_Irecv(\&in(0\ \ \ \ \ \ \ ,\ 1,\ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_src[dim],\ \ flag,\ }
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ \&reqs[req\_cnt++]);}
+\DoxyCodeLine{00255\ \ \ \ \ MPI\_Isend(\&in(n\_size-\/2,\ 1,\ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_dest[dim],\ flag,\ }
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ \&reqs[req\_cnt++]);}
+\DoxyCodeLine{00257\ }
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00259\ \ \ \ \ flag\ =\ 1;\ dim\ =\ 1;}
+\DoxyCodeLine{00260\ \ \ \ \ n\_size\ =\ in.topology().\_\_local\_shape[dim];}
+\DoxyCodeLine{00261\ \ \ \ \ \textcolor{comment}{//\ Send\ and\ receive\ for\ the\ second\ dimension}}
+\DoxyCodeLine{00262\ \ \ \ \ MPI\_Irecv(\&in(1,\ n\_size-\/1,\ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_dest[dim],\ flag,\ }
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ \&reqs[req\_cnt++]);}
+\DoxyCodeLine{00264\ \ \ \ \ MPI\_Isend(\&in(1,\ \ \ \ \ \ \ \ 1,\ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_src[dim],\ \ flag,\ }
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ \&reqs[req\_cnt++]);}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \ \ \ \ MPI\_Irecv(\&in(1,\ \ \ \ \ \ \ \ 0,\ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_src[dim],\ \ flag,\ }
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ \&reqs[req\_cnt++]);}
+\DoxyCodeLine{00269\ \ \ \ \ MPI\_Isend(\&in(1,\ n\_size-\/2,\ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_dest[dim],\ flag,\ }
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ \&reqs[req\_cnt++]);}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00272\ \ \ \ \ flag\ =\ 2;\ dim\ =\ 2;}
+\DoxyCodeLine{00273\ \ \ \ \ n\_size\ =\ in.topology().\_\_local\_shape[dim];}
+\DoxyCodeLine{00274\ \ \ \ \ \textcolor{comment}{//\ Send\ and\ receive\ for\ the\ second\ dimension}}
+\DoxyCodeLine{00275\ \ \ \ \ MPI\_Irecv(\&in(1,\ 1,\ n\_size-\/1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_dest[dim],\ flag,\ }
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ \&reqs[req\_cnt++]);}
+\DoxyCodeLine{00277\ \ \ \ \ MPI\_Isend(\&in(1,\ \ \ \ \ \ \ \ 1,\ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_src[dim],\ \ flag,\ }
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ \&reqs[req\_cnt++]);}
+\DoxyCodeLine{00279\ }
+\DoxyCodeLine{00280\ \ \ \ \ MPI\_Irecv(\&in(1,\ \ \ \ \ \ \ \ 1,\ 0),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_src[dim],\ \ flag,\ }
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ \&reqs[req\_cnt++]);}
+\DoxyCodeLine{00282\ \ \ \ \ MPI\_Isend(\&in(1,\ 1,\ n\_size-\/2),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_dest[dim],\ flag,\ }
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ \&reqs[req\_cnt++]);}
+\DoxyCodeLine{00284\ }
+\DoxyCodeLine{00285\ \ \ \ \ MPI\_Waitall(req\_cnt,\ reqs,\ MPI\_STATUS\_IGNORE);}
+\DoxyCodeLine{00286\ \ \ \}}
+\DoxyCodeLine{00287\ }
+\DoxyCodeLine{00292\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00293\ \ \ \textcolor{keyword}{inline}\ T\ }
+\DoxyCodeLine{00294\ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a81af79854e5f776b0179d037207d9b2a}{Heat\_3D<T>::update\_ping\_pong}}()}
+\DoxyCodeLine{00295\ \ \ \{}
+\DoxyCodeLine{00296\ \ \ \ \ T\ \mbox{\hyperlink{vis2d_8m_acbb9d2dc78b59ac8322ba303b960b44b}{diff}}\ \{0.0\};}
+\DoxyCodeLine{00297\ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ i\ \{1\},\ j\ \{1\},\ k\ \{1\};}
+\DoxyCodeLine{00298\ \ \ \ \ \textcolor{keywordflow}{for}\ (\ i\ =\ 1;\ i\ <\ in.topology().\_\_local\_shape[0]\ -\/\ 1;\ ++i\ )}
+\DoxyCodeLine{00299\ \ \ \ \ \{}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\ j\ =\ 1;\ j\ <\ in.topology().\_\_local\_shape[1]\ -\/\ 1;\ ++j\ )}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\ k\ =\ 1;\ k\ <\ in.topology().\_\_local\_shape[2]\ -\/\ 1;\ ++k\ )}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \ \ T\ current\ \{\ in(i,j,k)\ \};}
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \ \ out(i,j,k)\ =\ }
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>weights[0]\ *\ (\ in(i-\/1,\ j,\ k)\ +\ in(i+1,\ j,\ k)\ )}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \ \ +\ this-\/>weights[1]\ *\ (\ in(i,\ j-\/1,\ k)\ +\ in(i,\ j+1,\ k)\ )}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \ \ +\ this-\/>weights[2]\ *\ (\ in(i,\ j,\ k-\/1)\ +\ in(i,\ j,\ k+1)\ )}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \ \ +\ current\ *\ (}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>diags[0]\ *\ this-\/>weights[0]}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \ \ \ \ +\ this-\/>diags[1]\ *\ this-\/>weights[1]}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ \ \ \ \ +\ this-\/>diags[2]\ *\ this-\/>weights[2]}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00314\ }
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{vis2d_8m_acbb9d2dc78b59ac8322ba303b960b44b}{diff}}\ +=\ std::pow(current\ -\/\ out(i,j,k),\ 2);}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00318\ \ \ \ \ \}}
+\DoxyCodeLine{00319\ }
+\DoxyCodeLine{00320\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{vis2d_8m_acbb9d2dc78b59ac8322ba303b960b44b}{diff}};}
+\DoxyCodeLine{00321\ \ \ \}}
+\DoxyCodeLine{00322\ }
+\DoxyCodeLine{00327\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00328\ \ \ \textcolor{keyword}{inline}\ T\ }
+\DoxyCodeLine{00329\ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a2697811f87ee54d4ae613d967047fe48}{Heat\_3D<T>::update\_ping\_pong\_omp}}()}
+\DoxyCodeLine{00330\ \ \ \{}
+\DoxyCodeLine{00331\ \ \ \ \ T\ \mbox{\hyperlink{vis2d_8m_acbb9d2dc78b59ac8322ba303b960b44b}{diff}}\ \{0.0\};}
+\DoxyCodeLine{00332\ \ \ \ \ }
+\DoxyCodeLine{00333\ \textcolor{preprocessor}{\ \ \ \ \#pragma\ omp\ for\ collapse(3)}}
+\DoxyCodeLine{00334\ \ \ \ \ \textcolor{keywordflow}{for}\ (\ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ i\ =\ 1;\ i\ <\ in.topology().\_\_local\_shape[0]\ -\/\ 1;\ ++i\ )}
+\DoxyCodeLine{00335\ \ \ \ \ \{}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ j\ =\ 1;\ j\ <\ in.topology().\_\_local\_shape[1]\ -\/\ 1;\ ++j\ )}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ k\ =\ 1;\ k\ <\ in.topology().\_\_local\_shape[2]\ -\/\ 1;\ ++k\ )}
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00340\ \ \ \ \ \ \ \ \ \ \ T\ current\ \{\ in(i,j,k)\ \};}
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ \ \ out(i,j,k)\ =\ }
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>weights[0]\ *\ (\ in(i-\/1,\ j,\ k)\ +\ in(i+1,\ j,\ k)\ )}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ \ \ +\ this-\/>weights[1]\ *\ (\ in(i,\ j-\/1,\ k)\ +\ in(i,\ j+1,\ k)\ )}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \ \ +\ this-\/>weights[2]\ *\ (\ in(i,\ j,\ k-\/1)\ +\ in(i,\ j,\ k+1)\ )}
+\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ \ \ +\ current\ *\ (}
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>diags[0]\ *\ this-\/>weights[0]}
+\DoxyCodeLine{00347\ \ \ \ \ \ \ \ \ \ \ \ \ +\ this-\/>diags[1]\ *\ this-\/>weights[1]}
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ \ \ \ \ +\ this-\/>diags[2]\ *\ this-\/>weights[2]}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00350\ }
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{vis2d_8m_acbb9d2dc78b59ac8322ba303b960b44b}{diff}}\ +=\ std::pow(current\ -\/\ out(i,j,k),\ 2);}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00353\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00354\ \ \ \ \ \}}
+\DoxyCodeLine{00355\ }
+\DoxyCodeLine{00356\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{vis2d_8m_acbb9d2dc78b59ac8322ba303b960b44b}{diff}};}
+\DoxyCodeLine{00357\ \ \ \}}
+\DoxyCodeLine{00358\ }
+\DoxyCodeLine{00359\ }
+\DoxyCodeLine{00363\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00364\ \ \ \textcolor{keyword}{inline}\ T}
+\DoxyCodeLine{00365\ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a538af13084ec0f621cb307b53c153178}{Heat\_3D<T>::update\_ping\_pong\_bulk}}(\ )}
+\DoxyCodeLine{00366\ \ \ \{}
+\DoxyCodeLine{00367\ \ \ \ \ T\ \mbox{\hyperlink{vis2d_8m_acbb9d2dc78b59ac8322ba303b960b44b}{diff}}\ \{0.0\};}
+\DoxyCodeLine{00368\ \textcolor{preprocessor}{\ \ \ \ \#pragma\ omp\ for\ collapse(3)}}
+\DoxyCodeLine{00369\ \ \ \ \ \textcolor{keywordflow}{for}\ (\ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ i\ =\ 2;\ i\ <\ in.topology().\_\_local\_shape[0]\ -\/\ 2;\ ++i\ )}
+\DoxyCodeLine{00370\ \ \ \ \ \{}
+\DoxyCodeLine{00371\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ j\ =\ 2;\ j\ <\ in.topology().\_\_local\_shape[1]\ -\/\ 2;\ ++j\ )}
+\DoxyCodeLine{00372\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ k\ =\ 2;\ k\ <\ in.topology().\_\_local\_shape[2]\ -\/\ 2;\ ++k\ )}
+\DoxyCodeLine{00374\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00375\ \ \ \ \ \ \ \ \ \ \ T\ current\ \{\ in(i,j,k)\ \};}
+\DoxyCodeLine{00376\ \ \ \ \ \ \ \ \ \ \ out(i,j,k)\ =\ }
+\DoxyCodeLine{00377\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>weights[0]\ *\ (\ in(i-\/1,\ j,\ k)\ +\ in(i+1,\ j,\ k)\ )}
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ \ \ +\ this-\/>weights[1]\ *\ (\ in(i,\ j-\/1,\ k)\ +\ in(i,\ j+1,\ k)\ )}
+\DoxyCodeLine{00379\ \ \ \ \ \ \ \ \ \ \ +\ this-\/>weights[2]\ *\ (\ in(i,\ j,\ k-\/1)\ +\ in(i,\ j,\ k+1)\ )}
+\DoxyCodeLine{00380\ \ \ \ \ \ \ \ \ \ \ +\ current\ *\ (}
+\DoxyCodeLine{00381\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>diags[0]\ *\ this-\/>weights[0]}
+\DoxyCodeLine{00382\ \ \ \ \ \ \ \ \ \ \ \ \ +\ this-\/>diags[1]\ *\ this-\/>weights[1]}
+\DoxyCodeLine{00383\ \ \ \ \ \ \ \ \ \ \ \ \ +\ this-\/>diags[2]\ *\ this-\/>weights[2]}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00385\ }
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{vis2d_8m_acbb9d2dc78b59ac8322ba303b960b44b}{diff}}\ +=\ std::pow(current\ -\/\ out(i,j,k),\ 2);}
+\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00389\ \ \ \ \ \}}
+\DoxyCodeLine{00390\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{vis2d_8m_acbb9d2dc78b59ac8322ba303b960b44b}{diff}};}
+\DoxyCodeLine{00391\ \ \ \}}
+\DoxyCodeLine{00392\ }
+\DoxyCodeLine{00397\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00398\ \ \ \textcolor{keyword}{inline}\ T\ }
+\DoxyCodeLine{00399\ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_ac7b3b1f79661ae2b1f0b86aa7089c71e}{Heat\_3D<T>::update\_ping\_pong\_edge}}()}
+\DoxyCodeLine{00400\ \ \ \{}
+\DoxyCodeLine{00401\ \ \ \ \ T\ \mbox{\hyperlink{vis2d_8m_acbb9d2dc78b59ac8322ba303b960b44b}{diff}}\ \{0.0\};}
+\DoxyCodeLine{00402\ \ \ }
+\DoxyCodeLine{00403\ \textcolor{preprocessor}{\ \ \ \ \#pragma\ omp\ for\ collapse(2)}}
+\DoxyCodeLine{00404\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ j\ =\ 1;\ j\ <\ in.topology().\_\_local\_shape[1]\ -\/\ 1;\ ++j)}
+\DoxyCodeLine{00405\ \ \ \ \ \{}
+\DoxyCodeLine{00406\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ k\ =\ 1;\ k\ <\ in.topology().\_\_local\_shape[2]\ -\/\ 1;\ ++k)}
+\DoxyCodeLine{00407\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00408\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ i\ =\ 1;}
+\DoxyCodeLine{00409\ \ \ \ \ \ \ \ \ out(i,j,k)\ =\ compute\_next(i,j,k);}
+\DoxyCodeLine{00410\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{vis2d_8m_acbb9d2dc78b59ac8322ba303b960b44b}{diff}}\ +=\ std::pow(in(i,j,k)\ -\/\ out(i,j,k),\ 2);}
+\DoxyCodeLine{00411\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00412\ \ \ \ \ \}}
+\DoxyCodeLine{00413\ }
+\DoxyCodeLine{00414\ \textcolor{preprocessor}{\ \ \ \ \#pragma\ omp\ for\ collapse(2)}}
+\DoxyCodeLine{00415\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ j\ =\ 1;\ j\ <\ in.topology().\_\_local\_shape[1]\ -\/\ 1;\ ++j)}
+\DoxyCodeLine{00416\ \ \ \ \ \{}
+\DoxyCodeLine{00417\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ k\ =\ 1;\ k\ <\ in.topology().\_\_local\_shape[2]\ -\/\ 1;\ ++k)}
+\DoxyCodeLine{00418\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00419\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ i\ =\ in.topology().\_\_local\_shape[0]-\/2;}
+\DoxyCodeLine{00420\ \ \ \ \ \ \ \ \ out(i,j,k)\ =\ compute\_next(i,j,k);}
+\DoxyCodeLine{00421\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{vis2d_8m_acbb9d2dc78b59ac8322ba303b960b44b}{diff}}\ +=\ std::pow(in(i,j,k)\ -\/\ out(i,j,k),\ 2);}
+\DoxyCodeLine{00422\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00423\ \ \ \ \ \}}
+\DoxyCodeLine{00424\ }
+\DoxyCodeLine{00425\ \textcolor{preprocessor}{\ \ \ \ \#pragma\ omp\ for\ collapse(2)}}
+\DoxyCodeLine{00426\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ i\ =\ 2;\ i\ <\ in.topology().\_\_local\_shape[0]\ -\/\ 2;\ ++i)}
+\DoxyCodeLine{00427\ \ \ \ \ \{}
+\DoxyCodeLine{00428\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ j\ =\ 1;\ j\ <\ in.topology().\_\_local\_shape[1]\ -\/\ 1;\ ++j)}
+\DoxyCodeLine{00429\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00430\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ k\ =\ 1;}
+\DoxyCodeLine{00431\ \ \ \ \ \ \ \ \ out(i,j,k)\ =\ compute\_next(i,j,k);}
+\DoxyCodeLine{00432\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{vis2d_8m_acbb9d2dc78b59ac8322ba303b960b44b}{diff}}\ +=\ std::pow(in(i,j,k)\ -\/\ out(i,j,k),\ 2);}
+\DoxyCodeLine{00433\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00434\ \ \ \ \ \}}
+\DoxyCodeLine{00435\ }
+\DoxyCodeLine{00436\ \textcolor{preprocessor}{\ \ \ \ \#pragma\ omp\ for\ collapse(2)}}
+\DoxyCodeLine{00437\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ i\ =\ 2;\ i\ <\ in.topology().\_\_local\_shape[0]\ -\/\ 2;\ ++i)}
+\DoxyCodeLine{00438\ \ \ \ \ \{}
+\DoxyCodeLine{00439\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ j\ =\ 1;\ j\ <\ in.topology().\_\_local\_shape[1]\ -\/\ 1;\ ++j)}
+\DoxyCodeLine{00440\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00441\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ k\ =\ in.topology().\_\_local\_shape[2]-\/2;}
+\DoxyCodeLine{00442\ \ \ \ \ \ \ \ \ out(i,j,k)\ =\ compute\_next(i,j,k);}
+\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{vis2d_8m_acbb9d2dc78b59ac8322ba303b960b44b}{diff}}\ +=\ std::pow(in(i,j,k)\ -\/\ out(i,j,k),\ 2);}
+\DoxyCodeLine{00444\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00445\ \ \ \ \ \}}
+\DoxyCodeLine{00446\ }
+\DoxyCodeLine{00447\ \textcolor{preprocessor}{\ \ \ \ \#pragma\ omp\ for\ collapse(2)}}
+\DoxyCodeLine{00448\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ i\ =\ 2;\ i\ <\ in.topology().\_\_local\_shape[0]-\/2;\ ++i)}
+\DoxyCodeLine{00449\ \ \ \ \ \{}
+\DoxyCodeLine{00450\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ k\ =\ 2;\ k\ <\ in.topology().\_\_local\_shape[2]-\/2;\ ++k)}
+\DoxyCodeLine{00451\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00452\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ j\ =\ 1;\ }
+\DoxyCodeLine{00453\ \ \ \ \ \ \ \ \ out(i,j,k)\ =\ compute\_next(i,j,k);}
+\DoxyCodeLine{00454\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{vis2d_8m_acbb9d2dc78b59ac8322ba303b960b44b}{diff}}\ +=\ std::pow(in(i,j,k)\ -\/\ out(i,j,k),\ 2);}
+\DoxyCodeLine{00455\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00456\ \ \ \ \ \}}
+\DoxyCodeLine{00457\ }
+\DoxyCodeLine{00458\ \textcolor{preprocessor}{\ \ \ \ \#pragma\ omp\ for\ collapse(2)}}
+\DoxyCodeLine{00459\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ i\ =\ 2;\ i\ <\ in.topology().\_\_local\_shape[0]-\/2;\ ++i)}
+\DoxyCodeLine{00460\ \ \ \ \ \{}
+\DoxyCodeLine{00461\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ k\ =\ 2;\ k\ <\ in.topology().\_\_local\_shape[2]-\/2;\ ++k)}
+\DoxyCodeLine{00462\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00463\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ j\ =\ in.topology().\_\_local\_shape[1]-\/2;\ }
+\DoxyCodeLine{00464\ \ \ \ \ \ \ \ \ out(i,j,k)\ =\ compute\_next(i,j,k);}
+\DoxyCodeLine{00465\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{vis2d_8m_acbb9d2dc78b59ac8322ba303b960b44b}{diff}}\ +=\ std::pow(in(i,j,k)\ -\/\ out(i,j,k),\ 2);}
+\DoxyCodeLine{00466\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00467\ \ \ \ \ \}}
+\DoxyCodeLine{00468\ }
+\DoxyCodeLine{00469\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{vis2d_8m_acbb9d2dc78b59ac8322ba303b960b44b}{diff}};\ }
+\DoxyCodeLine{00470\ \ \ \}}
+\DoxyCodeLine{00471\ }
+\DoxyCodeLine{00472\ }
+\DoxyCodeLine{00473\ }
+\DoxyCodeLine{00474\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00475\ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}}
+\DoxyCodeLine{00476\ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a53f3687163c0c32d71f46a67fdf2557c}{Heat\_3D<T>::solve\_pure\_mpi}}(\textcolor{keyword}{const}\ T\ tol,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ nsteps,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ root)}
+\DoxyCodeLine{00477\ \ \ \{}
+\DoxyCodeLine{00478\ \ \ \ \ T\ ldiff\ \{0.0\},\ gdiff\ \{0.0\},\ time\ \{0.0\};\ MPI\_Datatype\ DiffType\ \{mpi::get\_mpi\_type<T>()\};}
+\DoxyCodeLine{00479\ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ iter\ \{1\};}
+\DoxyCodeLine{00480\ }
+\DoxyCodeLine{00481\ \textcolor{preprocessor}{\#ifndef\ DEBUG}}
+\DoxyCodeLine{00482\ \mbox{\hyperlink{mpi_2assert_8hpp_a4f7d8bb7e3ad94ac4ce9f09757a70f81}{FINAL\_PROJECT\_MPI\_ASSERT}}((BC\_3D\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ IC\_3D\ !=\ \textcolor{keyword}{nullptr}));}
+\DoxyCodeLine{00483\ \mbox{\hyperlink{assert_8hpp_a70ace4fb92bf5448f3a99d608502eb11}{FINAL\_PROJECT\_ASSERT}}(BC\_3D-\/>isSetUpBC\ \&\&\ IC\_3D-\/>isSetUpInit);}
+\DoxyCodeLine{00484\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00485\ }
+\DoxyCodeLine{00486\ \textcolor{preprocessor}{\#ifndef\ NDEBUG}}
+\DoxyCodeLine{00487\ \{}
+\DoxyCodeLine{00488\ \ \ \textcolor{keywordflow}{if}\ (root\ ==\ in.topology().rank)}
+\DoxyCodeLine{00489\ \ \ \{}
+\DoxyCodeLine{00490\ \ \ \ \ std::cout\ <<\ 3\ <<\ \textcolor{stringliteral}{"{}\ Dimension\ Simulation\ Parameters:\ "{}}\ <<\ std::endl;}
+\DoxyCodeLine{00491\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tDepth:\ "{}}\ \ \ \ \ \ \ \ <<\ in.topology().\_\_local\_shape[0]-\/2\ }
+\DoxyCodeLine{00492\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)tRow:\ "{}}\ \ \ \ \ \ \ \ <<\ in.topology().\_\_local\_shape[1]-\/2\ }
+\DoxyCodeLine{00493\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)tColumn:\ "{}}\ \ \ \ \ <<\ in.topology().\_\_local\_shape[2]-\/2\ \ \ \ \ <<\ std::endl;}
+\DoxyCodeLine{00494\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tTime\ steps:\ "{}}\ <<\ nsteps\ <<\ std::endl;}
+\DoxyCodeLine{00495\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tTolerance:\ "{}}\ \ <<\ tol\ \ \ \ <<\ std::endl;}
+\DoxyCodeLine{00496\ }
+\DoxyCodeLine{00497\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}MPI\ Parameters:\ "{}}\ \ \ \ \ \ \ \ \ \ \ \ \ <<\ std::endl;}
+\DoxyCodeLine{00498\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tNumber\ of\ MPI\ Processes:\ "{}}\ \ <<\ in.topology().num\_procs\ \ <<\ std::endl;}
+\DoxyCodeLine{00499\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tRoot\ Process:\ "{}}\ \ \ \ \ \ \ \ \ \ \ \ \ <<\ root\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ std::endl;}
+\DoxyCodeLine{00500\ }
+\DoxyCodeLine{00501\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Heat\ Parameters:\ "{}}\ \ \ \ <<\ std::endl;}
+\DoxyCodeLine{00502\ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tCoefficient:\ "{}}\ \ \ \ \ \ <<\ this-\/>coff\ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00503\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tTime\ resolution:\ "{}}\ \ <<\ this-\/>dt\ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00504\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tWeights:\ "{}}\ \ \ \ \ \ \ \ \ \ <<\ this-\/>weights[0]\ <<\ \textcolor{stringliteral}{"{},\ "{}}\ }
+\DoxyCodeLine{00505\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ this-\/>weights[1]\ <<\ \textcolor{stringliteral}{"{},\ "{}}}
+\DoxyCodeLine{00506\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ this-\/>weights[2]\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00507\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tdxs:\ "{}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ this-\/>dxs[0]\ \ \ \ \ <<\ \textcolor{stringliteral}{"{},\ "{}}\ }
+\DoxyCodeLine{00508\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ this-\/>dxs[1]\ \ \ \ \ <<\ \textcolor{stringliteral}{"{},\ "{}}}
+\DoxyCodeLine{00509\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ this-\/>dxs[2]\ \ \ \ \ <<\ std::endl;}
+\DoxyCodeLine{00510\ \ \ \}}
+\DoxyCodeLine{00511\ \}\ }
+\DoxyCodeLine{00512\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ end\ NDEBUG}}
+\DoxyCodeLine{00513\ }
+\DoxyCodeLine{00514\ }
+\DoxyCodeLine{00515\ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_a515365f87e39b26c5d0d6f23fe4269c1}{Double}}\ t0\ \{\ MPI\_Wtime()\ \};}
+\DoxyCodeLine{00516\ \ \ \ \ \textcolor{keywordflow}{for}\ (iter\ =\ 1;\ iter\ <=\ nsteps;\ ++iter)}
+\DoxyCodeLine{00517\ \ \ \ \ \{}
+\DoxyCodeLine{00518\ \ \ \ \ \ \ time\ =\ iter*this-\/>dt;}
+\DoxyCodeLine{00519\ }
+\DoxyCodeLine{00520\ \ \ \ \ \ \ exchange\_ping\_pong\_I();}
+\DoxyCodeLine{00521\ \ \ \ \ \ \ ldiff\ =\ update\_ping\_pong();}
+\DoxyCodeLine{00522\ \ \ \ \ \ \ BC\_3D-\/>UpdateBC(*\textcolor{keyword}{this},\ time);}
+\DoxyCodeLine{00523\ \ \ \ \ \ \ MPI\_Allreduce(\&ldiff,\ \&gdiff,\ 1,\ DiffType,\ MPI\_SUM,\ in.topology().comm\_cart);}
+\DoxyCodeLine{00524\ }
+\DoxyCodeLine{00525\ \textcolor{preprocessor}{\#ifndef\ NDEBUG}}
+\DoxyCodeLine{00526\ \mbox{\hyperlink{namespacefinal__project_1_1mpi_a24b0b9de057dcb3bf7b6410f5c970225}{mpi::Gather}}(gather,\ in,\ root);}
+\DoxyCodeLine{00527\ \textcolor{keywordflow}{if}\ (in.topology().rank\ ==\ root)\ }
+\DoxyCodeLine{00528\ \{}
+\DoxyCodeLine{00529\ \ \ std::cout\ <<\ std::fixed\ <<\ std::setprecision(13)\ <<\ std::setw(15)\ <<\ gdiff\ }
+\DoxyCodeLine{00530\ \ \ \ \ \ \ \ \ \ \ \ \ <<\ std::endl;}
+\DoxyCodeLine{00531\ \}}
+\DoxyCodeLine{00532\ \textcolor{preprocessor}{\#endif\ }}
+\DoxyCodeLine{00533\ }
+\DoxyCodeLine{00534\ \ \ \ \ \ \ switch\_in\_out();}
+\DoxyCodeLine{00535\ }
+\DoxyCodeLine{00536\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (gdiff\ <=\ tol)\ \{}
+\DoxyCodeLine{00537\ \ \ \ \ \ \ \ \ converge\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00538\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00539\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00540\ \ \ \ \ \}}
+\DoxyCodeLine{00541\ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_a515365f87e39b26c5d0d6f23fe4269c1}{Double}}\ t1\ \{\ MPI\_Wtime()\ -\/\ t0\ \};}
+\DoxyCodeLine{00542\ }
+\DoxyCodeLine{00543\ \ \ \ \ \textcolor{keywordflow}{if}\ (converge)}
+\DoxyCodeLine{00544\ \ \ \ \ \{}
+\DoxyCodeLine{00545\ \ \ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_a515365f87e39b26c5d0d6f23fe4269c1}{Double}}\ total\ \{0.0\};}
+\DoxyCodeLine{00546\ \ \ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_1_1mpi_a24b0b9de057dcb3bf7b6410f5c970225}{mpi::Gather}}(gather,\ in,\ root);}
+\DoxyCodeLine{00547\ \ \ \ \ \ \ MPI\_Reduce(\&t1,\ \&total,\ 1,\ MPI\_DOUBLE,\ MPI\_MAX,\ root,\ in.topology().comm\_cart);}
+\DoxyCodeLine{00548\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (root\ ==\ in.topology().rank)}
+\DoxyCodeLine{00549\ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Total\ Converge\ time:\ "{}}\ <<\ total\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}\ }
+\DoxyCodeLine{00550\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}Iterations:\ "{}}\ <<\ iter\ <<\ std::endl;}
+\DoxyCodeLine{00551\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00552\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (in.topology().rank\ ==\ root)\ std::cout\ <<\ \textcolor{stringliteral}{"{}Fail\ to\ converge"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00553\ \ \ \ \ \}}
+\DoxyCodeLine{00554\ }
+\DoxyCodeLine{00555\ \textcolor{preprocessor}{\#ifndef\ NDEBUG\ }\textcolor{comment}{//\ Gather\ }}
+\DoxyCodeLine{00556\ \mbox{\hyperlink{namespacefinal__project_1_1mpi_a24b0b9de057dcb3bf7b6410f5c970225}{mpi::Gather}}(gather,\ in,\ root);}
+\DoxyCodeLine{00557\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00558\ }
+\DoxyCodeLine{00559\ \ \ \ \ \textcolor{keywordflow}{return}\ iter;}
+\DoxyCodeLine{00560\ \ \ \}}
+\DoxyCodeLine{00561\ }
+\DoxyCodeLine{00562\ }
+\DoxyCodeLine{00563\ }
+\DoxyCodeLine{00564\ }
+\DoxyCodeLine{00565\ }
+\DoxyCodeLine{00566\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00567\ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ }
+\DoxyCodeLine{00568\ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_ae0c569faebbf7b2b4757cbf3a3d9b23f}{Heat\_3D<T>::solve\_hybrid\_mpi\_omp}}(\textcolor{keyword}{const}\ T\ tol,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ nsteps,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ root)}
+\DoxyCodeLine{00569\ \ \ \{}
+\DoxyCodeLine{00570\ \ \ \ \ T\ ldiff\ \{0.0\},\ gdiff\ \{0.0\};\ MPI\_Datatype\ DiffType\ \{\ mpi::get\_mpi\_type<T>()\ \};}
+\DoxyCodeLine{00571\ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ num\_threads\ \{1\}\ \textcolor{comment}{/*\ omp\ threads\ */},\ iter\ \{1\};}
+\DoxyCodeLine{00572\ }
+\DoxyCodeLine{00573\ \textcolor{preprocessor}{\#ifndef\ DEBUG}}
+\DoxyCodeLine{00574\ \mbox{\hyperlink{mpi_2assert_8hpp_a4f7d8bb7e3ad94ac4ce9f09757a70f81}{FINAL\_PROJECT\_MPI\_ASSERT}}((BC\_3D\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ IC\_3D\ !=\ \textcolor{keyword}{nullptr}));}
+\DoxyCodeLine{00575\ \mbox{\hyperlink{assert_8hpp_a70ace4fb92bf5448f3a99d608502eb11}{FINAL\_PROJECT\_ASSERT}}(BC\_3D-\/>isSetUpBC\ \&\&\ IC\_3D-\/>isSetUpInit);}
+\DoxyCodeLine{00576\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00577\ }
+\DoxyCodeLine{00578\ }
+\DoxyCodeLine{00579\ \textcolor{preprocessor}{\ \ \ \ \#pragma\ omp\ parallel}}
+\DoxyCodeLine{00580\ \ \ \ \ \{}
+\DoxyCodeLine{00581\ \ \ \ \ \ \ T\ omp\_ldiff\ \{0.0\},\ time\ \{0.0\};}
+\DoxyCodeLine{00582\ \ \ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ omp\_iter\ =\ 1;}
+\DoxyCodeLine{00583\ }
+\DoxyCodeLine{00584\ \textcolor{preprocessor}{\#ifdef\ \_OPENMP}}
+\DoxyCodeLine{00585\ \textcolor{preprocessor}{\ \ \#pragma\ omp\ master}}
+\DoxyCodeLine{00586\ \ \ num\_threads\ =\ omp\_get\_num\_threads();}
+\DoxyCodeLine{00587\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ end\ \_OPENMP}}
+\DoxyCodeLine{00588\ }
+\DoxyCodeLine{00589\ \textcolor{preprocessor}{\#ifndef\ NDEBUG}}
+\DoxyCodeLine{00590\ \{}
+\DoxyCodeLine{00591\ \textcolor{preprocessor}{\ \ \#pragma\ omp\ single}}
+\DoxyCodeLine{00592\ \ \ \{}
+\DoxyCodeLine{00593\ \ \ \ \ \textcolor{keywordflow}{if}\ (root\ ==\ in.topology().rank)}
+\DoxyCodeLine{00594\ \ \ \ \ \{}
+\DoxyCodeLine{00595\ \ \ \ \ \ \ std::cout\ <<\ 3\ <<\ \textcolor{stringliteral}{"{}\ Dimension\ Simulation\ Parameters:\ "{}}\ <<\ std::endl;}
+\DoxyCodeLine{00596\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tDepth:\ "{}}\ \ \ \ \ \ \ \ <<\ in.topology().\_\_local\_shape[0]-\/2\ }
+\DoxyCodeLine{00597\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)tRow:\ "{}}\ \ \ \ \ \ \ \ <<\ in.topology().\_\_local\_shape[1]-\/2\ }
+\DoxyCodeLine{00598\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)tColumn:\ "{}}\ \ \ \ \ <<\ in.topology().\_\_local\_shape[2]-\/2\ \ \ \ \ <<\ std::endl;}
+\DoxyCodeLine{00599\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tTime\ steps:\ "{}}\ <<\ nsteps\ <<\ std::endl;}
+\DoxyCodeLine{00600\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tTolerance:\ "{}}\ \ <<\ tol\ \ \ \ <<\ std::endl;}
+\DoxyCodeLine{00601\ }
+\DoxyCodeLine{00602\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}MPI\ Parameters:\ "{}}\ \ \ \ \ \ \ \ \ \ \ \ \ <<\ std::endl;}
+\DoxyCodeLine{00603\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tNumber\ of\ MPI\ Processes:\ "{}}\ \ <<\ in.topology().num\_procs\ \ <<\ std::endl;}
+\DoxyCodeLine{00604\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tRoot\ Process:\ "{}}\ \ \ \ \ \ \ \ \ \ \ \ \ <<\ root\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ std::endl;}
+\DoxyCodeLine{00605\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tNumber\ of\ Threads:\ "{}}\ \ \ \ \ \ \ \ <<\ num\_threads\ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ std::endl;}
+\DoxyCodeLine{00606\ }
+\DoxyCodeLine{00607\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Heat\ Parameters:\ "{}}\ \ \ \ <<\ std::endl;}
+\DoxyCodeLine{00608\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tCoefficient:\ "{}}\ \ \ \ \ \ <<\ this-\/>coff\ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00609\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tTime\ resolution:\ "{}}\ \ <<\ this-\/>dt\ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00610\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tWeights:\ "{}}\ \ \ \ \ \ \ \ \ \ <<\ this-\/>weights[0]\ <<\ \textcolor{stringliteral}{"{},\ "{}}\ }
+\DoxyCodeLine{00611\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ this-\/>weights[1]\ <<\ \textcolor{stringliteral}{"{},\ "{}}}
+\DoxyCodeLine{00612\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ this-\/>weights[2]\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00613\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tdxs:\ "{}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ this-\/>dxs[0]\ \ \ \ \ <<\ \textcolor{stringliteral}{"{},\ "{}}\ }
+\DoxyCodeLine{00614\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ this-\/>dxs[1]\ \ \ \ \ <<\ \textcolor{stringliteral}{"{},\ "{}}}
+\DoxyCodeLine{00615\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ this-\/>dxs[2]\ \ \ \ \ <<\ std::endl;}
+\DoxyCodeLine{00616\ \ \ \ \ \}}
+\DoxyCodeLine{00617\ \ \ \}}
+\DoxyCodeLine{00618\ \}\ }
+\DoxyCodeLine{00619\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ end\ NDEBUG}}
+\DoxyCodeLine{00620\ }
+\DoxyCodeLine{00621\ }
+\DoxyCodeLine{00622\ \ \ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_a515365f87e39b26c5d0d6f23fe4269c1}{Double}}\ t0\ \{\ MPI\_Wtime()\ \};}
+\DoxyCodeLine{00623\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (omp\_iter\ =\ 1;\ omp\_iter\ <=\ nsteps;\ ++omp\_iter)}
+\DoxyCodeLine{00624\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00625\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#pragma\ omp\ single}}
+\DoxyCodeLine{00626\ \ \ \ \ \ \ \ \ exchange\_ping\_pong\_SR();}
+\DoxyCodeLine{00627\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#pragma\ omp\ barrier}}
+\DoxyCodeLine{00628\ }
+\DoxyCodeLine{00629\ \ \ \ \ \ \ \ \ ldiff\ =\ 0;}
+\DoxyCodeLine{00630\ \ \ \ \ \ \ \ \ time\ =\ omp\_iter\ *\ this-\/>dt;}
+\DoxyCodeLine{00631\ }
+\DoxyCodeLine{00632\ \ \ \ \ \ \ \ \ omp\_ldiff\ =\ update\_ping\_pong\_omp();}
+\DoxyCodeLine{00633\ }
+\DoxyCodeLine{00634\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#pragma\ omp\ critical\ }}
+\DoxyCodeLine{00635\ \ \ \ \ \ \ \ \ ldiff\ +=\ omp\_ldiff;}
+\DoxyCodeLine{00636\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#pragma\ omp\ barrier}}
+\DoxyCodeLine{00637\ }
+\DoxyCodeLine{00638\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#pragma\ omp\ single}}
+\DoxyCodeLine{00639\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00640\ \ \ \ \ \ \ \ \ \ \ BC\_3D-\/>UpdateBC(*\textcolor{keyword}{this},\ time);}
+\DoxyCodeLine{00641\ \ \ \ \ \ \ \ \ \ \ MPI\_Allreduce(\&ldiff,\ \&gdiff,\ 1,\ DiffType,\ MPI\_SUM,\ in.topology().comm\_cart);}
+\DoxyCodeLine{00642\ }
+\DoxyCodeLine{00643\ \textcolor{preprocessor}{\#ifndef\ NDEBUG}}
+\DoxyCodeLine{00644\ \mbox{\hyperlink{namespacefinal__project_1_1mpi_a24b0b9de057dcb3bf7b6410f5c970225}{mpi::Gather}}(gather,\ in,\ root);}
+\DoxyCodeLine{00645\ \textcolor{keywordflow}{if}\ (in.topology().rank\ ==\ root)\ }
+\DoxyCodeLine{00646\ \{}
+\DoxyCodeLine{00647\ \ \ std::cout\ <<\ std::fixed\ <<\ std::setprecision(13)\ <<\ std::setw(15)\ <<\ gdiff\ }
+\DoxyCodeLine{00648\ \ \ \ \ \ \ \ \ \ \ \ \ <<\ std::endl;}
+\DoxyCodeLine{00649\ \}}
+\DoxyCodeLine{00650\ \textcolor{preprocessor}{\#endif\ }}
+\DoxyCodeLine{00651\ }
+\DoxyCodeLine{00652\ \ \ \ \ \ \ \ \ \ \ switch\_in\_out();}
+\DoxyCodeLine{00653\ }
+\DoxyCodeLine{00654\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (gdiff\ <=\ tol)\ \{\ converge\ =\ \textcolor{keyword}{true};\ \}}
+\DoxyCodeLine{00655\ \ \ \ \ \ \ \ \ \}\ \textcolor{comment}{//\ omp\ single\ }}
+\DoxyCodeLine{00656\ \ \ \ \ \ \ }
+\DoxyCodeLine{00657\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (converge)\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00658\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00659\ \ \ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_a515365f87e39b26c5d0d6f23fe4269c1}{Double}}\ t1\ \{\ MPI\_Wtime()\ -\/\ t0\ \};}
+\DoxyCodeLine{00660\ }
+\DoxyCodeLine{00661\ \textcolor{preprocessor}{\#pragma\ omp\ master}}
+\DoxyCodeLine{00662\ \{}
+\DoxyCodeLine{00663\ \ \ \ \ \textcolor{keywordflow}{if}\ (converge)}
+\DoxyCodeLine{00664\ \ \ \ \ \{}
+\DoxyCodeLine{00665\ \ \ \ \ \ \ iter\ =\ omp\_iter;}
+\DoxyCodeLine{00666\ \ \ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_a515365f87e39b26c5d0d6f23fe4269c1}{Double}}\ total\ \{0.0\};}
+\DoxyCodeLine{00667\ \ \ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_1_1mpi_a24b0b9de057dcb3bf7b6410f5c970225}{mpi::Gather}}(gather,\ in,\ root);}
+\DoxyCodeLine{00668\ \ \ \ \ \ \ MPI\_Reduce(\&t1,\ \&total,\ 1,\ MPI\_DOUBLE,\ MPI\_MAX,\ root,\ in.topology().comm\_cart);}
+\DoxyCodeLine{00669\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (root\ ==\ in.topology().rank)}
+\DoxyCodeLine{00670\ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Total\ Converge\ time:\ "{}}\ <<\ total\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}\ }
+\DoxyCodeLine{00671\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}Iterations:\ "{}}\ <<\ iter\ <<\ std::endl;}
+\DoxyCodeLine{00672\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00673\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (in.topology().rank\ ==\ root)\ std::cout\ <<\ \textcolor{stringliteral}{"{}Fail\ to\ converge"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00674\ \ \ \ \ \}}
+\DoxyCodeLine{00675\ }
+\DoxyCodeLine{00676\ \textcolor{preprocessor}{\#ifndef\ NDEBUG\ }\textcolor{comment}{//\ Gather\ }}
+\DoxyCodeLine{00677\ \mbox{\hyperlink{namespacefinal__project_1_1mpi_a24b0b9de057dcb3bf7b6410f5c970225}{mpi::Gather}}(gather,\ in,\ root);}
+\DoxyCodeLine{00678\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00679\ \}}
+\DoxyCodeLine{00680\ }
+\DoxyCodeLine{00681\ \ \ \ \ \}\ \textcolor{comment}{//\ end\ omp\ parallel}}
+\DoxyCodeLine{00682\ }
+\DoxyCodeLine{00683\ \ \ \ \ \textcolor{keywordflow}{return}\ iter;}
+\DoxyCodeLine{00684\ \ \ \}}
+\DoxyCodeLine{00685\ }
+\DoxyCodeLine{00686\ }
+\DoxyCodeLine{00687\ }
+\DoxyCodeLine{00688\ }
+\DoxyCodeLine{00689\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00690\ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}}
+\DoxyCodeLine{00691\ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a4aa83b2e905fcfc5f3ea1940fcf0da33}{Heat\_3D<T>::solve\_hybrid2\_mpi\_omp}}(\textcolor{keyword}{const}\ T\ tol,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ nsteps,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ root)}
+\DoxyCodeLine{00692\ \ \ \{}
+\DoxyCodeLine{00693\ \ \ \ \ T\ ldiff\ \{0.0\},\ gdiff\ \{0.0\};\ MPI\_Datatype\ DiffType\ \{\ mpi::get\_mpi\_type<T>()\ \};}
+\DoxyCodeLine{00694\ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ num\_threads\ \{1\}\ \textcolor{comment}{/*\ omp\ threads\ */},\ iter\ \{1\};}
+\DoxyCodeLine{00695\ }
+\DoxyCodeLine{00696\ \ \ \ \ MPI\_Request\ reqs[12];}
+\DoxyCodeLine{00697\ }
+\DoxyCodeLine{00698\ \textcolor{preprocessor}{\#ifndef\ DEBUG}}
+\DoxyCodeLine{00699\ \mbox{\hyperlink{mpi_2assert_8hpp_a4f7d8bb7e3ad94ac4ce9f09757a70f81}{FINAL\_PROJECT\_MPI\_ASSERT}}((BC\_3D\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ IC\_3D\ !=\ \textcolor{keyword}{nullptr}));}
+\DoxyCodeLine{00700\ \mbox{\hyperlink{assert_8hpp_a70ace4fb92bf5448f3a99d608502eb11}{FINAL\_PROJECT\_ASSERT}}(BC\_3D-\/>isSetUpBC\ \&\&\ IC\_3D-\/>isSetUpInit);}
+\DoxyCodeLine{00701\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00702\ }
+\DoxyCodeLine{00703\ \textcolor{preprocessor}{\ \ \ \ \#pragma\ omp\ parallel}}
+\DoxyCodeLine{00704\ \ \ \ \ \{}
+\DoxyCodeLine{00705\ \ \ \ \ \ \ T\ omp\_ldiff\_bulk\ \{0.0\},\ omp\_ldiff\_edge\ \{0.0\},\ time\ \{0.0\};}
+\DoxyCodeLine{00706\ \ \ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ omp\_iter\ =\ 1;}
+\DoxyCodeLine{00707\ }
+\DoxyCodeLine{00708\ \textcolor{preprocessor}{\#ifdef\ \_OPENMP}}
+\DoxyCodeLine{00709\ \textcolor{preprocessor}{\ \ \#pragma\ omp\ master}}
+\DoxyCodeLine{00710\ \ \ num\_threads\ =\ omp\_get\_num\_threads();}
+\DoxyCodeLine{00711\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ end\ \_OPENMP}}
+\DoxyCodeLine{00712\ }
+\DoxyCodeLine{00713\ \textcolor{preprocessor}{\#ifndef\ NDEBUG}}
+\DoxyCodeLine{00714\ \{}
+\DoxyCodeLine{00715\ \textcolor{preprocessor}{\ \ \#pragma\ omp\ single}}
+\DoxyCodeLine{00716\ \ \ \{}
+\DoxyCodeLine{00717\ \ \ \ \ \textcolor{keywordflow}{if}\ (root\ ==\ in.topology().rank)}
+\DoxyCodeLine{00718\ \ \ \ \ \{}
+\DoxyCodeLine{00719\ \ \ \ \ \ \ std::cout\ <<\ 3\ <<\ \textcolor{stringliteral}{"{}\ Dimension\ Simulation\ Parameters:\ "{}}\ <<\ std::endl;}
+\DoxyCodeLine{00720\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tDepth:\ "{}}\ \ \ \ \ \ \ \ <<\ in.topology().\_\_local\_shape[0]-\/2\ }
+\DoxyCodeLine{00721\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)tRow:\ "{}}\ \ \ \ \ \ \ \ <<\ in.topology().\_\_local\_shape[1]-\/2\ }
+\DoxyCodeLine{00722\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)tColumn:\ "{}}\ \ \ \ \ <<\ in.topology().\_\_local\_shape[2]-\/2\ \ \ \ \ <<\ std::endl;}
+\DoxyCodeLine{00723\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tTime\ steps:\ "{}}\ <<\ nsteps\ <<\ std::endl;}
+\DoxyCodeLine{00724\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tTolerance:\ "{}}\ \ <<\ tol\ \ \ \ <<\ std::endl;}
+\DoxyCodeLine{00725\ }
+\DoxyCodeLine{00726\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}MPI\ Parameters:\ "{}}\ \ \ \ \ \ \ \ \ \ \ \ \ <<\ std::endl;}
+\DoxyCodeLine{00727\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tNumber\ of\ MPI\ Processes:\ "{}}\ \ <<\ in.topology().num\_procs\ \ <<\ std::endl;}
+\DoxyCodeLine{00728\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tRoot\ Process:\ "{}}\ \ \ \ \ \ \ \ \ \ \ \ \ <<\ root\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ std::endl;}
+\DoxyCodeLine{00729\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tNumber\ of\ Threads:\ "{}}\ \ \ \ \ \ \ \ <<\ num\_threads\ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ std::endl;}
+\DoxyCodeLine{00730\ }
+\DoxyCodeLine{00731\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Heat\ Parameters:\ "{}}\ \ \ \ <<\ std::endl;}
+\DoxyCodeLine{00732\ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tCoefficient:\ "{}}\ \ \ \ \ \ <<\ this-\/>coff\ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00733\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tTime\ resolution:\ "{}}\ \ <<\ this-\/>dt\ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00734\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tWeights:\ "{}}\ \ \ \ \ \ \ \ \ \ <<\ this-\/>weights[0]\ <<\ \textcolor{stringliteral}{"{},\ "{}}\ }
+\DoxyCodeLine{00735\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ this-\/>weights[1]\ <<\ \textcolor{stringliteral}{"{},\ "{}}}
+\DoxyCodeLine{00736\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ this-\/>weights[2]\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00737\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)tdxs:\ "{}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ this-\/>dxs[0]\ \ \ \ \ <<\ \textcolor{stringliteral}{"{},\ "{}}\ }
+\DoxyCodeLine{00738\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ this-\/>dxs[1]\ \ \ \ \ <<\ \textcolor{stringliteral}{"{},\ "{}}}
+\DoxyCodeLine{00739\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ this-\/>dxs[2]\ \ \ \ \ <<\ std::endl;}
+\DoxyCodeLine{00740\ \ \ \ \ \}}
+\DoxyCodeLine{00741\ \ \ \}}
+\DoxyCodeLine{00742\ \}\ }
+\DoxyCodeLine{00743\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ end\ NDEBUG}}
+\DoxyCodeLine{00744\ }
+\DoxyCodeLine{00745\ }
+\DoxyCodeLine{00746\ \ \ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_a515365f87e39b26c5d0d6f23fe4269c1}{Double}}\ t0\ \{\ MPI\_Wtime()\ \};}
+\DoxyCodeLine{00747\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (omp\_iter\ =\ 1;\ omp\_iter\ <=\ nsteps;\ ++omp\_iter)}
+\DoxyCodeLine{00748\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00749\ \ \ \ \ \ \ \ \ ldiff\ =\ 0;}
+\DoxyCodeLine{00750\ \ \ \ \ \ \ \ \ time\ =\ omp\_iter\ *\ this-\/>dt;}
+\DoxyCodeLine{00751\ }
+\DoxyCodeLine{00752\ \textcolor{comment}{//\ ////////////////////////////////////////////////////////////////////////////////////////////////////////}}
+\DoxyCodeLine{00753\ }
+\DoxyCodeLine{00754\ \textcolor{preprocessor}{\#pragma\ omp\ single}}
+\DoxyCodeLine{00755\ \{}
+\DoxyCodeLine{00756\ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ req\_cnt\ \{0\},\ flag\ \{0\};\ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ dim\ \{0\};}
+\DoxyCodeLine{00757\ \ \ \textcolor{keyword}{auto}\ n\_size\ \{in.topology().\_\_local\_shape[dim]\};}
+\DoxyCodeLine{00758\ \ \ \textcolor{comment}{//\ Send\ and\ receive\ for\ the\ first\ dimension}}
+\DoxyCodeLine{00759\ \ \ MPI\_Irecv(\&in(n\_size-\/1,\ 1,\ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_dest[dim],\ flag,\ }
+\DoxyCodeLine{00760\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ \&reqs[req\_cnt++]);}
+\DoxyCodeLine{00761\ \ \ MPI\_Isend(\&in(1\ \ \ \ \ \ \ ,\ 1,\ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_src[dim],\ \ flag,\ }
+\DoxyCodeLine{00762\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ \&reqs[req\_cnt++]);}
+\DoxyCodeLine{00763\ }
+\DoxyCodeLine{00764\ \ \ MPI\_Irecv(\&in(0\ \ \ \ \ \ \ ,\ 1,\ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_src[dim],\ \ flag,\ }
+\DoxyCodeLine{00765\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ \&reqs[req\_cnt++]);}
+\DoxyCodeLine{00766\ \ \ MPI\_Isend(\&in(n\_size-\/2,\ 1,\ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_dest[dim],\ flag,\ }
+\DoxyCodeLine{00767\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ \&reqs[req\_cnt++]);}
+\DoxyCodeLine{00768\ }
+\DoxyCodeLine{00769\ }
+\DoxyCodeLine{00770\ \ \ flag\ =\ 1;\ dim\ =\ 1;}
+\DoxyCodeLine{00771\ \ \ n\_size\ =\ in.topology().\_\_local\_shape[dim];}
+\DoxyCodeLine{00772\ \ \ \textcolor{comment}{//\ Send\ and\ receive\ for\ the\ second\ dimension}}
+\DoxyCodeLine{00773\ \ \ MPI\_Irecv(\&in(1,\ n\_size-\/1,\ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_dest[dim],\ flag,\ }
+\DoxyCodeLine{00774\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ \&reqs[req\_cnt++]);}
+\DoxyCodeLine{00775\ \ \ MPI\_Isend(\&in(1,\ \ \ \ \ \ \ \ 1,\ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_src[dim],\ \ flag,\ }
+\DoxyCodeLine{00776\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ \&reqs[req\_cnt++]);}
+\DoxyCodeLine{00777\ }
+\DoxyCodeLine{00778\ \ \ MPI\_Irecv(\&in(1,\ \ \ \ \ \ \ \ 0,\ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_src[dim],\ \ flag,\ }
+\DoxyCodeLine{00779\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ \&reqs[req\_cnt++]);}
+\DoxyCodeLine{00780\ \ \ MPI\_Isend(\&in(1,\ n\_size-\/2,\ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_dest[dim],\ flag,\ }
+\DoxyCodeLine{00781\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ \&reqs[req\_cnt++]);}
+\DoxyCodeLine{00782\ }
+\DoxyCodeLine{00783\ \ \ flag\ =\ 2;\ dim\ =\ 2;}
+\DoxyCodeLine{00784\ \ \ n\_size\ =\ in.topology().\_\_local\_shape[dim];}
+\DoxyCodeLine{00785\ \ \ \textcolor{comment}{//\ Send\ and\ receive\ for\ the\ second\ dimension}}
+\DoxyCodeLine{00786\ \ \ MPI\_Irecv(\&in(1,\ 1,\ n\_size-\/1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_dest[dim],\ flag,\ }
+\DoxyCodeLine{00787\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ \&reqs[req\_cnt++]);}
+\DoxyCodeLine{00788\ \ \ MPI\_Isend(\&in(1,\ \ \ \ \ \ \ \ 1,\ 1),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_src[dim],\ \ flag,\ }
+\DoxyCodeLine{00789\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ \&reqs[req\_cnt++]);}
+\DoxyCodeLine{00790\ }
+\DoxyCodeLine{00791\ \ \ MPI\_Irecv(\&in(1,\ \ \ \ \ \ \ \ 1,\ 0),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_src[dim],\ \ flag,\ }
+\DoxyCodeLine{00792\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ \&reqs[req\_cnt++]);}
+\DoxyCodeLine{00793\ \ \ MPI\_Isend(\&in(1,\ 1,\ n\_size-\/2),\ 1,\ in.topology().halos[dim],\ in.topology().nbr\_dest[dim],\ flag,\ }
+\DoxyCodeLine{00794\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ in.topology().comm\_cart,\ \&reqs[req\_cnt++]);}
+\DoxyCodeLine{00795\ }
+\DoxyCodeLine{00796\ \}\ \textcolor{comment}{//\ omp\ single}}
+\DoxyCodeLine{00797\ }
+\DoxyCodeLine{00798\ omp\_ldiff\_bulk\ =\ update\_ping\_pong\_bulk();}
+\DoxyCodeLine{00799\ }
+\DoxyCodeLine{00800\ \textcolor{preprocessor}{\#pragma\ omp\ single}}
+\DoxyCodeLine{00801\ MPI\_Waitall(12,\ reqs,\ MPI\_STATUS\_IGNORE);\ }
+\DoxyCodeLine{00802\ }
+\DoxyCodeLine{00803\ \textcolor{comment}{//\ ////////////////////////////////////////////////////////////////////////////////////////////////////////}}
+\DoxyCodeLine{00804\ \textcolor{preprocessor}{\#pragma\ omp\ barrier}}
+\DoxyCodeLine{00805\ }
+\DoxyCodeLine{00806\ \ \ \ \ \ \ \ \ omp\_ldiff\_edge\ =\ update\_ping\_pong\_edge();}
+\DoxyCodeLine{00807\ }
+\DoxyCodeLine{00808\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#pragma\ omp\ critical}}
+\DoxyCodeLine{00809\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00810\ \ \ \ \ \ \ \ \ \ \ ldiff\ +=\ (omp\_ldiff\_bulk\ +\ omp\_ldiff\_edge);}
+\DoxyCodeLine{00811\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00812\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#pragma\ omp\ barrier}}
+\DoxyCodeLine{00813\ }
+\DoxyCodeLine{00814\ }
+\DoxyCodeLine{00815\ }
+\DoxyCodeLine{00816\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#pragma\ omp\ single}}
+\DoxyCodeLine{00817\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00818\ \ \ \ \ \ \ \ \ \ \ MPI\_Allreduce(\&ldiff,\ \&gdiff,\ 1,\ DiffType,\ MPI\_SUM,\ in.topology().comm\_cart);}
+\DoxyCodeLine{00819\ }
+\DoxyCodeLine{00820\ \textcolor{preprocessor}{\#ifndef\ NDEBUG}}
+\DoxyCodeLine{00821\ \mbox{\hyperlink{namespacefinal__project_1_1mpi_a24b0b9de057dcb3bf7b6410f5c970225}{mpi::Gather}}(gather,\ in,\ root);}
+\DoxyCodeLine{00822\ \textcolor{keywordflow}{if}\ (in.topology().rank\ ==\ root)\ }
+\DoxyCodeLine{00823\ \{}
+\DoxyCodeLine{00824\ \ \ std::cout\ <<\ std::fixed\ <<\ std::setprecision(13)\ <<\ std::setw(15)\ <<\ gdiff\ }
+\DoxyCodeLine{00825\ \ \ \ \ \ \ \ \ \ \ \ \ <<\ std::endl;}
+\DoxyCodeLine{00826\ \}}
+\DoxyCodeLine{00827\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00828\ \ \ \ \ \ \ \ \ \ \ BC\_3D-\/>UpdateBC(*\textcolor{keyword}{this},\ time);}
+\DoxyCodeLine{00829\ \ \ \ \ \ \ \ \ \ \ switch\_in\_out();}
+\DoxyCodeLine{00830\ }
+\DoxyCodeLine{00831\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (gdiff\ \ <=\ tol)\ \{\ converge\ =\ \textcolor{keyword}{true};\ \}}
+\DoxyCodeLine{00832\ \ \ \ \ \ \ \ \ \}\ \textcolor{comment}{//\ end\ single}}
+\DoxyCodeLine{00833\ }
+\DoxyCodeLine{00834\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ converge\ )\ \{\ \textcolor{keywordflow}{break};\ \}}
+\DoxyCodeLine{00835\ }
+\DoxyCodeLine{00836\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00837\ \ \ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_a515365f87e39b26c5d0d6f23fe4269c1}{Double}}\ t1\ \{\ MPI\_Wtime()\ -\/\ t0\ \};}
+\DoxyCodeLine{00838\ }
+\DoxyCodeLine{00839\ }
+\DoxyCodeLine{00840\ \textcolor{preprocessor}{\#pragma\ omp\ master}}
+\DoxyCodeLine{00841\ \{}
+\DoxyCodeLine{00842\ \ \ \ \ \textcolor{keywordflow}{if}\ (converge)}
+\DoxyCodeLine{00843\ \ \ \ \ \{}
+\DoxyCodeLine{00844\ \ \ \ \ \ \ iter\ =\ omp\_iter;}
+\DoxyCodeLine{00845\ \ \ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_a515365f87e39b26c5d0d6f23fe4269c1}{Double}}\ total\ \{0.0\};}
+\DoxyCodeLine{00846\ \ \ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_1_1mpi_a24b0b9de057dcb3bf7b6410f5c970225}{mpi::Gather}}(gather,\ in,\ root);}
+\DoxyCodeLine{00847\ \ \ \ \ \ \ MPI\_Reduce(\&t1,\ \&total,\ 1,\ MPI\_DOUBLE,\ MPI\_MAX,\ root,\ in.topology().comm\_cart);}
+\DoxyCodeLine{00848\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (root\ ==\ in.topology().rank)}
+\DoxyCodeLine{00849\ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Total\ Converge\ time:\ "{}}\ <<\ total\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}\ }
+\DoxyCodeLine{00850\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}Iterations:\ "{}}\ <<\ iter\ <<\ std::endl;}
+\DoxyCodeLine{00851\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00852\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (in.topology().rank\ ==\ root)\ std::cout\ <<\ \textcolor{stringliteral}{"{}Fail\ to\ converge"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00853\ \ \ \ \ \}}
+\DoxyCodeLine{00854\ }
+\DoxyCodeLine{00855\ \textcolor{preprocessor}{\#ifndef\ NDEBUG\ }\textcolor{comment}{//\ Gather\ }}
+\DoxyCodeLine{00856\ \mbox{\hyperlink{namespacefinal__project_1_1mpi_a24b0b9de057dcb3bf7b6410f5c970225}{mpi::Gather}}(gather,\ in,\ root);}
+\DoxyCodeLine{00857\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00858\ \}}
+\DoxyCodeLine{00859\ }
+\DoxyCodeLine{00860\ \ \ \ \ \}\ \textcolor{comment}{//\ omp\ parallel}}
+\DoxyCodeLine{00861\ }
+\DoxyCodeLine{00862\ \ \ \ \ \textcolor{keywordflow}{return}\ iter;}
+\DoxyCodeLine{00863\ \ \ \}}
+\DoxyCodeLine{00864\ }
+\DoxyCodeLine{00865\ }
+\DoxyCodeLine{00866\ }
+\DoxyCodeLine{00867\ \}\ \textcolor{comment}{//\ namespace\ pde}}
+\DoxyCodeLine{00868\ \}\ \textcolor{comment}{//\ namespace\ final\_project}}
+\DoxyCodeLine{00869\ }
+\DoxyCodeLine{00870\ }
+\DoxyCodeLine{00871\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ end\ define\ FINAL\_PROJECT\_HEAT\_3D\_HPP}}
+
+\end{DoxyCode}

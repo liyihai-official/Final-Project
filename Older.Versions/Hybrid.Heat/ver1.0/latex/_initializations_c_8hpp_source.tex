@@ -1,0 +1,169 @@
+\doxysection{Initializations\+C.\+hpp}
+\hypertarget{_initializations_c_8hpp_source}{}\label{_initializations_c_8hpp_source}\index{include/pde/detials/InitializationsC.hpp@{include/pde/detials/InitializationsC.hpp}}
+\mbox{\hyperlink{_initializations_c_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#ifndef\ FINAL\_PROJECT\_INITIALIZATIONS\_C\_HPP}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ FINAL\_PROJECT\_INITIALIZATIONS\_C\_HPP}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#pragma\ once\ }}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{_heat__2_d_8hpp}{pde/detials/Heat\_2D.hpp}}>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{_heat__3_d_8hpp}{pde/detials/Heat\_3D.hpp}}>}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacefinal__project}{final\_project}}\ \{\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacepde}{pde}}\ \{}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_initial_conditions}{InitialConditions}}\ \{}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00027\ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__2_d}{Init\_2D}}}
+\DoxyCodeLine{00028\ \ \ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__2_d_afd35475bfcb172c91267f680d899cad4}{InitFunction}}\ =\ std::function<T(T,\ T)>;}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00032\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__2_d_a389152d023e65a65e404f399e5049201}{Init\_2D}}();}
+\DoxyCodeLine{00033\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__2_d_a389152d023e65a65e404f399e5049201}{Init\_2D}}(\mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__2_d_afd35475bfcb172c91267f680d899cad4}{InitFunction}}\ \&\ );}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00036\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__2_d_afd35475bfcb172c91267f680d899cad4}{InitFunction}}\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__2_d_a22d1a0b5b85cc07d9ea69f65b67389ad}{initFunc}};}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__2_d_a134493a20f4acb1c4df89f57097b45a2}{SetUpInit}}(\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__2_d}{Heat\_2D<T>}}\ \&);}
+\DoxyCodeLine{00038\ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_ab8f3ebf8a3440235be1c17b6821b5d77}{Bool}}\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__2_d_a72e24355684a1aaa4479bd41f6d88454}{isSetUpInit}};}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{friend}\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__2_d}{Heat\_2D<T>}};}
+\DoxyCodeLine{00042\ \ \ \};\ \textcolor{comment}{//\ class\ Init\_2D}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00046\ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__3_d}{Init\_3D}}}
+\DoxyCodeLine{00047\ \ \ \{}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__3_d_aad283bbdeabf223ee78b7cec6246e897}{InitFunction}}\ =\ std::function<T(T,\ T,\ T)>;}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00051\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__3_d_a2a6990b2a50bc1a2b59f42ce05ebfee7}{Init\_3D}}();}
+\DoxyCodeLine{00052\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__3_d_a2a6990b2a50bc1a2b59f42ce05ebfee7}{Init\_3D}}(\mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__3_d_aad283bbdeabf223ee78b7cec6246e897}{InitFunction}}\ \&);}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00055\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__3_d_aad283bbdeabf223ee78b7cec6246e897}{InitFunction}}\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__3_d_abfdcbafb0e15d364072dc9283e96bc0f}{initFunc}};}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__3_d_aae931aae30fbafe5966733e5820f0fbe}{SetUpInit}}(\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d}{Heat\_3D<T>}}\ \&);}
+\DoxyCodeLine{00057\ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_ab8f3ebf8a3440235be1c17b6821b5d77}{Bool}}\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__3_d_ac46384260b45d80f46451368bbc1e0ee}{isSetUpInit}};}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keyword}{friend}\ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d}{Heat\_3D<T>}};}
+\DoxyCodeLine{00061\ \ \ \};\ \textcolor{comment}{//\ class\ Init\_3D}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \}\ \textcolor{comment}{//\ namespace\ InitialConditions}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \}\ \textcolor{comment}{//\ namespace\ pde}}
+\DoxyCodeLine{00068\ \}\ \textcolor{comment}{//\ namespace\ final\_project}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacefinal__project}{final\_project}}\ \{\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacepde}{pde}}\ \{}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_initial_conditions}{InitialConditions}}\ \{}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00090\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00091\ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__2_d_a389152d023e65a65e404f399e5049201}{Init\_2D<T>::Init\_2D}}()}
+\DoxyCodeLine{00092\ :\ initFunc([](T\ \mbox{\hyperlink{vis2d_8m_a08ed1df715226269031ac902d12e9867}{x}},\ T\ \mbox{\hyperlink{vis2d_8m_a2fb1c5cf58867b5bbc9a1b145a86f3a0}{y}})\ \{\ \textcolor{keywordflow}{return}\ 0;\ \}),\ isSetUpInit\ \{\textcolor{keyword}{false}\}}
+\DoxyCodeLine{00093\ \ \ \{\}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00099\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00100\ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__2_d_a389152d023e65a65e404f399e5049201}{Init\_2D<T>::Init\_2D}}(\mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__2_d_afd35475bfcb172c91267f680d899cad4}{InitFunction}}\ \&\ initFunc)}
+\DoxyCodeLine{00101\ \ \ :\ initFunc\ \{initFunc\},\ isSetUpInit\ \{false\}}
+\DoxyCodeLine{00102\ \ \ \{\}}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00107\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00108\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ }
+\DoxyCodeLine{00109\ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__2_d_a134493a20f4acb1c4df89f57097b45a2}{Init\_2D<T>::SetUpInit}}(\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__2_d}{Heat\_2D<T>}}\ \&\ obj)}
+\DoxyCodeLine{00110\ \ \ \{}
+\DoxyCodeLine{00111\ \ \ \ \ T\ \mbox{\hyperlink{vis2d_8m_a08ed1df715226269031ac902d12e9867}{x}}\{0\},\ \mbox{\hyperlink{vis2d_8m_a2fb1c5cf58867b5bbc9a1b145a86f3a0}{y}}\{0\};}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ i\ =\ 1;\ i\ <\ obj.\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__2_d_a79581a3429f65c5ff59cfc4d8843da6d}{in}}.\mbox{\hyperlink{classfinal__project_1_1mpi_1_1array___cart_aa58db48e046f18fb32da26e1b678a238}{topology}}().\_\_local\_shape[0]-\/1;\ ++i)}
+\DoxyCodeLine{00113\ \ \ \ \ \{}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ j\ =\ 1;\ j\ <\ obj.\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__2_d_a79581a3429f65c5ff59cfc4d8843da6d}{in}}.\mbox{\hyperlink{classfinal__project_1_1mpi_1_1array___cart_aa58db48e046f18fb32da26e1b678a238}{topology}}().\_\_local\_shape[1]-\/1;\ ++j)}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{vis2d_8m_a08ed1df715226269031ac902d12e9867}{x}}\ =\ (i+obj.\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__2_d_a79581a3429f65c5ff59cfc4d8843da6d}{in}}.\mbox{\hyperlink{classfinal__project_1_1mpi_1_1array___cart_aa58db48e046f18fb32da26e1b678a238}{topology}}().\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_aab66dbcd0a5da8f4dd47f2515579d67e}{starts}}[0]-\/1)\ *\ obj.\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat___base_a3550b62ca798b2f3f37faf5873c4e2b7}{dxs}}[0];}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{vis2d_8m_a2fb1c5cf58867b5bbc9a1b145a86f3a0}{y}}\ =\ (j+obj.\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__2_d_a79581a3429f65c5ff59cfc4d8843da6d}{in}}.\mbox{\hyperlink{classfinal__project_1_1mpi_1_1array___cart_aa58db48e046f18fb32da26e1b678a238}{topology}}().\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_aab66dbcd0a5da8f4dd47f2515579d67e}{starts}}[1]-\/1)\ *\ obj.\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat___base_a3550b62ca798b2f3f37faf5873c4e2b7}{dxs}}[1];}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ obj.\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__2_d_a79581a3429f65c5ff59cfc4d8843da6d}{in}}(i,j)\ =\ initFunc(\mbox{\hyperlink{vis2d_8m_a08ed1df715226269031ac902d12e9867}{x}},\mbox{\hyperlink{vis2d_8m_a2fb1c5cf58867b5bbc9a1b145a86f3a0}{y}});}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ obj.\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__2_d_a3ad69f44fbc35866382f9bd713058738}{out}}(i,j)\ =\ initFunc(\mbox{\hyperlink{vis2d_8m_a08ed1df715226269031ac902d12e9867}{x}},\mbox{\hyperlink{vis2d_8m_a2fb1c5cf58867b5bbc9a1b145a86f3a0}{y}});}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00122\ \ \ \ \ \}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ isSetUpInit\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00125\ \ \ \}}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00131\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00132\ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__3_d_a2a6990b2a50bc1a2b59f42ce05ebfee7}{Init\_3D<T>::Init\_3D}}()}
+\DoxyCodeLine{00133\ :\ initFunc([](T\ \mbox{\hyperlink{vis2d_8m_a08ed1df715226269031ac902d12e9867}{x}},\ T\ \mbox{\hyperlink{vis2d_8m_a2fb1c5cf58867b5bbc9a1b145a86f3a0}{y}},\ T\ \mbox{\hyperlink{visdataset_8m_a25ed1bcb423b0b7200f485fc5ff71c8e}{z}})\ \{\ \textcolor{keywordflow}{return}\ 0;\ \}),\ isSetUpInit\ \{\textcolor{keyword}{false}\}}
+\DoxyCodeLine{00134\ \ \ \{\}}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00140\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00141\ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__3_d_a2a6990b2a50bc1a2b59f42ce05ebfee7}{Init\_3D<T>::Init\_3D}}(\mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__3_d_aad283bbdeabf223ee78b7cec6246e897}{InitFunction}}\ \&\ initFunc)}
+\DoxyCodeLine{00142\ :\ initFunc\ \{initFunc\},\ isSetUpInit\ \{false\}}
+\DoxyCodeLine{00143\ \ \ \{\}}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00150\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00151\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ }
+\DoxyCodeLine{00152\ \ \ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_initial_conditions_1_1_init__3_d_aae931aae30fbafe5966733e5820f0fbe}{Init\_3D<T>::SetUpInit}}(\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d}{Heat\_3D<T>}}\ \&\ obj)}
+\DoxyCodeLine{00153\ \ \ \{}
+\DoxyCodeLine{00154\ \ \ \ \ T\ \mbox{\hyperlink{vis2d_8m_a08ed1df715226269031ac902d12e9867}{x}}\ \{0\},\ \mbox{\hyperlink{vis2d_8m_a2fb1c5cf58867b5bbc9a1b145a86f3a0}{y}}\ \{0\},\ \mbox{\hyperlink{visdataset_8m_a25ed1bcb423b0b7200f485fc5ff71c8e}{z}}\ \{0\};}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ i\ =\ 1;\ i\ <\ obj.\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a966e7064166200077349d8c90c77ef5f}{in}}.\mbox{\hyperlink{classfinal__project_1_1mpi_1_1array___cart_aa58db48e046f18fb32da26e1b678a238}{topology}}().\_\_local\_shape[0]-\/1;\ ++i)}
+\DoxyCodeLine{00156\ \ \ \ \ \{}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ j\ =\ 1;\ j\ <\ obj.\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a966e7064166200077349d8c90c77ef5f}{in}}.\mbox{\hyperlink{classfinal__project_1_1mpi_1_1array___cart_aa58db48e046f18fb32da26e1b678a238}{topology}}().\_\_local\_shape[1]-\/1;\ ++j)}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ k\ =\ 1;\ k\ <\ obj.\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a966e7064166200077349d8c90c77ef5f}{in}}.\mbox{\hyperlink{classfinal__project_1_1mpi_1_1array___cart_aa58db48e046f18fb32da26e1b678a238}{topology}}().\_\_local\_shape[2]-\/1;\ ++k)}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00161\ \mbox{\hyperlink{vis2d_8m_a08ed1df715226269031ac902d12e9867}{x}}\ =\ (i\ +\ obj.\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a966e7064166200077349d8c90c77ef5f}{in}}.\mbox{\hyperlink{classfinal__project_1_1mpi_1_1array___cart_aa58db48e046f18fb32da26e1b678a238}{topology}}().\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_aab66dbcd0a5da8f4dd47f2515579d67e}{starts}}[0]-\/1)\ *\ obj.\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat___base_a3550b62ca798b2f3f37faf5873c4e2b7}{dxs}}[0];}
+\DoxyCodeLine{00162\ \mbox{\hyperlink{vis2d_8m_a2fb1c5cf58867b5bbc9a1b145a86f3a0}{y}}\ =\ (j\ +\ obj.\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a966e7064166200077349d8c90c77ef5f}{in}}.\mbox{\hyperlink{classfinal__project_1_1mpi_1_1array___cart_aa58db48e046f18fb32da26e1b678a238}{topology}}().\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_aab66dbcd0a5da8f4dd47f2515579d67e}{starts}}[1]-\/1)\ *\ obj.\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat___base_a3550b62ca798b2f3f37faf5873c4e2b7}{dxs}}[1];}
+\DoxyCodeLine{00163\ \mbox{\hyperlink{visdataset_8m_a25ed1bcb423b0b7200f485fc5ff71c8e}{z}}\ =\ (k\ +\ obj.\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a966e7064166200077349d8c90c77ef5f}{in}}.\mbox{\hyperlink{classfinal__project_1_1mpi_1_1array___cart_aa58db48e046f18fb32da26e1b678a238}{topology}}().\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_aab66dbcd0a5da8f4dd47f2515579d67e}{starts}}[2]-\/1)\ *\ obj.\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat___base_a3550b62ca798b2f3f37faf5873c4e2b7}{dxs}}[2];}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ obj.\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a966e7064166200077349d8c90c77ef5f}{in}}(i,j,k)\ \ =\ initFunc(\mbox{\hyperlink{vis2d_8m_a08ed1df715226269031ac902d12e9867}{x}},\mbox{\hyperlink{vis2d_8m_a2fb1c5cf58867b5bbc9a1b145a86f3a0}{y}},\mbox{\hyperlink{visdataset_8m_a25ed1bcb423b0b7200f485fc5ff71c8e}{z}});}
+\DoxyCodeLine{00166\ obj.\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d_a67cf34c89e120718dbf9dba01b57b56a}{out}}(i,j,k)\ =\ initFunc(\mbox{\hyperlink{vis2d_8m_a08ed1df715226269031ac902d12e9867}{x}},\mbox{\hyperlink{vis2d_8m_a2fb1c5cf58867b5bbc9a1b145a86f3a0}{y}},\mbox{\hyperlink{visdataset_8m_a25ed1bcb423b0b7200f485fc5ff71c8e}{z}});}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00169\ \ \ \ \ \}}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \ \ \ \ isSetUpInit\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00172\ \ \ \}}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \}\ \textcolor{comment}{//\ namespace\ InitialConditions}}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \}\ \textcolor{comment}{//\ namespace\ pde}}
+\DoxyCodeLine{00184\ \}\ \textcolor{comment}{//\ namespace\ final\_project}}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ define\ FINAL\_PROJECT\_INITIALIZATIONS\_C\_HPP}}
+
+\end{DoxyCode}

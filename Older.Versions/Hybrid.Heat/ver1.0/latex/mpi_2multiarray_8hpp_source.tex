@@ -1,0 +1,139 @@
+\doxysection{multiarray.\+hpp}
+\hypertarget{mpi_2multiarray_8hpp_source}{}\label{mpi_2multiarray_8hpp_source}\index{include/mpi/multiarray.hpp@{include/mpi/multiarray.hpp}}
+\mbox{\hyperlink{mpi_2multiarray_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifndef\ FINAL\_PROJECT\_MPI\_MULTIARRAY\_HPP\_LIYIHAI}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ FINAL\_PROJECT\_MPI\_MULTIARRAY\_HPP\_LIYIHAI}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ Final\ Project\ Header\ Files}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{types_8hpp}{types.hpp}}>}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{mpi_2types_8hpp}{mpi/types.hpp}}>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{topology_8hpp}{mpi/topology.hpp}}>}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{base_8hpp}{multiarray/base.hpp}}>}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{multiarray_2types_8hpp}{multiarray/types.hpp}}>}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacefinal__project}{final\_project}}\ \{\ \textcolor{keyword}{namespace\ }mpi\ \{}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{namespace\ }\_\_detail\ \{}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ \_\_T,\ \_\_\textcolor{keywordtype}{size\_t}ype\ \_\_NumD>}
+\DoxyCodeLine{00034\ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart}{\_\_array\_Cart}}\ \{}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian}{topology::Cartesian<\_\_T,\ \_\_NumD>}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a946df73dcf6650314f86b35e0453ed65}{\_\_Cart}};}
+\DoxyCodeLine{00037\ \ \ \ \ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array}{multi\_array::\_\_detail::\_\_array<\_\_T,\ \_\_NumD>}}\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_af02b07c442d1995c5ee7267dd4a0456c}{\_\_array}};}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{structfinal__project_1_1multi__array_1_1____detail_1_1____multi__array__shape}{multi\_array::\_\_detail::\_\_multi\_array\_shape<\_\_NumD>}}\ \ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_ae1f6609f000df092e07a53fe1aa4c27f}{\_\_shape}};}
+\DoxyCodeLine{00040\ \ \ \ \ }
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00043\ \ \ \ \ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian}{\_\_Cart}}\ \ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a8a7e916f7248116d8323bcc48addb818}{\_\_loc\_Cart}};}
+\DoxyCodeLine{00044\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array}{\_\_array}}\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a453158f9c2479b0d94ab0b035089bd6a}{\_\_loc\_array}};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00047\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart}{\_\_array\_Cart}}(\mbox{\hyperlink{structfinal__project_1_1multi__array_1_1____detail_1_1____multi__array__shape}{\_\_shape}}\ \&,\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment}{environment}}\ \&);}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ ...\ Args>}
+\DoxyCodeLine{00050\ \ \ \ \ \_\_T\&\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a79b8693be972b3a997aeda8b18876bf1}{operator()}}(Args\ ...\ args)\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a453158f9c2479b0d94ab0b035089bd6a}{\_\_loc\_array}}(args...);\ \}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \_\_T*\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a92b6d5ef5f0f8e1af471571a8c587c04}{data}}()\ \ \ \ \ \ \ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a453158f9c2479b0d94ab0b035089bd6a}{\_\_loc\_array}}.\mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a69931b9f2a7e6468e962ddf69257fb6f}{begin}}();\ \}}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{const}\ \_\_T*\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_aaa072feea2dfd45481366cf96a0b6f2f}{data}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a453158f9c2479b0d94ab0b035089bd6a}{\_\_loc\_array}}.\mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a43e121512c41586893e05417147400a1}{cbegin}}();\ \}}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_aa0d514fc1aa95ec95e9caa44f5588d16}{get\_flat\_index}}(\ std::array<Integer,\ \_\_NumD>\ \&\ indexes\ )\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a453158f9c2479b0d94ab0b035089bd6a}{\_\_loc\_array}}.\mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a68f09c65a8c16c17250241ccf57fe36a}{get\_flat\_index}}(indexes);\ \}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{comment}{//\ Member\ Functions}}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a123f9ea2145335ed19e24f4baa775926}{swap}}(\mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart}{\_\_array\_Cart}}\ \&);}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keyword}{public}:\ \textcolor{comment}{//\ friend\ Functions}}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ \_\_U,\ \_\_\textcolor{keywordtype}{size\_t}ype\ \_\_Dims>}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{friend}\ std::ostream\&\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_af6bf7f48c4626128dc7ef710f1c9784c}{operator<<}}(std::ostream\ \&,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart}{\_\_array\_Cart<\_\_U,\ \_\_Dims>}}\ \&);}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \};\ \textcolor{comment}{//\ class\ \_\_array\_Cart}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \}\ \textcolor{comment}{//\ end\ of\ namespace\ \_\_detail}}
+\DoxyCodeLine{00068\ \}\ \textcolor{comment}{//\ end\ of\ namespace\ mpi}}
+\DoxyCodeLine{00069\ \}\ \textcolor{comment}{//\ end\ of\ final\_project}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \textcolor{comment}{//\ Unix\ Standard\ Libraries}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#include\ <unistd.h>}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{comment}{//\ Final\ Project\ Header\ Files}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{mpi_2assert_8hpp}{assert.hpp}}>}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{mpi_2assert_8hpp}{mpi/assert.hpp}}>}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacefinal__project}{final\_project}}\ \{\ \textcolor{keyword}{namespace\ }mpi\ \{}
+\DoxyCodeLine{00090\ \textcolor{keyword}{namespace\ }\_\_detail\ \{}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ \_\_T,\ \_\_\textcolor{keywordtype}{size\_t}ype\ \_\_NumD>}
+\DoxyCodeLine{00094\ \ \ \textcolor{keyword}{inline}}
+\DoxyCodeLine{00095\ \ \ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_aa0a2274360e5303586fb0744e12c458d}{\_\_array\_Cart<\_\_T,\ \_\_NumD>::\_\_array\_Cart}}(\mbox{\hyperlink{structfinal__project_1_1multi__array_1_1____detail_1_1____multi__array__shape}{\_\_shape}}\ \&\ \_\_glob\_shape,\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment}{environment}}\ \&\ env)}
+\DoxyCodeLine{00096\ :\ \_\_loc\_Cart(\_\_glob\_shape,\ env),\ }
+\DoxyCodeLine{00097\ \ \ \_\_loc\_array(\_\_loc\_Cart.\_\_local\_shape)\ \{\}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ \_\_T,\ \_\_\textcolor{keywordtype}{size\_t}ype\ \_\_NumD>}
+\DoxyCodeLine{00100\ \ \ \textcolor{keyword}{inline}}
+\DoxyCodeLine{00101\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a123f9ea2145335ed19e24f4baa775926}{\_\_array\_Cart<\_\_T,\ \_\_NumD>::swap}}(\mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart}{\_\_array\_Cart}}\ \&\ other)}
+\DoxyCodeLine{00102\ \ \ \{}
+\DoxyCodeLine{00103\ \ \ \ \ \mbox{\hyperlink{assert_8hpp_a4dd9c0fbd112eb96b5ac0f2272aeca55}{FINAL\_PROJECT\_ASSERT\_MSG}}(}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ (\_\_loc\_Cart\ ==\ other.\mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a8a7e916f7248116d8323bcc48addb818}{\_\_loc\_Cart}}),}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Match\ MPI\ Topology\ Structure\ required\ for\ swapping\ array\_Cart."{}}}
+\DoxyCodeLine{00106\ \ \ \ \ );}
+\DoxyCodeLine{00107\ \ \ \ \ \_\_loc\_array.swap(other.\mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a453158f9c2479b0d94ab0b035089bd6a}{\_\_loc\_array}});}
+\DoxyCodeLine{00108\ \ \ \}}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ \_\_U,\ \_\_\textcolor{keywordtype}{size\_t}ype\ \_\_Dims>}
+\DoxyCodeLine{00113\ \ \ std::ostream\&\ \mbox{\hyperlink{namespacefinal__project_1_1mpi_1_1____detail_a68e14dfb2aedf739559f6edabd0b242d}{operator<<}}(std::ostream\&\ os,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart}{\_\_array\_Cart<\_\_U,\ \_\_Dims>}}\&\ in)}
+\DoxyCodeLine{00114\ \ \ \{}
+\DoxyCodeLine{00115\ \ \ \ \ MPI\_Barrier(in.\mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a8a7e916f7248116d8323bcc48addb818}{\_\_loc\_Cart}}.\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a3cebd4de1cb0ae4f6a0dbea8d53a8e9c}{comm\_cart}});}
+\DoxyCodeLine{00116\ \ \ \ \ sleep(1);}
+\DoxyCodeLine{00117\ \ \ os\ <<\ \textcolor{stringliteral}{"{}Attempting\ to\ print\ array\ in\ order\ \(\backslash\)n"{}};}
+\DoxyCodeLine{00118\ \ \ MPI\_Barrier(in.\mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a8a7e916f7248116d8323bcc48addb818}{\_\_loc\_Cart}}.\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a3cebd4de1cb0ae4f6a0dbea8d53a8e9c}{comm\_cart}});}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ in.\mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a8a7e916f7248116d8323bcc48addb818}{\_\_loc\_Cart}}.\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_aab9070d77248397bcde57674cf278da0}{num\_procs}};\ ++i)}
+\DoxyCodeLine{00121\ \ \ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keywordflow}{if}\ (\ i\ ==\ in.\mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a8a7e916f7248116d8323bcc48addb818}{\_\_loc\_Cart}}.\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a55aab245e4415f702ba785e7359af9f7}{rank}}\ )}
+\DoxyCodeLine{00123\ \ \ \ \ \{}
+\DoxyCodeLine{00124\ \ \ os}
+\DoxyCodeLine{00125\ \ \ <<\ \textcolor{stringliteral}{"{}\(\backslash\)nPROC\ :\ "{}}\ <<\ in.\mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a8a7e916f7248116d8323bcc48addb818}{\_\_loc\_Cart}}.\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a55aab245e4415f702ba785e7359af9f7}{rank}}\ <<\ \textcolor{stringliteral}{"{}\ of\ "{}}\ }
+\DoxyCodeLine{00126\ \ \ <<\ in.\mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a8a7e916f7248116d8323bcc48addb818}{\_\_loc\_Cart}}.\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_aab9070d77248397bcde57674cf278da0}{num\_procs}}\ <<\ \ \textcolor{stringliteral}{"{}\ is\ Printing\ \(\backslash\)n"{}}\ }
+\DoxyCodeLine{00127\ \ \ <<\ in.\mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a453158f9c2479b0d94ab0b035089bd6a}{\_\_loc\_array}};}
+\DoxyCodeLine{00128\ \ \ \ \ \}}
+\DoxyCodeLine{00129\ \ \ \ \ fflush(stdout);}
+\DoxyCodeLine{00130\ \ \ \ \ sleep(0.1);}
+\DoxyCodeLine{00131\ \ \ \ \ MPI\_Barrier(in.\mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a8a7e916f7248116d8323bcc48addb818}{\_\_loc\_Cart}}.\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a3cebd4de1cb0ae4f6a0dbea8d53a8e9c}{comm\_cart}});}
+\DoxyCodeLine{00132\ \ \ \}}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \ \ \textcolor{keywordflow}{return}\ os;}
+\DoxyCodeLine{00135\ \ \ \}}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \}\ \textcolor{comment}{//\ end\ of\ namespace\ \_\_detail}}
+\DoxyCodeLine{00141\ \}\ \textcolor{comment}{//\ end\ of\ namespace\ mpi}}
+\DoxyCodeLine{00142\ \}\ \textcolor{comment}{//\ end\ of\ final\_project}}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ end\ of\ define\ FINAL\_PROJECT\_MPI\_MULTIARRAY\_HPP\_LIYIHAI}}
+
+\end{DoxyCode}

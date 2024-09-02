@@ -1,0 +1,247 @@
+\doxysection{final\+\_\+project\+::PINN\+::dataset\+\_\+3d Struct Reference}
+\hypertarget{structfinal__project_1_1_p_i_n_n_1_1dataset__3d}{}\label{structfinal__project_1_1_p_i_n_n_1_1dataset__3d}\index{final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}}
+
+
+{\ttfamily \#include $<$dataset.\+hpp$>$}
+
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_afc022e3effdc90721ed141ea02800de2}{BCFunction}} = std\+::function$<$ \mbox{\hyperlink{namespacefinal__project_1_1_p_i_n_n_ae72d825c535bbc45bf93248b40c749c1}{value\+\_\+type}}(\mbox{\hyperlink{namespacefinal__project_1_1_p_i_n_n_ae72d825c535bbc45bf93248b40c749c1}{value\+\_\+type}}, \mbox{\hyperlink{namespacefinal__project_1_1_p_i_n_n_ae72d825c535bbc45bf93248b40c749c1}{value\+\_\+type}}, \mbox{\hyperlink{namespacefinal__project_1_1_p_i_n_n_ae72d825c535bbc45bf93248b40c749c1}{value\+\_\+type}})$>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_adc2b777d1593470bfa38890883d5f512}{dataset\+\_\+3d}} ()=default
+\item 
+\mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_aeaf7b5877161a74df1bfd768609b8df9}{dataset\+\_\+3d}} (const \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}, const \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}, const \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}, const \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{String}}, const \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{String}}, const \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{String}}, const torch\+::\+Device \&)
+\begin{DoxyCompactList}\small\item\em Constructor of dataset (3d), load from predefined files and send them to given device. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a7d6f944706ec66313289f23330725edd}{dataset\+\_\+3d}} (const \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}, const \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}, const \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}, const \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}, const \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}, std\+::mt19937 \&, std\+::uniform\+\_\+real\+\_\+distribution$<$ \mbox{\hyperlink{namespacefinal__project_1_1_p_i_n_n_ae72d825c535bbc45bf93248b40c749c1}{value\+\_\+type}} $>$ \&, \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_afc022e3effdc90721ed141ea02800de2}{BCFunction}} \&, \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_afc022e3effdc90721ed141ea02800de2}{BCFunction}} \&, \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_afc022e3effdc90721ed141ea02800de2}{BCFunction}} \&, \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_afc022e3effdc90721ed141ea02800de2}{BCFunction}} \&, \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_afc022e3effdc90721ed141ea02800de2}{BCFunction}} \&, \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_afc022e3effdc90721ed141ea02800de2}{BCFunction}} \&, const torch\+::\+Device \&)
+\begin{DoxyCompactList}\small\item\em Random generate datasets with given parameters. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_ac4449d5e0793f6a575b20fac1c6e68c4}{dataset\+\_\+3d}} (const \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}, const \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}, const \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}, const \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}, const \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}, const torch\+::\+Device \&)
+\begin{DoxyCompactList}\small\item\em Generate a fined grid, rather than randomly. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_acc76f7436a98204c8e8e329c7fed33a1}{save}} (const \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{String}}, const \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{String}}, const \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{String}})
+\begin{DoxyCompactList}\small\item\em Save the datasets into files. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+torch\+::\+Tensor \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a0bc8ff441889459f82054defb27f3f05}{X\+\_\+internal}}
+\item 
+torch\+::\+Tensor \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_ad2d227fde1aec652ead5458cfc4c7feb}{X\+\_\+boundary}}
+\item 
+torch\+::\+Tensor \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a70a2c547f270007523f4d8547fb62788}{Y\+\_\+boundary}}
+\item 
+\mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}} \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_abbd96cb89c3e4bdc81a68cd86f4506cf}{in\+\_\+size}}
+\item 
+\mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}} \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a8d0e1abd9e84133d7160d233f1548c85}{out\+\_\+size}}
+\item 
+\mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}} \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a9105052a18863b12dc6948ac5bb571b8}{nx}}
+\item 
+\mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}} \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a14b687f69cca137656906b9ba0e2355a}{ny}}
+\item 
+\mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}} \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a01dee38d5a8ad680fb1cc3b891d4308d}{nz}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_afc022e3effdc90721ed141ea02800de2}\label{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_afc022e3effdc90721ed141ea02800de2} 
+\index{final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}!BCFunction@{BCFunction}}
+\index{BCFunction@{BCFunction}!final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}}
+\doxysubsubsection{\texorpdfstring{BCFunction}{BCFunction}}
+{\footnotesize\ttfamily using \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_afc022e3effdc90721ed141ea02800de2}{final\+\_\+project\+::\+PINN\+::dataset\+\_\+3d\+::\+BCFunction}} =  std\+::function$<$\mbox{\hyperlink{namespacefinal__project_1_1_p_i_n_n_ae72d825c535bbc45bf93248b40c749c1}{value\+\_\+type}}(\mbox{\hyperlink{namespacefinal__project_1_1_p_i_n_n_ae72d825c535bbc45bf93248b40c749c1}{value\+\_\+type}}, \mbox{\hyperlink{namespacefinal__project_1_1_p_i_n_n_ae72d825c535bbc45bf93248b40c749c1}{value\+\_\+type}}, \mbox{\hyperlink{namespacefinal__project_1_1_p_i_n_n_ae72d825c535bbc45bf93248b40c749c1}{value\+\_\+type}})$>$}
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_adc2b777d1593470bfa38890883d5f512}\label{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_adc2b777d1593470bfa38890883d5f512} 
+\index{final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}!dataset\_3d@{dataset\_3d}}
+\index{dataset\_3d@{dataset\_3d}!final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}}
+\doxysubsubsection{\texorpdfstring{dataset\_3d()}{dataset\_3d()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
+{\footnotesize\ttfamily final\+\_\+project\+::\+PINN\+::dataset\+\_\+3d\+::dataset\+\_\+3d (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+\Hypertarget{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_aeaf7b5877161a74df1bfd768609b8df9}\label{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_aeaf7b5877161a74df1bfd768609b8df9} 
+\index{final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}!dataset\_3d@{dataset\_3d}}
+\index{dataset\_3d@{dataset\_3d}!final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}}
+\doxysubsubsection{\texorpdfstring{dataset\_3d()}{dataset\_3d()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
+{\footnotesize\ttfamily final\+\_\+project\+::\+PINN\+::dataset\+\_\+3d\+::dataset\+\_\+3d (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}}]{nx,  }\item[{const \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}}]{ny,  }\item[{const \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}}]{nz,  }\item[{const \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{String}}}]{dataset\+\_\+\+X\+\_\+internal,  }\item[{const \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{String}}}]{dataset\+\_\+\+X\+\_\+boundary,  }\item[{const \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{String}}}]{dataset\+\_\+\+Y\+\_\+boundary,  }\item[{const torch\+::\+Device \&}]{device }\end{DoxyParamCaption})}
+
+
+
+Constructor of dataset (3d), load from predefined files and send them to given device. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em NX} & grid size of data. \\
+\hline
+{\em NY} & grid size of data. \\
+\hline
+{\em NZ} & grid size of data. \\
+\hline
+{\em dataset\+\_\+\+X\+\_\+internal} & Internal data needed to train. \\
+\hline
+{\em dataset\+\_\+\+X\+\_\+boundary} & Boundary data contains information of grid points. \\
+\hline
+{\em dataset\+\_\+\+Y\+\_\+boundary} & Boundary data of determinant values on grid points. \\
+\hline
+{\em device} & Torch\+::\+Device, k\+CUDA or k\+CPU. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a7d6f944706ec66313289f23330725edd}\label{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a7d6f944706ec66313289f23330725edd} 
+\index{final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}!dataset\_3d@{dataset\_3d}}
+\index{dataset\_3d@{dataset\_3d}!final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}}
+\doxysubsubsection{\texorpdfstring{dataset\_3d()}{dataset\_3d()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
+{\footnotesize\ttfamily final\+\_\+project\+::\+PINN\+::dataset\+\_\+3d\+::dataset\+\_\+3d (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}}]{in\+\_\+size,  }\item[{const \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}}]{out\+\_\+size,  }\item[{const \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}}]{nx,  }\item[{const \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}}]{ny,  }\item[{const \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}}]{nz,  }\item[{std\+::mt19937 \&}]{rde,  }\item[{std\+::uniform\+\_\+real\+\_\+distribution$<$ \mbox{\hyperlink{namespacefinal__project_1_1_p_i_n_n_ae72d825c535bbc45bf93248b40c749c1}{value\+\_\+type}} $>$ \&}]{rng,  }\item[{\mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_afc022e3effdc90721ed141ea02800de2}{BCFunction}} \&}]{Func\+Dim00,  }\item[{\mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_afc022e3effdc90721ed141ea02800de2}{BCFunction}} \&}]{Func\+Dim01,  }\item[{\mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_afc022e3effdc90721ed141ea02800de2}{BCFunction}} \&}]{Func\+Dim10,  }\item[{\mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_afc022e3effdc90721ed141ea02800de2}{BCFunction}} \&}]{Func\+Dim11,  }\item[{\mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_afc022e3effdc90721ed141ea02800de2}{BCFunction}} \&}]{Func\+Dim20,  }\item[{\mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_afc022e3effdc90721ed141ea02800de2}{BCFunction}} \&}]{Func\+Dim21,  }\item[{const torch\+::\+Device \&}]{device }\end{DoxyParamCaption})}
+
+
+
+Random generate datasets with given parameters. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em IN\+\_\+\+SIZE} & Dimension of Input layer of Torch\+::nn network. \\
+\hline
+{\em OUT\+\_\+\+SIZE} & Dimension of Output layer of Torch\+::nn network. \\
+\hline
+{\em NX} & grid size of data. \\
+\hline
+{\em NY} & grid size of data. \\
+\hline
+{\em NZ} & grid size of data. \\
+\hline
+{\em RNG} & Random number generator. \\
+\hline
+{\em RE} & Random number\textquotesingle{}s distribution. \\
+\hline
+{\em Dim00} & Condition Function, on Dimension 0 and source site. \\
+\hline
+{\em Dim01} & Condition Function, on Dimension 0 and dest site. \\
+\hline
+{\em Dim10} & Condition Function, on Dimension 1 and source site. \\
+\hline
+{\em Dim11} & Condition Function, on Dimension 1 and dest site. \\
+\hline
+{\em Dim20} & Condition Function, on Dimension 2 and source site. \\
+\hline
+{\em Dim21} & Condition Function, on Dimension 2 and dest site. \\
+\hline
+{\em device} & Torch\+::\+Device, k\+CUDA or k\+CPU. \\
+\hline
+\end{DoxyParams}
+internal\+\_\+\+Xobj
+
+boundary\+\_\+\+Xobj, boundary\+\_\+\+Yobj Dimension 0
+
+Dimension 1
+
+Dimension 2\Hypertarget{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_ac4449d5e0793f6a575b20fac1c6e68c4}\label{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_ac4449d5e0793f6a575b20fac1c6e68c4} 
+\index{final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}!dataset\_3d@{dataset\_3d}}
+\index{dataset\_3d@{dataset\_3d}!final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}}
+\doxysubsubsection{\texorpdfstring{dataset\_3d()}{dataset\_3d()}\hspace{0.1cm}{\footnotesize\ttfamily [4/4]}}
+{\footnotesize\ttfamily final\+\_\+project\+::\+PINN\+::dataset\+\_\+3d\+::dataset\+\_\+3d (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}}]{in\+\_\+size,  }\item[{const \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}}]{out\+\_\+size,  }\item[{const \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}}]{nx,  }\item[{const \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}}]{ny,  }\item[{const \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}}]{nz,  }\item[{const torch\+::\+Device \&}]{device }\end{DoxyParamCaption})}
+
+
+
+Generate a fined grid, rather than randomly. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em IN\+\_\+\+SIZE} & Dimension of Input layer of Torch\+::nn network. \\
+\hline
+{\em OUT\+\_\+\+SIZE} & Dimension of Output layer of Torch\+::nn network. \\
+\hline
+{\em NX} & grid size of data. \\
+\hline
+{\em NY} & grid size of data. \\
+\hline
+{\em NZ} & grid size of data. \\
+\hline
+{\em device} & Torch\+::\+Device, k\+CUDA or k\+CPU. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_acc76f7436a98204c8e8e329c7fed33a1}\label{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_acc76f7436a98204c8e8e329c7fed33a1} 
+\index{final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}!save@{save}}
+\index{save@{save}!final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}}
+\doxysubsubsection{\texorpdfstring{save()}{save()}}
+{\footnotesize\ttfamily void final\+\_\+project\+::\+PINN\+::dataset\+\_\+3d\+::save (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{String}}}]{dataset\+\_\+\+X\+\_\+internal,  }\item[{const \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{String}}}]{dataset\+\_\+\+X\+\_\+boundary,  }\item[{const \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{String}}}]{dataset\+\_\+\+Y\+\_\+boundary }\end{DoxyParamCaption})}
+
+
+
+Save the datasets into files. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dataset\+\_\+\+X\+\_\+internal} & File name. \\
+\hline
+{\em dataset\+\_\+\+X\+\_\+boundary} & File name. \\
+\hline
+{\em dataset\+\_\+\+Y\+\_\+boundary} & File name. \\
+\hline
+\end{DoxyParams}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=252pt]{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_acc76f7436a98204c8e8e329c7fed33a1_icgraph}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_abbd96cb89c3e4bdc81a68cd86f4506cf}\label{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_abbd96cb89c3e4bdc81a68cd86f4506cf} 
+\index{final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}!in\_size@{in\_size}}
+\index{in\_size@{in\_size}!final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}}
+\doxysubsubsection{\texorpdfstring{in\_size}{in\_size}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}} final\+\_\+project\+::\+PINN\+::dataset\+\_\+3d\+::in\+\_\+size}
+
+\Hypertarget{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a9105052a18863b12dc6948ac5bb571b8}\label{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a9105052a18863b12dc6948ac5bb571b8} 
+\index{final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}!nx@{nx}}
+\index{nx@{nx}!final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}}
+\doxysubsubsection{\texorpdfstring{nx}{nx}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}} final\+\_\+project\+::\+PINN\+::dataset\+\_\+3d\+::nx}
+
+\Hypertarget{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a14b687f69cca137656906b9ba0e2355a}\label{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a14b687f69cca137656906b9ba0e2355a} 
+\index{final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}!ny@{ny}}
+\index{ny@{ny}!final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}}
+\doxysubsubsection{\texorpdfstring{ny}{ny}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}} final\+\_\+project\+::\+PINN\+::dataset\+\_\+3d\+::ny}
+
+\Hypertarget{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a01dee38d5a8ad680fb1cc3b891d4308d}\label{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a01dee38d5a8ad680fb1cc3b891d4308d} 
+\index{final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}!nz@{nz}}
+\index{nz@{nz}!final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}}
+\doxysubsubsection{\texorpdfstring{nz}{nz}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}} final\+\_\+project\+::\+PINN\+::dataset\+\_\+3d\+::nz}
+
+\Hypertarget{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a8d0e1abd9e84133d7160d233f1548c85}\label{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a8d0e1abd9e84133d7160d233f1548c85} 
+\index{final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}!out\_size@{out\_size}}
+\index{out\_size@{out\_size}!final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}}
+\doxysubsubsection{\texorpdfstring{out\_size}{out\_size}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}} final\+\_\+project\+::\+PINN\+::dataset\+\_\+3d\+::out\+\_\+size}
+
+\Hypertarget{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_ad2d227fde1aec652ead5458cfc4c7feb}\label{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_ad2d227fde1aec652ead5458cfc4c7feb} 
+\index{final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}!X\_boundary@{X\_boundary}}
+\index{X\_boundary@{X\_boundary}!final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}}
+\doxysubsubsection{\texorpdfstring{X\_boundary}{X\_boundary}}
+{\footnotesize\ttfamily torch\+::\+Tensor final\+\_\+project\+::\+PINN\+::dataset\+\_\+3d\+::\+X\+\_\+boundary}
+
+\Hypertarget{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a0bc8ff441889459f82054defb27f3f05}\label{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a0bc8ff441889459f82054defb27f3f05} 
+\index{final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}!X\_internal@{X\_internal}}
+\index{X\_internal@{X\_internal}!final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}}
+\doxysubsubsection{\texorpdfstring{X\_internal}{X\_internal}}
+{\footnotesize\ttfamily torch\+::\+Tensor final\+\_\+project\+::\+PINN\+::dataset\+\_\+3d\+::\+X\+\_\+internal}
+
+\Hypertarget{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a70a2c547f270007523f4d8547fb62788}\label{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a70a2c547f270007523f4d8547fb62788} 
+\index{final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}!Y\_boundary@{Y\_boundary}}
+\index{Y\_boundary@{Y\_boundary}!final\_project::PINN::dataset\_3d@{final\_project::PINN::dataset\_3d}}
+\doxysubsubsection{\texorpdfstring{Y\_boundary}{Y\_boundary}}
+{\footnotesize\ttfamily torch\+::\+Tensor final\+\_\+project\+::\+PINN\+::dataset\+\_\+3d\+::\+Y\+\_\+boundary}
+
+
+
+The documentation for this struct was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/pinn/\mbox{\hyperlink{dataset_8hpp}{dataset.\+hpp}}\item 
+src/pinn/\mbox{\hyperlink{dataset_8cpp}{dataset.\+cpp}}\end{DoxyCompactItemize}

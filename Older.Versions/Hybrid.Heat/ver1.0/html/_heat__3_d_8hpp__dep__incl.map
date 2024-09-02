@@ -1,0 +1,15 @@
+<map id="include/pde/detials/Heat_3D.hpp" name="include/pde/detials/Heat_3D.hpp">
+<area shape="rect" id="Node000001" title="An object of heat equation 3D, with integrated features." alt="" coords="170,5,299,46"/>
+<area shape="rect" id="Node000002" href="$_boundary_conditions__3_d_8hpp.html" title="Objects of Boundary Conditions of PDE. Includes Dirichlet and Von Neumann Boundary Conditions." alt="" coords="5,94,197,150"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="196,57,141,96,138,91,193,53"/>
+<area shape="rect" id="Node000003" href="$main1__3d_8cpp.html" title=" " alt="" coords="114,198,256,223"/>
+<area shape="poly" id="edge7_Node000001_Node000003" title=" " alt="" coords="232,62,212,150,193,198,188,196,206,149,226,61"/>
+<area shape="rect" id="Node000004" href="$_initializations_c_8hpp.html" title="Objects of Initialization Conditions of PDEs." alt="" coords="272,102,408,142"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="269,54,320,99,316,103,266,58"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="140,159,175,195,171,199,136,163"/>
+<area shape="poly" id="edge5_Node000004_Node000003" title=" " alt="" coords="293,152,208,199,205,195,290,148"/>
+<area shape="rect" id="Node000005" href="$main1_8cpp.html" title="https://github.com/liyihai&#45;official/Final&#45;Project" alt="" coords="280,198,400,223"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="342,158,342,197,337,197,337,158"/>
+<area shape="rect" id="Node000006" href="$test_8cc.html" title=" " alt="" coords="424,198,511,223"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="383,149,451,195,448,199,380,153"/>
+</map>

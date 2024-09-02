@@ -1,0 +1,140 @@
+\doxysection{include/mpi/assert.hpp File Reference}
+\hypertarget{mpi_2assert_8hpp}{}\label{mpi_2assert_8hpp}\index{include/mpi/assert.hpp@{include/mpi/assert.hpp}}
+
+
+Defines the MPI assert using {\ttfamily assert}  
+
+
+{\ttfamily \#include $<$mpi.\+h$>$}\newline
+{\ttfamily \#include $<$cassert$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include "{}types.\+hpp"{}}\newline
+Include dependency graph for assert.\+hpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=307pt]{mpi_2assert_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{mpi_2assert_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{mpi_2assert_8hpp_a71221745b5f21624270b7f75b537ba53}{FINAL\+\_\+\+PROJECT\+\_\+\+MPI\+\_\+\+WARN}}(expr)
+\item 
+\#define \mbox{\hyperlink{mpi_2assert_8hpp_a4f7d8bb7e3ad94ac4ce9f09757a70f81}{FINAL\+\_\+\+PROJECT\+\_\+\+MPI\+\_\+\+ASSERT}}(expr)
+\item 
+\#define \mbox{\hyperlink{mpi_2assert_8hpp_a2987d523e767f42e9496df827e65d8b3}{FINAL\+\_\+\+PROJECT\+\_\+\+MPI\+\_\+\+ASSERT\+\_\+\+GLOBAL}}(expr)
+\item 
+\#define \mbox{\hyperlink{mpi_2assert_8hpp_aa7c6ff3e2b64696bdcc21fa6a2fb0a90}{FINAL\+\_\+\+PROJECT\+\_\+\+MPI\+\_\+\+INIT\+\_\+\+CHECK}}()
+\item 
+\#define \mbox{\hyperlink{mpi_2assert_8hpp_a10d88d8a48a0fc0aa3538b9548b1f4ef}{FINAL\+\_\+\+PROJECT\+\_\+\+MPI\+\_\+\+FINALIZE\+\_\+\+CHECK}}()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Defines the MPI assert using {\ttfamily assert} 
+
+\begin{DoxyAuthor}{Author}
+LI Yihai 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+6.\+0 
+\end{DoxyVersion}
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{mpi_2assert_8hpp_a4f7d8bb7e3ad94ac4ce9f09757a70f81}\label{mpi_2assert_8hpp_a4f7d8bb7e3ad94ac4ce9f09757a70f81} 
+\index{assert.hpp@{assert.hpp}!FINAL\_PROJECT\_MPI\_ASSERT@{FINAL\_PROJECT\_MPI\_ASSERT}}
+\index{FINAL\_PROJECT\_MPI\_ASSERT@{FINAL\_PROJECT\_MPI\_ASSERT}!assert.hpp@{assert.hpp}}
+\doxysubsubsection{\texorpdfstring{FINAL\_PROJECT\_MPI\_ASSERT}{FINAL\_PROJECT\_MPI\_ASSERT}}
+{\footnotesize\ttfamily \#define FINAL\+\_\+\+PROJECT\+\_\+\+MPI\+\_\+\+ASSERT(\begin{DoxyParamCaption}\item[{}]{expr }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \textcolor{keywordflow}{do}\ \{\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{final\_project::Integer}}\ cond\ =\ (expr);\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ if\ (!cond)\ \{\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ FINAL\_PROJECT\_MPI\_WARN(cond);\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ MPI\_Abort(MPI\_COMM\_WORLD,\ EXIT\_FAILURE);\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \}\ \(\backslash\)}
+\DoxyCodeLine{\ \ \}\ \textcolor{keywordflow}{while}\ (0)}
+
+\end{DoxyCode}
+\Hypertarget{mpi_2assert_8hpp_a2987d523e767f42e9496df827e65d8b3}\label{mpi_2assert_8hpp_a2987d523e767f42e9496df827e65d8b3} 
+\index{assert.hpp@{assert.hpp}!FINAL\_PROJECT\_MPI\_ASSERT\_GLOBAL@{FINAL\_PROJECT\_MPI\_ASSERT\_GLOBAL}}
+\index{FINAL\_PROJECT\_MPI\_ASSERT\_GLOBAL@{FINAL\_PROJECT\_MPI\_ASSERT\_GLOBAL}!assert.hpp@{assert.hpp}}
+\doxysubsubsection{\texorpdfstring{FINAL\_PROJECT\_MPI\_ASSERT\_GLOBAL}{FINAL\_PROJECT\_MPI\_ASSERT\_GLOBAL}}
+{\footnotesize\ttfamily \#define FINAL\+\_\+\+PROJECT\+\_\+\+MPI\+\_\+\+ASSERT\+\_\+\+GLOBAL(\begin{DoxyParamCaption}\item[{}]{expr }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \textcolor{keywordflow}{do}\ \{\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{final\_project::Integer}}\ loc\_cond\ =\ (expr),\ glob\_cond;\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ MPI\_Allreduce(\&loc\_cond,\ \&glob\_cond,\ 1,\ MPI\_INT,\ MPI\_LAND,\ MPI\_COMM\_WORLD);\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ if\ (!glob\_cond)\ \{\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ FINAL\_PROJECT\_MPI\_WARN(loc\_cond);\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ MPI\_Abort(MPI\_COMM\_WORLD,\ EXIT\_FAILURE);\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \}\ \(\backslash\)}
+\DoxyCodeLine{\ \ \}\ \textcolor{keywordflow}{while}\ (0)}
+
+\end{DoxyCode}
+\Hypertarget{mpi_2assert_8hpp_a10d88d8a48a0fc0aa3538b9548b1f4ef}\label{mpi_2assert_8hpp_a10d88d8a48a0fc0aa3538b9548b1f4ef} 
+\index{assert.hpp@{assert.hpp}!FINAL\_PROJECT\_MPI\_FINALIZE\_CHECK@{FINAL\_PROJECT\_MPI\_FINALIZE\_CHECK}}
+\index{FINAL\_PROJECT\_MPI\_FINALIZE\_CHECK@{FINAL\_PROJECT\_MPI\_FINALIZE\_CHECK}!assert.hpp@{assert.hpp}}
+\doxysubsubsection{\texorpdfstring{FINAL\_PROJECT\_MPI\_FINALIZE\_CHECK}{FINAL\_PROJECT\_MPI\_FINALIZE\_CHECK}}
+{\footnotesize\ttfamily \#define FINAL\+\_\+\+PROJECT\+\_\+\+MPI\+\_\+\+FINALIZE\+\_\+\+CHECK(\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \{\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{final\_project::Integer}}\ finalized;\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ MPI\_Finalized(\&finalized);\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ FINAL\_PROJECT\_MPI\_ASSERT(finalized);\ \(\backslash\)}
+\DoxyCodeLine{\ \ \}}
+
+\end{DoxyCode}
+\Hypertarget{mpi_2assert_8hpp_aa7c6ff3e2b64696bdcc21fa6a2fb0a90}\label{mpi_2assert_8hpp_aa7c6ff3e2b64696bdcc21fa6a2fb0a90} 
+\index{assert.hpp@{assert.hpp}!FINAL\_PROJECT\_MPI\_INIT\_CHECK@{FINAL\_PROJECT\_MPI\_INIT\_CHECK}}
+\index{FINAL\_PROJECT\_MPI\_INIT\_CHECK@{FINAL\_PROJECT\_MPI\_INIT\_CHECK}!assert.hpp@{assert.hpp}}
+\doxysubsubsection{\texorpdfstring{FINAL\_PROJECT\_MPI\_INIT\_CHECK}{FINAL\_PROJECT\_MPI\_INIT\_CHECK}}
+{\footnotesize\ttfamily \#define FINAL\+\_\+\+PROJECT\+\_\+\+MPI\+\_\+\+INIT\+\_\+\+CHECK(\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \{\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{final\_project::Integer}}\ initialized;\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ MPI\_Initialized(\&initialized);\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ FINAL\_PROJECT\_MPI\_ASSERT(initialized);\ \(\backslash\)}
+\DoxyCodeLine{\ \ \}}
+
+\end{DoxyCode}
+\Hypertarget{mpi_2assert_8hpp_a71221745b5f21624270b7f75b537ba53}\label{mpi_2assert_8hpp_a71221745b5f21624270b7f75b537ba53} 
+\index{assert.hpp@{assert.hpp}!FINAL\_PROJECT\_MPI\_WARN@{FINAL\_PROJECT\_MPI\_WARN}}
+\index{FINAL\_PROJECT\_MPI\_WARN@{FINAL\_PROJECT\_MPI\_WARN}!assert.hpp@{assert.hpp}}
+\doxysubsubsection{\texorpdfstring{FINAL\_PROJECT\_MPI\_WARN}{FINAL\_PROJECT\_MPI\_WARN}}
+{\footnotesize\ttfamily \#define FINAL\+\_\+\+PROJECT\+\_\+\+MPI\+\_\+\+WARN(\begin{DoxyParamCaption}\item[{}]{expr }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \textcolor{keywordflow}{if}\ (!(expr))\ \{\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{final\_project::Integer}}\ rank,\ size;\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ MPI\_Comm\_rank(MPI\_COMM\_WORLD,\ \&rank);\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ MPI\_Comm\_size(MPI\_COMM\_WORLD,\ \&size);\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}MPI\ Assertion\ Failed:\ "{}}\ \#expr\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{},\ on\ rank\ "{}}\ <<\ rank\ <<\ \textcolor{stringliteral}{"{}/"{}}\ <<\ size\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{},\ file\ "{}}\ <<\ \_\_FILE\_\_\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{},\ line\ "{}}\ <<\ \_\_LINE\_\_\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ std::endl;\ \(\backslash\)}
+\DoxyCodeLine{\ \ \}}
+
+\end{DoxyCode}
+FINAL\+\_\+\+PROJECT\+\_\+\+MPI\+\_\+\+WARN FINAL\+\_\+\+PROJECT\+\_\+\+MPI\+\_\+\+ASSERT, FINAL\+\_\+\+PROJECT\+\_\+\+ASSERT\+\_\+\+GLOBAL 

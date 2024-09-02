@@ -1,0 +1,82 @@
+\doxysection{types.\+hpp}
+\hypertarget{mpi_2types_8hpp_source}{}\label{mpi_2types_8hpp_source}\index{include/mpi/types.hpp@{include/mpi/types.hpp}}
+\mbox{\hyperlink{mpi_2types_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#ifndef\ FINAL\_PROJECT\_MPI\_TYPES\_HPP\_LIYIHAI}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#define\ FINAL\_PROJECT\_MPI\_TYPES\_HPP\_LIYIHAI}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <mpi.h>}\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ OpenMPI\ Library}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{types_8hpp}{types.hpp}}>}\ \ \ \textcolor{comment}{//\ Final\ Project\ Header\ Files}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacefinal__project}{final\_project}}\ \{}
+\DoxyCodeLine{00015\ \textcolor{keyword}{namespace\ }mpi\ \{}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{namespace\ }topology\ \{}
+\DoxyCodeLine{00018\ \ \ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{namespacefinal__project_a4444f518ac9564eca37f7226752429c1}{Dworld}}\ \ \ \ \mbox{\hyperlink{namespacefinal__project_1_1mpi_1_1topology_ad2fcc2924ac41b8322423004b8c24eef}{size\_type}};}
+\DoxyCodeLine{00019\ \ \ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{namespacefinal__project_a154b80a40c4423f64c9bc502dfdf28c5}{Qworld}}\ \ \ \ \mbox{\hyperlink{namespacefinal__project_1_1mpi_1_1topology_ad9aeecf5a94a0b4451f94f12d9a47014}{super\_size\_type}};}
+\DoxyCodeLine{00020\ \}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{namespace\ }\_\_detail\ \{}
+\DoxyCodeLine{00023\ \ \ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{namespacefinal__project_ab572d4ee71244a5c7ad4dfeb5e145545}{size\_type}}\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_1_1mpi_1_1____detail_a7469aefd9f02763c9b07c86e54e90273}{\_\_size\_type}};}
+\DoxyCodeLine{00024\ \ \ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{namespacefinal__project_afefd4d06a20da7d2b3a9f6abbb830606}{super\_size\_type}}\ \ \ \mbox{\hyperlink{namespacefinal__project_1_1mpi_1_1____detail_aceda2f86d4a886bbe46d11872e3d653e}{\_\_super\_size\_type}};}
+\DoxyCodeLine{00025\ \}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00036\ MPI\_Datatype\ \mbox{\hyperlink{namespacefinal__project_1_1mpi_a79d0bf49a91a480039245bffc0bc6c62}{get\_mpi\_type}}();\ }
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00039\ \textcolor{keyword}{template}\ <>}
+\DoxyCodeLine{00040\ \ \ \textcolor{keyword}{inline}\ }
+\DoxyCodeLine{00041\ \ \ MPI\_Datatype\ }
+\DoxyCodeLine{00042\ \ \ \mbox{\hyperlink{namespacefinal__project_1_1mpi_a7c241ba61c322bd9b1972460d536110b}{get\_mpi\_type<Integer>}}()}
+\DoxyCodeLine{00043\ \{\ \textcolor{keywordflow}{return}\ MPI\_INT;\ \}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00046\ \textcolor{keyword}{template}\ <>}
+\DoxyCodeLine{00047\ \ \ \textcolor{keyword}{inline}\ }
+\DoxyCodeLine{00048\ \ \ MPI\_Datatype}
+\DoxyCodeLine{00049\ \ \ \mbox{\hyperlink{namespacefinal__project_1_1mpi_a93fe57db35d14f349e401435d8fc83fe}{get\_mpi\_type<Float>}}()}
+\DoxyCodeLine{00050\ \{\ \textcolor{keywordflow}{return}\ MPI\_FLOAT;\ \}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00054\ \textcolor{keyword}{template}\ <>}
+\DoxyCodeLine{00055\ \ \ \textcolor{keyword}{inline}\ }
+\DoxyCodeLine{00056\ \ \ MPI\_Datatype}
+\DoxyCodeLine{00057\ \ \ \mbox{\hyperlink{namespacefinal__project_1_1mpi_a90ab133c19e12aa9be2eb1ccbdaf4bb1}{get\_mpi\_type<Double>}}()}
+\DoxyCodeLine{00058\ \{\ \textcolor{keywordflow}{return}\ MPI\_DOUBLE;\ \}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00061\ \textcolor{keyword}{template}\ <>}
+\DoxyCodeLine{00062\ \ \ \textcolor{keyword}{inline}\ }
+\DoxyCodeLine{00063\ \ \ MPI\_Datatype}
+\DoxyCodeLine{00064\ \ \ \mbox{\hyperlink{namespacefinal__project_1_1mpi_a10054ac0e92a4f3789f1bafbce0ff626}{get\_mpi\_type<Byte>}}()\ }
+\DoxyCodeLine{00065\ \{\ \textcolor{keywordflow}{return}\ MPI\_BYTE;\ \}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00068\ \textcolor{keyword}{template}\ <>\ }
+\DoxyCodeLine{00069\ \ \ \textcolor{keyword}{inline}\ }
+\DoxyCodeLine{00070\ \ \ MPI\_Datatype}
+\DoxyCodeLine{00071\ \ \ \mbox{\hyperlink{namespacefinal__project_1_1mpi_a5d484b9711d59aaf83f79d55a53d1fb3}{get\_mpi\_type<Word>}}()}
+\DoxyCodeLine{00072\ \{\ \textcolor{keywordflow}{return}\ MPI\_UNSIGNED\_SHORT;\ \}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00075\ \textcolor{keyword}{template}\ <>}
+\DoxyCodeLine{00076\ \ \ \textcolor{keyword}{inline}\ }
+\DoxyCodeLine{00077\ \ \ MPI\_Datatype}
+\DoxyCodeLine{00078\ \ \ \mbox{\hyperlink{namespacefinal__project_1_1mpi_a9153b4b5f01f3520b9d2033341c49d04}{get\_mpi\_type<Dworld>}}()}
+\DoxyCodeLine{00079\ \{\ \textcolor{keywordflow}{return}\ MPI\_UNSIGNED;\ \}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00082\ \textcolor{keyword}{template}\ <>}
+\DoxyCodeLine{00083\ \ \ \textcolor{keyword}{inline}\ }
+\DoxyCodeLine{00084\ \ \ MPI\_Datatype\ }
+\DoxyCodeLine{00085\ \ \ \mbox{\hyperlink{namespacefinal__project_1_1mpi_a88c2db1fcd39f5a6031c02935a8659e8}{get\_mpi\_type<Qworld>}}()}
+\DoxyCodeLine{00086\ \{\ \textcolor{keywordflow}{return}\ MPI\_UNSIGNED\_LONG\_LONG;\ \}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \}\ \textcolor{comment}{//\ end\ of\ namespace\ mpi}}
+\DoxyCodeLine{00091\ \}\ \textcolor{comment}{//\ end\ of\ namespace\ final\_project}}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ end\ of\ define\ FINAL\_PROJECT\_MPI\_TYPES\_HPP\_LIYIHAI}}
+
+\end{DoxyCode}

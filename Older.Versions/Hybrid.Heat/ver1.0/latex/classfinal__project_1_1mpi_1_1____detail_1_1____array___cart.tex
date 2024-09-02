@@ -1,0 +1,191 @@
+\doxysection{final\+\_\+project\+::mpi\+::\+\_\+\+\_\+detail\+::\+\_\+\+\_\+array\+\_\+\+Cart\texorpdfstring{$<$}{<} \+\_\+\+\_\+T, \+\_\+\+\_\+\+NumD \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart}{}\label{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart}\index{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$@{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$}}
+
+
+The implementation of multi-\/dimension array, based on {\ttfamily MPI\+\_\+\+Cart} topology structure.  
+
+
+
+
+{\ttfamily \#include $<$multiarray.\+hpp$>$}
+
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian}{topology\+::\+Cartesian}}$<$ \+\_\+\+\_\+T, \+\_\+\+\_\+\+NumD $>$ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a946df73dcf6650314f86b35e0453ed65}{\+\_\+\+\_\+\+Cart}}
+\item 
+typedef \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array}{multi\+\_\+array\+::\+\_\+\+\_\+detail\+::\+\_\+\+\_\+array}}$<$ \+\_\+\+\_\+T, \+\_\+\+\_\+\+NumD $>$ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_af02b07c442d1995c5ee7267dd4a0456c}{\+\_\+\+\_\+array}}
+\item 
+typedef \mbox{\hyperlink{structfinal__project_1_1multi__array_1_1____detail_1_1____multi__array__shape}{multi\+\_\+array\+::\+\_\+\+\_\+detail\+::\+\_\+\+\_\+multi\+\_\+array\+\_\+shape}}$<$ \+\_\+\+\_\+\+NumD $>$ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_ae1f6609f000df092e07a53fe1aa4c27f}{\+\_\+\+\_\+shape}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_aa0a2274360e5303586fb0744e12c458d}{\+\_\+\+\_\+array\+\_\+\+Cart}} (\mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_ae1f6609f000df092e07a53fe1aa4c27f}{\+\_\+\+\_\+shape}} \&, \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment}{environment}} \&)
+\item 
+{\footnotesize template$<$typename ... Args$>$ }\\\+\_\+\+\_\+T \& \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a79b8693be972b3a997aeda8b18876bf1}{operator()}} (Args ... args)
+\item 
+\+\_\+\+\_\+T \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a92b6d5ef5f0f8e1af471571a8c587c04}{data}} ()
+\item 
+const \+\_\+\+\_\+T \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_aaa072feea2dfd45481366cf96a0b6f2f}{data}} () const
+\item 
+\mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}} \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_aa0d514fc1aa95ec95e9caa44f5588d16}{get\+\_\+flat\+\_\+index}} (std\+::array$<$ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}, \+\_\+\+\_\+\+NumD $>$ \&indexes)
+\item 
+void \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a123f9ea2145335ed19e24f4baa775926}{swap}} (\mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart}{\+\_\+\+\_\+array\+\_\+\+Cart}} \&)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a946df73dcf6650314f86b35e0453ed65}{\+\_\+\+\_\+\+Cart}} \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a8a7e916f7248116d8323bcc48addb818}{\+\_\+\+\_\+loc\+\_\+\+Cart}}
+\item 
+\mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_af02b07c442d1995c5ee7267dd4a0456c}{\+\_\+\+\_\+array}} \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a453158f9c2479b0d94ab0b035089bd6a}{\+\_\+\+\_\+loc\+\_\+array}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$class \+\_\+\+\_\+U , \mbox{\hyperlink{namespacefinal__project_1_1mpi_1_1____detail_a7469aefd9f02763c9b07c86e54e90273}{\+\_\+\+\_\+size\+\_\+type}} \+\_\+\+\_\+\+Dims$>$ }\\std\+::ostream \& \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_af6bf7f48c4626128dc7ef710f1c9784c}{operator$<$$<$}} (std\+::ostream \&, const \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart}{\+\_\+\+\_\+array\+\_\+\+Cart}}$<$ \+\_\+\+\_\+U, \+\_\+\+\_\+\+Dims $>$ \&)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$class \+\_\+\+\_\+T, \mbox{\hyperlink{namespacefinal__project_1_1mpi_1_1____detail_a7469aefd9f02763c9b07c86e54e90273}{\+\_\+\+\_\+size\+\_\+type}} \+\_\+\+\_\+\+NumD$>$\newline
+class final\+\_\+project\+::mpi\+::\+\_\+\+\_\+detail\+::\+\_\+\+\_\+array\+\_\+\+Cart$<$ \+\_\+\+\_\+\+T, \+\_\+\+\_\+\+Num\+D $>$}
+The implementation of multi-\/dimension array, based on {\ttfamily MPI\+\_\+\+Cart} topology structure. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em \+\_\+\+\_\+T} & The value type. \\
+\hline
+{\em \+\_\+\+\_\+\+NumD} & The number of dimensions. \\
+\hline
+\end{DoxyTemplParams}
+
+
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_af02b07c442d1995c5ee7267dd4a0456c}\label{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_af02b07c442d1995c5ee7267dd4a0456c} 
+\index{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$@{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$}!\_\_array@{\_\_array}}
+\index{\_\_array@{\_\_array}!final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$@{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$}}
+\doxysubsubsection{\texorpdfstring{\_\_array}{\_\_array}}
+{\footnotesize\ttfamily template$<$class \+\_\+\+\_\+T , \mbox{\hyperlink{namespacefinal__project_1_1mpi_1_1____detail_a7469aefd9f02763c9b07c86e54e90273}{\+\_\+\+\_\+size\+\_\+type}} \+\_\+\+\_\+\+NumD$>$ \\
+typedef \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array}{multi\+\_\+array\+::\+\_\+\+\_\+detail\+::\+\_\+\+\_\+array}}$<$\+\_\+\+\_\+T, \+\_\+\+\_\+\+NumD$>$ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart}{final\+\_\+project\+::mpi\+::\+\_\+\+\_\+detail\+::\+\_\+\+\_\+array\+\_\+\+Cart}}$<$ \+\_\+\+\_\+T, \+\_\+\+\_\+\+NumD $>$\+::\+\_\+\+\_\+array}
+
+\Hypertarget{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a946df73dcf6650314f86b35e0453ed65}\label{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a946df73dcf6650314f86b35e0453ed65} 
+\index{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$@{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$}!\_\_Cart@{\_\_Cart}}
+\index{\_\_Cart@{\_\_Cart}!final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$@{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$}}
+\doxysubsubsection{\texorpdfstring{\_\_Cart}{\_\_Cart}}
+{\footnotesize\ttfamily template$<$class \+\_\+\+\_\+T , \mbox{\hyperlink{namespacefinal__project_1_1mpi_1_1____detail_a7469aefd9f02763c9b07c86e54e90273}{\+\_\+\+\_\+size\+\_\+type}} \+\_\+\+\_\+\+NumD$>$ \\
+typedef \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian}{topology\+::\+Cartesian}}$<$\+\_\+\+\_\+T, \+\_\+\+\_\+\+NumD$>$ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart}{final\+\_\+project\+::mpi\+::\+\_\+\+\_\+detail\+::\+\_\+\+\_\+array\+\_\+\+Cart}}$<$ \+\_\+\+\_\+T, \+\_\+\+\_\+\+NumD $>$\+::\+\_\+\+\_\+\+Cart}
+
+\Hypertarget{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_ae1f6609f000df092e07a53fe1aa4c27f}\label{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_ae1f6609f000df092e07a53fe1aa4c27f} 
+\index{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$@{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$}!\_\_shape@{\_\_shape}}
+\index{\_\_shape@{\_\_shape}!final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$@{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$}}
+\doxysubsubsection{\texorpdfstring{\_\_shape}{\_\_shape}}
+{\footnotesize\ttfamily template$<$class \+\_\+\+\_\+T , \mbox{\hyperlink{namespacefinal__project_1_1mpi_1_1____detail_a7469aefd9f02763c9b07c86e54e90273}{\+\_\+\+\_\+size\+\_\+type}} \+\_\+\+\_\+\+NumD$>$ \\
+typedef \mbox{\hyperlink{structfinal__project_1_1multi__array_1_1____detail_1_1____multi__array__shape}{multi\+\_\+array\+::\+\_\+\+\_\+detail\+::\+\_\+\+\_\+multi\+\_\+array\+\_\+shape}}$<$\+\_\+\+\_\+\+NumD$>$ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart}{final\+\_\+project\+::mpi\+::\+\_\+\+\_\+detail\+::\+\_\+\+\_\+array\+\_\+\+Cart}}$<$ \+\_\+\+\_\+T, \+\_\+\+\_\+\+NumD $>$\+::\+\_\+\+\_\+shape}
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_aa0a2274360e5303586fb0744e12c458d}\label{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_aa0a2274360e5303586fb0744e12c458d} 
+\index{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$@{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$}!\_\_array\_Cart@{\_\_array\_Cart}}
+\index{\_\_array\_Cart@{\_\_array\_Cart}!final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$@{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$}}
+\doxysubsubsection{\texorpdfstring{\_\_array\_Cart()}{\_\_array\_Cart()}}
+{\footnotesize\ttfamily template$<$class \+\_\+\+\_\+T , \mbox{\hyperlink{namespacefinal__project_1_1mpi_1_1____detail_a7469aefd9f02763c9b07c86e54e90273}{\+\_\+\+\_\+size\+\_\+type}} \+\_\+\+\_\+\+NumD$>$ \\
+\mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart}{final\+\_\+project\+::mpi\+::\+\_\+\+\_\+detail\+::\+\_\+\+\_\+array\+\_\+\+Cart}}$<$ \+\_\+\+\_\+T, \+\_\+\+\_\+\+NumD $>$\+::\+\_\+\+\_\+array\+\_\+\+Cart (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_ae1f6609f000df092e07a53fe1aa4c27f}{\+\_\+\+\_\+shape}} \&}]{\+\_\+\+\_\+glob\+\_\+shape,  }\item[{\mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment}{environment}} \&}]{env }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a92b6d5ef5f0f8e1af471571a8c587c04}\label{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a92b6d5ef5f0f8e1af471571a8c587c04} 
+\index{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$@{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$}!data@{data}}
+\index{data@{data}!final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$@{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$}}
+\doxysubsubsection{\texorpdfstring{data()}{data()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$class \+\_\+\+\_\+T , \mbox{\hyperlink{namespacefinal__project_1_1mpi_1_1____detail_a7469aefd9f02763c9b07c86e54e90273}{\+\_\+\+\_\+size\+\_\+type}} \+\_\+\+\_\+\+NumD$>$ \\
+\+\_\+\+\_\+T \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart}{final\+\_\+project\+::mpi\+::\+\_\+\+\_\+detail\+::\+\_\+\+\_\+array\+\_\+\+Cart}}$<$ \+\_\+\+\_\+T, \+\_\+\+\_\+\+NumD $>$\+::data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=331pt]{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a92b6d5ef5f0f8e1af471571a8c587c04_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_aaa072feea2dfd45481366cf96a0b6f2f}\label{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_aaa072feea2dfd45481366cf96a0b6f2f} 
+\index{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$@{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$}!data@{data}}
+\index{data@{data}!final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$@{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$}}
+\doxysubsubsection{\texorpdfstring{data()}{data()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$class \+\_\+\+\_\+T , \mbox{\hyperlink{namespacefinal__project_1_1mpi_1_1____detail_a7469aefd9f02763c9b07c86e54e90273}{\+\_\+\+\_\+size\+\_\+type}} \+\_\+\+\_\+\+NumD$>$ \\
+const \+\_\+\+\_\+T \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart}{final\+\_\+project\+::mpi\+::\+\_\+\+\_\+detail\+::\+\_\+\+\_\+array\+\_\+\+Cart}}$<$ \+\_\+\+\_\+T, \+\_\+\+\_\+\+NumD $>$\+::data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=331pt]{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_aaa072feea2dfd45481366cf96a0b6f2f_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_aa0d514fc1aa95ec95e9caa44f5588d16}\label{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_aa0d514fc1aa95ec95e9caa44f5588d16} 
+\index{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$@{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$}!get\_flat\_index@{get\_flat\_index}}
+\index{get\_flat\_index@{get\_flat\_index}!final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$@{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$}}
+\doxysubsubsection{\texorpdfstring{get\_flat\_index()}{get\_flat\_index()}}
+{\footnotesize\ttfamily template$<$class \+\_\+\+\_\+T , \mbox{\hyperlink{namespacefinal__project_1_1mpi_1_1____detail_a7469aefd9f02763c9b07c86e54e90273}{\+\_\+\+\_\+size\+\_\+type}} \+\_\+\+\_\+\+NumD$>$ \\
+\mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}} \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart}{final\+\_\+project\+::mpi\+::\+\_\+\+\_\+detail\+::\+\_\+\+\_\+array\+\_\+\+Cart}}$<$ \+\_\+\+\_\+T, \+\_\+\+\_\+\+NumD $>$\+::get\+\_\+flat\+\_\+index (\begin{DoxyParamCaption}\item[{std\+::array$<$ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}, \+\_\+\+\_\+\+NumD $>$ \&}]{indexes }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=344pt]{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_aa0d514fc1aa95ec95e9caa44f5588d16_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a79b8693be972b3a997aeda8b18876bf1}\label{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a79b8693be972b3a997aeda8b18876bf1} 
+\index{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$@{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$}!operator()@{operator()}}
+\index{operator()@{operator()}!final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$@{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$}}
+\doxysubsubsection{\texorpdfstring{operator()()}{operator()()}}
+{\footnotesize\ttfamily template$<$class \+\_\+\+\_\+T , \mbox{\hyperlink{namespacefinal__project_1_1mpi_1_1____detail_a7469aefd9f02763c9b07c86e54e90273}{\+\_\+\+\_\+size\+\_\+type}} \+\_\+\+\_\+\+NumD$>$ \\
+template$<$typename ... Args$>$ \\
+\+\_\+\+\_\+T \& \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart}{final\+\_\+project\+::mpi\+::\+\_\+\+\_\+detail\+::\+\_\+\+\_\+array\+\_\+\+Cart}}$<$ \+\_\+\+\_\+T, \+\_\+\+\_\+\+NumD $>$\+::operator() (\begin{DoxyParamCaption}\item[{Args ...}]{args }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a123f9ea2145335ed19e24f4baa775926}\label{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a123f9ea2145335ed19e24f4baa775926} 
+\index{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$@{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$}!swap@{swap}}
+\index{swap@{swap}!final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$@{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$}}
+\doxysubsubsection{\texorpdfstring{swap()}{swap()}}
+{\footnotesize\ttfamily template$<$class \+\_\+\+\_\+T , \mbox{\hyperlink{namespacefinal__project_1_1mpi_1_1____detail_a7469aefd9f02763c9b07c86e54e90273}{\+\_\+\+\_\+size\+\_\+type}} \+\_\+\+\_\+\+NumD$>$ \\
+void \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart}{final\+\_\+project\+::mpi\+::\+\_\+\+\_\+detail\+::\+\_\+\+\_\+array\+\_\+\+Cart}}$<$ \+\_\+\+\_\+T, \+\_\+\+\_\+\+NumD $>$\+::swap (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart}{\+\_\+\+\_\+array\+\_\+\+Cart}}$<$ \+\_\+\+\_\+T, \+\_\+\+\_\+\+NumD $>$ \&}]{other }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Friends And Related Symbol Documentation}
+\Hypertarget{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_af6bf7f48c4626128dc7ef710f1c9784c}\label{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_af6bf7f48c4626128dc7ef710f1c9784c} 
+\index{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$@{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$@{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$}}
+\doxysubsubsection{\texorpdfstring{operator$<$$<$}{operator<<}}
+{\footnotesize\ttfamily template$<$class \+\_\+\+\_\+T , \mbox{\hyperlink{namespacefinal__project_1_1mpi_1_1____detail_a7469aefd9f02763c9b07c86e54e90273}{\+\_\+\+\_\+size\+\_\+type}} \+\_\+\+\_\+\+NumD$>$ \\
+template$<$class \+\_\+\+\_\+U , \mbox{\hyperlink{namespacefinal__project_1_1mpi_1_1____detail_a7469aefd9f02763c9b07c86e54e90273}{\+\_\+\+\_\+size\+\_\+type}} \+\_\+\+\_\+\+Dims$>$ \\
+std\+::ostream \& operator$<$$<$ (\begin{DoxyParamCaption}\item[{std\+::ostream \&}]{os,  }\item[{const \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart}{\+\_\+\+\_\+array\+\_\+\+Cart}}$<$ \+\_\+\+\_\+U, \+\_\+\+\_\+\+Dims $>$ \&}]{in }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a453158f9c2479b0d94ab0b035089bd6a}\label{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a453158f9c2479b0d94ab0b035089bd6a} 
+\index{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$@{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$}!\_\_loc\_array@{\_\_loc\_array}}
+\index{\_\_loc\_array@{\_\_loc\_array}!final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$@{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$}}
+\doxysubsubsection{\texorpdfstring{\_\_loc\_array}{\_\_loc\_array}}
+{\footnotesize\ttfamily template$<$class \+\_\+\+\_\+T , \mbox{\hyperlink{namespacefinal__project_1_1mpi_1_1____detail_a7469aefd9f02763c9b07c86e54e90273}{\+\_\+\+\_\+size\+\_\+type}} \+\_\+\+\_\+\+NumD$>$ \\
+\mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_af02b07c442d1995c5ee7267dd4a0456c}{\+\_\+\+\_\+array}} \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart}{final\+\_\+project\+::mpi\+::\+\_\+\+\_\+detail\+::\+\_\+\+\_\+array\+\_\+\+Cart}}$<$ \+\_\+\+\_\+T, \+\_\+\+\_\+\+NumD $>$\+::\+\_\+\+\_\+loc\+\_\+array}
+
+\Hypertarget{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a8a7e916f7248116d8323bcc48addb818}\label{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a8a7e916f7248116d8323bcc48addb818} 
+\index{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$@{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$}!\_\_loc\_Cart@{\_\_loc\_Cart}}
+\index{\_\_loc\_Cart@{\_\_loc\_Cart}!final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$@{final\_project::mpi::\_\_detail::\_\_array\_Cart$<$ \_\_T, \_\_NumD $>$}}
+\doxysubsubsection{\texorpdfstring{\_\_loc\_Cart}{\_\_loc\_Cart}}
+{\footnotesize\ttfamily template$<$class \+\_\+\+\_\+T , \mbox{\hyperlink{namespacefinal__project_1_1mpi_1_1____detail_a7469aefd9f02763c9b07c86e54e90273}{\+\_\+\+\_\+size\+\_\+type}} \+\_\+\+\_\+\+NumD$>$ \\
+\mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart_a946df73dcf6650314f86b35e0453ed65}{\+\_\+\+\_\+\+Cart}} \mbox{\hyperlink{classfinal__project_1_1mpi_1_1____detail_1_1____array___cart}{final\+\_\+project\+::mpi\+::\+\_\+\+\_\+detail\+::\+\_\+\+\_\+array\+\_\+\+Cart}}$<$ \+\_\+\+\_\+T, \+\_\+\+\_\+\+NumD $>$\+::\+\_\+\+\_\+loc\+\_\+\+Cart}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/mpi/\mbox{\hyperlink{mpi_2multiarray_8hpp}{multiarray.\+hpp}}\end{DoxyCompactItemize}

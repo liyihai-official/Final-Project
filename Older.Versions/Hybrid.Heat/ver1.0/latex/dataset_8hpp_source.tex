@@ -1,0 +1,89 @@
+\doxysection{dataset.\+hpp}
+\hypertarget{dataset_8hpp_source}{}\label{dataset_8hpp_source}\index{include/pinn/dataset.hpp@{include/pinn/dataset.hpp}}
+\mbox{\hyperlink{dataset_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#ifndef\ FINAL\_PROJECT\_DATASET\_HPP}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#define\ FINAL\_PROJECT\_DATASET\_HPP}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#pragma\ once\ }}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <torch/torch.h>}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <random>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{types_8hpp}{types.hpp}}>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{pinn_2types_8hpp}{pinn/types.hpp}}>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <multiarray.hpp>}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <filesystem>}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacefinal__project}{final\_project}}\ \{\ \textcolor{keyword}{namespace\ }PINN\ \{}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset}{dataset}}}
+\DoxyCodeLine{00028\ \{}
+\DoxyCodeLine{00029\ \ \ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{using\ }\mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset_a364f4ae2dd622aa7acc8bd1593184e2d}{BCFunction}}\ =\ std::function<\mbox{\hyperlink{namespacefinal__project_1_1_p_i_n_n_ae72d825c535bbc45bf93248b40c749c1}{value\_type}}(\mbox{\hyperlink{namespacefinal__project_1_1_p_i_n_n_ae72d825c535bbc45bf93248b40c749c1}{value\_type}},\ \mbox{\hyperlink{namespacefinal__project_1_1_p_i_n_n_ae72d825c535bbc45bf93248b40c749c1}{value\_type}})>;}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset_a2f8c9ef25cedcea16ea055456429338b}{dataset}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00042\ \ \ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset_a2f8c9ef25cedcea16ea055456429338b}{dataset}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}},\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}},}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{String}},\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{String}},\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{String}},\ \ \textcolor{keyword}{const}\ torch::Device\ \&);}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00057\ \ \ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset_a2f8c9ef25cedcea16ea055456429338b}{dataset}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \textcolor{comment}{/*IN\_SIZE*/},\ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \textcolor{comment}{/*OUT\_SIZE*/},\ }
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \textcolor{comment}{/*NX*/},\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \textcolor{comment}{/*NY*/},\ }
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ std::mt19937\ \&\ \textcolor{comment}{/*\ Random\ Number\ Generator\ */},}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ std::uniform\_real\_distribution<value\_type>\ \&\ \textcolor{comment}{/*\ Distribution\ */},}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset_a364f4ae2dd622aa7acc8bd1593184e2d}{BCFunction}}\ \&,\ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset_a364f4ae2dd622aa7acc8bd1593184e2d}{BCFunction}}\ \&,\ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset_a364f4ae2dd622aa7acc8bd1593184e2d}{BCFunction}}\ \&,\ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset_a364f4ae2dd622aa7acc8bd1593184e2d}{BCFunction}}\ \&,\ \textcolor{comment}{/*\ Boundary\ Functions\ */}}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ torch::Device\ \&);}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00070\ \ \ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset_a2f8c9ef25cedcea16ea055456429338b}{dataset}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \textcolor{comment}{/*IN\_SIZE*/},\ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \textcolor{comment}{/*OUT\_SIZE*/},}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \textcolor{comment}{/*NX*/},\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \textcolor{comment}{/*NY*/},}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ torch::Device\ \&);}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00078\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset_a823d6ae4a4809b7ea70666b2eab259fe}{save}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{String}},\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{String}},\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{String}});}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ torch::Tensor\ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset_ac093ac443956f4acece4110318688c03}{X\_internal}},\ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset_a9da15ea9b4312bddfc8d8ff7323f2f00}{X\_boundary}},\ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset_a803011bf0ce9075fc467c894c989453d}{Y\_boundary}};}
+\DoxyCodeLine{00081\ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset_acfab98f23ff2773113ec1c595a5aa053}{in\_size}},\ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset_aa98ee3a36b1e9c1864c8c4080af38863}{out\_size}},\ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset_a6f3b2ea6689929b26bf8ef6189f3eb7d}{nx}},\ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset_aecc5140ef00946a49ea1231bb06fae65}{ny}};}
+\DoxyCodeLine{00082\ \};\ \textcolor{comment}{//\ dataset}}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00086\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d}{dataset\_3d}}\ }
+\DoxyCodeLine{00087\ \{}
+\DoxyCodeLine{00088\ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_afc022e3effdc90721ed141ea02800de2}{BCFunction}}\ =\ std::function<\mbox{\hyperlink{namespacefinal__project_1_1_p_i_n_n_ae72d825c535bbc45bf93248b40c749c1}{value\_type}}(\mbox{\hyperlink{namespacefinal__project_1_1_p_i_n_n_ae72d825c535bbc45bf93248b40c749c1}{value\_type}},\ \mbox{\hyperlink{namespacefinal__project_1_1_p_i_n_n_ae72d825c535bbc45bf93248b40c749c1}{value\_type}},\ \mbox{\hyperlink{namespacefinal__project_1_1_p_i_n_n_ae72d825c535bbc45bf93248b40c749c1}{value\_type}})>;}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_adc2b777d1593470bfa38890883d5f512}{dataset\_3d}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00100\ \ \ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_adc2b777d1593470bfa38890883d5f512}{dataset\_3d}}(\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}},\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}},\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}},}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{String}},\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{String}},\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{String}},\ \ \textcolor{keyword}{const}\ torch::Device\ \&);}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00118\ \ \ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_adc2b777d1593470bfa38890883d5f512}{dataset\_3d}}(\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \textcolor{comment}{/*IN\_SIZE*/},\ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \textcolor{comment}{/*OUT\_SIZE*/},\ }
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \textcolor{comment}{/*NX*/},\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \textcolor{comment}{/*NY*/},\ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \textcolor{comment}{/*NZ*/},\ }
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::mt19937\ \&\ \textcolor{comment}{/*\ Random\ Number\ Generator\ */},}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::uniform\_real\_distribution<value\_type>\ \&\ \textcolor{comment}{/*\ Distribution\ */},}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_afc022e3effdc90721ed141ea02800de2}{BCFunction}}\ \&,\ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_afc022e3effdc90721ed141ea02800de2}{BCFunction}}\ \&,\ \textcolor{comment}{/*\ Boundary\ Functions\ */}}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_afc022e3effdc90721ed141ea02800de2}{BCFunction}}\ \&,\ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_afc022e3effdc90721ed141ea02800de2}{BCFunction}}\ \&,\ }
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_afc022e3effdc90721ed141ea02800de2}{BCFunction}}\ \&,\ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_afc022e3effdc90721ed141ea02800de2}{BCFunction}}\ \&,\ }
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ torch::Device\ \&);}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00134\ \ \ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_adc2b777d1593470bfa38890883d5f512}{dataset\_3d}}(\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \textcolor{comment}{/*IN\_SIZE*/},\ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \textcolor{comment}{/*OUT\_SIZE*/},}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \textcolor{comment}{/*NX*/},\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \textcolor{comment}{/*NY*/},\ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \textcolor{comment}{/*NZ*/},}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ torch::Device\ \&);}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00142\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_acc76f7436a98204c8e8e329c7fed33a1}{save}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{String}},\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{String}},\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{String}});}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ torch::Tensor\ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a0bc8ff441889459f82054defb27f3f05}{X\_internal}},\ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_ad2d227fde1aec652ead5458cfc4c7feb}{X\_boundary}},\ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a70a2c547f270007523f4d8547fb62788}{Y\_boundary}};}
+\DoxyCodeLine{00145\ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_abbd96cb89c3e4bdc81a68cd86f4506cf}{in\_size}},\ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a8d0e1abd9e84133d7160d233f1548c85}{out\_size}},\ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a9105052a18863b12dc6948ac5bb571b8}{nx}},\ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a14b687f69cca137656906b9ba0e2355a}{ny}},\ \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d_a01dee38d5a8ad680fb1cc3b891d4308d}{nz}};}
+\DoxyCodeLine{00146\ \};\ \textcolor{comment}{//\ dataset\_3d}}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \}\ \textcolor{comment}{//\ namespace\ PINN}}
+\DoxyCodeLine{00149\ \}\ \textcolor{comment}{//\ namespace\ final\_project\ \ }}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ end\ define\ FINAL\_PROJECT\_DATASET\_HPP}}
+
+\end{DoxyCode}

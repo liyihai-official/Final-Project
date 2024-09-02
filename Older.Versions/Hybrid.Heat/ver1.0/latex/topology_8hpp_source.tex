@@ -1,0 +1,185 @@
+\doxysection{topology.\+hpp}
+\hypertarget{topology_8hpp_source}{}\label{topology_8hpp_source}\index{include/mpi/topology.hpp@{include/mpi/topology.hpp}}
+\mbox{\hyperlink{topology_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ FINAL\_PROJECT\_MPI\_TOPOLOGY\_HPP\_LIYIHAI}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ FINAL\_PROJECT\_MPI\_TOPOLOGY\_HPP\_LIYIHAI}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ OpenMPI\ Library}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <mpi.h>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <array>}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ Final\ Project\ Header\ Files}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{types_8hpp}{types.hpp}}>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{multiarray_2types_8hpp}{multiarray/types.hpp}}>}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{environment_8hpp}{mpi/environment.hpp}}>}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacefinal__project}{final\_project}}\ \{\ \textcolor{keyword}{namespace\ }mpi\ \{}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{namespace\ }topology\ }
+\DoxyCodeLine{00029\ \{}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00036\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keywordtype}{size\_t}ype\ NumD>}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian}{Cartesian}}\ }
+\DoxyCodeLine{00038\ \ \ \ \ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{structfinal__project_1_1multi__array_1_1____detail_1_1____multi__array__shape}{multi\_array::\_\_detail::\_\_multi\_array\_shape<NumD>}}\ \ \ \ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a18e5f18b50f327b1cdfc6216c94388fc}{\_\_array\_shape}};}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ Global\ Entities\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ //}}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a7c834528b67e4487b87802fd470fa1fc}{dimension}},\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_aab9070d77248397bcde57674cf278da0}{num\_procs}};}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \mbox{\hyperlink{structfinal__project_1_1multi__array_1_1____detail_1_1____multi__array__shape}{\_\_array\_shape}}\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_abf8d7b464895836b3d782dd579d8bba6}{\_\_global\_shape}};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \ \ MPI\_Comm\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a3cebd4de1cb0ae4f6a0dbea8d53a8e9c}{comm\_cart}};}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ MPI\_Datatype\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a5b918d19b0acc8b2abd3bad274681057}{value\_type}}\ \{get\_mpi\_type<T>()\};}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ Local\ Entities\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ //}}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \textcolor{keyword}{public}:\ }
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \mbox{\hyperlink{structfinal__project_1_1multi__array_1_1____detail_1_1____multi__array__shape}{\_\_array\_shape}}\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a617a1cb79840339dadd5bf10a2290886}{\_\_local\_shape}};}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a55aab245e4415f702ba785e7359af9f7}{rank}};}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ std::array<Integer,\ NumD>\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_aab66dbcd0a5da8f4dd47f2515579d67e}{starts}},\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_ae02dddc75994ade777f7efe7add487bb}{ends}},\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a4c5d0e543aa86f302b453c27dda01236}{dims}}\ =\ \{0\},\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a51ca0c7e668dee0a714a8cd8e0c5b06c}{periods}}\ =\ \{0\};}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ std::array<Integer,\ NumD>\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a2c19f2da489d29e1fb47ae1826587b75}{nbr\_src}},\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_abd6f8e0c4ddf4bd22b4528b0de88fae8}{nbr\_dest}},\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a74c4c5b8aea68c0b27d96b22e932fba5}{coordinates}};}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ std::array<MPI\_Datatype,\ NumD>\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a42a5ad7adca48fb6212cc681020eced2}{halos}};}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ Cons\ \&\ Decons\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ //}}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a4d4e0a08c734c5936c8d67d8bbef374d}{Cartesian}}();}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a73096b9fcb6a5e683563c5889688d086}{Cartesian}}(\mbox{\hyperlink{structfinal__project_1_1multi__array_1_1____detail_1_1____multi__array__shape}{\_\_array\_shape}}\ \&,\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment}{environment}}\ \&);}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_abd7c97ba4092bcefe27499cc5ef894e8}{\string~Cartesian}}();}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ Operators\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ //}}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a8bed964826cc5d54e6a458882580dc3d}{operator==}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian}{Cartesian}}\ \&)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a68ef78e606df07e5111928391b1fda82}{operator!=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian}{Cartesian}}\ \&)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \ \ }
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \};\ \textcolor{comment}{//\ struct\ Cartesian}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \}\ \textcolor{comment}{//\ namespace\ topology}}
+\DoxyCodeLine{00076\ \}\ \textcolor{comment}{//\ namespace\ mpi}}
+\DoxyCodeLine{00077\ \}\ \textcolor{comment}{//\ namespace\ final\_project}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{mpi_2assert_8hpp}{assert.hpp}}>}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{mpi_2assert_8hpp}{mpi/assert.hpp}}>}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacefinal__project}{final\_project}}\ \{\ \textcolor{keyword}{namespace\ }mpi\ \{}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{keyword}{namespace\ }topology\ }
+\DoxyCodeLine{00091\ \{}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{comment}{//\ typedef\ Dworld\ size\_type;}}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00101\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keywordtype}{size\_t}ype\ NumD>}
+\DoxyCodeLine{00102\ \ \ \textcolor{keyword}{inline}}
+\DoxyCodeLine{00103\ \ \ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a4d4e0a08c734c5936c8d67d8bbef374d}{Cartesian<T,\ NumD>::Cartesian}}()}
+\DoxyCodeLine{00104\ \ \ \ \ :\ num\_procs\ \{0\},\ rank\ \{0\},\ comm\_cart\ \{MPI\_COMM\_NULL\},\ }
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \_\_local\_shape(\_\_global\_shape),\ \_\_global\_shape()}
+\DoxyCodeLine{00106\ \ \ \{}
+\DoxyCodeLine{00107\ std::fill(\ \ \ \ \ \ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_aab66dbcd0a5da8f4dd47f2515579d67e}{starts}}.begin(),\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_aab66dbcd0a5da8f4dd47f2515579d67e}{starts}}.end(),\ \ \ \ \ \ \ 0);}
+\DoxyCodeLine{00108\ std::fill(\ \ \ \ \ \ \ \ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_ae02dddc75994ade777f7efe7add487bb}{ends}}.begin(),\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_ae02dddc75994ade777f7efe7add487bb}{ends}}.end(),\ \ \ \ \ \ \ \ \ 0);}
+\DoxyCodeLine{00109\ std::fill(\ \ \ \ \ \ \ \ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a4c5d0e543aa86f302b453c27dda01236}{dims}}.begin(),\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a4c5d0e543aa86f302b453c27dda01236}{dims}}.end(),\ \ \ \ \ \ \ \ \ 0);}
+\DoxyCodeLine{00110\ std::fill(\ \ \ \ \ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a51ca0c7e668dee0a714a8cd8e0c5b06c}{periods}}.begin(),\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a51ca0c7e668dee0a714a8cd8e0c5b06c}{periods}}.end(),\ \ \ \ \ \ 0);}
+\DoxyCodeLine{00111\ std::fill(\ \ \ \ \ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a2c19f2da489d29e1fb47ae1826587b75}{nbr\_src}}.begin(),\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a2c19f2da489d29e1fb47ae1826587b75}{nbr\_src}}.end(),\ \ \ \ \ \ 0);}
+\DoxyCodeLine{00112\ std::fill(\ \ \ \ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_abd6f8e0c4ddf4bd22b4528b0de88fae8}{nbr\_dest}}.begin(),\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_abd6f8e0c4ddf4bd22b4528b0de88fae8}{nbr\_dest}}.end(),\ \ \ \ \ 0);}
+\DoxyCodeLine{00113\ std::fill(\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a74c4c5b8aea68c0b27d96b22e932fba5}{coordinates}}.begin(),\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a74c4c5b8aea68c0b27d96b22e932fba5}{coordinates}}.end(),\ \ 0);}
+\DoxyCodeLine{00114\ std::fill(\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a42a5ad7adca48fb6212cc681020eced2}{halos}}.begin(),\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a42a5ad7adca48fb6212cc681020eced2}{halos}}.end(),\ MPI\_DATATYPE\_NULL);}
+\DoxyCodeLine{00115\ \ \ \}}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00118\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keywordtype}{size\_t}ype\ NumD>}
+\DoxyCodeLine{00119\ \ \ \textcolor{keyword}{inline}}
+\DoxyCodeLine{00120\ \ \ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_abd7c97ba4092bcefe27499cc5ef894e8}{Cartesian<T,\ NumD>::\string~Cartesian}}()}
+\DoxyCodeLine{00121\ \ \ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ i\ \{0\};}
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keywordflow}{for}\ (;\ i\ <\ dimension;\ ++i)\ }
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (halos[i]\ !=\ MPI\_DATATYPE\_NULL)\ }
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \{MPI\_Type\_free(\&halos[i]);\}}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keywordflow}{if}\ (comm\_cart\ !=\ MPI\_COMM\_NULL)\ }
+\DoxyCodeLine{00128\ \ \ \ \ \ \ MPI\_Comm\_free(\&comm\_cart);}
+\DoxyCodeLine{00129\ \ \ \}}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{namespacefinal__project_a4444f518ac9564eca37f7226752429c1}{Dworld}}\ \mbox{\hyperlink{namespacefinal__project_1_1mpi_1_1topology_ad2fcc2924ac41b8322423004b8c24eef}{size\_type}};}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00138\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keywordtype}{size\_t}ype\ NumD>}
+\DoxyCodeLine{00139\ \ \ \textcolor{keyword}{inline}\ }
+\DoxyCodeLine{00140\ \ \ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a4d4e0a08c734c5936c8d67d8bbef374d}{Cartesian<T,\ NumD>::Cartesian}}(\ \mbox{\hyperlink{structfinal__project_1_1multi__array_1_1____detail_1_1____multi__array__shape}{\_\_array\_shape}}\ \&\ global\_shape,\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment}{environment}}\ \&\ env\ )}
+\DoxyCodeLine{00141\ :\ \_\_global\_shape(global\_shape),\ \_\_local\_shape(global\_shape)}
+\DoxyCodeLine{00142\ \ \ \{}
+\DoxyCodeLine{00143\ \ \ \ \ \mbox{\hyperlink{assert_8hpp_a4dd9c0fbd112eb96b5ac0f2272aeca55}{FINAL\_PROJECT\_ASSERT\_MSG}}((NumD\ <=\ 4),\ \textcolor{stringliteral}{"{}Number\ of\ dimension\ if\ out\ of\ range."{}});}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00146\ \textcolor{keyword}{auto}\ Decomp\ =\ [](}
+\DoxyCodeLine{00147\ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ n,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ prob\_size,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a55aab245e4415f702ba785e7359af9f7}{rank}},\ }
+\DoxyCodeLine{00148\ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \&\ s,\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \&\ e)}
+\DoxyCodeLine{00149\ \{}
+\DoxyCodeLine{00150\ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ n\_loc\ \{n\ /\ prob\_size\},\ deficit\ \{n\ \%\ prob\_size\};}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \ \ s\ =\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a55aab245e4415f702ba785e7359af9f7}{rank}}\ *\ n\_loc\ +\ 1;}
+\DoxyCodeLine{00153\ \ \ s\ +=\ ((\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a55aab245e4415f702ba785e7359af9f7}{rank}}\ <\ deficit)\ ?\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a55aab245e4415f702ba785e7359af9f7}{rank}}\ :\ deficit);}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a55aab245e4415f702ba785e7359af9f7}{rank}}\ <\ deficit)\ ++n\_loc;}
+\DoxyCodeLine{00156\ \ \ e\ =\ s\ +\ n\_loc\ -\/\ 1;}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \ \ \textcolor{keywordflow}{if}\ (e\ >\ n\ ||\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a55aab245e4415f702ba785e7359af9f7}{rank}}\ ==\ prob\_size\ -\/\ 1)\ e\ =\ n;}
+\DoxyCodeLine{00159\ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00160\ \};}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ i\ \{0\};}
+\DoxyCodeLine{00163\ \ \ \ \ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a7c834528b67e4487b87802fd470fa1fc}{dimension}}\ =\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\textcolor{keyword}{>}(NumD);\ \textcolor{comment}{//\ 0\ <\ Num\ <\ 4}}
+\DoxyCodeLine{00164\ \ \ \ \ std::array<Integer,\ NumD>\ array\_size,\ array\_sub\_size,\ array\_starts\ =\ \{0\};}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \ \ \ \ MPI\_Dims\_create(env.\mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment_aae5fe217a48f9af3f55af145fe445d8d}{size}}(),\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a7c834528b67e4487b87802fd470fa1fc}{dimension}},\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a4c5d0e543aa86f302b453c27dda01236}{dims}}.data());}
+\DoxyCodeLine{00167\ \ \ \ \ MPI\_Cart\_create(env.\mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment_a2cc5ddfdc6972d450e274cae6555e0be}{comm}}(),\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a7c834528b67e4487b87802fd470fa1fc}{dimension}},\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a4c5d0e543aa86f302b453c27dda01236}{dims}}.data(),\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a51ca0c7e668dee0a714a8cd8e0c5b06c}{periods}}.data(),\ 1,\ \&\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a3cebd4de1cb0ae4f6a0dbea8d53a8e9c}{comm\_cart}});}
+\DoxyCodeLine{00168\ \ \ \ \ MPI\_Comm\_size(\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a3cebd4de1cb0ae4f6a0dbea8d53a8e9c}{comm\_cart}},\ \&\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_aab9070d77248397bcde57674cf278da0}{num\_procs}});}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \ \ \ \ MPI\_Comm\_rank(\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a3cebd4de1cb0ae4f6a0dbea8d53a8e9c}{comm\_cart}},\ \&\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a55aab245e4415f702ba785e7359af9f7}{rank}});}
+\DoxyCodeLine{00171\ \ \ \ \ MPI\_Cart\_coords(\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a3cebd4de1cb0ae4f6a0dbea8d53a8e9c}{comm\_cart}},\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a55aab245e4415f702ba785e7359af9f7}{rank}},\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a7c834528b67e4487b87802fd470fa1fc}{dimension}},\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a74c4c5b8aea68c0b27d96b22e932fba5}{coordinates}}.data());}
+\DoxyCodeLine{00172\ \ \ \ \ }
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ 0;\ i\ <\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a7c834528b67e4487b87802fd470fa1fc}{dimension}};\ ++i)}
+\DoxyCodeLine{00174\ \ \ \ \ \{}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ MPI\_Cart\_shift(\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a3cebd4de1cb0ae4f6a0dbea8d53a8e9c}{comm\_cart}},\ i,\ 1,\ \&\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a2c19f2da489d29e1fb47ae1826587b75}{nbr\_src}}[i],\ \&\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_abd6f8e0c4ddf4bd22b4528b0de88fae8}{nbr\_dest}}[i]);}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \ \ \ \ \ \ Decomp(\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_abf8d7b464895836b3d782dd579d8bba6}{\_\_global\_shape}}[i]-\/2,\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a4c5d0e543aa86f302b453c27dda01236}{dims}}[i],\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a74c4c5b8aea68c0b27d96b22e932fba5}{coordinates}}[i],\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_aab66dbcd0a5da8f4dd47f2515579d67e}{starts}}[i],\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_ae02dddc75994ade777f7efe7add487bb}{ends}}[i]);}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a617a1cb79840339dadd5bf10a2290886}{\_\_local\_shape}}[i]\ =\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_ae02dddc75994ade777f7efe7add487bb}{ends}}[i]\ -\/\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_aab66dbcd0a5da8f4dd47f2515579d67e}{starts}}[i]\ +\ 1\ +\ 2;\ \textcolor{comment}{//\ Include\ halos}}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ array\_size[i]\ =\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a617a1cb79840339dadd5bf10a2290886}{\_\_local\_shape}}[i];}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ array\_sub\_size[i]\ =\ array\_size[i]\ -\/\ 2;}
+\DoxyCodeLine{00182\ \mbox{\hyperlink{mpi_2assert_8hpp_a2987d523e767f42e9496df827e65d8b3}{FINAL\_PROJECT\_MPI\_ASSERT\_GLOBAL}}((array\_sub\_size[i]\ >\ 0));\ \textcolor{comment}{//\ sub\ size\ must\ bigger\ than\ 0}}
+\DoxyCodeLine{00183\ \ \ \ \ \}}
+\DoxyCodeLine{00184\ \ \ \ \ }
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ 0;\ i\ <\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a7c834528b67e4487b87802fd470fa1fc}{dimension}};\ ++i)}
+\DoxyCodeLine{00186\ \ \ \ \ \{}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ temp\ =\ array\_sub\_size[i];}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ array\_sub\_size[i]\ =\ 1;}
+\DoxyCodeLine{00189\ MPI\_Type\_create\_subarray(\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a7c834528b67e4487b87802fd470fa1fc}{dimension}},\ \ array\_size.data(),\ }
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ array\_sub\_size.data(),\ }
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ array\_starts.data(),\ }
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MPI\_ORDER\_C,\ \mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a5b918d19b0acc8b2abd3bad274681057}{value\_type}},\ \&\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a42a5ad7adca48fb6212cc681020eced2}{halos}}[i]);}
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00194\ MPI\_Type\_commit(\&\mbox{\hyperlink{structfinal__project_1_1mpi_1_1topology_1_1_cartesian_a42a5ad7adca48fb6212cc681020eced2}{halos}}[i]);}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ array\_sub\_size[i]\ =\ temp;}
+\DoxyCodeLine{00196\ \ \ \ \ \}}
+\DoxyCodeLine{00197\ \ \ \}}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \}\ \textcolor{comment}{//\ namespace\ topology}}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \}\ \textcolor{comment}{//\ namespace\ topology}}
+\DoxyCodeLine{00203\ \}\ \textcolor{comment}{//\ namespace\ final\_project}}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ end\ of\ define\ FINAL\_PROJECT\_MPI\_TOPOLOGY\_HPP\_LIYIHAI}}
+
+\end{DoxyCode}

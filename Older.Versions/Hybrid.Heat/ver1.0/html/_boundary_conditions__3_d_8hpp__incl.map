@@ -1,0 +1,22 @@
+<map id="include/pde/detials/BoundaryConditions/BoundaryConditions_3D.hpp" name="include/pde/detials/BoundaryConditions/BoundaryConditions_3D.hpp">
+<area shape="rect" id="Node000001" title="Objects of Boundary Conditions of PDE. Includes Dirichlet and Von Neumann Boundary Conditions." alt="" coords="5,5,197,61"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="28,330,105,356"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,62,85,109,74,183,69,256,68,314,63,314,64,256,69,182,80,109,91,61"/>
+<area shape="rect" id="Node000003" href="$_heat__3_d_8hpp.html" title="An object of heat equation 3D, with integrated features." alt="" coords="94,109,260,135"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="127,59,158,95,154,99,123,63"/>
+<area shape="rect" id="Node000004" href="$_heat_8hpp.html" title=" " alt="" coords="153,183,252,208"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="184,134,196,167,190,169,179,136"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="79,256,136,282"/>
+<area shape="poly" id="edge10_Node000003_Node000008" title=" " alt="" coords="171,136,143,184,119,243,114,241,139,181,167,134"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="277,256,352,282"/>
+<area shape="poly" id="edge11_Node000003_Node000009" title=" " alt="" coords="201,133,233,153,266,181,288,211,305,241,300,244,284,214,262,184,230,158,199,138"/>
+<area shape="rect" id="Node000005" href="$pde_8hpp.html" title="This file gives the prototypes of PDEs object and the routines of namespace layouts inside of pde nam..." alt="" coords="160,256,253,282"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="206,208,207,241,202,241,200,209"/>
+<area shape="poly" id="edge8_Node000004_Node000008" title=" " alt="" coords="188,211,137,249,134,245,185,207"/>
+<area shape="poly" id="edge9_Node000004_Node000009" title=" " alt="" coords="223,207,284,245,281,250,220,211"/>
+<area shape="poly" id="edge5_Node000005_Node000002" title=" " alt="" coords="184,285,105,325,102,320,181,280"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="267,330,346,356"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="225,280,278,318,275,323,222,285"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="142,330,244,356"/>
+<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="207,283,201,315,195,314,202,282"/>
+</map>

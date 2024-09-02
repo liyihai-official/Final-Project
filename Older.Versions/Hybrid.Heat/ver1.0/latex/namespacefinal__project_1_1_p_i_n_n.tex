@@ -1,0 +1,111 @@
+\doxysection{final\+\_\+project\+::PINN Namespace Reference}
+\hypertarget{namespacefinal__project_1_1_p_i_n_n}{}\label{namespacefinal__project_1_1_p_i_n_n}\index{final\_project::PINN@{final\_project::PINN}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset}{dataset}}
+\item 
+struct \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1dataset__3d}{dataset\+\_\+3d}}
+\item 
+struct \mbox{\hyperlink{structfinal__project_1_1_p_i_n_n_1_1_heat_p_i_n_n_impl}{Heat\+PINNImpl}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef \mbox{\hyperlink{namespacefinal__project_a48ac888085e166e62e2c6be813a6bbf5}{Float}} \mbox{\hyperlink{namespacefinal__project_1_1_p_i_n_n_ae72d825c535bbc45bf93248b40c749c1}{value\+\_\+type}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacefinal__project_1_1_p_i_n_n_a55f99f126418e22dadea2717505c686d}{TORCH\+\_\+\+MODULE}} (Heat\+PINN)
+\item 
+torch\+::\+Tensor \mbox{\hyperlink{namespacefinal__project_1_1_p_i_n_n_af5cfc77828e74719e75ff8d75f8aadc5}{get\+\_\+pde\+\_\+loss}} (torch\+::\+Tensor \&\mbox{\hyperlink{vis2d_8m_a1a45186fe9af663ba838f1023f921ecf}{u}}, torch\+::\+Tensor \&X, torch\+::\+Device \&device)
+\item 
+torch\+::\+Tensor \mbox{\hyperlink{namespacefinal__project_1_1_p_i_n_n_ae41755a6a185a7335febe98cde949e59}{get\+\_\+total\+\_\+loss}} (Heat\+PINN \&net, torch\+::\+Tensor \&X, torch\+::\+Tensor \&X\+\_\+train, torch\+::\+Tensor \&Y\+\_\+train, torch\+::\+Device \&device)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Typedef Documentation}
+\Hypertarget{namespacefinal__project_1_1_p_i_n_n_ae72d825c535bbc45bf93248b40c749c1}\label{namespacefinal__project_1_1_p_i_n_n_ae72d825c535bbc45bf93248b40c749c1} 
+\index{final\_project::PINN@{final\_project::PINN}!value\_type@{value\_type}}
+\index{value\_type@{value\_type}!final\_project::PINN@{final\_project::PINN}}
+\doxysubsubsection{\texorpdfstring{value\_type}{value\_type}}
+{\footnotesize\ttfamily typedef \mbox{\hyperlink{namespacefinal__project_a48ac888085e166e62e2c6be813a6bbf5}{Float}} \mbox{\hyperlink{namespacefinal__project_1_1_p_i_n_n_ae72d825c535bbc45bf93248b40c749c1}{final\+\_\+project\+::\+PINN\+::value\+\_\+type}}}
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacefinal__project_1_1_p_i_n_n_af5cfc77828e74719e75ff8d75f8aadc5}\label{namespacefinal__project_1_1_p_i_n_n_af5cfc77828e74719e75ff8d75f8aadc5} 
+\index{final\_project::PINN@{final\_project::PINN}!get\_pde\_loss@{get\_pde\_loss}}
+\index{get\_pde\_loss@{get\_pde\_loss}!final\_project::PINN@{final\_project::PINN}}
+\doxysubsubsection{\texorpdfstring{get\_pde\_loss()}{get\_pde\_loss()}}
+{\footnotesize\ttfamily torch\+::\+Tensor final\+\_\+project\+::\+PINN\+::get\+\_\+pde\+\_\+loss (\begin{DoxyParamCaption}\item[{torch\+::\+Tensor \&}]{u,  }\item[{torch\+::\+Tensor \&}]{X,  }\item[{torch\+::\+Device \&}]{device }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em u} & \\
+\hline
+{\em X} & \\
+\hline
+{\em device} & ~\newline
+ \\
+\hline
+\end{DoxyParams}
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=244pt]{namespacefinal__project_1_1_p_i_n_n_af5cfc77828e74719e75ff8d75f8aadc5_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacefinal__project_1_1_p_i_n_n_af5cfc77828e74719e75ff8d75f8aadc5_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacefinal__project_1_1_p_i_n_n_ae41755a6a185a7335febe98cde949e59}\label{namespacefinal__project_1_1_p_i_n_n_ae41755a6a185a7335febe98cde949e59} 
+\index{final\_project::PINN@{final\_project::PINN}!get\_total\_loss@{get\_total\_loss}}
+\index{get\_total\_loss@{get\_total\_loss}!final\_project::PINN@{final\_project::PINN}}
+\doxysubsubsection{\texorpdfstring{get\_total\_loss()}{get\_total\_loss()}}
+{\footnotesize\ttfamily torch\+::\+Tensor final\+\_\+project\+::\+PINN\+::get\+\_\+total\+\_\+loss (\begin{DoxyParamCaption}\item[{Heat\+PINN \&}]{net,  }\item[{torch\+::\+Tensor \&}]{X,  }\item[{torch\+::\+Tensor \&}]{X\+\_\+train,  }\item[{torch\+::\+Tensor \&}]{Y\+\_\+train,  }\item[{torch\+::\+Device \&}]{device }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em net} & \\
+\hline
+{\em X} & \\
+\hline
+{\em X\+\_\+train} & \\
+\hline
+{\em Y\+\_\+train} & \\
+\hline
+{\em device} & ~\newline
+ \\
+\hline
+\end{DoxyParams}
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacefinal__project_1_1_p_i_n_n_ae41755a6a185a7335febe98cde949e59_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=252pt]{namespacefinal__project_1_1_p_i_n_n_ae41755a6a185a7335febe98cde949e59_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacefinal__project_1_1_p_i_n_n_a55f99f126418e22dadea2717505c686d}\label{namespacefinal__project_1_1_p_i_n_n_a55f99f126418e22dadea2717505c686d} 
+\index{final\_project::PINN@{final\_project::PINN}!TORCH\_MODULE@{TORCH\_MODULE}}
+\index{TORCH\_MODULE@{TORCH\_MODULE}!final\_project::PINN@{final\_project::PINN}}
+\doxysubsubsection{\texorpdfstring{TORCH\_MODULE()}{TORCH\_MODULE()}}
+{\footnotesize\ttfamily final\+\_\+project\+::\+PINN\+::\+TORCH\+\_\+\+MODULE (\begin{DoxyParamCaption}\item[{Heat\+PINN}]{ }\end{DoxyParamCaption})}
+

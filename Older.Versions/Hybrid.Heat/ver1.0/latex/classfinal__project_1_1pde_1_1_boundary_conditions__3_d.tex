@@ -1,0 +1,285 @@
+\doxysection{final\+\_\+project\+::pde\+::Boundary\+Conditions\+\_\+3D\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classfinal__project_1_1pde_1_1_boundary_conditions__3_d}{}\label{classfinal__project_1_1pde_1_1_boundary_conditions__3_d}\index{final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}}
+
+
+{\ttfamily \#include $<$Boundary\+Conditions\+\_\+3\+D.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a64a8f6aee0456afc8fcc04bbf530469b}{Boundary\+Conditions\+\_\+3D}} ()
+\item 
+\mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a39055a6d138f7a50c0475426db89604d}{Boundary\+Conditions\+\_\+3D}} (\mbox{\hyperlink{namespacefinal__project_ab8f3ebf8a3440235be1c17b6821b5d77}{Bool}}, \mbox{\hyperlink{namespacefinal__project_ab8f3ebf8a3440235be1c17b6821b5d77}{Bool}}, \mbox{\hyperlink{namespacefinal__project_ab8f3ebf8a3440235be1c17b6821b5d77}{Bool}}, \mbox{\hyperlink{namespacefinal__project_ab8f3ebf8a3440235be1c17b6821b5d77}{Bool}}, \mbox{\hyperlink{namespacefinal__project_ab8f3ebf8a3440235be1c17b6821b5d77}{Bool}}, \mbox{\hyperlink{namespacefinal__project_ab8f3ebf8a3440235be1c17b6821b5d77}{Bool}})
+\begin{DoxyCompactList}\small\item\em Specifying the Type of boundary conditions in each edge. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_aab2a819d5dd69e2e2c9b8037772d146c}{Set\+BC}} (\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d}{Heat\+\_\+3D}}$<$ T $>$ \&, \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a49c25791d43c4ef89fd01a85cbb96a9f}{BCFunction}}, \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a49c25791d43c4ef89fd01a85cbb96a9f}{BCFunction}}, \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a49c25791d43c4ef89fd01a85cbb96a9f}{BCFunction}}, \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a49c25791d43c4ef89fd01a85cbb96a9f}{BCFunction}}, \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a49c25791d43c4ef89fd01a85cbb96a9f}{BCFunction}}, \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a49c25791d43c4ef89fd01a85cbb96a9f}{BCFunction}})
+\begin{DoxyCompactList}\small\item\em Set Up the Boundary Conditions with std\+::function. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a49c25791d43c4ef89fd01a85cbb96a9f}{BCFunction}} = std\+::function$<$ T(T, T, T, T)$>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_af129df7b6ae478c821d13ae640d28e17}{Set\+BCin\+Dim00}} (\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d}{Heat\+\_\+3D}}$<$ T $>$ \&, const T \&)
+\item 
+void \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a50d32b4bcc000ab67db0b985a5d49f8d}{Set\+BCin\+Dim01}} (\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d}{Heat\+\_\+3D}}$<$ T $>$ \&, const T \&)
+\item 
+void \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a3af8686d72d324803152a854257d81f0}{Set\+BCin\+Dim10}} (\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d}{Heat\+\_\+3D}}$<$ T $>$ \&, const T \&)
+\item 
+void \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_af659cdd5c6bd7df9024520ea9403c91c}{Set\+BCin\+Dim11}} (\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d}{Heat\+\_\+3D}}$<$ T $>$ \&, const T \&)
+\item 
+void \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_ae4760f78d7a344166850655015c8ef6f}{Set\+BCin\+Dim20}} (\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d}{Heat\+\_\+3D}}$<$ T $>$ \&, const T \&)
+\item 
+void \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a15cdca2604e2cf85c6e4c82b882eb27a}{Set\+BCin\+Dim21}} (\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d}{Heat\+\_\+3D}}$<$ T $>$ \&, const T \&)
+\item 
+void \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a7f6abfe00bf563e089c66d4311912a05}{Update\+BC}} (\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d}{Heat\+\_\+3D}}$<$ T $>$ \&, const T \&)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacefinal__project_ab8f3ebf8a3440235be1c17b6821b5d77}{Bool}} \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a380a93b52f92e56d9c0a0905c6f51f23}{is\+Set\+Up\+BC}}
+\item 
+std\+::array$<$ \mbox{\hyperlink{namespacefinal__project_ab8f3ebf8a3440235be1c17b6821b5d77}{Bool}}, 6 $>$ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a70df935d29f88f520f195169e73d8160}{is\+Dirichlet\+BC}}
+\item 
+std\+::array$<$ \mbox{\hyperlink{namespacefinal__project_ab8f3ebf8a3440235be1c17b6821b5d77}{Bool}}, 6 $>$ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_aa82b7b1c93225b8dd33877e3dca57eff}{is\+Neumann}}
+\item 
+std\+::array$<$ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a49c25791d43c4ef89fd01a85cbb96a9f}{BCFunction}}, 6 $>$ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_af4ff60f4864169fd0bfb2d2343cb6bec}{BCFunc}}
+\item 
+friend \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a0d2bde20e74ca79d06eb1feafed1a96d}{Heat\+\_\+3\+D$<$ T $>$}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a49c25791d43c4ef89fd01a85cbb96a9f}\label{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a49c25791d43c4ef89fd01a85cbb96a9f} 
+\index{final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}!BCFunction@{BCFunction}}
+\index{BCFunction@{BCFunction}!final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{BCFunction}{BCFunction}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+using \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d}{final\+\_\+project\+::pde\+::\+Boundary\+Conditions\+\_\+3D}}$<$ T $>$\mbox{\hyperlink{pinn_2types_8hpp_a04ee5e6ebe3fa2aee4b97ec3a0860ab3}{\+::\+BCFunction}} =  std\+::function$<$T(T, T, T, T)$>$\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a64a8f6aee0456afc8fcc04bbf530469b}\label{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a64a8f6aee0456afc8fcc04bbf530469b} 
+\index{final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}!BoundaryConditions\_3D@{BoundaryConditions\_3D}}
+\index{BoundaryConditions\_3D@{BoundaryConditions\_3D}!final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{BoundaryConditions\_3D()}{BoundaryConditions\_3D()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d}{final\+\_\+project\+::pde\+::\+Boundary\+Conditions\+\_\+3D}}$<$ T $>$\+::\+Boundary\+Conditions\+\_\+3D (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a39055a6d138f7a50c0475426db89604d}\label{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a39055a6d138f7a50c0475426db89604d} 
+\index{final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}!BoundaryConditions\_3D@{BoundaryConditions\_3D}}
+\index{BoundaryConditions\_3D@{BoundaryConditions\_3D}!final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{BoundaryConditions\_3D()}{BoundaryConditions\_3D()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d}{final\+\_\+project\+::pde\+::\+Boundary\+Conditions\+\_\+3D}}$<$ T $>$\+::\+Boundary\+Conditions\+\_\+3D (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacefinal__project_ab8f3ebf8a3440235be1c17b6821b5d77}{Bool}}}]{is\+Dirich\+Dim00,  }\item[{\mbox{\hyperlink{namespacefinal__project_ab8f3ebf8a3440235be1c17b6821b5d77}{Bool}}}]{is\+Dirich\+Dim01,  }\item[{\mbox{\hyperlink{namespacefinal__project_ab8f3ebf8a3440235be1c17b6821b5d77}{Bool}}}]{is\+Dirich\+Dim10,  }\item[{\mbox{\hyperlink{namespacefinal__project_ab8f3ebf8a3440235be1c17b6821b5d77}{Bool}}}]{is\+Dirich\+Dim11,  }\item[{\mbox{\hyperlink{namespacefinal__project_ab8f3ebf8a3440235be1c17b6821b5d77}{Bool}}}]{is\+Dirich\+Dim20,  }\item[{\mbox{\hyperlink{namespacefinal__project_ab8f3ebf8a3440235be1c17b6821b5d77}{Bool}}}]{is\+Dirich\+Dim21 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Specifying the Type of boundary conditions in each edge. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Value type \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em is\+Dirich\+Dim00} & true if it\textquotesingle{}s Dirichlet in Dimension 0, source site. \\
+\hline
+{\em is\+Dirich\+Dim01} & true if it\textquotesingle{}s Dirichlet in Dimension 0, dest site. \\
+\hline
+{\em is\+Dirich\+Dim10} & true if it\textquotesingle{}s Dirichlet in Dimension 1, source site. \\
+\hline
+{\em is\+Dirich\+Dim11} & true if it\textquotesingle{}s Dirichlet in Dimension 1, dest site. \\
+\hline
+{\em is\+Dirich\+Dim20} & true if it\textquotesingle{}s Dirichlet in Dimension 2, source site. \\
+\hline
+{\em is\+Dirich\+Dim21} & true if it\textquotesingle{}s Dirichlet in Dimension 2, dest site. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_aab2a819d5dd69e2e2c9b8037772d146c}\label{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_aab2a819d5dd69e2e2c9b8037772d146c} 
+\index{final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}!SetBC@{SetBC}}
+\index{SetBC@{SetBC}!final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{SetBC()}{SetBC()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d}{final\+\_\+project\+::pde\+::\+Boundary\+Conditions\+\_\+3D}}$<$ T $>$\+::\+Set\+BC (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d}{Heat\+\_\+3D}}$<$ T $>$ \&}]{obj,  }\item[{\mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a49c25791d43c4ef89fd01a85cbb96a9f}{BCFunction}}}]{Func\+Dim00,  }\item[{\mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a49c25791d43c4ef89fd01a85cbb96a9f}{BCFunction}}}]{Func\+Dim01,  }\item[{\mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a49c25791d43c4ef89fd01a85cbb96a9f}{BCFunction}}}]{Func\+Dim10,  }\item[{\mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a49c25791d43c4ef89fd01a85cbb96a9f}{BCFunction}}}]{Func\+Dim11,  }\item[{\mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a49c25791d43c4ef89fd01a85cbb96a9f}{BCFunction}}}]{Func\+Dim20,  }\item[{\mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a49c25791d43c4ef89fd01a85cbb96a9f}{BCFunction}}}]{Func\+Dim21 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Set Up the Boundary Conditions with std\+::function. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Value type \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em obj} & The reference of the object \doxylink{class_heat__2_d_3_01_t_01_4}{Heat\+\_\+2\+D$<$\+T$>$}. \\
+\hline
+{\em Func\+Dim00} & The function in Dimension 0, source site. \\
+\hline
+{\em Func\+Dim01} & The function in Dimension 0, dest site. \\
+\hline
+{\em Func\+Dim10} & The function in Dimension 1, source site. \\
+\hline
+{\em Func\+Dim11} & The function in Dimension 1, dest site. \\
+\hline
+{\em Func\+Dim20} & The function in Dimension 2, source site. \\
+\hline
+{\em Func\+Dim21} & The function in Dimension 2, dest site. \\
+\hline
+\end{DoxyParams}
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=336pt]{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_aab2a819d5dd69e2e2c9b8037772d146c_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_af129df7b6ae478c821d13ae640d28e17}\label{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_af129df7b6ae478c821d13ae640d28e17} 
+\index{final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}!SetBCinDim00@{SetBCinDim00}}
+\index{SetBCinDim00@{SetBCinDim00}!final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{SetBCinDim00()}{SetBCinDim00()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d}{final\+\_\+project\+::pde\+::\+Boundary\+Conditions\+\_\+3D}}$<$ T $>$\+::\+Set\+BCin\+Dim00 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d}{Heat\+\_\+3D}}$<$ T $>$ \&}]{obj,  }\item[{const T \&}]{time }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=336pt]{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_af129df7b6ae478c821d13ae640d28e17_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a50d32b4bcc000ab67db0b985a5d49f8d}\label{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a50d32b4bcc000ab67db0b985a5d49f8d} 
+\index{final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}!SetBCinDim01@{SetBCinDim01}}
+\index{SetBCinDim01@{SetBCinDim01}!final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{SetBCinDim01()}{SetBCinDim01()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d}{final\+\_\+project\+::pde\+::\+Boundary\+Conditions\+\_\+3D}}$<$ T $>$\+::\+Set\+BCin\+Dim01 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d}{Heat\+\_\+3D}}$<$ T $>$ \&}]{obj,  }\item[{const T \&}]{time }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=336pt]{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a50d32b4bcc000ab67db0b985a5d49f8d_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a3af8686d72d324803152a854257d81f0}\label{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a3af8686d72d324803152a854257d81f0} 
+\index{final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}!SetBCinDim10@{SetBCinDim10}}
+\index{SetBCinDim10@{SetBCinDim10}!final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{SetBCinDim10()}{SetBCinDim10()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d}{final\+\_\+project\+::pde\+::\+Boundary\+Conditions\+\_\+3D}}$<$ T $>$\+::\+Set\+BCin\+Dim10 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d}{Heat\+\_\+3D}}$<$ T $>$ \&}]{obj,  }\item[{const T \&}]{time }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=336pt]{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a3af8686d72d324803152a854257d81f0_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_af659cdd5c6bd7df9024520ea9403c91c}\label{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_af659cdd5c6bd7df9024520ea9403c91c} 
+\index{final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}!SetBCinDim11@{SetBCinDim11}}
+\index{SetBCinDim11@{SetBCinDim11}!final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{SetBCinDim11()}{SetBCinDim11()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d}{final\+\_\+project\+::pde\+::\+Boundary\+Conditions\+\_\+3D}}$<$ T $>$\+::\+Set\+BCin\+Dim11 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d}{Heat\+\_\+3D}}$<$ T $>$ \&}]{obj,  }\item[{const T \&}]{time }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=336pt]{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_af659cdd5c6bd7df9024520ea9403c91c_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_ae4760f78d7a344166850655015c8ef6f}\label{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_ae4760f78d7a344166850655015c8ef6f} 
+\index{final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}!SetBCinDim20@{SetBCinDim20}}
+\index{SetBCinDim20@{SetBCinDim20}!final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{SetBCinDim20()}{SetBCinDim20()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d}{final\+\_\+project\+::pde\+::\+Boundary\+Conditions\+\_\+3D}}$<$ T $>$\+::\+Set\+BCin\+Dim20 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d}{Heat\+\_\+3D}}$<$ T $>$ \&}]{obj,  }\item[{const T \&}]{time }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=336pt]{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_ae4760f78d7a344166850655015c8ef6f_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a15cdca2604e2cf85c6e4c82b882eb27a}\label{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a15cdca2604e2cf85c6e4c82b882eb27a} 
+\index{final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}!SetBCinDim21@{SetBCinDim21}}
+\index{SetBCinDim21@{SetBCinDim21}!final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{SetBCinDim21()}{SetBCinDim21()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d}{final\+\_\+project\+::pde\+::\+Boundary\+Conditions\+\_\+3D}}$<$ T $>$\+::\+Set\+BCin\+Dim21 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d}{Heat\+\_\+3D}}$<$ T $>$ \&}]{obj,  }\item[{const T \&}]{time }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=336pt]{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a15cdca2604e2cf85c6e4c82b882eb27a_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a7f6abfe00bf563e089c66d4311912a05}\label{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a7f6abfe00bf563e089c66d4311912a05} 
+\index{final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}!UpdateBC@{UpdateBC}}
+\index{UpdateBC@{UpdateBC}!final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{UpdateBC()}{UpdateBC()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d}{final\+\_\+project\+::pde\+::\+Boundary\+Conditions\+\_\+3D}}$<$ T $>$\+::\+Update\+BC (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classfinal__project_1_1pde_1_1_heat__3_d}{Heat\+\_\+3D}}$<$ T $>$ \&}]{obj,  }\item[{const T \&}]{time }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_af4ff60f4864169fd0bfb2d2343cb6bec}\label{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_af4ff60f4864169fd0bfb2d2343cb6bec} 
+\index{final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}!BCFunc@{BCFunc}}
+\index{BCFunc@{BCFunc}!final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{BCFunc}{BCFunc}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+std\+::array$<$\mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a49c25791d43c4ef89fd01a85cbb96a9f}{BCFunction}}, 6$>$ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d}{final\+\_\+project\+::pde\+::\+Boundary\+Conditions\+\_\+3D}}$<$ T $>$\+::\+BCFunc\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a0d2bde20e74ca79d06eb1feafed1a96d}\label{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a0d2bde20e74ca79d06eb1feafed1a96d} 
+\index{final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}!Heat\_3D$<$ T $>$@{Heat\_3D$<$ T $>$}}
+\index{Heat\_3D$<$ T $>$@{Heat\_3D$<$ T $>$}!final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Heat\_3D$<$ T $>$}{Heat\_3D< T >}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+friend \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d}{final\+\_\+project\+::pde\+::\+Boundary\+Conditions\+\_\+3D}}$<$ T $>$\+::\+Heat\+\_\+3D$<$ T $>$\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a70df935d29f88f520f195169e73d8160}\label{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a70df935d29f88f520f195169e73d8160} 
+\index{final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}!isDirichletBC@{isDirichletBC}}
+\index{isDirichletBC@{isDirichletBC}!final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{isDirichletBC}{isDirichletBC}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+std\+::array$<$\mbox{\hyperlink{namespacefinal__project_ab8f3ebf8a3440235be1c17b6821b5d77}{Bool}}, 6$>$ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d}{final\+\_\+project\+::pde\+::\+Boundary\+Conditions\+\_\+3D}}$<$ T $>$\+::is\+Dirichlet\+BC\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_aa82b7b1c93225b8dd33877e3dca57eff}\label{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_aa82b7b1c93225b8dd33877e3dca57eff} 
+\index{final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}!isNeumann@{isNeumann}}
+\index{isNeumann@{isNeumann}!final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{isNeumann}{isNeumann}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+std\+::array$<$\mbox{\hyperlink{namespacefinal__project_ab8f3ebf8a3440235be1c17b6821b5d77}{Bool}}, 6$>$ \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d}{final\+\_\+project\+::pde\+::\+Boundary\+Conditions\+\_\+3D}}$<$ T $>$\+::is\+Neumann\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a380a93b52f92e56d9c0a0905c6f51f23}\label{classfinal__project_1_1pde_1_1_boundary_conditions__3_d_a380a93b52f92e56d9c0a0905c6f51f23} 
+\index{final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}!isSetUpBC@{isSetUpBC}}
+\index{isSetUpBC@{isSetUpBC}!final\_project::pde::BoundaryConditions\_3D$<$ T $>$@{final\_project::pde::BoundaryConditions\_3D$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{isSetUpBC}{isSetUpBC}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{namespacefinal__project_ab8f3ebf8a3440235be1c17b6821b5d77}{Bool}} \mbox{\hyperlink{classfinal__project_1_1pde_1_1_boundary_conditions__3_d}{final\+\_\+project\+::pde\+::\+Boundary\+Conditions\+\_\+3D}}$<$ T $>$\+::is\+Set\+Up\+BC\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/pde/detials/\+Boundary\+Conditions/\mbox{\hyperlink{_boundary_conditions__3_d_8hpp}{Boundary\+Conditions\+\_\+3\+D.\+hpp}}\end{DoxyCompactItemize}

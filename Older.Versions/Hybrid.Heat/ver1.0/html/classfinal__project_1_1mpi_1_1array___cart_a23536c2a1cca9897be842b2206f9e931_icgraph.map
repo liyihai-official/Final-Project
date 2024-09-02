@@ -1,0 +1,39 @@
+<map id="final_project::mpi::array_Cart::array" name="final_project::mpi::array_Cart::array">
+<area shape="rect" id="Node000001" title=" " alt="" coords="727,232,854,272"/>
+<area shape="rect" id="Node000002" href="$classfinal__project_1_1mpi_1_1array___cart.html#ad6d3718738999fdf9868f7d7370436bf" title=" " alt="" coords="509,68,669,108"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="766,220,728,170,704,145,677,123,656,111,658,106,680,119,707,141,732,167,770,217"/>
+<area shape="rect" id="Node000003" href="$classfinal__project_1_1mpi_1_1array___cart.html#a6b75e4102e3090c0ff93fb27ab24421e" title=" " alt="" coords="509,133,669,174"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="743,225,677,189,649,176,651,172,680,184,745,220"/>
+<area shape="rect" id="Node000004" href="$classfinal__project_1_1mpi_1_1array___cart.html#a10372791f0c9a7d7f834705c0c03f1b2" title=" " alt="" coords="499,198,679,239"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="711,241,679,236,680,231,712,236"/>
+<area shape="rect" id="Node000015" href="$classfinal__project_1_1pde_1_1_heat__2_d.html#a9a15a314b17ccd85375d4da9462f23c7" title="Constructs the Heat Equation system in 2D space, with grid size [nx] by [ny]." alt="" coords="518,264,660,304"/>
+<area shape="poly" id="edge18_Node000001_Node000015" title=" " alt="" coords="711,267,660,275,660,270,711,262"/>
+<area shape="rect" id="Node000016" href="$classfinal__project_1_1pde_1_1_heat__3_d.html#a54cde68f1da28b773f172ad387bf48fb" title="Constructs the Heat Equation system in 2D space, with grid size [nx] by [ny] by [nz]." alt="" coords="518,329,660,370"/>
+<area shape="poly" id="edge19_Node000001_Node000016" title=" " alt="" coords="745,283,680,318,651,331,649,326,677,313,742,278"/>
+<area shape="rect" id="Node000017" href="$classfinal__project_1_1mpi_1_1array___cart.html#a1d3a32438e5f76cdd902521a1d5aa815" title=" " alt="" coords="512,394,666,435"/>
+<area shape="poly" id="edge20_Node000001_Node000017" title=" " alt="" coords="770,287,732,336,707,361,680,383,658,396,656,391,677,379,704,357,728,333,766,284"/>
+<area shape="rect" id="Node000005" href="$namespacefinal__project_1_1mpi.html#a24b0b9de057dcb3bf7b6410f5c970225" title="Gather the distributed arrays on every processes in MPI_Comm environment." alt="" coords="331,198,451,239"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="484,221,452,221,452,216,484,216"/>
+<area shape="rect" id="Node000006" href="$classfinal__project_1_1pde_1_1_heat__2_d.html#a641348a6de807f5f90b234a45e65b165" title="Solve this object using MPI/OpenMP Hybrid strategy, version 1." alt="" coords="108,5,278,61"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="369,186,333,130,308,101,281,75,264,64,267,59,285,71,312,97,337,127,374,183"/>
+<area shape="rect" id="Node000008" href="$classfinal__project_1_1pde_1_1_heat__3_d.html#a4aa83b2e905fcfc5f3ea1940fcf0da33" title=" " alt="" coords="108,295,278,350"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="346,250,284,285,261,296,258,292,282,280,343,245"/>
+<area shape="rect" id="Node000010" href="$classfinal__project_1_1pde_1_1_heat__2_d.html#abcacaa73acb5c9c533a68c0024799358" title="Solve this object using MPI/OpenMP Hybrid strategy, version 1." alt="" coords="112,85,274,141"/>
+<area shape="poly" id="edge9_Node000005_Node000010" title=" " alt="" coords="344,192,282,156,258,144,261,139,284,151,347,187"/>
+<area shape="rect" id="Node000011" href="$classfinal__project_1_1pde_1_1_heat__3_d.html#ae0c569faebbf7b2b4757cbf3a3d9b23f" title=" " alt="" coords="112,375,274,430"/>
+<area shape="poly" id="edge11_Node000005_Node000011" title=" " alt="" coords="374,254,337,309,312,339,285,365,267,376,264,372,281,360,308,335,332,306,369,251"/>
+<area shape="rect" id="Node000012" href="$classfinal__project_1_1pde_1_1_heat__2_d.html#afe0513191d8d7a0dfdcedb9f9635c0c5" title="A integrated function of solve this system, purely based on MPI ." alt="" coords="103,165,283,206"/>
+<area shape="poly" id="edge13_Node000005_Node000012" title=" " alt="" coords="315,208,283,203,284,198,316,203"/>
+<area shape="rect" id="Node000014" href="$classfinal__project_1_1pde_1_1_heat__3_d.html#a53f3687163c0c32d71f46a67fdf2557c" title=" " alt="" coords="103,230,283,271"/>
+<area shape="poly" id="edge16_Node000005_Node000014" title=" " alt="" coords="316,233,284,239,283,233,315,228"/>
+<area shape="rect" id="Node000007" href="$main1_8cpp.html#a2f496d6e2a50974437c2bccea54c65c8" title=" " alt="" coords="5,100,55,126"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="114,70,104,76,55,102,53,97,101,71,112,66"/>
+<area shape="rect" id="Node000009" href="$main1__3d_8cpp.html#a2f496d6e2a50974437c2bccea54c65c8" title=" " alt="" coords="5,310,55,335"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="92,325,55,325,55,320,92,320"/>
+<area shape="poly" id="edge10_Node000010_Node000007" title=" " alt="" coords="96,116,55,116,55,111,96,111"/>
+<area shape="poly" id="edge12_Node000011_Node000009" title=" " alt="" coords="112,370,101,365,53,338,55,334,104,360,114,365"/>
+<area shape="poly" id="edge15_Node000012_Node000007" title=" " alt="" coords="114,161,102,156,51,129,54,124,104,151,116,156"/>
+<area shape="rect" id="Node000013" href="$test_8cc.html#a3c04138a5bfe5d72780bb7e82a18e627" title=" " alt="" coords="5,172,55,198"/>
+<area shape="poly" id="edge14_Node000012_Node000013" title=" " alt="" coords="87,188,55,188,55,183,87,183"/>
+<area shape="poly" id="edge17_Node000014_Node000009" title=" " alt="" coords="116,279,104,285,54,312,51,307,102,280,114,275"/>
+</map>

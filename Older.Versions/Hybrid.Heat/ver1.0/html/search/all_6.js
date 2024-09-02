@@ -1,0 +1,27 @@
+var searchData=
+[
+  ['f_0',['F',['../vis3d_8m.html#a2d5e9cce91ee5cb533d27edfc5dfc740',1,'vis3d.m']]],
+  ['fid_1',['fid',['../vis3d_8m.html#ae9011d40c6f13e68e6f07156e0da7c5d',1,'fid:&#160;vis3d.m'],['../visdataset_8m.html#ae9011d40c6f13e68e6f07156e0da7c5d',1,'fid:&#160;visdataset.m'],['../vis2d_8m.html#ae9011d40c6f13e68e6f07156e0da7c5d',1,'fid:&#160;vis2d.m']]],
+  ['figure_2',['figure',['../vis2d_8m.html#a391e34f2de441d79152a7b3d6e4c9c86',1,'figure:&#160;vis2d.m'],['../vis3d_8m.html#a391e34f2de441d79152a7b3d6e4c9c86',1,'figure:&#160;vis3d.m']]],
+  ['fill_3',['fill',['../classfinal__project_1_1multi__array_1_1____detail_1_1____array.html#a2cb702a125809541cf37d39952d10ecc',1,'final_project::multi_array::__detail::__array']]],
+  ['final_5fproject_4',['final_project',['../namespacefinal__project.html',1,'']]],
+  ['final_5fproject_3a_3ampi_5',['mpi',['../namespacefinal__project_1_1mpi.html',1,'final_project']]],
+  ['final_5fproject_3a_3ampi_3a_3a_5f_5fdetail_6',['__detail',['../namespacefinal__project_1_1mpi_1_1____detail.html',1,'final_project::mpi']]],
+  ['final_5fproject_3a_3ampi_3a_3atopology_7',['topology',['../namespacefinal__project_1_1mpi_1_1topology.html',1,'final_project::mpi']]],
+  ['final_5fproject_3a_3amulti_5farray_8',['multi_array',['../namespacefinal__project_1_1multi__array.html',1,'final_project']]],
+  ['final_5fproject_3a_3amulti_5farray_3a_3a_5f_5fdetail_9',['__detail',['../namespacefinal__project_1_1multi__array_1_1____detail.html',1,'final_project::multi_array']]],
+  ['final_5fproject_3a_3apde_10',['pde',['../namespacefinal__project_1_1pde.html',1,'final_project']]],
+  ['final_5fproject_3a_3apde_3a_3ainitialconditions_11',['InitialConditions',['../namespacefinal__project_1_1pde_1_1_initial_conditions.html',1,'final_project::pde']]],
+  ['final_5fproject_3a_3apinn_12',['PINN',['../namespacefinal__project_1_1_p_i_n_n.html',1,'final_project']]],
+  ['final_5fproject_5fassert_13',['FINAL_PROJECT_ASSERT',['../assert_8hpp.html#a70ace4fb92bf5448f3a99d608502eb11',1,'assert.hpp']]],
+  ['final_5fproject_5fassert_5fmsg_14',['FINAL_PROJECT_ASSERT_MSG',['../assert_8hpp.html#a4dd9c0fbd112eb96b5ac0f2272aeca55',1,'assert.hpp']]],
+  ['final_5fproject_5fdataset_5fcpp_15',['FINAL_PROJECT_DATASET_CPP',['../dataset_8cpp.html#aff7eee30b672026f6a08fb2c712934c2',1,'dataset.cpp']]],
+  ['final_5fproject_5fhelper_5fcpp_5fliyihai_16',['FINAL_PROJECT_HELPER_CPP_LIYIHAI',['../helper_8cpp.html#ad3e40659ca9cea4dde7e22467afc03d3',1,'helper.cpp']]],
+  ['final_5fproject_5fmpi_5fassert_17',['FINAL_PROJECT_MPI_ASSERT',['../mpi_2assert_8hpp.html#a4f7d8bb7e3ad94ac4ce9f09757a70f81',1,'assert.hpp']]],
+  ['final_5fproject_5fmpi_5fassert_5fglobal_18',['FINAL_PROJECT_MPI_ASSERT_GLOBAL',['../mpi_2assert_8hpp.html#a2987d523e767f42e9496df827e65d8b3',1,'assert.hpp']]],
+  ['final_5fproject_5fmpi_5ffinalize_5fcheck_19',['FINAL_PROJECT_MPI_FINALIZE_CHECK',['../mpi_2assert_8hpp.html#a10d88d8a48a0fc0aa3538b9548b1f4ef',1,'assert.hpp']]],
+  ['final_5fproject_5fmpi_5finit_5fcheck_20',['FINAL_PROJECT_MPI_INIT_CHECK',['../mpi_2assert_8hpp.html#aa7c6ff3e2b64696bdcc21fa6a2fb0a90',1,'assert.hpp']]],
+  ['final_5fproject_5fmpi_5fwarn_21',['FINAL_PROJECT_MPI_WARN',['../mpi_2assert_8hpp.html#a71221745b5f21624270b7f75b537ba53',1,'assert.hpp']]],
+  ['float_22',['float',['../main1__3d_8cpp.html#a685615aaa23ec44eb4d9b902c59b6733',1,'Float:&#160;main1_3d.cpp'],['../pinn_2types_8hpp.html#a685615aaa23ec44eb4d9b902c59b6733',1,'Float:&#160;types.hpp'],['../namespacefinal__project.html#a48ac888085e166e62e2c6be813a6bbf5',1,'final_project::Float'],['../main1_8cpp.html#a685615aaa23ec44eb4d9b902c59b6733',1,'Float:&#160;main1.cpp']]],
+  ['forward_23',['forward',['../structfinal__project_1_1_p_i_n_n_1_1_heat_p_i_n_n_impl.html#aa677e51a40916ed98ceea75b60949e82',1,'final_project::PINN::HeatPINNImpl']]]
+];

@@ -1,0 +1,96 @@
+\doxysection{environment.\+hpp}
+\hypertarget{environment_8hpp_source}{}\label{environment_8hpp_source}\index{include/mpi/environment.hpp@{include/mpi/environment.hpp}}
+\mbox{\hyperlink{environment_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifndef\ FINAL\_PROJECT\_ENVRIONMENT\_HPP\_LIYIHAI}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ FINAL\_PROJECT\_ENVRIONMENT\_HPP\_LIYIHAI}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <mpi.h>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <optional>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{types_8hpp}{types.hpp}}>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{mpi_2assert_8hpp}{assert.hpp}}>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{mpi_2assert_8hpp}{mpi/assert.hpp}}>}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacefinal__project}{final\_project}}\ \{\ \textcolor{keyword}{namespace\ }mpi\ \{}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment}{environment}}\ \{}
+\DoxyCodeLine{00029\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00030\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment_a88d48225b1c12246dd55269299056a72}{environment}}()\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00031\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment_a4a32f6831c57f2eb6ab2e30ccbd570ed}{environment}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment}{environment}}\ \&)\ \ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00032\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment_a57e76113f6fc685e998e994abf2e56d3}{environment}}(\mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment}{environment}}\ \&\&)\ \ \ \ \ \ \ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00035\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment_ac452f8752e196f27bc93fa356254f917}{environment}}(}
+\DoxyCodeLine{00036\ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\&\ argc,\ \mbox{\hyperlink{namespacefinal__project_a3697eefa99fb444ee797f569c8fdb6f2}{Char}}**\ \&argv,\ }
+\DoxyCodeLine{00037\ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ host\_prank\ =\ 0,}
+\DoxyCodeLine{00038\ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ required\ =\ MPI\_THREAD\_SINGLE)}
+\DoxyCodeLine{00039\ \ \ \{}
+\DoxyCodeLine{00040\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ provided;}
+\DoxyCodeLine{00041\ MPI\_Init\_thread(\&argc,\ \&argv,\ required,\ \&provided);}
+\DoxyCodeLine{00042\ \mbox{\hyperlink{mpi_2assert_8hpp_aa7c6ff3e2b64696bdcc21fa6a2fb0a90}{FINAL\_PROJECT\_MPI\_INIT\_CHECK}}();}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ MPI\_Comm\_size(MPI\_COMM\_WORLD,\ \&\mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment_ab01da49ceb3f3ec2bca72a50a709931b}{psize}});}
+\DoxyCodeLine{00045\ MPI\_Comm\_rank(MPI\_COMM\_WORLD,\ \&\mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment_a0399cc6963c74ff73de11351ab8063f9}{prank}});}
+\DoxyCodeLine{00046\ \ \ \}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment_a119e4fbeef3fe731e28c2d0fa82f5f5a}{\string~environment}}()\ }
+\DoxyCodeLine{00049\ \ \ \{\ MPI\_Finalize();\ \}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment}{environment}}\&\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment_a4b4e5009f110787178ce7ed51e444ab9}{operator=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment}{environment}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00052\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment}{environment}}\&\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment_a3d02ddaa35ca473cfb8fbcf3da533120}{operator=}}(\mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment}{environment}}\&\&)\ \ \ \ \ \ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00055\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment_aae5fe217a48f9af3f55af145fe445d8d}{size}}();}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00058\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment_a402384daaff56d6dfbf4982c522aabf0}{rank}}();}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00061\ MPI\_Comm\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment_a2cc5ddfdc6972d450e274cae6555e0be}{comm}}();}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00064\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment_a0399cc6963c74ff73de11351ab8063f9}{prank}},\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment_ab01da49ceb3f3ec2bca72a50a709931b}{psize}};}
+\DoxyCodeLine{00065\ MPI\_Comm\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment_a98e8be5352d72bf7b5b520b3f13b21ca}{comm\_world}}\ \{MPI\_COMM\_WORLD\};}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \};\ }
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \}\ \textcolor{comment}{//\ end\ namespace\ mpi}}
+\DoxyCodeLine{00070\ \}\ \textcolor{comment}{//\ end\ namespace\ final\_project}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacefinal__project}{final\_project}}\ \{\ \textcolor{keyword}{namespace\ }mpi\ \{}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \mbox{\hyperlink{pinn_2types_8hpp_a74d5137273d7fb30037d5fd2a878a9d9}{Integer}}\ }
+\DoxyCodeLine{00081\ \ \ \textcolor{keyword}{inline}\ }
+\DoxyCodeLine{00082\ \ \ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment_aae5fe217a48f9af3f55af145fe445d8d}{environment::size}}()}
+\DoxyCodeLine{00083\ \ \ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment_ab01da49ceb3f3ec2bca72a50a709931b}{psize}};\ \}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ }
+\DoxyCodeLine{00086\ \ \ \textcolor{keyword}{inline}\ }
+\DoxyCodeLine{00087\ \ \ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment_a402384daaff56d6dfbf4982c522aabf0}{environment::rank}}()}
+\DoxyCodeLine{00088\ \ \ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment_a0399cc6963c74ff73de11351ab8063f9}{prank}};\ \}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ MPI\_Comm}
+\DoxyCodeLine{00091\ \ \ \textcolor{keyword}{inline}\ }
+\DoxyCodeLine{00092\ \ \ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment_a2cc5ddfdc6972d450e274cae6555e0be}{environment::comm}}()}
+\DoxyCodeLine{00093\ \ \ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classfinal__project_1_1mpi_1_1environment_a98e8be5352d72bf7b5b520b3f13b21ca}{comm\_world}};\ \}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \}\ \textcolor{comment}{//\ end\ namespace\ mpi}}
+\DoxyCodeLine{00096\ \}\ \textcolor{comment}{//\ end\ namespace\ final\_project}}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ end\ of\ define\ FINAL\_PROJECT\_ENVRIONMENT\_HPP\_LIYIHAI}}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ }
+
+\end{DoxyCode}

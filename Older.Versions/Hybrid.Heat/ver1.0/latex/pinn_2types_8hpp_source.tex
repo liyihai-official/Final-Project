@@ -1,0 +1,68 @@
+\doxysection{types.\+hpp}
+\hypertarget{pinn_2types_8hpp_source}{}\label{pinn_2types_8hpp_source}\index{include/pinn/types.hpp@{include/pinn/types.hpp}}
+\mbox{\hyperlink{pinn_2types_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#ifndef\ FINAL\_PROJECT\_PINN\_TYPES\_HPP}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ FINAL\_PROJECT\_PINN\_TYPES\_HPP}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{types_8hpp}{types.hpp}}>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <torch/torch.h>}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#if\ !defined\ (IN\_SIZE\_2D)\ ||\ !defined(IN\_SIZE\_3D)\ ||\ !defined\ (OUT\_SIZE)}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ IN\_SIZE\_2D\ 2}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ IN\_SIZE\_3D\ 3}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ OUT\_SIZE\ 1}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#endif\ }}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#if\ !defined(NX)\ ||\ !defined\ (NY)\ ||\ !defined(NZ)}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ NX\ 60+2}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ NY\ 60+2}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ NZ\ 50+2}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#if\ !defined(DATASET\_X\_BOUNDARY)\ ||\ !defined(DATASET\_X\_INTERNAL)\ ||\ !defined(DATASET\_Y\_BOUNDARY)}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ DATASET\_X\_INTERNAL\ "{}X\_internal.pt"{}}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ DATASET\_X\_BOUNDARY\ "{}X\_boundary.pt"{}}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ DATASET\_Y\_BOUNDARY\ "{}Y\_boundary.pt"{}}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00038\ \textcolor{keyword}{using\ }\mbox{\hyperlink{pinn_2types_8hpp_a74d5137273d7fb30037d5fd2a878a9d9}{Integer}}\ =\ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{final\_project::Integer}};}
+\DoxyCodeLine{00039\ \textcolor{keyword}{using\ }\mbox{\hyperlink{pinn_2types_8hpp_ac4c3ad6b4b31a05658d0c860ba8c4ba9}{Char}}\ \ \ \ =\ \mbox{\hyperlink{namespacefinal__project_a3697eefa99fb444ee797f569c8fdb6f2}{final\_project::Char}};}
+\DoxyCodeLine{00040\ \textcolor{keyword}{using\ }\mbox{\hyperlink{pinn_2types_8hpp_af50bf93a04b2b384857f9284d39f7261}{Double}}\ \ =\ \mbox{\hyperlink{namespacefinal__project_a515365f87e39b26c5d0d6f23fe4269c1}{final\_project::Double}};}
+\DoxyCodeLine{00041\ \textcolor{keyword}{using\ }\mbox{\hyperlink{pinn_2types_8hpp_a685615aaa23ec44eb4d9b902c59b6733}{Float}}\ \ \ =\ \mbox{\hyperlink{namespacefinal__project_a48ac888085e166e62e2c6be813a6bbf5}{final\_project::Float}};}
+\DoxyCodeLine{00042\ \textcolor{keyword}{using\ }\mbox{\hyperlink{pinn_2types_8hpp_a46b5d9fef5e57cc52676df7dad335470}{String}}\ \ =\ \mbox{\hyperlink{namespacefinal__project_a82449e9e4ba01d18b30027d2898abe3b}{final\_project::String}};}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{keyword}{using\ }\mbox{\hyperlink{pinn_2types_8hpp_a25a40249c6a4def9b8101a28c32187f6}{size\_type}}\ =\ \mbox{\hyperlink{namespacefinal__project_a4444f518ac9564eca37f7226752429c1}{final\_project::Dworld}};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{keyword}{using\ }\mbox{\hyperlink{pinn_2types_8hpp_a0af4ba1210b45e93c236f982607c4087}{maintype}}\ \ =\ \mbox{\hyperlink{pinn_2types_8hpp_a685615aaa23ec44eb4d9b902c59b6733}{Float}};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{keyword}{using\ }\mbox{\hyperlink{pinn_2types_8hpp_a04ee5e6ebe3fa2aee4b97ec3a0860ab3}{BCFunction}}\ \ \ \ =\ std::function<\mbox{\hyperlink{pinn_2types_8hpp_a0af4ba1210b45e93c236f982607c4087}{maintype}}(\mbox{\hyperlink{pinn_2types_8hpp_a0af4ba1210b45e93c236f982607c4087}{maintype}},\ \mbox{\hyperlink{pinn_2types_8hpp_a0af4ba1210b45e93c236f982607c4087}{maintype}})>;}
+\DoxyCodeLine{00049\ \textcolor{keyword}{using\ }\mbox{\hyperlink{pinn_2types_8hpp_a9abf2ec578a5d2a897c7e5f399f2673e}{BCFunction\_3d}}\ =\ std::function<\mbox{\hyperlink{pinn_2types_8hpp_a0af4ba1210b45e93c236f982607c4087}{maintype}}(\mbox{\hyperlink{pinn_2types_8hpp_a0af4ba1210b45e93c236f982607c4087}{maintype}},\ \mbox{\hyperlink{pinn_2types_8hpp_a0af4ba1210b45e93c236f982607c4087}{maintype}},\ \mbox{\hyperlink{pinn_2types_8hpp_a0af4ba1210b45e93c236f982607c4087}{maintype}})>;}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacefinal__project}{final\_project}}\ \{\ \textcolor{keyword}{namespace\ }PINN\ \{}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{namespacefinal__project_a48ac888085e166e62e2c6be813a6bbf5}{Float}}\ \mbox{\hyperlink{namespacefinal__project_1_1_p_i_n_n_ae72d825c535bbc45bf93248b40c749c1}{value\_type}};}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \}\ \textcolor{comment}{//\ namespace\ PINN}}
+\DoxyCodeLine{00062\ \}\ \textcolor{comment}{//\ namespace\ final\_project}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ end\ define\ FINAL\_PROJECT\_PINN\_TYPES\_HPP}}
+
+\end{DoxyCode}

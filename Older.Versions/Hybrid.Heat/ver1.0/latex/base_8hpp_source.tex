@@ -1,0 +1,298 @@
+\doxysection{base.\+hpp}
+\hypertarget{base_8hpp_source}{}\label{base_8hpp_source}\index{include/multiarray/base.hpp@{include/multiarray/base.hpp}}
+\mbox{\hyperlink{base_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#ifndef\ FINAL\_PROJECT\_MULTIARRAY\_BASE\_HPP\_LIYIHAI}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ FINAL\_PROJECT\_MULTIARRAY\_BASE\_HPP\_LIYIHAI}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ Standard\ Libraries}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ Final\ Project\ Header\ Files}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{types_8hpp}{types.hpp}}>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{multiarray_2types_8hpp}{multiarray/types.hpp}}>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <assert.hpp>}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacefinal__project}{final\_project}}\ \{\ \textcolor{keyword}{namespace\ }multi\_array\ \{}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{namespace\ }\_\_detail\ \{}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ \_\_T,\ \_\_\textcolor{keywordtype}{size\_t}ype\ \_\_NumD>}
+\DoxyCodeLine{00031\ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array}{\_\_array}}\ \{}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \textcolor{keyword}{public}:\ \textcolor{comment}{//\ Member\ Datatypes}}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{typedef}\ \ \ \ \ \ \ \_\_T\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a3a7d4f9d137ccaabd05022895c7804e4}{value\_type}};}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{const}\ \_\_T\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_acd8439fecb59f54f444925a6e8743aa0}{const\_value\_type}};}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{typedef}\ \ \ \ \ \ \ \_\_T\&\ \ \ \ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_abcfa335ea44caf69d56b62d41181e8ca}{reference}};}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{const}\ \_\_T\&\ \ \ \ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_aae5d1dd250b74152e8c774dc61f9aead}{const\_reference}};}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{typedef}\ \ \ \ \ \ \ \_\_T*\ \ \ \ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a3022ddf922e33546f68efebb6eb1b9ab}{iterator}};\ }
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{const}\ \_\_T*\ \ \ \ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a9217a6b168ce6b091e49ece5c750cb03}{const\_iterator}};}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{structfinal__project_1_1multi__array_1_1____detail_1_1____multi__array__shape}{\_\_multi\_array\_shape<\_\_NumD>}}\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a25a185e02da377cee5a982390d84f4c5}{\_\_array\_shape}};}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \textcolor{keyword}{public}:\ \textcolor{comment}{//\ Member\ Variables}}
+\DoxyCodeLine{00044\ \ \ \ \ \mbox{\hyperlink{structfinal__project_1_1multi__array_1_1____detail_1_1____multi__array__shape}{\_\_array\_shape}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a281d60e3d4dde146b97219249eed4ec4}{\_\_shape}};}
+\DoxyCodeLine{00045\ \ \ \ \ std::unique\_ptr<value\_type[]>\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a745d8ed34d3883d26feac3b938ae2797}{\_\_data}};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \mbox{\hyperlink{namespacefinal__project_1_1multi__array_1_1____detail_ab59076a3765a9c70e657b82dc8e32ad3}{\_\_size\_type}}\ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_af03d56995349e1ec848d39b294fc1b06}{\_\_dimension}}\ \{\_\_NumD\};}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \textcolor{keyword}{public}:\ \textcolor{comment}{//\ Cons\ \&\ Decons\ }}
+\DoxyCodeLine{00050\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_aa58abec090bef44dc5bfb06996836a1e}{\_\_array}}()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ noexcept;}
+\DoxyCodeLine{00051\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array}{\_\_array}}(const\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array}{\_\_array}}\ \&)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ noexcept;}
+\DoxyCodeLine{00052\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array}{\_\_array}}(\mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array}{\_\_array}}\&\&)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ noexcept;}
+\DoxyCodeLine{00053\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array}{\_\_array}}\&\ operator=(\mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array}{\_\_array}}\&\&)\ \ \ \ \ \ \ \ \ \ \ noexcept;}
+\DoxyCodeLine{00054\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array}{\_\_array}}\&\ operator=(const\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array}{\_\_array}}\&)\ \ \ \ \ \ noexcept;}
+\DoxyCodeLine{00055\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array}{\_\_array}}(\mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a25a185e02da377cee5a982390d84f4c5}{\_\_array\_shape}})\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ noexcept;}
+\DoxyCodeLine{00056\ \ \ \ \ \string~\mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array}{\_\_array}}()\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ noexcept\ =\ default;}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ public:\ \textcolor{comment}{//\ Element\ access}}
+\DoxyCodeLine{00060\ \ \ \ \ template\ <typename\ ...\ Exts>}
+\DoxyCodeLine{00061\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_abcfa335ea44caf69d56b62d41181e8ca}{reference}}\ operator()(Exts\ ...);}
+\DoxyCodeLine{00062\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_abcfa335ea44caf69d56b62d41181e8ca}{reference}}\ operator[](\mbox{\hyperlink{namespacefinal__project_1_1multi__array_1_1____detail_ab59076a3765a9c70e657b82dc8e32ad3}{\_\_size\_type}});}
+\DoxyCodeLine{00063\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_abcfa335ea44caf69d56b62d41181e8ca}{reference}}\ operator[](\mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}});}
+\DoxyCodeLine{00064\ \ \ }
+\DoxyCodeLine{00065\ \ \ public:\ \textcolor{comment}{//\ Iterators}}
+\DoxyCodeLine{00066\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a3022ddf922e33546f68efebb6eb1b9ab}{iterator}}\ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a69931b9f2a7e6468e962ddf69257fb6f}{begin}}()\ \ \ \ \ \ \ noexcept\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a745d8ed34d3883d26feac3b938ae2797}{\_\_data}}.get();\ \}}
+\DoxyCodeLine{00067\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a9217a6b168ce6b091e49ece5c750cb03}{const\_iterator}}\ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_ac660e83b510ab50c6a13c7bb8284f983}{begin}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a745d8ed34d3883d26feac3b938ae2797}{\_\_data}}.get();\ \}}
+\DoxyCodeLine{00068\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a9217a6b168ce6b091e49ece5c750cb03}{const\_iterator}}\ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a43e121512c41586893e05417147400a1}{cbegin}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a745d8ed34d3883d26feac3b938ae2797}{\_\_data}}.get();\ \}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a3022ddf922e33546f68efebb6eb1b9ab}{iterator}}\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a468ec7eea119519a9c78262836826fed}{end}}()\ \ \ \ \ \ \ noexcept\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a745d8ed34d3883d26feac3b938ae2797}{\_\_data}}.get()\ +\ this-\/>\mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_ac459ca6532fa58362bef58f8185ac9ac}{size}}();\ \}}
+\DoxyCodeLine{00071\ \ \ \ \ const\_iterator\ \ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a5b786736fa059a90befeb33742c6dfda}{end}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a745d8ed34d3883d26feac3b938ae2797}{\_\_data}}.get()\ +\ this-\/>\mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_ac459ca6532fa58362bef58f8185ac9ac}{size}}();\ \}}
+\DoxyCodeLine{00072\ \ \ \ \ const\_iterator\ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a4510e1b2f84783d123b8c8d410e12a15}{cend}}()\ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a745d8ed34d3883d26feac3b938ae2797}{\_\_data}}.get()\ +\ this-\/>\mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_ac459ca6532fa58362bef58f8185ac9ac}{size}}();\ \}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \textcolor{keyword}{public}:\ \textcolor{comment}{//\ Capacity}}
+\DoxyCodeLine{00075\ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_1_1multi__array_1_1____detail_a3591eb85000e734c520421015526349e}{\_\_super\_size\_type}}\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_ac459ca6532fa58362bef58f8185ac9ac}{size}}()\ \ const\ noexcept\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a281d60e3d4dde146b97219249eed4ec4}{\_\_shape}}.\mbox{\hyperlink{structfinal__project_1_1multi__array_1_1____detail_1_1____multi__array__shape_acb08790e045e794ee68a76b50e801d9a}{size}}();\ \}}
+\DoxyCodeLine{00076\ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ \ \ \ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a68f09c65a8c16c17250241ccf57fe36a}{get\_flat\_index}}(\ std::array<Integer,\ \_\_NumD>\ \&\ );}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ }
+\DoxyCodeLine{00079\ \ \ \textcolor{keyword}{public}:\ \textcolor{comment}{//\ Modifiers}}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_ae5bee0bb2b0da5a2426091e06da0ff98}{swap}}(\mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array}{\_\_array}}\ \&)\ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a2cb702a125809541cf37d39952d10ecc}{fill}}(\mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_aae5d1dd250b74152e8c774dc61f9aead}{const\_reference}})\ \ \ \ \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a18dda1fd5bae91233a87837f6dde97c3}{assign}}(\mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_aae5d1dd250b74152e8c774dc61f9aead}{const\_reference}})\ \ \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ \_\_U,\ \_\_\textcolor{keywordtype}{size\_t}ype\ \_\_Dims>}
+\DoxyCodeLine{00085\ \ \ \textcolor{keyword}{friend}\ std::ostream\ \&\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a99ca920f6617c23f8d5e4bec565f0983}{operator<<}}(std::ostream\ \&,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array}{\_\_array<\_\_U,\ \_\_Dims>}}\ \&);}
+\DoxyCodeLine{00086\ \ \ \};\ \textcolor{comment}{//\ end\ if\ class\ \_\_array}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \}\ \textcolor{comment}{//\ end\ of\ namespace\ \_\_detail}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \}\ \textcolor{comment}{//\ end\ of\ namespace\ multi\_array}}
+\DoxyCodeLine{00093\ \}\ \textcolor{comment}{//\ end\ of\ final\_project}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#include\ <iomanip>}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacefinal__project}{final\_project}}\ \{\ \textcolor{keyword}{namespace\ }multi\_array\ \{}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \textcolor{keyword}{namespace\ }\_\_detail\ \{}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ \_\_T,\ \_\_\textcolor{keywordtype}{size\_t}ype\ \_\_NumD>}
+\DoxyCodeLine{00112\ \ \ \textcolor{keyword}{inline}}
+\DoxyCodeLine{00113\ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_aa58abec090bef44dc5bfb06996836a1e}{\_\_array<\_\_T,\ \_\_NumD>::\_\_array}}()\ noexcept}
+\DoxyCodeLine{00114\ :\ \_\_shape(),\ \_\_data(\textcolor{keywordtype}{nullptr})\ }
+\DoxyCodeLine{00115\ \ \ \{\}}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ \_\_T,\ \_\_\textcolor{keywordtype}{size\_t}ype\ \_\_NumD>}
+\DoxyCodeLine{00118\ \ \ \textcolor{keyword}{inline}\ }
+\DoxyCodeLine{00119\ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_aa58abec090bef44dc5bfb06996836a1e}{\_\_array<\_\_T,\ \_\_NumD>::\_\_array}}(\mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array}{\_\_array}}\ \&\&\ other)\ noexcept}
+\DoxyCodeLine{00120\ :\ \_\_shape(std::move(other.\_\_shape)),}
+\DoxyCodeLine{00121\ \ \ \_\_data(std::move(other.\_\_data))}
+\DoxyCodeLine{00122\ \{}
+\DoxyCodeLine{00123\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Move\ Constructor\ \_\_array"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00124\ \ \ other.\_\_shape\ =\ \mbox{\hyperlink{structfinal__project_1_1multi__array_1_1____detail_1_1____multi__array__shape}{\_\_array\_shape}}\{\};}
+\DoxyCodeLine{00125\ \ \ other.\_\_data\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00126\ \}}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ \_\_T,\ \_\_\textcolor{keywordtype}{size\_t}ype\ \_\_NumD>}
+\DoxyCodeLine{00129\ \ \ \textcolor{keyword}{inline}\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array}{\_\_array<\_\_T,\ \_\_NumD>}}\&}
+\DoxyCodeLine{00130\ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a0e9a32fcb30833b9b256133a59b02e99}{\_\_array<\_\_T,\ \_\_NumD>::operator=}}(\mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array}{\_\_array}}\ \&\&\ other)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00131\ \{}
+\DoxyCodeLine{00132\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Move\ Assignment\ \_\_array"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00133\ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{this}\ !=\ \&other)}
+\DoxyCodeLine{00134\ \ \ \{}
+\DoxyCodeLine{00135\ \ \ \ \ \_\_shape\ =\ std::move(other.\_\_shape);}
+\DoxyCodeLine{00136\ \ \ \ \ \_\_data\ =\ std::move(other.\_\_data);}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \ \ \ \ other.\_\_data\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00139\ \ \ \ \ other.\_\_shape\ =\ \mbox{\hyperlink{structfinal__project_1_1multi__array_1_1____detail_1_1____multi__array__shape}{\_\_array\_shape}}\{\};}
+\DoxyCodeLine{00140\ \ \ \}}
+\DoxyCodeLine{00141\ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00142\ \}\ }
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ \_\_T,\ \_\_\textcolor{keywordtype}{size\_t}ype\ \_\_NumD>}
+\DoxyCodeLine{00145\ \ \ \textcolor{keyword}{inline}\ }
+\DoxyCodeLine{00146\ \ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_aa58abec090bef44dc5bfb06996836a1e}{\_\_array<\_\_T,\ \_\_NumD>::\_\_array}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array}{\_\_array}}\ \&\ other)\ noexcept}
+\DoxyCodeLine{00147\ :\ \_\_shape(other.\_\_shape),}
+\DoxyCodeLine{00148\ \ \ \_\_data(std::make\_unique<\mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a3a7d4f9d137ccaabd05022895c7804e4}{value\_type}}[]>(other.size()))}
+\DoxyCodeLine{00149\ \{}
+\DoxyCodeLine{00150\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Copy\ Constructor\ \_\_array"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00151\ \ \ std::copy(other.\_\_data.get(),\ other.\_\_data.get()\ +\ other.size(),\ \_\_data.get());\ \textcolor{comment}{//\ Copy\ data}}
+\DoxyCodeLine{00152\ \}}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ \_\_T,\ \_\_\textcolor{keywordtype}{size\_t}ype\ \_\_NumD>}
+\DoxyCodeLine{00155\ \ \ \textcolor{keyword}{inline}\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array}{\_\_array<\_\_T,\ \_\_NumD>}}\&\ }
+\DoxyCodeLine{00156\ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a0e9a32fcb30833b9b256133a59b02e99}{\_\_array<\_\_T,\ \_\_NumD>::operator=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array}{\_\_array}}\&\ other)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00157\ \{}
+\DoxyCodeLine{00158\ \ \ std::cout\ <<\ \textcolor{stringliteral}{"{}Copy\ Assignment\ \_\_array"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00159\ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{this}\ !=\ \&other)}
+\DoxyCodeLine{00160\ \ \ \{}
+\DoxyCodeLine{00161\ \_\_shape\ =\ other.\mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a281d60e3d4dde146b97219249eed4ec4}{\_\_shape}};}
+\DoxyCodeLine{00162\ \_\_data\ =\ std::make\_unique<value\_type[]>(other.size());}
+\DoxyCodeLine{00163\ std::copy(other.\_\_data.get(),\ other.\_\_data.get()+other.size(),\ \_\_data.get());}
+\DoxyCodeLine{00164\ \ \ \}}
+\DoxyCodeLine{00165\ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00166\ \}}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ \_\_T,\ \_\_\textcolor{keywordtype}{size\_t}ype\ \_\_NumD>}
+\DoxyCodeLine{00169\ \ \ \textcolor{keyword}{inline}}
+\DoxyCodeLine{00170\ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_aa58abec090bef44dc5bfb06996836a1e}{\_\_array<\_\_T,\ \_\_NumD>::\_\_array}}(\mbox{\hyperlink{structfinal__project_1_1multi__array_1_1____detail_1_1____multi__array__shape}{\_\_array\_shape}}\ \_\_in\_shape)\ noexcept}
+\DoxyCodeLine{00171\ :\ \_\_shape\ \{\_\_in\_shape\},}
+\DoxyCodeLine{00172\ \ \ \_\_data\ \{std::make\_unique<value\_type[]>(\_\_in\_shape.size())\}\ }
+\DoxyCodeLine{00173\ \ \ \{\}}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \textcolor{comment}{//\ Operators}}
+\DoxyCodeLine{00176\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ \_\_T,\ \_\_\textcolor{keywordtype}{size\_t}ype\ \_\_NumD>}
+\DoxyCodeLine{00177\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ ...\ Exts>}
+\DoxyCodeLine{00178\ \ \ \textcolor{keyword}{inline}}
+\DoxyCodeLine{00179\ \ \ \_\_T\&\ }
+\DoxyCodeLine{00180\ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a7f16fde2f0548969a4be2a7faba24de6}{\_\_array<\_\_T,\ \_\_NumD>::operator()}}(Exts\ ...\ exts)}
+\DoxyCodeLine{00181\ \{}
+\DoxyCodeLine{00182\ \ \ \mbox{\hyperlink{assert_8hpp_a4dd9c0fbd112eb96b5ac0f2272aeca55}{FINAL\_PROJECT\_ASSERT\_MSG}}(}
+\DoxyCodeLine{00183\ \ \ \ \ (\textcolor{keyword}{sizeof}...(exts)\ ==\ \_\_NumD),}
+\DoxyCodeLine{00184\ \ \ \ \ \textcolor{stringliteral}{"{}Number\ of\ Arguments\ must\ Match\ the\ dimension."{}}}
+\DoxyCodeLine{00185\ \ \ );}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \ \ \mbox{\hyperlink{namespacefinal__project_1_1multi__array_1_1____detail_ab59076a3765a9c70e657b82dc8e32ad3}{\_\_size\_type}}\ index\ \{0\},\ i\ \{0\};}
+\DoxyCodeLine{00188\ \ \ \mbox{\hyperlink{namespacefinal__project_1_1multi__array_1_1____detail_ab59076a3765a9c70e657b82dc8e32ad3}{\_\_size\_type}}\ indices[]\ =\ \{\ \_\_shape.check\_and\_cast(exts)\ ...\ \};}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \ \ \textcolor{keywordflow}{for}\ (;\ i\ <\ \_\_NumD;\ ++i)\ index\ +=\ \_\_shape.strides[i]\ *\ indices[i];}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \ \ \mbox{\hyperlink{assert_8hpp_a4dd9c0fbd112eb96b5ac0f2272aeca55}{FINAL\_PROJECT\_ASSERT\_MSG}}(}
+\DoxyCodeLine{00193\ \ \ \ \ (index\ <\ \_\_shape.size()),\ }
+\DoxyCodeLine{00194\ \ \ \ \ \textcolor{stringliteral}{"{}Index\ is\ out\ of\ range."{}}}
+\DoxyCodeLine{00195\ \ \ );}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \ \ \textcolor{keywordflow}{return}\ \_\_data[index];}
+\DoxyCodeLine{00198\ \}}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ \_\_T,\ \_\_\textcolor{keywordtype}{size\_t}ype\ \_\_NumD>}
+\DoxyCodeLine{00201\ \ \ \textcolor{keyword}{inline}\ }
+\DoxyCodeLine{00202\ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}}
+\DoxyCodeLine{00203\ \ \ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a68f09c65a8c16c17250241ccf57fe36a}{\_\_array<\_\_T,\ \_\_NumD>::get\_flat\_index}}(std::array<Integer,\ \_\_NumD>\ \&\ indexes)}
+\DoxyCodeLine{00204\ \{}
+\DoxyCodeLine{00205\ \ \ \mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ index\ \{0\},\ i\ \{0\};}
+\DoxyCodeLine{00206\ \ \ \textcolor{keywordflow}{for}\ (;\ i\ <\ \_\_NumD;\ ++i)}
+\DoxyCodeLine{00207\ \ \ \{}
+\DoxyCodeLine{00208\ \mbox{\hyperlink{assert_8hpp_a4dd9c0fbd112eb96b5ac0f2272aeca55}{FINAL\_PROJECT\_ASSERT\_MSG}}((indexes[\_\_NumD\ -\/\ 1\ -\/\ i]\ >=\ 0),\ \textcolor{stringliteral}{"{}Indexing\ must\ be\ none-\/negative\ number.\(\backslash\)n"{}});}
+\DoxyCodeLine{00209\ \ \ \ \ index\ +=\ \_\_shape.strides[i]\ *\ indexes[i];}
+\DoxyCodeLine{00210\ \ \ \}}
+\DoxyCodeLine{00211\ \ \ \textcolor{keywordflow}{return}\ index;}
+\DoxyCodeLine{00212\ \}}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ \_\_T,\ \_\_\textcolor{keywordtype}{size\_t}ype\ \_\_NumD>}
+\DoxyCodeLine{00216\ \ \ \textcolor{keyword}{inline}\ }
+\DoxyCodeLine{00217\ \ \ \_\_T\&\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a4b06400d3ca806044958b64574c4ddf3}{\_\_array<\_\_T,\ \_\_NumD>::operator[]}}(\mbox{\hyperlink{namespacefinal__project_1_1multi__array_1_1____detail_ab59076a3765a9c70e657b82dc8e32ad3}{\_\_size\_type}}\ index)\ }
+\DoxyCodeLine{00218\ \{}
+\DoxyCodeLine{00219\ \ \ \mbox{\hyperlink{assert_8hpp_a4dd9c0fbd112eb96b5ac0f2272aeca55}{FINAL\_PROJECT\_ASSERT\_MSG}}(}
+\DoxyCodeLine{00220\ \ \ \ \ (index\ <\ \_\_shape.size()),\ }
+\DoxyCodeLine{00221\ \ \ \ \ \textcolor{stringliteral}{"{}Index\ is\ out\ of\ range."{}}}
+\DoxyCodeLine{00222\ \ \ );}
+\DoxyCodeLine{00223\ \ \ \textcolor{keywordflow}{return}\ \_\_data[index];\ \ \ }
+\DoxyCodeLine{00224\ \}}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ \_\_T,\ \_\_\textcolor{keywordtype}{size\_t}ype\ \_\_NumD>}
+\DoxyCodeLine{00227\ \ \ \textcolor{keyword}{inline}\ }
+\DoxyCodeLine{00228\ \ \ \_\_T\&\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a4b06400d3ca806044958b64574c4ddf3}{\_\_array<\_\_T,\ \_\_NumD>::operator[]}}(\mbox{\hyperlink{namespacefinal__project_a3ea1691db0c46cfd864ba89f5de08bb6}{Integer}}\ index)\ }
+\DoxyCodeLine{00229\ \{}
+\DoxyCodeLine{00230\ \ \ index\ =\ \_\_shape.check\_and\_cast(index);}
+\DoxyCodeLine{00231\ \ \ \mbox{\hyperlink{assert_8hpp_a4dd9c0fbd112eb96b5ac0f2272aeca55}{FINAL\_PROJECT\_ASSERT\_MSG}}(}
+\DoxyCodeLine{00232\ \ \ \ \ (index\ <\ \_\_shape.size()),\ }
+\DoxyCodeLine{00233\ \ \ \ \ \textcolor{stringliteral}{"{}Index\ is\ out\ of\ range."{}}}
+\DoxyCodeLine{00234\ \ \ );}
+\DoxyCodeLine{00235\ \ \ \textcolor{keywordflow}{return}\ \_\_data[index];\ \ \ }
+\DoxyCodeLine{00236\ \}}
+\DoxyCodeLine{00237\ }
+\DoxyCodeLine{00238\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ \_\_T,\ \_\_\textcolor{keywordtype}{size\_t}ype\ \_\_NumD>}
+\DoxyCodeLine{00239\ \ \ \textcolor{keyword}{inline}\ }
+\DoxyCodeLine{00240\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a2cb702a125809541cf37d39952d10ecc}{\_\_array<\_\_T,\ \_\_NumD>::fill}}(\mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_aae5d1dd250b74152e8c774dc61f9aead}{const\_reference}}\ value)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00241\ \{\ std::fill\_n(begin(),\ size(),\ value);\ \}}
+\DoxyCodeLine{00242\ }
+\DoxyCodeLine{00243\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ \_\_T,\ \_\_\textcolor{keywordtype}{size\_t}ype\ \_\_NumD>}
+\DoxyCodeLine{00244\ \ \ \textcolor{keyword}{inline}\ }
+\DoxyCodeLine{00245\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_a18dda1fd5bae91233a87837f6dde97c3}{\_\_array<\_\_T,\ \_\_NumD>::assign}}(\mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_aae5d1dd250b74152e8c774dc61f9aead}{const\_reference}}\ value)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00246\ \{\ fill(value);\ \}}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ \_\_T,\ \_\_\textcolor{keywordtype}{size\_t}ype\ \_\_NumD>}
+\DoxyCodeLine{00249\ \ \ \textcolor{keyword}{inline}}
+\DoxyCodeLine{00250\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array_ae5bee0bb2b0da5a2426091e06da0ff98}{\_\_array<\_\_T,\ \_\_NumD>::swap}}(\mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array}{\_\_array}}\ \&\ other)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00251\ \{}
+\DoxyCodeLine{00252\ \ \ \_\_data.swap(other.\_\_data);}
+\DoxyCodeLine{00253\ \ \ \_\_shape.swap(other.\_\_shape);}
+\DoxyCodeLine{00254\ \}}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00262\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ \_\_U,\ \_\_\textcolor{keywordtype}{size\_t}ype\ \_\_Dims>}
+\DoxyCodeLine{00263\ std::ostream\&\ \mbox{\hyperlink{namespacefinal__project_1_1multi__array_1_1____detail_a91cb2191df07ca5aa63c90dc563229f7}{operator<<}}(std::ostream\&\ os,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array}{\_\_array<\_\_U,\ \_\_Dims>}}\&\ in)\ }
+\DoxyCodeLine{00264\ \{}
+\DoxyCodeLine{00265\ \ \ \textcolor{comment}{//\ Helper\ Function\ to\ print\ multi-\/dimensional\ array}}
+\DoxyCodeLine{00266\ \ \ \textcolor{keyword}{auto}\ print\_recursive\ =\ [\&](}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \textcolor{keyword}{auto}\&\&\ self,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classfinal__project_1_1multi__array_1_1____detail_1_1____array}{\_\_array<\_\_U,\ \_\_Dims>}}\&\ arr,\ }
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_1_1multi__array_1_1____detail_ab59076a3765a9c70e657b82dc8e32ad3}{\_\_size\_type}}\ current\_dim,\ }
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \mbox{\hyperlink{namespacefinal__project_1_1multi__array_1_1____detail_ab59076a3765a9c70e657b82dc8e32ad3}{\_\_size\_type}}\ offset)\ -\/>\ \textcolor{keywordtype}{void}\ }
+\DoxyCodeLine{00270\ \ \ \{}
+\DoxyCodeLine{00271\ \ \ \ \ \textcolor{keywordflow}{if}\ (current\_dim\ ==\ \_\_Dims\ -\/\ 1)\ }
+\DoxyCodeLine{00272\ \ \ \ \ \{}
+\DoxyCodeLine{00273\ os\ <<\ \textcolor{stringliteral}{"{}|"{}};}
+\DoxyCodeLine{00274\ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{namespacefinal__project_1_1multi__array_1_1____detail_ab59076a3765a9c70e657b82dc8e32ad3}{\_\_size\_type}}\ i\ =\ 0;\ i\ <\ arr.\_\_shape[current\_dim];\ ++i)}
+\DoxyCodeLine{00275\ \{}
+\DoxyCodeLine{00276\ \ \ os\ <<\ std::fixed\ <<\ std::setprecision(5)\ <<\ std::setw(12)\ <<\ (arr.\_\_data[offset\ +\ i]);}
+\DoxyCodeLine{00277\ \}}
+\DoxyCodeLine{00278\ os\ <<\ \textcolor{stringliteral}{"{}\ |\(\backslash\)n"{}};}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00280\ \textcolor{keywordflow}{for}\ (\mbox{\hyperlink{namespacefinal__project_1_1multi__array_1_1____detail_ab59076a3765a9c70e657b82dc8e32ad3}{\_\_size\_type}}\ i\ =\ 0;\ i\ <\ arr.\_\_shape[current\_dim];\ ++i)\ }
+\DoxyCodeLine{00281\ \{}
+\DoxyCodeLine{00282\ \ \ self(self,\ arr,\ current\_dim\ +\ 1,\ offset\ +\ i\ *\ arr.\_\_shape.strides[current\_dim]);}
+\DoxyCodeLine{00283\ \}}
+\DoxyCodeLine{00284\ os\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00285\ \ \ \ \ \}}
+\DoxyCodeLine{00286\ \ \ \};\ \textcolor{comment}{//\ End\ of\ Helper\ Function}}
+\DoxyCodeLine{00287\ }
+\DoxyCodeLine{00288\ \ \ \textcolor{comment}{//\ Start\ recursive\ printing}}
+\DoxyCodeLine{00289\ \ \ print\_recursive(print\_recursive,\ in,\ 0,\ 0);}
+\DoxyCodeLine{00290\ }
+\DoxyCodeLine{00291\ \ \ \textcolor{keywordflow}{return}\ os;}
+\DoxyCodeLine{00292\ \}}
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00294\ }
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \}\ \textcolor{comment}{//\ end\ of\ namespace\ \_\_detail}}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ }
+\DoxyCodeLine{00299\ }
+\DoxyCodeLine{00300\ \}\ \textcolor{comment}{//\ end\ of\ namespace\ multi\_array}}
+\DoxyCodeLine{00301\ \}\ \textcolor{comment}{//\ end\ of\ final\_project}}
+\DoxyCodeLine{00302\ }
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ }
+\DoxyCodeLine{00306\ }
+\DoxyCodeLine{00307\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ end\ of\ define\ FINAL\_PROJECT\_MULTIARRAY\_BASE\_HPP\_LIYIHAI}}
+
+\end{DoxyCode}
