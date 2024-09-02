@@ -1,7 +1,0 @@
-<map id="final_project::mpi::topology::Cartesian::Cartesian" name="final_project::mpi::topology::Cartesian::Cartesian">
-<area shape="rect" id="Node000001" title="Constructor Cartesian Topology,." alt="" coords="5,31,148,87"/>
-<area shape="rect" id="Node000002" href="$classfinal__project_1_1mpi_1_1environment.html#a2cc5ddfdc6972d450e274cae6555e0be" title="Return the MPI_COMM_WORLD." alt="" coords="196,5,340,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,44,180,38,181,43,149,49"/>
-<area shape="rect" id="Node000003" href="$classfinal__project_1_1mpi_1_1environment.html#aae5fe217a48f9af3f55af145fe445d8d" title="Return the number of processes in MPI_COMM_WORLD." alt="" coords="202,71,334,111"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="149,68,187,75,186,80,148,74"/>
-</map>

@@ -1,7 +1,0 @@
-var searchData=
-[
-  ['bcfunction_0',['bcfunction',['../classfinal__project_1_1pde_1_1_boundary_conditions__2_d.html#a0962ff9bfd8908b2f3e4d80c42011a04',1,'final_project::pde::BoundaryConditions_2D::BCFunction'],['../classfinal__project_1_1pde_1_1_boundary_conditions__3_d.html#a49c25791d43c4ef89fd01a85cbb96a9f',1,'final_project::pde::BoundaryConditions_3D::BCFunction'],['../classfinal__project_1_1pde_1_1_heat__2_d.html#a23e3b91e617f4907f491334c158cf059',1,'final_project::pde::Heat_2D::BCFunction'],['../classfinal__project_1_1pde_1_1_heat__3_d.html#aafc11b61125a10445199ec72691c0354',1,'final_project::pde::Heat_3D::BCFunction'],['../structfinal__project_1_1_p_i_n_n_1_1dataset.html#a364f4ae2dd622aa7acc8bd1593184e2d',1,'final_project::PINN::dataset::BCFunction'],['../structfinal__project_1_1_p_i_n_n_1_1dataset__3d.html#afc022e3effdc90721ed141ea02800de2',1,'final_project::PINN::dataset_3d::BCFunction'],['../pinn_2types_8hpp.html#a04ee5e6ebe3fa2aee4b97ec3a0860ab3',1,'BCFunction:&#160;types.hpp'],['../main1_8cpp.html#a99b92172aab3ee8c592ae07a16286bba',1,'BCFunction:&#160;main1.cpp'],['../main1__3d_8cpp.html#a0e53a57eab17dbcded48f1eca04bdf21',1,'BCFunction:&#160;main1_3d.cpp']]],
-  ['bcfunction_5f3d_1',['BCFunction_3d',['../pinn_2types_8hpp.html#a9abf2ec578a5d2a897c7e5f399f2673e',1,'types.hpp']]],
-  ['bool_2',['Bool',['../namespacefinal__project.html#ab8f3ebf8a3440235be1c17b6821b5d77',1,'final_project']]],
-  ['byte_3',['Byte',['../namespacefinal__project.html#a53df891665b76d926e8ff9c2220c17d2',1,'final_project']]]
-];

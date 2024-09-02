@@ -1,9 +1,0 @@
-<map id="include/pde/pde.hpp" name="include/pde/pde.hpp">
-<area shape="rect" id="Node000001" title="This file gives the prototypes of PDEs object and the routines of namespace layouts inside of pde nam..." alt="" coords="77,5,214,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,83,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,34,75,72,72,67,127,29"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="106,79,185,105"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="148,31,148,63,143,63,143,31"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="208,79,309,105"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="166,29,228,68,225,73,163,34"/>
-</map>

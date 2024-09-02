@@ -1,5 +1,0 @@
-<map id="final_project::mpi::environment::comm" name="final_project::mpi::environment::comm">
-<area shape="rect" id="Node000001" title="Return the MPI_COMM_WORLD." alt="" coords="196,13,340,54"/>
-<area shape="rect" id="Node000002" href="$structfinal__project_1_1mpi_1_1topology_1_1_cartesian.html#a73096b9fcb6a5e683563c5889688d086" title="Constructor Cartesian Topology,." alt="" coords="5,5,148,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="180,36,148,36,148,31,180,31"/>
-</map>

@@ -1,7 +1,0 @@
-<map id="final_project::pde::Heat_2D::Heat_2D" name="final_project::pde::Heat_2D::Heat_2D">
-<area shape="rect" id="Node000001" title="Constructs the Heat Equation system in 2D space, with grid size [nx] by [ny]." alt="" coords="5,39,147,79"/>
-<area shape="rect" id="Node000002" href="$classfinal__project_1_1mpi_1_1array___cart.html#a23536c2a1cca9897be842b2206f9e931" title=" " alt="" coords="222,5,350,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="146,45,207,36,207,41,147,50"/>
-<area shape="rect" id="Node000003" href="$classfinal__project_1_1multi__array_1_1____detail_1_1____array.html#a2cb702a125809541cf37d39952d10ecc" title=" " alt="" coords="195,71,377,111"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="147,67,180,72,179,77,146,72"/>
-</map>
