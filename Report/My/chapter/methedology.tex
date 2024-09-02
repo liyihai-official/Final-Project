@@ -953,6 +953,36 @@ it increase the efficiency of updating values in one CPU clockwise.
 
 
 \subsection{Parallel Strategies}
+The MPI-3.x introduced shared memory programming unlike OpenMP library, 
+Independent Software Vendor (ISV) and application libraries need not to be thread-safe
+No additional OpenMP overhead and problems. 
+In general, the Parallel Programming Models on Hybrid Platforms have 
+                                              \cite{SUPERsmith}
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}
+    % Draw a grid with steps of 1 cm
+    \def\gridsize{5em};
+    \draw[help lines, step=1em] (-\gridsize,-\gridsize) grid (\gridsize,\gridsize);
+  
+    % Draw axes
+    \draw[thick,->] (-\gridsize,0) -- (\gridsize,0) node[right] {$x$};
+    \draw[thick,->] (0,-\gridsize) -- (0,\gridsize) node[above] {$y$};    
+  \end{tikzpicture}
+  \caption{Hybrid Platforms\cite{SUPERsmith}}
+  \label{FIG:Hybrid_Platforms}
+\end{figure}
+In this project, I chose to implement three parallel strategies
+\begin{itemize}
+  \item Pure MPI: only one MPI process on each core.
+  \item hybrid MPI + OpenMP with non-overlapped communication/computation:
+                          inter-node communication OpenMP: inside of each SMP node, 
+                          MPI only outside of parallel regions of the numerical application code.
+  \item funneled hybrid + Open with overlapped communication/computation: 
+                          MPI communication by one or a few threads while other threads are computing.
+\end{itemize}
+
 \subsubsection{Pure Message Passing Parallel} \label{SEC:PURE_MPI}
 Pure MPI parallelism is a type of strategy that do not take shared memory programming into considering.
 With no worry about NUMA structure, pure MPI only needs to determine what is the efficient way for communication,
@@ -971,17 +1001,225 @@ such as
 Thus, this projects focused on blocking and non-blocking MPI communications, since RMA requires the hardware support to gain the benefits.
 In general, Pure MPI strategy follows algorithm
 \begin{algorithm}
-  \caption{}
-  \label{}
+  \caption{Pure MPI PDE solver Mechanism}
+  \label{ALG:PURE_MPI}
   \begin{algorithmic}[1]
-    \STATE 
+    \STATE The $i^{th}$ iteration 
+    \STATE Determine current time of $i^{th}$ step.
+    \STATE Exchange ghost values.
+    \STATE Update, store in the next status.
+    \STATE Update boundary conditions at current time.
+    \STATE \texttt{MPI\_Allreduce} the local difference check if it is converge
+    \IF {No Debug}
+      \STATE Store the current results if in Debug mode.  \hfill \# Debug mode
+      \STATE Print global difference on root process.
+    \ENDIF
+    \STATE Switch current / next arrays.
+    \IF{glocal difference $\leqslant$ tolerance}
+      \STATE converge = \texttt{true}, break the iteration.
+    \ENDIF
+  \end{algorithmic}
+\end{algorithm}
+The update function \texttt{update\_ping\_pong()} follows the values except ghost values, as the idea of FDM described in equation \ref{EQ_FDM_FDTD_EQ_Iterating}
+or more specifically for a $D$ dimension heat equation
+\begin{equation}
+  u^{n+1}_{1,\dots,d,\dots,D} = 
+      u^{n}_{1, \dots,d, \dots,D}
+    + \sum_{d=1}^{D}\frac{\lambda \Delta t}{\Delta x_d^2}
+  \left(
+      u^{n}_{1,\dots,d+1, \dots,D} 
+    - 2u^{n}_{1,\dots,d, \dots,D} 
+    + u^{n}_{1,\dots,d-1, \dots,D}
+  \right)
+\end{equation}
+
+\paragraph{Exchange}
+Blocking communication is applied with \texttt{MPI\_Sendrecv} function which is a unified operation of 
+an \texttt{MPI\_Send} to the destination site 
+and an \texttt{MPI\_Recv} from source site.
+The communication topology is shown in figure \ref{FIG_MPI_3D_exchange_SCHEME}, 
+for each process, there are two \texttt{MPI\_Sendrecv} operations, for the destination and source sites communications.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}
+    % Draw a grid with steps of 1 cm
+    % \draw[help lines, step=1em] (-2em,-2em) grid (20em,20em);
+  
+    % Draw axes
+    % \draw[dashed,->] (-2em,0) -- (20em,0) node[right] {x};
+    % \draw[dashed,->] (0,-2em) -- (0,20em) node[above] {y};
+    
+      % Define a local macro to draw a cube at a given position
+      \def\drawcube#1#2{
+        \begin{scope}[shift={#1}, x={(0.8em,-0.1em)}, y={(0em,0.8em)}, z={(0.4em,0.20em)}]
+          \def\size{#2}
+
+          \draw[thick,->] (-2em, 3em) -- (1em, 2.5em) node[pos=0, above] {$source$} node[pos=0.5, above] {} node[pos=1, above] {};
+          \draw[thick,->] (3em, 2em) -- (3em, -2em) node[pos=0, above] {} node[pos=0.5, left] {} node[pos=1, below] {$dest$};
+          \draw[thick,->] (9em, 5em) -- (2em, 2em) node[pos=0, above] {$source$} node[pos=0.5, above] {} node[pos=1, above] {};
+
+          % Draw the front face
+          \fill[blue!20] (0,0,0) -- (0,\size,0) -- (\size, \size,0) -- (\size,0,0) -- cycle;
+          % Draw the top face
+          \fill[blue!40] (0,\size,0) -- (0,\size,\size) -- (\size, \size, \size) -- (\size, \size,0) -- cycle;
+          % Draw the right face
+          \fill[blue!60] (\size,0,0) -- (\size,0,\size) -- (\size, \size, \size) -- (\size, \size,0) -- cycle;
+  
+          \fill[red!30] (1,1,0) -- (1,\size-1,0) -- (\size-1, \size-1,0) -- (\size-1,1,0) -- cycle;
+          \fill[red!40] (1,\size,1) -- (1,\size,\size-1) -- (\size-1, \size, \size-1) -- (\size-1, \size,1) -- cycle;
+          \fill[red!45] (\size,1,1) -- (\size,1,\size-1) -- (\size, \size-1, \size-1) -- (\size, \size-1,1) -- cycle;
+          
+          \draw[thick,->] (5em, 2em) -- (8em, 1.5em) node[pos=0, above] {} node[pos=0.5, above] {} node[pos=1, above] {$dest$};
+          \draw[thick,->] (3em, 7em) -- (3em, 4em) node[pos=0, above] {$source$} node[pos=0.5, left] {} node[pos=1, below] {};
+          \draw[thick,->] (2em, 2em) -- (-3em, 0em) node[pos=0, above] {} node[pos=0.5, above] {} node[pos=1, above] {$dest$};
+
+          % Draw the grid
+          \foreach \x in {0,1,...,\size} 
+          {
+            \draw[black] (\x,0,0) -- (\x,\size,0);
+            \draw[black] (0,\x,0) -- (\size,\x,0);
+
+            \draw[black] (\size,\x,0) -- (\size,\x,\size);
+            \draw[black] (\size,0,\x) -- (\size, \size,\x);
+
+            \draw[black] (\x,\size,0) -- (\x,\size,\size);
+            \draw[black] (0,\size,\x) -- (\size, \size,\x);
+          }
+
+        \end{scope}
+      }
+  
+      % Draw the first cube at (0,0) with size 8
+      \drawcube{(0em, 0em)}{5}
+      \drawcube{(14em, 0em)}{5}
+      \drawcube{(0em, 12em)}{5}
+      \drawcube{(14em, 12em)}{5}
+
+    \end{tikzpicture}  
+  \caption{A 3D MPI Communication Scheme of $8$ processors between $3$ dimension matrices.}
+  \label{FIG_MPI_3D_exchange_SCHEME}
+\end{figure}
+
+
+% The average time consumption of a process denoted with $t_{b}$ stands for blocking communications, 
+% due to the $p^{th}$ will return when the send and recv operation complete. 
+% Thus the $p^{th}$ process among $n_p$ processes, it will wait $(p - 1)t_{b}$ time to complete.
+% Ideally, the execution time would close to $pt_b$, however, non-blocking communication has time complexity $O(n_p^2)$.
+
+\subsubsection{No comm./comp overlapped Hybrid Parallel}\label{SEC:HYBRID_0}
+The hybrid programming takes shared memory into consider, and the most simple idea is using OpenMP multi-threads for updating 
+arrays of each MPI process.
+
+In the meanwhile, the update function \texttt{update\_ping\_pong} has a nested loop which is suitable for using \texttt{parallel for} syntax.
+Thus the update function of the first hybrid strategy is \texttt{update\_ping\_ping\_omp} with OpenMp pragma 
+\texttt{omp for collapse(NumD)}.
+In order to collect differences from all threads of MPI processes, the local difference of threads are collected to MPI local differences
+by using pragma \texttt{omp critical}, with a \texttt{omp barrier} at the end.
+The boundary condition updates and gathering results or print global difference are set to \texttt{single}.
+\begin{algorithm}
+  \caption{Master-only MPI+OpenMP with non-overlapped Communication/Computation}
+  \label{ALG:Hybrid_0}
+  \begin{algorithmic}[1]
+    \FOR {iterations}
+      \STATE \texttt{\#pragma omp single}
+      \STATE MPI communications.
+      \FOR {for grid values}
+        \STATE \texttt{\#pragma omp for} updates.
+      \ENDFOR
+      \STATE \texttt{\#pragma omp single} Switch and other operations.
+    \ENDFOR
   \end{algorithmic}
 \end{algorithm}
 
 
 
-\subsubsection{Hybrid Parallel}\label{SEC:HYBRID_0}
-\subsubsection{Hybrid Parallel}\label{SEC:HYBRID_1}
+
+\paragraph{Exchange}
+The exchange method of first hybrid solver is identical with pure MPI exchanger, however, only single thread will call it.
+Such strategy is called Master-Only Hybrid 
+                                                      \cite{Master-Only}, 
+it can be using \texttt{omp single} for calling MPI communications
+rather than using \texttt{omp master}.
+In general the master-only hybrid has such communication scheme
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}
+    \def\drawMPI#1#2{
+      \begin{scope}
+        \draw[node] (0em, 0em);
+      \end{scope}
+    }
+
+    % Draw a grid with steps of 1 cm
+    \def\gridsize{5em};
+    \draw[help lines, step=1em] (-\gridsize,-\gridsize) grid (\gridsize,\gridsize);
+  
+    % Draw axes
+    \draw[thick,->] (-\gridsize,0) -- (\gridsize,0) node[right] {$x$};
+    \draw[thick,->] (0,-\gridsize) -- (0,\gridsize) node[above] {$y$};
+
+
+  \end{tikzpicture}
+  \caption{Scheme: Master only hybrid strategy}
+  \label{FIG:master_only_hybrid}
+\end{figure}
+
+
+\subsubsection{Funneled Hybrid Parallel with overlapped comm./comp.}\label{SEC:HYBRID_1}
+Basic on the work in section \ref{SEC:HYBRID_0}, the second hybrid strategy is still master-only hybrid but with more optimizations on update 
+function. 
+Due to the inner part of grid is independent with ghost values, thus the update function can be separated the update function into two steps, 
+update the bulk and update the edges.
+
+\begin{algorithm}
+  \caption{Funneled Master-only MPI+OpenMPI with overlapped Communication/Computation}
+  \label{ALG:Hybrid_1}
+  \begin{algorithmic}[1]
+    \FOR {iterations}
+      \STATE \texttt{\#pragma omp single}
+      \STATE MPI communications. (\texttt{Isends/Irecvs})
+      \FOR {for bulk points} 
+        \STATE Update bulk points.                                  \hfill \# Update the points that do not need ghosts.
+      \ENDFOR
+      \STATE \texttt{MPI\_Waitall()}                                \hfill \# Wait all MPI Communications complete
+      \FOR {for edge pints}
+        \STATE update edge values.                                 
+      \ENDFOR
+      \STATE \texttt{\#pragma omp single} Switch and other operations.
+    \ENDFOR
+  \end{algorithmic}
+\end{algorithm}
+Comparing to the previous scheme \ref{ALG:Hybrid_0}, the scheme \ref{ALG:Hybrid_1} overlaps part of MPI communications and computation, 
+rather than only take the advantages of shared memory computing.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}
+    \def\drawMPI#1#2{
+      \begin{scope}
+        \draw[node] (0em, 0em);
+      \end{scope}
+    }
+
+    % Draw a grid with steps of 1 cm
+    \def\gridsize{5em};
+    \draw[help lines, step=1em] (-\gridsize,-\gridsize) grid (\gridsize,\gridsize);
+  
+    % Draw axes
+    \draw[thick,->] (-\gridsize,0) -- (\gridsize,0) node[right] {$x$};
+    \draw[thick,->] (0,-\gridsize) -- (0,\gridsize) node[above] {$y$};
+
+
+  \end{tikzpicture}
+  \caption{Scheme: Master only hybrid strategy with computation/communication overlapping}
+  \label{FIG:master_only_hybrid_1}
+\end{figure}
+Also, due to the asynchronous communication is not guaranteed by non-blocking MPI communication,
+which means that the implementation of multiple overlapping of communication / computation.
+Thus, applying multiple overlapping hybrid method can be very hard to do even on simple question, and highly hardware dependent.
+
+
 
 % \subsection{Physics Informed Neural Networks}
 % \subsection{CUDA parallel}
