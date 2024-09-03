@@ -17,7 +17,7 @@ Integer
   main( Integer argc, Char ** argv)
 {
   constexpr maintype tol {1E-4};
-  constexpr size_type nsteps {10000000};
+  constexpr size_type nsteps {1'000'000};
   final_project::PINN::Dimension Dimension {final_project::PINN::Dimension::UNKNOWN};
   final_project::String filename {""};
   Integer opt {0}, iter {1};  
