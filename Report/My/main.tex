@@ -55,10 +55,59 @@
 
 \usepackage{tikz}
 
+\tikzstyle myBG=[line width=3pt,opacity=1.0]
+\newcommand{\myGlobalTransformation}[2]
+{
+  \pgftransformcm{1}{0}{0.5}{0.3}{\pgfpoint{#1em}{#2em}}
+}
+
+\newcommand{\gridThreeD}[3]
+{
+  \begin{scope}
+    \myGlobalTransformation{#1}{#2};
+    \draw [#3,step=1.5em] grid (12,12);
+  \end{scope}
+}
+
+\newcommand{\drawLinewithBG}[2]
+{
+  \draw[white,myBG]  (#1) -- (#2);
+  \draw[dashed, black,thick] (#1) -- (#2);
+}
+\newcommand{\graphLinesHorizontal}
+{
+  \drawLinewithBG{1,1}{7,1};
+  \drawLinewithBG{1,2.5}{7,2.5};
+  \drawLinewithBG{1,4}{7,4};
+  \drawLinewithBG{1,5.5}{7,5.5};
+  \drawLinewithBG{1,7}{7,7};
+}
+
+\newcommand{\graphLinesVertical}
+{
+  \pgftransformcm{0}{1}{1}{0}{\pgfpoint{0em}{0em}}
+  \graphLinesHorizontal;
+}
+
+\newcommand{\graphThreeDnodes}[2]
+{
+  \begin{scope}
+    \myGlobalTransformation{#1}{#2};
+    \foreach \x in {1,2.5,4,5.5,7} 
+    {
+      \foreach \y in {1,2.5,4,5.5,7} 
+      {
+\node at (\x,\y) [circle,fill=black,scale=0.45] {};
+      }
+    }
+  \end{scope}
+}
+
 %% \BibTeX command to typeset BibTeX logo in the docs
 \AtBeginDocument{%
   \providecommand\BibTeX{{%
     \normalfont B\kern-0.5em{\scshape i\kern-0.25em b}\kern-0.8em\TeX}}}
+
 
 
 \setcopyright{none}
