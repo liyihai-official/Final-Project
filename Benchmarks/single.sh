@@ -19,6 +19,7 @@ export PATH_TO_GCC=/data/app/gcc13.2.0/bin/gcc
 export PATH_TO_GXX=/data/app/openmpi/4.1.5-gcc13.2.0/bin/mpicxx
 export PATH_TO_LIBTORCH=/data/home/pokemonarrive_gmail.com/libtorch
 
+
 scale_values=(512 1024 2048 4096 8192 16384 32768)
 
 ppr_values=(1 2 4 8 16 24 32 48 64 96)
