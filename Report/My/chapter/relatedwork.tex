@@ -184,10 +184,100 @@ $t$ and $x$ as inputs, outputs with the predicting value $\hat{u}(t,x)$.
 In the training process, the next step is calculating the necessary derivatives of $u$ with the respect to $t$ and $x$.
 The value of loss function is a combination of the metrics of how well does these predictions fit the given conditions and 
 fit the natural law [Fig. \ref{FIG_Schematic_View_PINN}]. 
+% \begin{figure}[htbp]
+%   \centering
+%   \includegraphics[width=0.5\textwidth]{figure/FIG_Schematic_View_PINN.jpg}
+%   \caption{The Schematic Representa of a structure of PINN.}
+%   \label{FIG_Schematic_View_PINN}
+% \end{figure}
+
+
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.5\textwidth]{figure/FIG_Schematic_View_PINN.jpg}
-  \caption{The Schematic Representa of a structure of PINN.}
+  \begin{tikzpicture}[
+    % Define styles
+    neuron/.style={circle,draw,minimum size=.2cm},
+    func/.style={rectangle,draw,minimum size=.2cm},
+    PDE/.style={func, fill=green!20},
+    loss/.style={func, fill=blue!20},
+    input/.style={neuron, fill=green!20},
+    hidden/.style={neuron, fill=blue!20},
+    output/.style={neuron, fill=red!20},
+    diff/.style={neuron, fill=green!20},
+    arrow/.style={->,>=stealth},
+    scale=0.5
+  ]
+    
+  % \steporfull<1->{
+    % Input Layer
+    \draw[dashed, thick] (-2,1) rectangle (9,-5); % 前两个坐标为矩形左下角的坐标，后两个坐标为矩形右上角的坐标
+    \node at (-2,1) [above right] {$NN(t,x; \theta)$}; % 文本内容为"文本"，位置为方框的左上角
+
+    \node[input] (Input0) at (0,-1) {$x$};
+    \node[input] (Input) at (0,-3) {$t$};
+  
+    % Hidden Layer 1
+    \node[hidden] (Hidden11) at (2,0) {$\sigma$};
+    \node[hidden] (Hidden12) at (2,-2) {$\sigma$};
+    \node[hidden] (Hidden13) at (2,-4) {$\sigma$};
+  
+    % Hidden Layer 2
+    \node[hidden] (Hidden21) at (4,0) {$\sigma$};
+    \node[hidden] (Hidden22) at (4,-2) {$\sigma$};
+    \node[hidden] (Hidden23) at (4,-4) {$\sigma$};
+  
+    % Hidden Layer 3
+    \node[hidden] (Hidden31) at (6,0) {$\sigma$};
+    \node[hidden] (Hidden32) at (6,-2) {$\sigma$};
+    \node[hidden] (Hidden33) at (6,-4) {$\sigma$};
+
+    % Output Layer
+    \node[output] (Output) at (8,-2) {$u$};
+
+    % Connect neurons Input-Hidden Layer 1
+    \foreach \i in {1,2,3}
+        \draw[arrow] (Input) -- (Hidden1\i);
+      \foreach \i in {1,2,3}
+        \draw[arrow] (Input0) -- (Hidden1\i);
+  
+    % Connect neurons Hidden Layer 1-Hidden Layer 2
+    \foreach \i in {1,2,3}
+        \foreach \j in {1,2,3}
+            \draw[arrow] (Hidden1\i) -- (Hidden2\j);
+  
+    % Connect neurons Hidden Layer 2-Hidden Layer 3
+    \foreach \i in {1,2,3}
+        \foreach \j in {1,2,3}
+            \draw[arrow] (Hidden2\i) -- (Hidden3\j);
+  
+    % Connect neurons Hidden Layer 3-Output
+    \foreach \i in {1,2,3}
+        \draw[arrow] (Hidden3\i) -- (Output);
+  % }
+
+  % \steporfull<2->{
+    \draw[dashed, thick] (7,2.5) rectangle (18,-6.4);
+    \node at (15,2.5) [above right] {PDE($\lambda$)}; % 文本内容为"文本"，位置为方框的左上角
+    % Partial Derivatives
+    \node[diff] (D1) at (10,1) {$\frac{\partial}{\partial t}$};
+    \node[diff] (D2) at (10,-2) {$\frac{\partial}{\partial x}$};
+    \node[diff] (D3) at (10,-5) {$\frac{\partial^2}{\partial^2 x}$};
+    \node[PDE] (PDE) at (14.5,-2) {$u_t(t,x) + \varGamma \left[u; \lambda \right]$};
+
+    \foreach \i in {1,2,3}
+        \draw[arrow] (Output) -- (D\i);
+    \foreach \i in {1,2,3}
+        \draw[arrow] (D\i) -- (PDE);
+  % }
+
+  % \steporfull<2->{
+    \node[loss] (L) at (12,-7.3) {Loss};
+
+    \draw[arrow] (Output) |- (L);
+    \draw[arrow] (PDE) |- (L);
+  % }
+  \end{tikzpicture}
+  \caption{The Schematic Representation of a structure of PINN, a FCN with 4 layers (3 hidden layers)}
   \label{FIG_Schematic_View_PINN}
 \end{figure}
 

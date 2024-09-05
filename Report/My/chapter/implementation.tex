@@ -1,14 +1,199 @@
 \section{Experiments}
 \subsection{Experimental Setup}
+
+
 I verify the proposed PINN methods on generated dataset, and FDTD methods with hybrid and pure MPI strategies
 on the server with two Intel (R) Xeon (R) Platinum 9242 CPU nodes (96 cores per node) and $4$ NUMA nodes per node.
 While the dataset is using \texttt{std::m19937} STL random device with given seed $42$ \cite{STL:RANDOM_SEED}.
 The PINN models I mentioned are trained using train-from-scratch strategy, and maximin number of training times is $1'000'000$ epochs.
 In the setting of learning rate and optimizer, I chose to use Adam with constant learning speed $10^{-3}$.
 The details of PDEs are determined in previous section \ref{SEC:Specific_Form}.  
-For more settings, please refer to Appendix.
+
+\paragraph{Compiling}
+Compiling the program is also a critical important processes.
+I chose to use the macros for defining the scale of problems in advance, this is because the compiler will 
+have more aggressive optimizations if it knows more predefined parameters.
+
+\paragraph{Running}
+For finely manipulate the resource allocation on cluster, following command line \ref{LST:mpirun} is used for this 
+the script arguments \texttt{rsc} stands for the resource type such as \texttt{numa}, \texttt{node} and \texttt{socket},
+\texttt{--report-bindings} is a error message, for showing the details of threads and CPUs tasks allocated on cluster.
+\begin{lstlisting}[
+  style=customCpp,
+  caption={main command line for launching program on cluster},
+  label={LST:mpirun}]
+    mpirun --map-by ppr:$ppr:$rsc:pe=$threads --report-bindings <executable> <arguments>
+\end{lstlisting}
+and \texttt{threads} means the number of threads per resource. The \texttt{ppr} is the number of CPU tasks per resource.
+The last \texttt{<argument>} is command line arguments for the program, which is designed by programmer. 
+In this case, I designed three type of arguments
+\begin{enumerate}
+  \item \texttt{-S, -s} Strategy, for specifying the pure mpi, hybrid 0 or 1 strategy.
+  \item \texttt{-F, -f} file name, if this argument is defiend, the results will be stored in the file.
+  \item \texttt{-H, -h} Helper message, the usage information.
+  \item \texttt{-V, -v} Showing the version of program.
+\end{enumerate}
+
+
+
+\subsection{Computational Topology}
+The computational topology is critically important when we are programming parallel PDEs solver softwares.
+Put the strongly speed-dependent data into the slow memory could make entire program slower.
+
+\paragraph{Cluster}
+The cluster we are using for this project is \texttt{Callan} \cite{Callan_TCD} which has 
+$2$ CPUs per compute node, and each CPU has $32$ cores with single thread. 
+The Non-Uniform Memory Access (NUMA) nodes are layout as following 
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}
+    \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.5\textwidth]{figure/FIG_Topology_9242.pdf}};
+    % \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.58\textwidth]{figure/FIG_Topology_9242.pdf}};     /// overleaf
+    \begin{scope}[x={(image.south east)},y={(image.north west)}]
+        % \draw[help lines, step=1em] (-1em,-1em) grid (30em,20em);    
+        % % Draw axes
+        % \draw[dashed,->] (-1em,0) -- (30em,0) node[right] {x};
+        % \draw[dashed,->] (0,-1em) -- (0,20em) node[above] {y};
+
+      \node at (12em,18em) {$2$ $Scokets$};
+
+      \node at (4.5em,1em) {$DDR4$};
+      \node at (19.5em,1em) {$DDR4$};
+
+      \node at (4.5em, 15em) {$DDR4$};
+      \node at (19.5em,15em) {$DDR4$};
+
+      \node at (12em,13em) {$Hyper-threads$};
+      \node at (12em,5.5em) {$Hyper-threads$};
+
+      \node at (12em,11em) {$48$ $CPUS$};
+      \node at (12em,3.5em) {$48$ $CPUS$};
+    \end{scope}
+  \end{tikzpicture}
+  \caption{NUMA topology of single node on Cluster}
+  \label{FIG_Topology_Callan}
+\end{figure}
+Accessing the other NUMA node's memory reduces the bandwidth and also the latency,
+though the bandwidth is commonly high enough, the latency can increase by 
+$~30\%$ to $~400\%$ \cite{NUMA_Latency_TCD}. 
+This latency becomes dangerous when writing shared memory parallel programs.
+
 
 \subsection{Comparison on single node}
+On single node, the CPUs are connected by high-bandwidth, low-latency internal bus which is faster than connection between nodes.
+However, for the $4$ total NUMA nodes per compute node, memory accessing between them has higher latency than cache.
+Thus, the first tests set were run on the platform with single node, to evaluate the parallelistic performance of heat equation on 2 and 3 dimension spaces with 
+3 strategies.
+Figure \ref{FIG:Benchmark:PURE_MPI} visualizes the comparison of my proposed parallelistic program using pure MPI on two dimension space heat euqation with 
+the number of CPUs and various problem scales.
+Overall, the more CPUs brings more performance among all scales from $512^2$ to the $32'768^2$ but can not break the speedup limits.
+Compared with large scale bigger than $4096^2$, the light problems has less speedup as the number of CPUs increases.
+By seeing the trend of speedup ratios drop as the CPU gets more, 
+the trend can be readily discovered which is the as the scale of problems gets larger, the latter it will have performance-dropping.
+Once the problem size is large enough, ($4096^2$ and larger), the solvers can get the more benefits from more CPUs.
+
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.6\textwidth]{figure/FIG_Benchmark_pure_mpi.pdf}
+  \caption{
+    Comparison of speedup ratios of strong scaling tests of pure MPI parallelized program. 
+    The investigated problem scales are the power of $2$, exponents ranging from $9$ to $15$.
+    The number of CPUs are also set as power of $2$, with additional numbers $24$, $48$ and $96$ matched the topologies of CPU.
+  }
+  \label{FIG:Benchmark:PURE_MPI}
+\end{figure}
+
+On the other hand, I also include some unconventionaly number of CPUs in scaling tests such as $24$, $48$ and $96$ for comparison. and 
+the results are also shown in the figure \ref{FIG:Benchmark:PURE_MPI}.
+From this figure, it is hard to tell the difference of these where it ought to indicate some information about its NUMA structure.
+This is because the MPI communication does not strongly effected by memory structure, while the hybrid does.
+Figure \ref{FIG:Benchmark:Hybrid} shows the difference, the hybrid strategy brings lower performance with small scale across all CPUs and 
+approximately identical in the large scale cases.
+The most visible change in figure \ref{FIG:Benchmark:Hybrid_0} is that the speedup ratio of problem with scale $4096^2$ 
+exceded the limits on $4$, $8$ and $16$ CPUs which is $1$, $2$, $4$ threads of each MPI process.
+We can also see that when the number of threads is $8$ and $4$ MPI processes, the performances on large scale is better than pure MPI parallelism.
+
+\begin{figure}[htbp]
+  \centering
+  \subfigure[No overlapping comm./comp.]
+  {
+    \includegraphics[width=0.47\textwidth]{figure/FIG_Benchmark_hybrid_0.pdf}
+    \label{FIG:Benchmark:Hybrid_0}
+  }
+  \hfill
+  \subfigure[With overlapping comm./comp.]
+  {
+    \includegraphics[width=0.47\textwidth]{figure/FIG_Benchmark_hybrid_1.pdf}
+    \label{FIG:Benchmark:Hybrid_1}
+  }
+  \caption{
+    Comparison of speedup ratios of strong scaling tests of mater-only parallelized program with overlapping and no overlapping of computation and communication.  
+    The vague background is the results of pure MPI parallelization from figure \ref{FIG:Benchmark:PURE_MPI} and problems sclaes are identical as well.
+    The number of threads are set to $1$, $2$, $4$, $8$, $16$, and $24$, 
+    tasks per CPU are $1$, $2$ and $4$.
+  }
+  \label{FIG:Benchmark:Hybrid}
+\end{figure}
+
+For the other funneled hybrid parallelization, the figure 
+            \ref{FIG:Benchmark:Hybrid_1} 
+in the appendix shows the details of results,
+this strategy has nearly idential performance of master only with no overlapping on large problem scales.
+However, the behaviour of it on small scales has a different pattern.
+This indicates that the overlappings of computation and communication are not as good as previous one, which means the overload management is not 
+well on these tests.
+
+% \begin{figure}[htbp]
+%   \centering
+%   \includegraphics[width=0.7\textwidth]{figure/FIG_Benchmark_hybrid_1.pdf}
+%   \caption{<caption>}
+%   \label{FIG:Benchmark:Hybrid_1}
+% \end{figure}
+
+% \begin{figure}[htbp]
+%   \centering
+%   \subfigure[Grid sizes: 150*45*40/25*33*40.]{
+%       \includegraphics[width=0.45\textwidth]{weak.png}
+%       \label{fig:weak_scaling_1}    
+%   }
+%   \hfill
+%   \subfigure[Grid sizes: 300*90*80/50*65*80]{
+%       \includegraphics[width=0.48\textwidth]{weak_scaling_2_efficiency_comparison.png}    
+%       \label{fig:weak_scaling_2}
+%   }
+%   \caption{
+%       Weak scaling tests of Cartesian / Cylinder equation with same problem scale on $1$, $2^2$, $3^3$, $4^3$ processors.
+%   }
+%   \label{fig:weak_scaling}
+% \end{figure}
+
+
+\subsection{Comparison on multi-node}
+\subsection{Comparison}
+
+% \subsection{Finite Difference Methods}
+% \subsubsection{Pure Message Passing Parallel}
+% \subsubsection{Hybrid Parallel}
+
+
+% \subsection{Physics Informed Neural Networks}
+% \subsubsection{CUDA parallel}
+% \subsubsection{Hybrid Parallel}
+
+
+\subsection{Visualization}
+
+
+
+
+
+
+
+
+
+
+
 
 % Table 
 % lists the results 
@@ -37,31 +222,3 @@ For more settings, please refer to Appendix.
 %     % \footnotesize\emph{Source:} This is source 
 %   \end{minipage}
 % \end{table}
-
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.8\textwidth]{figure/test_plot.pdf}
-  \caption{<caption>}
-  \label{<label>}
-\end{figure}
-
-
-
-
-
-
-\subsection{Comparison}
-\subsection{Comparison}
-
-% \subsection{Finite Difference Methods}
-% \subsubsection{Pure Message Passing Parallel}
-% \subsubsection{Hybrid Parallel}
-
-
-% \subsection{Physics Informed Neural Networks}
-% \subsubsection{CUDA parallel}
-% \subsubsection{Hybrid Parallel}
-
-
-\subsection{Visualization}

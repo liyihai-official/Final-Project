@@ -164,22 +164,3 @@ The standard model holds that
 \end{equation}
 where the op stands for the four elementary operations: $+, -, \times, /$. \cite{Germund,NMSC,V1,P112}.
 
-
-\subsection{Computiational Topology}
-The computational topology is critically important when we are programming parallel PDEs solver softwares.
-Put the strongly speed-dependent data into the slow memory could make entire program slower.
-
-\paragraph{Callan}
-The cluster we are using for this project is \texttt{Callan} \cite{Callan_TCD} which has 
-$2$ CPUs per compute node, and each CPU has $32$ cores with single thread. 
-The Non-Uniform Memory Access (NUMA) nodes are layout as following 
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.5\textwidth]{figure/FIG_Topology_Callan.jpg}
-  \caption{NUMA topology of single node on Callan}
-  \label{FIG_Topology_Callan}
-\end{figure}
-Accessing the other NUMA node's memory reduces the bandwidth and also the latency,
-though the bandwidth is commonly high enough, the latency can increase by 
-$~30\%$ to $~400\%$ \cite{NUMA_Latency_TCD}. 
-This latency becomes dangerous when writing shared memory parallel programs.
