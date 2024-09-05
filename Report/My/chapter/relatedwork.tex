@@ -2,8 +2,8 @@
 % 在工程学、物理学、生物学和化学等众多领域，为了解决各种各样的偏微分方程，学术界尝试了非常多的途径，诞生了很多数值解法并且都已经非常成熟。
 % 有限差分法是一种被广泛运用的方法，通过差商来近似所需要的连续函数的导数。
 
-To gain well quality solution of various types of PDEs is prohibitive and notoriously challanging.
-The number of methods avaliable to determine canonical PDEs is limited as well,
+To gain well quality solution of various types of PDEs is prohibitive and notoriously challenging.
+The number of methods available to determine canonical PDEs is limited as well,
 includes 
 separation of variables, 
 superposition, 
@@ -16,7 +16,7 @@ Even though there methods are exclusively well-performed on constrained conditio
 such as regular shaped geometry domain, constant coefficients, well-symmetric conditions 
 and many others.
 These limits strongly constrained the range of applicability of numerical techniques for solving PDEs,
-rendering them nearly irrelevant for solving problems pratically.
+rendering them nearly irrelevant for solving problems practically.
 
 General, the methods of determining numerical solutions of PDEs can be broadly classified into
 two types: 
@@ -27,9 +27,9 @@ Monte Carlo Method \cite{Monte Carlo Method} which is a popular method in solvin
 notable complexity.
 
 \subsection{Finite Difference Method}\label{SEC:FDM}
-The Finithe Difference Method(FDM) is based on the numerical approximation method in calculus of finite differences.
+The Finite Difference Method(FDM) is based on the numerical approximation method in calculus of finite differences.
 The motivation is quiet straightforward which is approximating solutions by finding values satisfied PDEs on a set of 
-presctibed interconnected points within the domain of it. Those points are which referd as nodes, and the set of nodes 
+prescribed interconnected points within the domain of it. Those points are which referred as nodes, and the set of nodes 
 are so called as a grid of mesh.
 A notable way to approximate derivatives are using 
 Taylor Series expansions.
@@ -392,3 +392,42 @@ also shown in the figure \ref{FIG:Scheme_FDTD_2D_Heat}.
   \caption{The Schematic Representation the computational spatio-temporal domain of FDTD methods.}
   \label{FIG:Scheme_FDTD_2D_Heat}
 \end{figure}
+
+
+
+\subsection{Scalability}
+High performance computing which also called 
+parallel computing
+is solving large scale problems using Clusters, with a number of compute nodes and many CPUs.
+Parallel computing is many CPUs, thousands of CPUs in most case, are simultaneously processing the data and 
+producing the exceptional results, which significantly reduce the time consumption totally.
+In this scenario, scaling test is a widely used to investigate the ability of hardware and programs to 
+deliver more computational power when the amount of compute resources increase.
+
+\subsubsection{Amdalh's Law and Strong Scaling}
+The Amdalh's law for speedup is 
+\begin{theorem}\label{THEO:Amdalh's law}
+  Let $f_s$ and $f_p$ be the fraction of time spend on purely sequential tasks and that can be parallelized, then 
+  the Amdalh's formula
+  \cite{Amdalh'sLaw} of final speedup is
+  \begin{equation}\label{EQ:Amdalh's law}
+    S_N = \frac{1}{f_s + \frac{f_p}{N}}
+  \end{equation}
+\end{theorem}
+and it states that for a fixed problem, the upper limits of speedup is restricted by the fraction of sequential parts, 
+where the limits is $\lim_{N\to +\infty} S_N = 1 / f_s$, which is called the strong scaling.
+
+
+\subsubsection{Gustafsson-Barsis' Law}
+The Gaustafsson-Barsis' law for speedup is 
+\begin{theorem}\label{THEO:GaustafssonLaw}
+  Let $f_s$ and $f_p$ be the fraction of time spend on purely sequential tasks and that can be parallelized, then 
+  the Gaustafsson-Barsis' formula 
+                                                        \cite{GaustafssonLaw}
+  of the final speedup is 
+  \begin{equation}\label{EQ:GaustafssonLaw}
+    S_N = f_s + Nf_p
+  \end{equation}
+\end{theorem}
+With Gaustafsson-Barsis's law, the scaled speedup increases linearly with the number of processes, and there is no upper 
+limits for the scaled speedup, which is called weak scaling.

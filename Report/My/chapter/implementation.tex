@@ -36,7 +36,7 @@ In this case, I designed three type of arguments
 
 
 
-\subsection{Computational Topology}
+\subsubsection{Computational Topology}
 The computational topology is critically important when we are programming parallel PDEs solver softwares.
 Put the strongly speed-dependent data into the slow memory could make entire program slower.
 
@@ -46,7 +46,7 @@ $2$ CPUs per compute node, and each CPU has $32$ cores with single thread.
 The Non-Uniform Memory Access (NUMA) nodes are layout as following 
 \begin{figure}[htbp]
   \centering
-  \begin{tikzpicture}
+  \begin{tikzpicture}[scale=1, transform shape]
     \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.5\textwidth]{figure/FIG_Topology_9242.pdf}};
     % \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.58\textwidth]{figure/FIG_Topology_9242.pdf}};     /// overleaf
     \begin{scope}[x={(image.south east)},y={(image.north west)}]
@@ -84,6 +84,9 @@ On single node, the CPUs are connected by high-bandwidth, low-latency internal b
 However, for the $4$ total NUMA nodes per compute node, memory accessing between them has higher latency than cache.
 Thus, the first tests set were run on the platform with single node, to evaluate the parallelistic performance of heat equation on 2 and 3 dimension spaces with 
 3 strategies.
+
+
+\subsubsection{Strong Scaling}
 Figure \ref{FIG:Benchmark:PURE_MPI} visualizes the comparison of my proposed parallelistic program using pure MPI on two dimension space heat euqation with 
 the number of CPUs and various problem scales.
 Overall, the more CPUs brings more performance among all scales from $512^2$ to the $32'768^2$ but can not break the speedup limits.
@@ -91,7 +94,6 @@ Compared with large scale bigger than $4096^2$, the light problems has less spee
 By seeing the trend of speedup ratios drop as the CPU gets more, 
 the trend can be readily discovered which is the as the scale of problems gets larger, the latter it will have performance-dropping.
 Once the problem size is large enough, ($4096^2$ and larger), the solvers can get the more benefits from more CPUs.
-
 
 \begin{figure}[htbp]
   \centering
@@ -144,6 +146,23 @@ However, the behaviour of it on small scales has a different pattern.
 This indicates that the overlappings of computation and communication are not as good as previous one, which means the overload management is not 
 well on these tests.
 
+
+\paragraph{Superliner Speedup}
+Conventionally, the actuall speedup won't excedes the theoratical predictions of Amdalh's law.
+However, the scaling of two hybrid programs did exceded the limits but exclusively on the problem scale $4096^2$ and $1$ to $8$ threads of each $4$ MPI processes.
+Considering the details of the CPU used for these tests, 
+\begin{itemize}
+  \item It has $4$ NUMA node per CPU and once of which has $12$ CPUs with $2$ threads.
+  \item It has \texttt{32KB} L1 data and L1 instruction cache, \texttt{1024KB} L2 cache and \texttt{36608KB} L3 cache.
+\end{itemize}
+The data type for this solver is \texttt{Double} which takes $8$ bytes, and $4096^2$ \texttt{Double} numbers takes 128 \texttt{MB} to store.
+In the case of $4$ MPI processes, each process own a quater of number which uses 32 \texttt{MB} for handling sub-problems.
+On the other hand, the L3 cache is 36608 \texttt{KB} = 35.75 \texttt{MB} which is just bigger than the sub-problem scale 32 \texttt{MB}.
+When the problem size gets larger, such as $8096^2$ which takes 128 \texttt{MB} to store the sub-problem. 
+In such case, the L3 case is no longer able to hold it, thus part of the numbers will be stored in the DDR4 memories which is lower bandwidth and higher latency than cache.
+Moreover, due to the CPU enables hyper-threading, a NUMA node actually holds $12$ CPUs, which makes the 
+superlinear speedup disappear when the threads is 16 and 24.
+
 % \begin{figure}[htbp]
 %   \centering
 %   \includegraphics[width=0.7\textwidth]{figure/FIG_Benchmark_hybrid_1.pdf}
@@ -165,8 +184,57 @@ well on these tests.
 %   \caption{
 %       Weak scaling tests of Cartesian / Cylinder equation with same problem scale on $1$, $2^2$, $3^3$, $4^3$ processors.
 %   }
-%   \label{fig:weak_scaling}
+%   \label{fig:weak_scaling}    
 % \end{figure}
+
+\subsubsection{Weak Scaling}
+The weak scaling tests of an high performance program runing on cluster is necessary for researching the inner relationships 
+between the number of CPUs and the scale of problems.
+In order to get better weak scaling performance, the fraction of synchronization among processes and the cost of communications 
+plays a minor role when the number of resources increase. 
+
+Table \ref{TAB:Benchmark:Weak_PURE_MPI} lists the comparison of three different parallel strategies.
+Overall, both three strategies have good weak scaling results across all problem sizes.
+For example, according to the Gaustafsson's Law \ref{THEO:GaustafssonLaw}, the program using
+overlapped strategy has sequential fraction 
+$$f_s = \frac{49.989 - 64}{1-63} \approx 0.222$$
+on the problem scale $4096^2$ with 64 CPUs
+and $f_s \approx 0.147$ with 16 CPUs.
+
+\begin{table}
+  \caption{Weak Scaling on Single Node of 2D Heat Equation}
+  \label{TAB:Benchmark:Weak_PURE_MPI}
+  \begin{minipage}{\columnwidth}
+    \begin{center}
+      % \footnotesize % overleaf
+      \begin{tabular}{>{\bfseries}p{3cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1cm}}
+        \toprule
+        \multirow{2}{*}{Strategy}     & \multirow{2}{*}{\bfseries Size} & \multicolumn{3}{c}{\bfseries  Number of CPUs}   \\
+                                      &                                  & \bfseries 4   & \bfseries 16   & \bfseries 64   \\
+        \midrule
+        Pure MPI      & \multirow{3}{*}{$512^2$}      & 4.006  & 12.497  & 47.849 \\
+        No Overlap    &                               & 2.876  & 11.206  & 42.754 \\
+        With Overlap  &                               & 3.173  & 10.818  & 42.282 \\
+        \midrule
+        Pure MPI      & \multirow{3}{*}{$1024^2$}     & 3.838  & 9.304   & 33.707 \\
+        No Overlap    &                               & 3.947  & 12.995  & 33.447 \\
+        With Overlap  &                               & 4.024  & 12.932  & 33.361 \\
+        \midrule
+        Pure MPI      & \multirow{3}{*}{$2048^2$}     & 2.376  & 8.245   & 31.203 \\
+        No Overlap    &                               & 3.874  & 8.972   & 31.510 \\
+        With Overlap  &                               & 3.740  & 8.989   & 31.430 \\
+        \midrule
+        Pure MPI      & \multirow{3}{*}{$4096^2$}     & 3.543  & 8.245   & 31.203 \\
+        No Overlap    &                               & 3.953  & 13.799  & 49.515 \\
+        With Overlap  &                               & 3.948  & 13.800  & 49.989 \\
+        \bottomrule
+      \end{tabular}
+    \end{center}
+    % \bigskip
+    % \footnotesize\emph{Source:} This is source 
+  \end{minipage}
+\end{table}
+
 
 
 \subsection{Comparison on multi-node}

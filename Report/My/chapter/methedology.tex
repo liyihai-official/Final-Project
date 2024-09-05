@@ -318,15 +318,15 @@ Below is a example [Fig. \ref{FIG_MPI_TOPOLOGY_24_PROCS}] of cartesian topology 
 \begin{figure}[htbp]
   \centering
   \begin{tikzpicture}
-    \draw[help lines, step=1em] (0,0) grid (-20em, -20em);
-    \draw[thick, ->] (0,0) -- (-20em, 0) node[left] {$x$};
-    \draw[thick, ->] (0,0) -- (0, -20em) node[below] {$y$};
+    \draw[help lines, step=1em] (0,0) grid (12em, 10em);
+    \draw[thick, ->] (0,0) -- (12em, 0) node[right] {$x$};
+    \draw[thick, ->] (0,0) -- (0, 10em) node[above] {$y$};
     
     \def\xsize{2};
     \def\ysize{3};
     \def\zsize{4};
   
-    \begin{scope}[shift={(-15em, -15em)}, x={(2em,-0.25em)},y={(0em,2em)}, , z={(-1.25em,-0.5em)}]
+    \begin{scope}[shift={(0em, 0em)}, x={(2em,-0.25em)},y={(0em,2em)}, , z={(-1.25em,-0.5em)}]
       % Draw the front face
       \fill[blue!20] (0,0,0) -- (0,\ysize,0) -- (\zsize, \ysize,0) -- (\zsize,0,0) -- cycle;
       % Draw the top face
@@ -383,20 +383,21 @@ create essential halo datatypes.
   \centering
   \begin{tikzpicture}
     % Draw a grid with steps of 1 cm
-    \draw[help lines, step=1em] (-10em,-10em) grid (30em,30em);
+    % \draw[help lines, step=1em] (-2em,-2em) grid (20em,20em);
   
     % Draw axes
-    \draw[dashed,->] (-10em,0) -- (30em,0) node[right] {x};
-    \draw[dashed,->] (0,-10em) -- (0,30em) node[above] {y};
-  
-    \draw[thick,->] (5em, 28em) -- (-5em, 23em) node[pos=0, above] {$source$} node[pos=0.5, above] {$dim_0$} node[pos=1, above] {$dest$};
-    \draw[thick,->] (-3em, 18em) -- (-3em, 4em) node[pos=0, above] {$source$} node[pos=0.5, left] {$dim_1$} node[pos=1, below] {$dest$};
-    \draw[thick,->] (14em, 28.5em) -- (28em, 27em) node[pos=0, above] {$source$} node[pos=0.5, above] {$dim_2$} node[pos=1, above] {$dest$};
-  
+    % \draw[dashed,->] (-2em,0) -- (20em,0) node[right] {x};
+    % \draw[dashed,->] (0,-2em) -- (0,20em) node[above] {y};
+    
       % Define a local macro to draw a cube at a given position
       \def\drawcube#1#2{
         \begin{scope}[shift={#1}, x={(0.8em,-0.1em)}, y={(0em,0.8em)}, z={(0.4em,0.20em)}]
           \def\size{#2}
+
+          \draw[thick,->] (-2em, 4em) -- (1em, 3.5em) node[pos=0, above] {$source$} node[pos=0.5, above] {} node[pos=1, above] {};
+          \draw[thick,->] (5em, 2em) -- (5em, -2em) node[pos=0, above] {} node[pos=0.5, left] {} node[pos=1, below] {$dest$};
+          \draw[thick,->] (12em, 7em) -- (3em, 3em) node[pos=0, above] {$source$} node[pos=0.5, above] {} node[pos=1, above] {};
+
           % Draw the front face
           \fill[blue!20] (0,0,0) -- (0,\size,0) -- (\size, \size,0) -- (\size,0,0) -- cycle;
           % Draw the top face
@@ -407,9 +408,14 @@ create essential halo datatypes.
           \fill[red!30] (1,1,0) -- (1,\size-1,0) -- (\size-1, \size-1,0) -- (\size-1,1,0) -- cycle;
           \fill[red!40] (1,\size,1) -- (1,\size,\size-1) -- (\size-1, \size, \size-1) -- (\size-1, \size,1) -- cycle;
           \fill[red!45] (\size,1,1) -- (\size,1,\size-1) -- (\size, \size-1, \size-1) -- (\size, \size-1,1) -- cycle;
-  
+          
+          \draw[thick,->] (8em, 3em) -- (11em, 2.5em) node[pos=0, above] {} node[pos=0.5, above] {} node[pos=1, above] {$dest$};
+          \draw[thick,->] (5em, 9em) -- (5em, 7em) node[pos=0, above] {$source$} node[pos=0.5, left] {} node[pos=1, below] {};
+          \draw[thick,->] (3em, 3em) -- (-2em, 1em) node[pos=0, above] {} node[pos=0.5, above] {} node[pos=1, above] {$dest$};
+
           % Draw the grid
-          \foreach \x in {0,1,...,\size} {
+          \foreach \x in {0,1,...,\size} 
+          {
             \draw[black] (\x,0,0) -- (\x,\size,0);
             \draw[black] (0,\x,0) -- (\size,\x,0);
 
@@ -419,26 +425,19 @@ create essential halo datatypes.
             \draw[black] (\x,\size,0) -- (\x,\size,\size);
             \draw[black] (0,\size,\x) -- (\size, \size,\x);
           }
+
         \end{scope}
       }
   
       % Draw the first cube at (0,0) with size 8
-      \drawcube{(0em, 0em)}{10}
-      \drawcube{(18em, 0em)}{10}
-      \drawcube{(0em, 15em)}{10}
-      \drawcube{(18em, 15em)}{10}
-        
-      \node[draw, minimum width = 3em, minimum height = 1.5em, align=center] at (14em,12em) {MPI Communications};
-    
-      \fill[red] (14em,12em) circle (3pt);
-      \fill[red] (14em,4em) circle (3pt);
-      \fill[red] (14em,20em) circle (3pt);
+      \drawcube{(0em, 0em)}{8}
+      \drawcube{(16em, 0em)}{8}
+      \drawcube{(0em, 14em)}{8}
+      \drawcube{(16em, 14em)}{8}
 
-      \fill[red] (4em,12em) circle (3pt);
-      \fill[red] (22em,12em) circle (3pt);
     \end{tikzpicture}  
   \caption{A 3D MPI Communication Scheme of $8$ processors between $3$ dimension matrices.}
-  \label{FIG_MPI_3D_Example_SCHEME}
+  \label{FIG_MPI_3D_exchange_SCHEME}
 \end{figure}
 
 
@@ -956,23 +955,33 @@ it increase the efficiency of updating values in one CPU clockwise.
 The MPI-3.x introduced shared memory programming unlike OpenMP library, 
 Independent Software Vendor (ISV) and application libraries need not to be thread-safe
 No additional OpenMP overhead and problems. 
-In general, the Parallel Programming Models on Hybrid Platforms have 
-                                              \cite{SUPERsmith}
+In general, the Parallel Programming Models on Hybrid Platforms have 13 types
+                                              \cite{SUPERsmith}.
 
-\begin{figure}[htbp]
-  \centering
-  \begin{tikzpicture}
-    % Draw a grid with steps of 1 cm
-    \def\gridsize{5em};
-    \draw[help lines, step=1em] (-\gridsize,-\gridsize) grid (\gridsize,\gridsize);
+% \begin{figure}[htbp]
+%   \centering
+%   \begin{tikzpicture}
+%     % Draw a grid with steps of 1 cm
+%     \def\gridsize{5em};
+%     \draw[help lines, step=1em] (-\gridsize,-\gridsize) grid (\gridsize,\gridsize);
   
-    % Draw axes
-    \draw[thick,->] (-\gridsize,0) -- (\gridsize,0) node[right] {$x$};
-    \draw[thick,->] (0,-\gridsize) -- (0,\gridsize) node[above] {$y$};    
-  \end{tikzpicture}
-  \caption{Hybrid Platforms\cite{SUPERsmith}}
-  \label{FIG:Hybrid_Platforms}
-\end{figure}
+%     % Draw axes
+%     \draw[thick,->] (-\gridsize,0) -- (\gridsize,0) node[right] {$x$};
+%     \draw[thick,->] (0,-\gridsize) -- (0,\gridsize) node[above] {$y$};  
+    
+    
+%     % \node[draw, rectangle, minimum size=1em] (A) {Hybrid Platforms};
+%     % \node[draw, rectangle, below of=A, minimum size=1em] (B) {hybrid MPI + OpenMP};
+%     % \node[draw, rectangle, below of=B, minimum size=1em] (C) {pure MPI};
+%     % \node[draw, rectangle, right of=, minimum size=1em] (C) {C};
+
+%     % \draw[->] (A) -- (B);
+%     % \draw[->] (B) -- (C);
+
+%   \end{tikzpicture}
+%   \caption{Hybrid Platforms\cite{SUPERsmith}}
+%   \label{FIG:Hybrid_Platforms}
+% \end{figure}
 In this project, I chose to implement three parallel strategies
 \begin{itemize}
   \item Pure MPI: only one MPI process on each core.
@@ -1042,67 +1051,6 @@ and an \texttt{MPI\_Recv} from source site.
 The communication topology is shown in figure \ref{FIG_MPI_3D_exchange_SCHEME}, 
 for each process, there are two \texttt{MPI\_Sendrecv} operations, for the destination and source sites communications.
 
-\begin{figure}[htbp]
-  \centering
-  \begin{tikzpicture}
-    % Draw a grid with steps of 1 cm
-    % \draw[help lines, step=1em] (-2em,-2em) grid (20em,20em);
-  
-    % Draw axes
-    % \draw[dashed,->] (-2em,0) -- (20em,0) node[right] {x};
-    % \draw[dashed,->] (0,-2em) -- (0,20em) node[above] {y};
-    
-      % Define a local macro to draw a cube at a given position
-      \def\drawcube#1#2{
-        \begin{scope}[shift={#1}, x={(0.8em,-0.1em)}, y={(0em,0.8em)}, z={(0.4em,0.20em)}]
-          \def\size{#2}
-
-          \draw[thick,->] (-2em, 3em) -- (1em, 2.5em) node[pos=0, above] {$source$} node[pos=0.5, above] {} node[pos=1, above] {};
-          \draw[thick,->] (3em, 2em) -- (3em, -2em) node[pos=0, above] {} node[pos=0.5, left] {} node[pos=1, below] {$dest$};
-          \draw[thick,->] (9em, 5em) -- (2em, 2em) node[pos=0, above] {$source$} node[pos=0.5, above] {} node[pos=1, above] {};
-
-          % Draw the front face
-          \fill[blue!20] (0,0,0) -- (0,\size,0) -- (\size, \size,0) -- (\size,0,0) -- cycle;
-          % Draw the top face
-          \fill[blue!40] (0,\size,0) -- (0,\size,\size) -- (\size, \size, \size) -- (\size, \size,0) -- cycle;
-          % Draw the right face
-          \fill[blue!60] (\size,0,0) -- (\size,0,\size) -- (\size, \size, \size) -- (\size, \size,0) -- cycle;
-  
-          \fill[red!30] (1,1,0) -- (1,\size-1,0) -- (\size-1, \size-1,0) -- (\size-1,1,0) -- cycle;
-          \fill[red!40] (1,\size,1) -- (1,\size,\size-1) -- (\size-1, \size, \size-1) -- (\size-1, \size,1) -- cycle;
-          \fill[red!45] (\size,1,1) -- (\size,1,\size-1) -- (\size, \size-1, \size-1) -- (\size, \size-1,1) -- cycle;
-          
-          \draw[thick,->] (5em, 2em) -- (8em, 1.5em) node[pos=0, above] {} node[pos=0.5, above] {} node[pos=1, above] {$dest$};
-          \draw[thick,->] (3em, 7em) -- (3em, 4em) node[pos=0, above] {$source$} node[pos=0.5, left] {} node[pos=1, below] {};
-          \draw[thick,->] (2em, 2em) -- (-3em, 0em) node[pos=0, above] {} node[pos=0.5, above] {} node[pos=1, above] {$dest$};
-
-          % Draw the grid
-          \foreach \x in {0,1,...,\size} 
-          {
-            \draw[black] (\x,0,0) -- (\x,\size,0);
-            \draw[black] (0,\x,0) -- (\size,\x,0);
-
-            \draw[black] (\size,\x,0) -- (\size,\x,\size);
-            \draw[black] (\size,0,\x) -- (\size, \size,\x);
-
-            \draw[black] (\x,\size,0) -- (\x,\size,\size);
-            \draw[black] (0,\size,\x) -- (\size, \size,\x);
-          }
-
-        \end{scope}
-      }
-  
-      % Draw the first cube at (0,0) with size 8
-      \drawcube{(0em, 0em)}{5}
-      \drawcube{(14em, 0em)}{5}
-      \drawcube{(0em, 12em)}{5}
-      \drawcube{(14em, 12em)}{5}
-
-    \end{tikzpicture}  
-  \caption{A 3D MPI Communication Scheme of $8$ processors between $3$ dimension matrices.}
-  \label{FIG_MPI_3D_exchange_SCHEME}
-\end{figure}
-
 
 % The average time consumption of a process denoted with $t_{b}$ stands for blocking communications, 
 % due to the $p^{th}$ will return when the send and recv operation complete. 
@@ -1153,15 +1101,27 @@ In general the master-only hybrid has such communication scheme
       \end{scope}
     }
 
+    \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.5\textwidth]{figure/FIG_Schematic_Hybrid0.pdf}};
+    % \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.58\textwidth]{figure/FIG_Schematic_Hybrid0.pdf}};
+
+    \begin{scope}[x={(image.south east)},y={(image.north west)}]
+
     % Draw a grid with steps of 1 cm
-    \def\gridsize{5em};
-    \draw[help lines, step=1em] (-\gridsize,-\gridsize) grid (\gridsize,\gridsize);
+    \def\gridsize{20em};
+    \draw[help lines, step=1em] (0,0) grid (\gridsize,\gridsize);
   
     % Draw axes
-    \draw[thick,->] (-\gridsize,0) -- (\gridsize,0) node[right] {$x$};
-    \draw[thick,->] (0,-\gridsize) -- (0,\gridsize) node[above] {$y$};
+    \draw[thick,->] (0,0) -- (\gridsize,0) node[right] {$x$};
+    \draw[thick,->] (0,0) -- (0,\gridsize) node[above] {$y$};
 
+    \node at (11em,8.5em) {MPI Communication};
+    \node at (0em,10.5em) {OpenMP single};
+    \node at (0em,1.5em) {OpenMP single};
 
+    \node at (11em,4em) {Update Grid};
+    \node at (11em,13em) {Update Grid};
+
+    \end{scope}
   \end{tikzpicture}
   \caption{Scheme: Master only hybrid strategy}
   \label{FIG:master_only_hybrid}
@@ -1204,13 +1164,28 @@ rather than only take the advantages of shared memory computing.
       \end{scope}
     }
 
+
+    \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.35\textwidth]{figure/FIG_Schematic_Hybrid1.pdf}};
+    % \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.58\textwidth]{figure/FIG_Schematic_Hybrid1.pdf}};
+
+    \begin{scope}[x={(image.south east)},y={(image.north west)}]
+
     % Draw a grid with steps of 1 cm
-    \def\gridsize{5em};
-    \draw[help lines, step=1em] (-\gridsize,-\gridsize) grid (\gridsize,\gridsize);
+    \def\gridsize{20em};
+    \draw[help lines, step=1em] (0,0) grid (\gridsize,\gridsize);
   
     % Draw axes
-    \draw[thick,->] (-\gridsize,0) -- (\gridsize,0) node[right] {$x$};
-    \draw[thick,->] (0,-\gridsize) -- (0,\gridsize) node[above] {$y$};
+    \draw[thick,->] (0,0) -- (\gridsize,0) node[right] {$x$};
+    \draw[thick,->] (0,0) -- (0,\gridsize) node[above] {$y$};
+
+    % \node at (11em,8.5em) {MPI Communication};
+    % \node at (0em,10.5em) {OpenMP single};
+    % \node at (0em,1.5em) {OpenMP single};
+
+    % \node at (11em,4em) {Update Grid};
+    % \node at (11em,13em) {Update Grid};
+
+    \end{scope}
 
 
   \end{tikzpicture}
