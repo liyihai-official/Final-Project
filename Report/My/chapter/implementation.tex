@@ -187,7 +187,7 @@ superlinear speedup disappear when the threads is 16 and 24.
 %   \label{fig:weak_scaling}    
 % \end{figure}
 
-\subsubsection{Weak Scaling}
+\subsubsection{Weak Scaling}\label{SSS:Weak_Scaling:SingleNode}
 
 Table \ref{TAB:Benchmark:Weak_PURE_MPI} lists the weak scaling comparison of three different parallel strategies.
 Overall, both three strategies have good weak scaling results across all problem sizes.
@@ -345,6 +345,16 @@ These shows that the advantages of combination of shared memory programming and 
 % 2048 55.86720303491557 [14.27434744 34.41421545]
 % 4096 84.15726269711293 [15.29389611 53.40098918]
 Table \ref{TAB:Benchmark:Weak_PURE_MPI_Multi_Node} lists the weak scaling comparison results of multi-node tests.
+Overall, the hybrid models have better scaling speedup ratios than pure MPI model on the size larger than $512^2$.
+Although the speedups of pure MPI model are better than hybrid models on $16$ CPUs with $2048^2$ problem size,
+the hybrid model with no comm./comp. overlapping still have better performance when testing is running on $64$ and $256$ CPUs.
+Controversially, the hybrid with no overlapping has better results comparing to the one with overlapping,
+and we have opposite results when the scale gets larger.
+
+On the other hand, similar to previous section \ref{SSS:Weak_Scaling:SingleNode}, the fraction of parallelizable is approximated by linder regression 
+based on the model proposed in theorem \ref{THEO:GaustafssonLaw}.
+As the table \ref{TAB:Benchmark:Weak_PURE_MPI_Multi_Node} lists results, the fraction of parallelizable increases as the size gets larger.
+Moreover, the overlapping has the most large fraction then the model with no overlapping, and both of then are significantly larger than pure MPI model.
 
 \begin{table}
   \caption{Weak Scaling on Multi-node of 2D Heat Equation}
@@ -380,14 +390,171 @@ Table \ref{TAB:Benchmark:Weak_PURE_MPI_Multi_Node} lists the weak scaling compar
   \end{minipage}
 \end{table}
 
+There are some important performance leap forward 
+due to the memory structure mentioned in previous section \ref{SSS:Weak_Scaling:SingleNode}, the L3 cache for single NUMA node 
+just fits the problem with $2048^2$ \texttt{Double} numbers.
+\begin{itemize}
+  \item The first one is the number of CPUs increases from $16$ to $64$, in the case of the problem size is $1024^2$ running on hybrid models, 
+  the problem scale of each NUMA node increases from $1024^2$ to $2048^2$ which makes the program requires less cache synchronization 
+  and brings about $52.6\%$ more scaling speedup performance.
+  \item The second is the size of problems increas from $1024^2$ to $2048^2$ when the number of CPUs is $16$.
+  With such doubled size, the program can make more use of L3 cache on single NUMA node and brings about speedup $46.6\%$ improvements. 
+\end{itemize}
+Both of the improvements are about $50\%$, these results indicates that the hybrid strategies I was implementing are effective, 
+also, the overlapping of computation and communication promoted the 
+speedup further.
+
+\subsection{Comparison on Dimension}
+\subsubsection{Strong Scaling}
+The figures \ref{FIG:Benchmark:Pure_MPI_Node_3D} show the results of solving 3D heat equation with Dirichlet boundary conditions 
+specified by euqations \ref{EQ:Heat3D}.
+Conventionally, solving a 3D problem is extreamly computational expensive comparing to solve a 2D problem and hard to be parallelized.
+Overall, both of them have great strong sclaing speedups in a reasonable problem size and amount of resources.
+However, considering the size of the problems are common cube of number which is smaller than $1024$, 
+we can barely get solution with fine quality in 3D dimension case.
+
+\begin{figure}[htbp]
+  \centering
+  \subfigure[Strong scaling on single node]
+  {
+    \includegraphics[width=0.45\textwidth]{figure/FIG_Benchmark_pure_mpi_3D.pdf}
+    \label{FIG:Benchmark:Pure_MPI_Single_Node_3D}
+  }
+  \hfill
+  \subfigure[Strong scaling on four node]
+  {
+    \includegraphics[width=0.45\textwidth]{figure/FIG_Benchmark_pure_mpi_3D_multi_nodes.pdf}
+    \label{FIG:Benchmark:Pure_MPI_Multi_Node_3D}
+  }
+  \caption{
+    Comparison of speedup ratios of strong scaling tests  pure MPI models on $4$ nodes of and $1$ node.
+    The problem sizes are set to $32^3$, $64^3$, $128^3$, $256^3$ and $512^3$ and data type is \texttt{Double}.
+  }
+  \label{FIG:Benchmark:Pure_MPI_Node_3D}
+\end{figure}
+
+On the other hand, I specify the maximun scale of problem is $512^3$ rather than $1024^3$. 
+This is because the pattern of accessing memories is $O(n^3)$ space complexity which leads more time consumption per epoch, 
+although the problem has identical scale $1024^3 = 32768^2$. 
+It also makes us harder to see a large superlinear speedup occurs comparing to 2D problems.
+In this scenario, only the figure \ref{FIG:Benchmark:Pure_MPI_Multi_Node_3D} shows that the problem with scale $256^3$ has 
+superlinear speedup on $8$, $16$ and $32$ CPUs due to the separated nodes has dependent CPU clock whic increase the rate of hitting cache.
+\begin{wrapfigure}{r}{0.8\textwidth} 
+  \centering
+  \subfigure[Single]{
+    \includegraphics[width=0.35\textwidth]{figure/FIG_Benchmark_hybrid_0_single_nodes_3D.pdf}
+    \label{FIG:Benchmark:FIG_Benchmark_hybrid_0_single_nodes_3D}
+  }
+  \hspace{0em} 
+  \subfigure[Single]{
+    \includegraphics[width=0.35\textwidth]{figure/FIG_Benchmark_hybrid_1_single_nodes_3D.pdf}
+    \label{FIG:Benchmark:FIG_Benchmark_hybrid_1_single_nodes_3D}
+  }
+  \hspace{0em} 
+  \subfigure[caption]{
+    \includegraphics[width=0.35\textwidth]{figure/FIG_Benchmark_hybrid_0_multi_nodes_3D.pdf}
+    \label{FIG:Benchmark:FIG_Benchmark_hybrid_0_multi_nodes_3D}
+  }
+  \hspace{0em} 
+  \subfigure[caption]{
+    \includegraphics[width=0.35\textwidth]{figure/FIG_Benchmark_hybrid_1_multi_nodes_3D.pdf}
+    \label{FIG:Benchmark:FIG_Benchmark_hybrid_1_multi_nodes_3D}
+  }
+  \caption{<caption>}
+  \label{FIG:Benchmark:Hybrid_Single_Four_Node_3D}
+\end{wrapfigure}
+The figure \ref{FIG:Benchmark:Hybrid_Single_Four_Node_3D} shows the details of hybrid parallel models on single and four nodes.
+Overall, the figures \ref{FIG:Benchmark:FIG_Benchmark_hybrid_0_single_nodes_3D} and \ref{FIG:Benchmark:FIG_Benchmark_hybrid_1_single_nodes_3D}
+show that both hybrid model have worse performance on single node. Even with the benefits of caching, the $256^3$ scale problem still 
+a little bit loss on speedup on $4$, $8$ and $16$ CPUs.
+However the figures \ref{FIG:Benchmark:FIG_Benchmark_hybrid_0_multi_nodes_3D} and \ref{FIG:Benchmark:FIG_Benchmark_hybrid_1_single_nodes_3D} 
+shows completely different results.
+On the multi-nodes test, overall, all hybrid models have better performance comparing to pure MPI parallelization.
+Especially for the largest problem $512^3$ which the pure MPI scaling speedup ratio is $96$ under $384$ CPUs, the 
+hybrid models gained approximately $130$ and $140$ speedups which is about $30\% ~ 40\%$ improvements.
+Moreover, the problem with $256^3$ scale investigated on $8$ $16$ and $32$ CPUs reached superlinear speedup at the end,
+which were making use of L3 cache and asynchronized CPU clock cycle.
+
+As for the promotion gets from the cache and CPU asynchronization, we can discovered that the 2D problems got less benefits 
+while the 3D problems got bigger.
+This is the 3D problem relys more on the memory accessing, and the shared memory parallelization can do optimizations better than MPI.
+
+\subsubsection{Weak Scaling}
+
+
+% \begin{table}
+%   \caption{Weak Scaling on Multi-node of 2D Heat Equation}
+%   \label{TAB:Benchmark:Weak_PURE_MPI_Multi_Node}
+%   \begin{minipage}{\columnwidth}
+%     \begin{center}
+%       \footnotesize % overleaf
+%       \begin{tabular}{>{\bfseries}p{3cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1cm}}
+%         \toprule
+%         \multirow{2}{*}{Strategy}     & \multirow{2}{*}{\bfseries Size} & \multicolumn{4}{c}{\bfseries  Number of CPUs}   & \multirow{2}{*}{\bfseries $f_p(\%)$}  \\
+%                                       &                                 & \bfseries 4   & \bfseries 16   & \bfseries 64  & \bfseries 256  &                        \\
+%         \midrule
+%         Pure MPI      & \multirow{3}{*}{$512^2$}      & 3.300  & 10.379  & 26.000   & 124.375                                    & 48.2 \\
+%         No Overlap    &                               &   -    &  8.094  & 25.931   & 127.648                                    & 49.3 \\
+%         With Overlap  &                               &   -    &  8.386  & 27.126   & 116.951                                    & 45.5 \\
+%         \midrule
+%         Pure MPI      & \multirow{3}{*}{$1024^2$}     & 3.848  & 13.037  & 30.143   &   -                                        & 49.3 \\
+%         No Overlap    &                               &   -    & 13.702  & 44.040   &   -                                        & 69.8 \\
+%         With Overlap  &                               &   -    & 13.834  & 44.090   &   -                                        & 69.9 \\
+%         \midrule
+%         Pure MPI      & \multirow{3}{*}{$2048^2$}     & 3.787  & 9.172   & 32.013   &   -                                        & 50.6 \\
+%         No Overlap    &                               &   -    & 13.936  & 34.368   &   -                                        & 55.7 \\
+%         With Overlap  &                               &   -    & 14.274  & 34.414   &   -                                        & 55.9 \\
+%         \midrule
+%         Pure MPI      & \multirow{3}{*}{$4096^2$}     & 3.884  & 13.859  & 51.041   &   -                                        & 80.2 \\
+%         No Overlap    &                               &   -    & 15.315  & 53.157   &   -                                        & 83.8 \\
+%         With Overlap  &                               &   -    & 15.294  & 53.401   &   -                                        & 84.2 \\
+%         \bottomrule
+%       \end{tabular}
+%     \end{center}
+%     % \bigskip
+%     % \footnotesize\emph{Source:} This is source 
+%   \end{minipage}
+% \end{table}
+
+
+
+% \begin{wrapfigure}{r}{0.45\textwidth} 
+%   \centering
+%   \includegraphics[width=0.5\textwidth]{figure/FIG_Benchmark_pure_mpi_3D.pdf}
+%   \caption{
+%     Comparison of speedup ratios of strong scaling tests of pure MPI parallelized program. 
+%     % The investigated problem scales are the power of $2$, exponents ranging from $9$ to $15$.
+%     % The number of CPUs are also set as power of $2$, with additional numbers $24$, $48$ and $96$ matched the topologies of CPU.
+%   }
+%   \label{FIG:Benchmark:PURE_MPI_3D}
+% \end{wrapfigure}
+
+% pure_mpi 32 41.6454976809507 [ 5.24300273 26.40508026]
+% pure_mpi 64 50.82124287680077 [ 7.93685039 32.03401739]
+% pure_mpi 128 37.981618106817486 [ 3.51273741 24.23926922]
+
+% hybrid_0 32 21.021019630184377 [ 2.12419944 13.38579736]
+% hybrid_0 64 31.834114645269405 [ 5.39291326 20.00740944]
+% hybrid_0 128 24.09155036036035 [ 3.30294977 15.23477832]
+
+% hybrid_1 32 21.766954032208076 [ 2.01448206 13.88448595]
+% hybrid_1 64 31.105830542060243 [ 5.19953955 19.55808269]
+% hybrid_1 128 23.872619887404646 [ 3.18707655 15.10692345]
+
+
+
+
+
+
+
+
+
 
 \subsection{Comparison on Boundary Conditions}
 
 
-\subsection{Comparison on Dimension}
 
-
-\subsection{Comparison on Accuracy}
+\subsection{Comparison on Accuracy, with PINN}
 
 
 
