@@ -239,3 +239,164 @@ author = {Kurt Hornik and Maxwell Stinchcombe and Halbert White},
 keywords = {Feedforward networks, Universal approximation, Mapping networks, Network representation capability, Stone-Weierstrass Theorem, Squashing functions, Sigma-Pi networks, Back-propagation networks},
 abstract = {This paper rigorously establishes that standard multilayer feedforward networks with as few as one hidden layer using arbitrary squashing functions are capable of approximating any Borel measurable function from one finite dimensional space to another to any desired degree of accuracy, provided sufficiently many hidden units are available. In this sense, multilayer feedforward networks are a class of universal approximators.}
 }
+
+
+@article{CNN,
+author = {Krizhevsky, Alex and Sutskever, Ilya and Hinton, Geoffrey E.},
+title = {ImageNet classification with deep convolutional neural networks},
+year = {2017},
+issue_date = {June 2017},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {60},
+number = {6},
+issn = {0001-0782},
+url = {https://doi.org/10.1145/3065386},
+doi = {10.1145/3065386},
+abstract = {We trained a large, deep convolutional neural network to classify the 1.2 million high-resolution images in the ImageNet LSVRC-2010 contest into the 1000 different classes. On the test data, we achieved top-1 and top-5 error rates of 37.5\% and 17.0\%, respectively, which is considerably better than the previous state-of-the-art. The neural network, which has 60 million parameters and 650,000 neurons, consists of five convolutional layers, some of which are followed by max-pooling layers, and three fully connected layers with a final 1000-way softmax. To make training faster, we used non-saturating neurons and a very efficient GPU implementation of the convolution operation. To reduce overfitting in the fully connected layers we employed a recently developed regularization method called "dropout" that proved to be very effective. We also entered a variant of this model in the ILSVRC-2012 competition and achieved a winning top-5 test error rate of 15.3\%, compared to 26.2\% achieved by the second-best entry.},
+journal = {Commun. ACM},
+month = {may},
+pages = {84–90},
+numpages = {7}
+}
+
+
+@article{PINN,
+  author = {Karniadakis, George Em and Kevrekidis, Ioannis G. and Lu, Lu and Perdikaris, Paris and Wang, Sifan and Yang, Liu},
+  title = {Physics-informed machine learning},
+  journal = {Nature Reviews Physics},
+  volume = {3},
+  number = {6},
+  pages = {422--440},
+  year = {2021},
+  month = {June},
+  doi = {10.1038/s42254-021-00314-5},
+  url = {https://doi.org/10.1038/s42254-021-00314-5},
+  issn = {2522-5820},
+  abstract = {Despite great progress in simulating multiphysics problems using the numerical discretization of partial differential equations (PDEs), one still cannot seamlessly incorporate noisy data into existing algorithms, mesh generation remains complex, and high-dimensional problems governed by parameterized PDEs cannot be tackled. Moreover, solving inverse problems with hidden physics is often prohibitively expensive and requires different formulations and elaborate computer codes. Machine learning has emerged as a promising alternative, but training deep neural networks requires big data, not always available for scientific problems. Instead, such networks can be trained from additional information obtained by enforcing the physical laws (for example, at random points in the continuous space-time domain). Such physics-informed learning integrates (noisy) data and mathematical models, and implements them through neural networks or other kernel-based regression networks. Moreover, it may be possible to design specialized network architectures that automatically satisfy some of the physical invariants for better accuracy, faster training and improved generalization. Here, we review some of the prevailing trends in embedding physics into machine learning, present some of the current capabilities and limitations and discuss diverse applications of physics-informed learning both for forward and inverse problems, including discovering hidden physics and tackling high-dimensional problems.}
+}
+
+@ARTICLE{GPT,
+  author={Yenduri, Gokul and Ramalingam, M. and Selvi, G. Chemmalar and Supriya, Y. and Srivastava, Gautam and Maddikunta, Praveen Kumar Reddy and Raj, G. Deepti and Jhaveri, Rutvij H. and Prabadevi, B. and Wang, Weizheng and Vasilakos, Athanasios V. and Gadekallu, Thippa Reddy},
+  journal={IEEE Access}, 
+  title={GPT (Generative Pre-Trained Transformer)— A Comprehensive Review on Enabling Technologies, Potential Applications, Emerging Challenges, and Future Directions}, 
+  year={2024},
+  volume={12},
+  number={},
+  pages={54608-54649},
+  keywords={Natural language processing;Solid modeling;Artificial intelligence;Surveys;Task analysis;Reviews;Transformers;Generative pre-trained transformer;natural language processing;artificial intelligence},
+  doi={10.1109/ACCESS.2024.3389497}}
+
+
+
+@ARTICLE{AmdalhsLaw,
+  author={Amdahl, Gene M.},
+  journal={IEEE Solid-State Circuits Society Newsletter}, 
+  title={Validity of the Single Processor Approach to Achieving Large Scale Computing Capabilities, Reprinted from the AFIPS Conference Proceedings, Vol. 30 (Atlantic City, N.J., Apr. 18–20), AFIPS Press, Reston, Va., 1967, pp. 483–485, when Dr. Amdahl was at International Business Machines Corporation, Sunnyvale, California}, 
+  year={2007},
+  volume={12},
+  number={3},
+  pages={19-20},
+  keywords={Computers;Hardware;Data mining;Degradation;Memory management;Organizations;Performance evaluation},
+  doi={10.1109/N-SSC.2007.4785615}}
+
+@article{GaustafssonLaw,
+    author = {Gustafson, John L.},
+    title = {Reevaluating Amdahl's law},
+    year = {1988},
+    issue_date = {May 1988},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    volume = {31},
+    number = {5},
+    issn = {0001-0782},
+    url = {https://doi.org/10.1145/42411.42415},
+    doi = {10.1145/42411.42415},
+    journal = {Commun. ACM},
+    month = {may},
+    pages = {532–533},
+    numpages = {2}
+}
+
+@Inbook{Moore_Law,
+author="Gustafson, John L.",
+editor="Padua, David",
+title="Moore's Law",
+bookTitle="Encyclopedia of Parallel Computing",
+year="2011",
+publisher="Springer US",
+address="Boston, MA",
+pages="1177--1184",
+isbn="978-0-387-09766-4",
+doi="10.1007/978-0-387-09766-4_81",
+url="https://doi.org/10.1007/978-0-387-09766-4_81"
+}
+
+@misc{Matrix_Calculus,
+  author       = {{MIT OpenCourseWare}},
+  title        = {Matrix Calculus for Machine Learning and Beyond},
+  howpublished = {\url{https://ocw.mit.edu/courses/18-s096-matrix-calculus-for-machine-learning-and-beyond-january-iap-2023/}},
+  year         = {2023},
+  note         = {Accessed: 2024-09-07}
+}
+
+
+@article{AD,
+author = {Baydin, At\i{}l\i{}m G\"{u}nes and Pearlmutter, Barak A. and Radul, Alexey Andreyevich and Siskind, Jeffrey Mark},
+title = {Automatic differentiation in machine learning: a survey},
+year = {2017},
+issue_date = {January 2017},
+publisher = {JMLR.org},
+volume = {18},
+number = {1},
+issn = {1532-4435},
+abstract = {Derivatives, mostly in the form of gradients and Hessians, are ubiquitous in machine learning. Automatic differentiation (AD), also called algorithmic differentiation or simply "auto-diff", is a family of techniques similar to but more general than backpropagation for efficiently and accurately evaluating derivatives of numeric functions expressed as computer programs. AD is a small but established field with applications in areas including computational uid dynamics, atmospheric sciences, and engineering design optimization. Until very recently, the fields of machine learning and AD have largely been unaware of each other and, in some cases, have independently discovered each other's results. Despite its relevance, general-purpose AD has been missing from the machine learning toolbox, a situation slowly changing with its ongoing adoption under the names "dynamic computational graphs" and "differentiable programming". We survey the intersection of AD and machine learning, cover applications where AD has direct relevance, and address the main implementation techniques. By precisely defining the main differentiation techniques and their interrelationships, we aim to bring clarity to the usage of the terms "autodiff", "automatic differentiation", and "symbolic differentiation" as these are encountered more and more in machine learning settings.},
+journal = {J. Mach. Learn. Res.},
+month = {jan},
+pages = {5595–5637},
+numpages = {43},
+keywords = {backpropagation, differentiable programming}
+}
+
+
+
+@article{CFL_limitation,
+title = {Enforcing the Courant–Friedrichs–Lewy condition in explicitly conservative local time stepping schemes},
+journal = {Journal of Computational Physics},
+volume = {359},
+pages = {93-105},
+year = {2018},
+issn = {0021-9991},
+doi = {https://doi.org/10.1016/j.jcp.2018.01.008},
+url = {https://www.sciencedirect.com/science/article/pii/S0021999118300184},
+author = {Nickolay Y. Gnedin and Vadim A. Semenov and Andrey V. Kravtsov},
+keywords = {Numerical methods, Computational fluid dynamics, Partial differential equations},
+abstract = {An optimally efficient explicit numerical scheme for solving fluid dynamics equations, or any other parabolic or hyperbolic system of partial differential equations, should allow local regions to advance in time with their own, locally constrained time steps. However, such a scheme can result in violation of the Courant–Friedrichs–Lewy (CFL) condition, which is manifestly non-local. Although the violations can be considered to be “weak” in a certain sense and the corresponding numerical solution may be stable, such calculation does not guarantee the correct propagation speed for arbitrary waves. We use an experimental fluid dynamics code that allows cubic “patches” of grid cells to step with independent, locally constrained time steps to demonstrate how the CFL condition can be enforced by imposing a constraint on the time steps of neighboring patches. We perform several numerical tests that illustrate errors introduced in the numerical solutions by weak CFL condition violations and show how strict enforcement of the CFL condition eliminates these errors. In all our tests the strict enforcement of the CFL condition does not impose a significant performance penalty.}
+}
+
+
+@manual{BOOST_MPI,
+  title        = {Boost.MPI: C++ library for message passing},
+  author       = {Boost C++ Libraries},
+  year         = {2024},
+  note         = {Version 1.82.0},
+  url          = {https://www.boost.org/doc/libs/release/doc/html/mpi.html},
+  organization = {Boost}
+}
+
+
+
+@article{Transformer_PINN,
+  author    = {Goswami, Somdatta and Kontolati, Katiana and Shields, Michael D. and Karniadakis, George Em},
+  title     = {Deep transfer operator learning for partial differential equations under conditional shift},
+  journal   = {Nature Machine Intelligence},
+  volume    = {4},
+  number    = {12},
+  pages     = {1155--1164},
+  year      = {2022},
+  month     = {December},
+  doi       = {10.1038/s42256-022-00569-2},
+  url       = {https://doi.org/10.1038/s42256-022-00569-2},
+  issn      = {2522-5839},
+  abstract  = {Transfer learning enables the transfer of knowledge gained while learning to perform one task (source) to a related but different task (target), hence addressing the expense of data acquisition and labelling, potential computational power limitations and dataset distribution mismatches. We propose a new transfer learning framework for task-specific learning (functional regression in partial differential equations) under conditional shift based on the deep operator network (DeepONet). Task-specific operator learning is accomplished by fine-tuning task-specific layers of the target DeepONet using a hybrid loss function that allows for the matching of individual target samples while also preserving the global properties of the conditional distribution of the target data. Inspired by conditional embedding operator theory, we minimize the statistical distance between labelled target data and the surrogate prediction on unlabelled target data by embedding conditional distributions onto a reproducing kernel Hilbert space. We demonstrate the advantages of our approach for various transfer learning scenarios involving nonlinear partial differential equations under diverse conditions due to shifts in the geometric domain and model dynamics. Our transfer learning framework enables fast and efficient learning of heterogeneous tasks despite considerable differences between the source and target domains.}
+}
