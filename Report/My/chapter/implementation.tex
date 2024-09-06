@@ -46,7 +46,7 @@ $2$ CPUs per compute node, and each CPU has $32$ cores with single thread.
 The Non-Uniform Memory Access (NUMA) nodes are layout as following 
 \begin{figure}[htbp]
   \centering
-  \begin{tikzpicture}[scale=1, transform shape]
+  \begin{tikzpicture}[scale=0.8, transform shape]
     \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.5\textwidth]{figure/FIG_Topology_9242.pdf}};
     % \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.58\textwidth]{figure/FIG_Topology_9242.pdf}};     /// overleaf
     \begin{scope}[x={(image.south east)},y={(image.north west)}]
@@ -63,8 +63,8 @@ The Non-Uniform Memory Access (NUMA) nodes are layout as following
       \node at (4.5em, 15em) {$DDR4$};
       \node at (19.5em,15em) {$DDR4$};
 
-      \node at (12em,13em) {$Hyper-threads$};
-      \node at (12em,5.5em) {$Hyper-threads$};
+      \node at (12em,13em) {Hyper-threads};
+      \node at (12em,5.5em) {Hyper-threads};
 
       \node at (12em,11em) {$48$ $CPUS$};
       \node at (12em,3.5em) {$48$ $CPUS$};
@@ -188,45 +188,190 @@ superlinear speedup disappear when the threads is 16 and 24.
 % \end{figure}
 
 \subsubsection{Weak Scaling}
-The weak scaling tests of an high performance program runing on cluster is necessary for researching the inner relationships 
-between the number of CPUs and the scale of problems.
-In order to get better weak scaling performance, the fraction of synchronization among processes and the cost of communications 
-plays a minor role when the number of resources increase. 
 
-Table \ref{TAB:Benchmark:Weak_PURE_MPI} lists the comparison of three different parallel strategies.
+Table \ref{TAB:Benchmark:Weak_PURE_MPI} lists the weak scaling comparison of three different parallel strategies.
 Overall, both three strategies have good weak scaling results across all problem sizes.
 For example, according to the Gaustafsson's Law \ref{THEO:GaustafssonLaw}, the program using
 overlapped strategy has sequential fraction 
 $$f_s = \frac{49.989 - 64}{1-63} \approx 0.222$$
 on the problem scale $4096^2$ with 64 CPUs
 and $f_s \approx 0.147$ with 16 CPUs.
+For the small size problems, like $512^2$, the pure MPI has significantly higher weak scaling efficiency comparing to the other two,
+more specifically about $7.8\%$, $7.5\%$ higher in 64, 16 CPUs, and $22.5\%$ higher in 4 CPUs.
+However, as the scale gets larger, this advantages gradually disappear and even worse than other two.
+Especially when $4096^2$ on 16 and 64 cores, the forward leap of hybrid versions gets larger, about $34.4\%$ and $28.1\%$ higher than 
+pure MPI respectively.
+
+On the other hand, the superlinear speedup appears for the problem size with $512^2$ and $1024^2$ on 4 CPUs.
+This is because the sub-problem for each CPUs only take 512 \texttt{KB} and 1024 \texttt{KB} to store, 
+which is the L2 cache size of the Xeon Platinum 9242.
+Thus the four processes could take the performance advantages of L2 cache individual for each CPU.
+Once the problem size gets larger, such as $2048^2$, part of the problem will be allocated on L2 cache and other parts on L3 cache.
+These memory allocations requires extra synchronization between cache accessing, which drop the performance down.
+However, as the size gets to $4096^2$, the sub-problem will be fully make use of L3 cache, which require less synchronization of cache, 
+the weak scaling goes up but we can not see the superlinear speedup again.
 
 \begin{table}
   \caption{Weak Scaling on Single Node of 2D Heat Equation}
   \label{TAB:Benchmark:Weak_PURE_MPI}
   \begin{minipage}{\columnwidth}
     \begin{center}
-      % \footnotesize % overleaf
-      \begin{tabular}{>{\bfseries}p{3cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1cm}}
+      \footnotesize % overleaf
+      \begin{tabular}{>{\bfseries}p{3cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1cm}}
         \toprule
-        \multirow{2}{*}{Strategy}     & \multirow{2}{*}{\bfseries Size} & \multicolumn{3}{c}{\bfseries  Number of CPUs}   \\
-                                      &                                  & \bfseries 4   & \bfseries 16   & \bfseries 64   \\
+        \multirow{2}{*}{Strategy}     & \multirow{2}{*}{\bfseries Size} & \multicolumn{3}{c}{\bfseries  Number of CPUs}   & \multirow{2}{*}{\bfseries $f_p(\%)$}  \\
+                                      &                                  & \bfseries 4   & \bfseries 16   & \bfseries 64  &                                       \\
         \midrule
-        Pure MPI      & \multirow{3}{*}{$512^2$}      & 4.006  & 12.497  & 47.849 \\
-        No Overlap    &                               & 2.876  & 11.206  & 42.754 \\
-        With Overlap  &                               & 3.173  & 10.818  & 42.282 \\
+        Pure MPI      & \multirow{3}{*}{$512^2$}      & 4.006  & 12.497  & 47.849                                         & 75.1 \\
+        No Overlap    &                               & 2.876  & 11.206  & 42.754                                         & 67.0 \\
+        With Overlap  &                               & 3.173  & 10.818  & 42.282                                         & 66.2 \\
         \midrule
-        Pure MPI      & \multirow{3}{*}{$1024^2$}     & 3.838  & 9.304   & 33.707 \\
-        No Overlap    &                               & 3.947  & 12.995  & 33.447 \\
-        With Overlap  &                               & 4.024  & 12.932  & 33.361 \\
+        Pure MPI      & \multirow{3}{*}{$1024^2$}     & 3.838  & 9.304   & 33.707                                         & 53.2  \\
+        No Overlap    &                               & 3.947  & 12.995  & 33.447                                         & 54.1 \\
+        With Overlap  &                               & 4.024  & 12.932  & 33.361                                         &  54.0 \\
         \midrule
-        Pure MPI      & \multirow{3}{*}{$2048^2$}     & 2.376  & 8.245   & 31.203 \\
-        No Overlap    &                               & 3.874  & 8.972   & 31.510 \\
-        With Overlap  &                               & 3.740  & 8.989   & 31.430 \\
+        Pure MPI      & \multirow{3}{*}{$2048^2$}     & 2.376  & 8.245   & 31.203                                         &  49.0\\
+        No Overlap    &                               & 3.874  & 8.972   & 31.510                                         &  49.8 \\
+        With Overlap  &                               & 3.740  & 8.989   & 31.430                                         &  49.7 \\
         \midrule
-        Pure MPI      & \multirow{3}{*}{$4096^2$}     & 3.543  & 8.245   & 31.203 \\
-        No Overlap    &                               & 3.953  & 13.799  & 49.515 \\
-        With Overlap  &                               & 3.948  & 13.800  & 49.989 \\
+        Pure MPI      & \multirow{3}{*}{$4096^2$}     & 3.543  & 8.245   & 31.203                                         &  77.5\\
+        No Overlap    &                               & 3.953  & 13.799  & 49.515                                         &  78.0\\
+        With Overlap  &                               & 3.948  & 13.800  & 49.989                                         &  78.7 \\
+        \bottomrule
+      \end{tabular}
+    \end{center}
+    % \bigskip
+    % \footnotesize\emph{Source:} This is source 
+  \end{minipage}
+\end{table}
+
+Moreover, since Gaustafsson' theorem \ref{THEO:GaustafssonLaw} gives us a linear module for valuating the parallel problem.
+Thus I chose to use the linear model from equation \ref{EQ:GaustafssonLaw} as a linear polymonimal fitting.
+Considering the original point has to be on the line, which stantds for $f_s + f_p = 1$, 
+I manually create an extended version of speedups by concatenate a inverse negative one to ensure their 
+means are $0$ which makes the fitting line across the $(0,0)$. 
+Eventually, the results of $f_p$ are shown in the table \ref{TAB:Benchmark:Weak_PURE_MPI} as well.
+These fitting lines also indicate that the hybrid parallelized versions has more parallel fraction than pure MPI when the scale of problem gets larger than $512$,
+which means that hybrid strategies reduced the cost of synchronization and brought higher efficiency.
+
+
+
+\subsection{Comparison on multi-node}
+Running programs on multi-node also utilized the command line \ref{LST:mpirun} to specify the resource allocation on cluster.
+In this setup, I ran the tests on $4$ nodes with total $16$ NUMA nodes or $384$ CPUs, all other settings are maintained from the single-node tests.
+\subsubsection{Strong Scaling}
+Figure \ref{FIG:Benchmark:PURE_MPI_Multi_Node} demonstrates speedup ratio of all candidates for test and their relationships with the number of CPUs.
+In the big picture, it is easy to determine that the small scale problems (smaller than $4096^2$) had pool speedup performances on these settings.
+Especially for the $512^2$, $1024^2$ and $2048^2$, parallelization even brought worse performance in the end, which is 
+strongly different from the big scales.
+In the large scale problems, the most large two maintained good strong scaling performances at the end, but 
+the pure MPI failed on launching the program when using $384$ processes.
+Moeover, the problem with $4096^2$ numbers show superlinear speedup on $4$, $8$ and $16$ processes which 
+is similar to single-node hybrid tests.
+However, unlike gaining benefits from shared memory operations on single NUMA node, 
+these superlinear speedup came from the node structure.
+Where the pure MPI processes were allocated on four different CPU, which has individual CPU clock cycle.
+Thus, the processes can behave like operating on shraed memory model.
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.55\textwidth]{figure/FIG_Benchmark_pure_mpi_multi_nodes.pdf}
+  \caption{
+    Comparison of speedup ratios of strong scaling tests of pure MPI parallelized program. 
+    The investigated problem scales are the power of $2$, exponents ranging from $9$ to $15$.
+    The number of CPUs are also set as power of $2$, with additional numbers $96$, $192$ and $384$ matched the topologies of CPU.
+  }
+  \label{FIG:Benchmark:PURE_MPI_Multi_Node}
+\end{figure}
+In addition, the patterns of the strong scaling are different from the Amdalh'S law \ref{THEO:Amdalh's law} demonstrates.
+Which has may visible exceptional performance decreases, due to the topologies of CPUs, especially when using 
+$32$, $48$ and $96$ CPUs per node.
+
+On the other hand, 
+based on comparison of the strong scaling speedup ratios and the amount of resources,
+two hybrid versions performed better than pure MPI parallel and the 
+results are shown in the figure \ref{FIG:Benchmark:Hybrid_Multi_Node}.
+From the figure \ref{FIG:Benchmark:Hybrid_0_Multi_Node} and \ref{FIG:Benchmark:Hybrid_1_Multi_Node},
+we could see that the superlinear speedup appears on the scale $4096^2$ and $8019^2$ which are effected by 
+the previously mentioned two reasons, the high performance local NUMA node shared memory and individual CPU clock cycle.
+More specifically, $8092^2$ \texttt{Double} numbers takes $512$ \texttt{MB} to store, $128$ \texttt{MB} on each node and $32$ \texttt{MB} per NUMA node,
+which just fits the L3 cache size.
+
+\begin{figure}[htbp]
+  \centering
+  \subfigure[No overlapping comm./comp.]
+  {
+    \includegraphics[width=0.47\textwidth]{figure/FIG_Benchmark_hybrid_0_multi_nodes.pdf}
+    \label{FIG:Benchmark:Hybrid_0_Multi_Node}
+  }
+  \hfill
+  \subfigure[With overlapping comm./comp.]
+  {
+    \includegraphics[width=0.47\textwidth]{figure/FIG_Benchmark_hybrid_1_multi_nodes.pdf}
+    \label{FIG:Benchmark:Hybrid_1_Multi_Node}
+  }
+  \caption{
+    Comparison of speedup ratios of strong scaling tests on $4$ nodes of 
+    mater-only parallelized program with overlapping and no overlapping of computation and communication.  
+    The vague background is the results of pure MPI parallelization from figure 
+    \ref{FIG:Benchmark:PURE_MPI_Multi_Node} and problems sclaes are identical as well.
+    The number of threads are set to $1$, $2$, $4$, $8$, $16$, and $24$, 
+    tasks per CPU are $1$, $2$ and $4$.
+  }
+  \label{FIG:Benchmark:Hybrid_Multi_Node}
+\end{figure}
+
+As the amount of resources increase, the speedups are not increase as expected for all three parallel models.
+However, hybrid parallel models were successfully launched on the $384$ CPUs, 
+and also brought more performance for all tested number of CPUs.
+These shows that the advantages of combination of shared memory programming and message-passing programming.
+
+\subsubsection{Weak Scaling}
+
+% PURE
+% 512 48.185757348293464 [  3.29985789  10.37890476  25.99976339 124.37502699]
+% 1024 49.30470677010394 [ 3.84763481 13.03676319 30.14287326]
+% 2048 50.62289960989542 [ 3.7870875   9.17180313 32.01277006]
+% 4096 80.22207174643209 [ 3.88441248 13.85932765 51.04086597]
+
+% Hybrid 0
+% 512 49.318336840965884 [  8.09445064  25.93147463 127.648308  ]
+% 1024 69.80932598630608 [13.70192876 44.04014219]
+% 2048 55.675781151306126 [13.93648546 34.36848416]
+% 4096 83.806215053791 [15.31462331 53.15704013]
+
+% Hybrid 1
+% 512 45.51606462315708 [  8.38595555  27.12574758 116.95116903]
+% 1024 69.93179786064245 [13.83401    44.09042189]
+% 2048 55.86720303491557 [14.27434744 34.41421545]
+% 4096 84.15726269711293 [15.29389611 53.40098918]
+Table \ref{TAB:Benchmark:Weak_PURE_MPI_Multi_Node} lists the weak scaling comparison results of multi-node tests.
+
+\begin{table}
+  \caption{Weak Scaling on Multi-node of 2D Heat Equation}
+  \label{TAB:Benchmark:Weak_PURE_MPI_Multi_Node}
+  \begin{minipage}{\columnwidth}
+    \begin{center}
+      \footnotesize % overleaf
+      \begin{tabular}{>{\bfseries}p{3cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1cm}}
+        \toprule
+        \multirow{2}{*}{Strategy}     & \multirow{2}{*}{\bfseries Size} & \multicolumn{4}{c}{\bfseries  Number of CPUs}   & \multirow{2}{*}{\bfseries $f_p(\%)$}  \\
+                                      &                                 & \bfseries 4   & \bfseries 16   & \bfseries 64  & \bfseries 256  &                        \\
+        \midrule
+        Pure MPI      & \multirow{3}{*}{$512^2$}      & 3.300  & 10.379  & 26.000   & 124.375                                    & 48.2 \\
+        No Overlap    &                               &   -    &  8.094  & 25.931   & 127.648                                    & 49.3 \\
+        With Overlap  &                               &   -    &  8.386  & 27.126   & 116.951                                    & 45.5 \\
+        \midrule
+        Pure MPI      & \multirow{3}{*}{$1024^2$}     & 3.848  & 13.037  & 30.143   &   -                                        & 49.3 \\
+        No Overlap    &                               &   -    & 13.702  & 44.040   &   -                                        & 69.8 \\
+        With Overlap  &                               &   -    & 13.834  & 44.090   &   -                                        & 69.9 \\
+        \midrule
+        Pure MPI      & \multirow{3}{*}{$2048^2$}     & 3.787  & 9.172   & 32.013   &   -                                        & 50.6 \\
+        No Overlap    &                               &   -    & 13.936  & 34.368   &   -                                        & 55.7 \\
+        With Overlap  &                               &   -    & 14.274  & 34.414   &   -                                        & 55.9 \\
+        \midrule
+        Pure MPI      & \multirow{3}{*}{$4096^2$}     & 3.884  & 13.859  & 51.041   &   -                                        & 80.2 \\
+        No Overlap    &                               &   -    & 15.315  & 53.157   &   -                                        & 83.8 \\
+        With Overlap  &                               &   -    & 15.294  & 53.401   &   -                                        & 84.2 \\
         \bottomrule
       \end{tabular}
     \end{center}
@@ -236,9 +381,15 @@ and $f_s \approx 0.147$ with 16 CPUs.
 \end{table}
 
 
+\subsection{Comparison on Boundary Conditions}
 
-\subsection{Comparison on multi-node}
-\subsection{Comparison}
+
+\subsection{Comparison on Dimension}
+
+
+\subsection{Comparison on Accuracy}
+
+
 
 % \subsection{Finite Difference Methods}
 % \subsubsection{Pure Message Passing Parallel}

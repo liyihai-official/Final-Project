@@ -336,7 +336,7 @@ equation \ref{EQ_FDM_FDTD_EQ_Iterating} to get the value $u$ of next time stamp 
 also shown in the figure \ref{FIG:Scheme_FDTD_2D_Heat}.
 \begin{figure}[htbp]
   \centering
-  \begin{tikzpicture}
+  \begin{tikzpicture}[scale=0.8, transform shape]
     \def\h{10};
     \def\scale{0.8};
 
@@ -378,10 +378,10 @@ also shown in the figure \ref{FIG:Scheme_FDTD_2D_Heat}.
       \node (other) at (4,4) [circle, fill=red, scale=\scale] {};
     \end{scope}
 
-    \draw[very thick,->] (this) node[below] {$u^{n}_{i,j}$} -- (other) node[above] {$u^{n+1}_{i,j}$};
-    \draw[very thick,->] (left) node[below] {$u^{n}_{i-1,j}$} -- (other) node[right] {};
-    \draw[very thick,->] (back) node[below] {$u^{n}_{i,j-1}$} -- (other) node[right] {};
-    \draw[very thick,->] (right) node[below] {$u^{n}_{i+1,j}$} -- (other) node[right] {};
+    \draw[very thick,->] (this) node[below right] {$u^{n}_{i,j}$} -- (other) node[above] {$u^{n+1}_{i,j}$};
+    \draw[very thick,->] (left) node[below right] {$u^{n}_{i-1,j}$} -- (other) node[right] {};
+    \draw[very thick,->] (back) node[below right] {$u^{n}_{i,j-1}$} -- (other) node[right] {};
+    \draw[very thick,->] (right) node[below right] {$u^{n}_{i+1,j}$} -- (other) node[right] {};
     \draw[very thick,->] (front) node[below] {$u^{n}_{i,j+1}$} -- (other) node[right] {};
 
     \draw[thick, ->] (orig) -- (Horig) node[above] {Time Status};
@@ -431,3 +431,15 @@ The Gaustafsson-Barsis' law for speedup is
 \end{theorem}
 With Gaustafsson-Barsis's law, the scaled speedup increases linearly with the number of processes, and there is no upper 
 limits for the scaled speedup, which is called weak scaling.
+
+The weak scaling tests of an high performance program runing on cluster is necessary for researching the inner relationships 
+between the number of CPUs and the scale of problems.
+In order to get better weak scaling performance, the fraction of synchronization among processes and the cost of communications 
+plays a minor role when the number of resources increase. 
+In the meanwhile, unlike the strong scaling test, the iterations takes for converging on different problem sizes are various as well.
+Thus, the weak scaling is more effective if it only consider the scaling for single iteration, where the speedup 
+on $N$ CPUs has formula follows
+\begin{equation}
+  S_N = N\frac{T_1C_N}{C_1T_N} 
+\end{equation}
+where $T_N$ and $C_N$ denote with the time and epochs that the solver takes for converging on $N$ CPUs.
