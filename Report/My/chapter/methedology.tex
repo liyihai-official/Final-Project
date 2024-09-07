@@ -4,15 +4,16 @@ Initially, we need to determine the data types to be used and define macros for
 assertions and helper functions to ensure that the program can detect common bugs 
 and report their locations. 
 These features can also be disabled in the release version for performance optimization. 
-Such details are defined in the \texttt{assert.hpp}, \texttt{helper.hpp}, 
-and other related header files located in the subfolder.
+Such details are defined in the \texttt{assert.hpp}, \texttt{helper.hpp}, \texttt{types.hpp}, 
+and other related header files located library and its sub-folder seeing in the appendix \ref{APP:FOLDER}.
 
 \subsection{Template Multi-dimension Matrix Detail Design}
-The FDTD method is a type of FDM. 
-The main idea behind FDM is briefly outlined in Section \ref{SEC:FDM}. 
+The FDTD method is a type of FDM, and
+the main idea behind FDM is briefly outlined in Section \ref{SEC:FDM}. 
 The challenge lies in implementing it in a computer system to ensure it runs both correctly and efficiently.
-Also, the data types I am using for storing sizes are unit32\_t and unit64\_t while I used them 
-as Dworld and Qworld respectively, also are defined as size\_type and super\_size\_type in \_\_detail namespace.
+Also, the data types I am using for storing sizes are \texttt{unit32\_t} and \texttt{unit64\_t} while I defined as trait, such
+as \texttt{Dworld} and \texttt{Qworld} respectively, 
+as \texttt{size\_type} and \texttt{super\_size\_type} in \texttt{\_\_detail} namespace.
 
 \subsubsection{Performance Balancing}
 \paragraph{Template Class}
@@ -21,7 +22,7 @@ and leading to scattered data members between base and derived class objects.
 This scattering can increase the cache misses which accessing these members, as the data might not be contiguous in memory.
 Also, with deep inheritance hierarchies, program has higher change to occur diamond problems, since it increases the code complexity.
 In detail, the diamond problem leads the duplicate inheritance and ambiguity in the method resolution, which will drop performance down again.
-Although, it is solvable by using \texttt{virtual} inheritance, but again, it increase the complexity.
+Although, it is solvable by using \texttt{virtual} inheritance which is called meta-programming, but again, it increase the complexity.
 
 In such case, I chose to use template class to design the matrix object, which implement compile-time polymorphism as opposed runtime polymorphism
 provided by inheritance and virtual functions. 
@@ -53,23 +54,23 @@ The \texttt{\_\_multi\_array\_shape} object is encapsulated within
 the \texttt{\_\_detail} namespace and serves as a member variable of the later template object for the multi-dimensional matrix. 
 This object includes a member variable defined using the STL vector, as the shape object primarily stores the sizes for each dimension, 
 which typically requires only a small amount of space. 
-Additionally, this object provides member functions to access the size of a given dimension. 
+Additionally, this object provides member functions \ref{ALG:StrideImplementation} to access the size of a given dimension. 
 \begin{algorithm}
   \caption{Stride implementation}
+  \label{ALG:StrideImplementation}
   \begin{algorithmic}[1]
     \STATE \texttt{dims}    \hfill \# STL vector, stores the matrix's size in each dimension.
     \STATE \texttt{strides} \hfill \# STL vector, has the same size with dims.
-    \STATE n = dims.size()  \hfill \# Store the dimension of matrix.
-    \STATE strides[d-1] = 1; \hfill \# Stride is 1 in the first dimension.
-    \FOR{ d = n - 1; d > 0; --d }     
-      \STATE strides[d-1] = strides[d] * dims[d] \hfill \# Determine stride in the latter dimension.
+    \STATE \texttt{n = dims.size()}  \hfill \# Store the dimension of matrix.
+    \STATE \texttt{strides[d-1] = 1} \hfill \# Stride is 1 in the first dimension.
+    \FOR{ \texttt{d = n - 1; d > 0; --d} }     
+      \STATE \texttt{strides[d-1] = strides[d] * dims[d]} \hfill \# Determine stride in the latter dimension.
     \ENDFOR
     \RETURN \texttt{strides}
   \end{algorithmic}
 \end{algorithm}
 
-
-\paragraph{Performace Balancing}
+\paragraph{Performance Balancing}
 In certain scenarios, 
 we only require the shape information of a matrix without needing to access the entire matrix object. 
 Accessing the shape information through well-defined operators is a more efficient way to 
@@ -77,6 +78,7 @@ handle multidimensional matrices.
 This is particularly crucial in parallel programming, where understanding 
 the shape of a matrix is of critical importance. 
 Sometimes, a process may need to know the shape of matrices stored on other processes. 
+
 In such cases, using this matrix object as a local variable within functions increases the 
 likelihood that the compiler will store it in a register, 
 which is generally faster than using heap or stack memory.
@@ -92,7 +94,6 @@ variable \texttt{\_\_T} and \texttt{\_\_NumD}, for the value data type and numbe
 also including iterators, swap functionality, fill operations, and support for the IO stream operator \texttt{<<}. 
 To facilitate this, the \texttt{\_\_array\_shape} object is used to explicitly manage and access the array's shape information. 
 
-
 \paragraph{Operator \texttt{()}}
 The hard part of this object designed is the support template number of dimension, whereas the dimension 
 is integer not less than $1$,
@@ -101,9 +102,9 @@ the operator of access element is designed by following algorithm
   \caption{Operator \texttt{(Ext ... exts)} of template matrices object \texttt{\_\_detail::\_\_array}}
   \begin{algorithmic}[1]
     \STATE \texttt{\_\_NumD}, \texttt{\_\_T};                   \hfill \# Template variables: dimension, data type.
-    \STATE \texttt{FINAL\_PROJECT\_ASSERT\_MSE}                 \hfill \# Number of Arguments must Match the dimension.
+    \STATE \texttt{FINAL\_PROJECT\_ASSERT\_MSG}                 \hfill \# Number of Arguments must Match the dimension.
     \STATE \texttt{index} = 0, \texttt{i} = 1                \hfill \# Initialize variables in advance.
-    \STATE \texttt{indices[] = \_\_shape.check\_and\_cast(ext)}          \hfill \# The indexes number must none-negative number.
+    \STATE \texttt{indices[] = \_\_shape.check\_and\_cast(ext)}          \hfill \# The indexes must non-negative.
     \FOR{i < \texttt{\_\_NumD}; ++i}
       \STATE \texttt{index += indices[i] * \_\_shape.strides[i]} 
     \ENDFOR
@@ -140,8 +141,6 @@ recursively print all dimensions.
     \ENDIF
   \end{algorithmic}
 \end{algorithm}
-
-
 
 \subsection{Template Multi-dimension Matrix Interface Design}
 With contiguity of safety, this object of multi-dimension array is accessible to users without 
@@ -244,7 +243,7 @@ Similar to how \texttt{malloc} in C and \texttt{new} in C++ require manual memor
 the MPI environment also necessitates explicit initialization and finalization. 
 However, unlike the efficient implementation of smart pointers in the STL, 
 Boost.MPI\cite{BOOST_MPI}
--a high-level parallelism library—
+- a high-level parallelism library -
 may not be the optimal choice for high-performance programs. 
 Therefore, I chose to design a custom MPI environment that encapsulates the necessary features specific to this project.
 
@@ -317,22 +316,39 @@ the neighbors of each process in all dimension.
 Below is a example [Fig. \ref{FIG_MPI_TOPOLOGY_24_PROCS}] of cartesian topology of $24$ processors, with no period in all dimensions.
 \begin{figure}[htbp]
   \centering
-  \begin{tikzpicture}
-    \draw[help lines, step=1em] (0,0) grid (12em, 10em);
-    \draw[thick, ->] (0,0) -- (12em, 0) node[right] {$x$};
-    \draw[thick, ->] (0,0) -- (0, 10em) node[above] {$y$};
+  \begin{tikzpicture}[scale=0.8, transform shape]
+    % \draw[help lines, step=1em] (0,0) grid (12em, 10em);
+    % \draw[dashed, ->] (0,0) -- (12em, 0) node[right] {$x$};
+    % \draw[dashed, ->] (0,0) -- (0, 10em) node[above] {$y$};
     
     \def\xsize{2};
     \def\ysize{3};
     \def\zsize{4};
   
     \begin{scope}[shift={(0em, 0em)}, x={(2em,-0.25em)},y={(0em,2em)}, , z={(-1.25em,-0.5em)}]
+    % \draw[help lines, step=1em] (0,0,0) grid (0.5em, 0.5em, 0);
+    \draw[thick, ->] (0,3.5,-0.2em) -- (7, 3.5, -2) node[above] {$dim_2$};
+    \draw[thick, ->] (0,3.5,-0.2em) -- (0, -2, -2) node[below] {$dim_1$};
+    \draw[thick, ->] (0,3.5,-0.2em) -- (0, 3.5, 3.5) node[above] {$dim_0$};
+
+  \foreach \y in {0, 1, ..., \ysize}
+  {
+    \node at (\y/\ysize * \ysize,0.4 + \xsize, -6) {$\y$};
+
+    \pgfmathsetmacro{\pid}{int(\y + \zsize)}
+    \node at (\y/\ysize * \ysize,0.4 + \xsize - 1, -6) {$\pid$};
+
+    \pgfmathsetmacro{\pidd}{int(\y + 2 * \zsize)}
+    \node at (\y/\ysize * \ysize,0.4 + \xsize - 2, -6) {$\pidd$};
+  }
+      
       % Draw the front face
       \fill[blue!20] (0,0,0) -- (0,\ysize,0) -- (\zsize, \ysize,0) -- (\zsize,0,0) -- cycle;
       % Draw the top face
       \fill[blue!40] (0,\ysize,0) -- (0,\ysize,-\xsize) -- (\zsize, \ysize, -\xsize) -- (\zsize, \ysize,0) -- cycle;
       % Draw the right face
       \fill[blue!60] (\zsize,0,0) -- (\zsize,0,-\xsize) -- (\zsize, \ysize, -\xsize) -- (\zsize, \ysize,0) -- cycle;
+
   
       \foreach \x in {0,1, ..., \xsize}
       {
@@ -351,20 +367,38 @@ Below is a example [Fig. \ref{FIG_MPI_TOPOLOGY_24_PROCS}] of cartesian topology 
         \draw[black] (\z/\zsize * \zsize,\ysize,0) -- (\z/\zsize * \zsize,\ysize,-\xsize);
         \draw[black] (\z/\zsize * \zsize,0,0) -- (\z/\zsize * \zsize,\ysize,0);
       }
+
+      \foreach \y in {0, 1, ..., \ysize}
+      {
+        \pgfmathsetmacro{\pid}{int(\y + 12)}
+        \node at (\y/\ysize * \ysize + 0.4,0.4 + \xsize, 0) {$\pid$};
+
+        \pgfmathsetmacro{\pidd}{int(\y + \zsize + 12)}
+        \node at (\y/\ysize * \ysize + 0.4,0.4 + \xsize - 1, 0) {$\pidd$};
+
+        \pgfmathsetmacro{\piddd}{int(\y + 2 * \zsize + 12)}
+        \node at (\y/\ysize * \ysize + 0.4,0.4 + \xsize - 2, 0) {$\piddd$};
+      }
     \end{scope}
   \end{tikzpicture}
-  \caption{An example of MPI Cartesian topology Scheme of $24$ processors.}
+  \caption{
+        The Schematic representation of the MPI Cartesian topology scheme of $24$ processors on $3$ dimension space, 
+        which has a $2\times 3\times 4$ grid of processes 
+    }
   \label{FIG_MPI_TOPOLOGY_24_PROCS}
 \end{figure}
 
 \paragraph{Determine MPI datatypes for communication}
 In order to do MPI communications, the source and the destination of every process are necessary, also the datatype.
-When working with the meta-designed multidimensional matrix, we need to utilize the function \texttt{MPI\_Type\_Create\_subarray} to 
-create essential halo datatypes.
+When working with the meta-designed multidimensional matrix, we need to utilize the function \texttt{MPI\_Type\_Create\_subarray} 
+follow the routine \ref{LST:mpi_subarray} to 
+create essential halo datatypes which follows the routine \ref{ALG:CreateHalo} below
 \begin{algorithm}
+  \caption{Creating MPI Datatype for communication of Ghost}
+  \label{ALG:CreateHalo}
   \begin{algorithmic}[1]
     \STATE \texttt{array\_size}, \texttt{array\_subsize}, \texttt{array\_starts=\{0\}} \hfill \#\texttt{std::array<Integer, NumD>}, the information of matrix.
-    \FOR {i = 0 : NumD}
+    \FOR {\texttt{i = 0 : NumD}}
       \STATE Split tasks in dimension \texttt{i} by calling \texttt{decomposition}
       \STATE \texttt{array\_size = }local shape
       \STATE \texttt{array\_subsize = array\_size - 2}
@@ -372,16 +406,18 @@ create essential halo datatypes.
     \FOR {i=0 : NumD}
       \STATE \texttt{temp = array\_subsize[i]} \hfill \# Store the number temporally.
       \STATE \texttt{array\_subsize[i] = 1}
-      \STATE \texttt{MPI\_Type\_Create\_subarray
-      } and \texttt{MPI\_Type\_commit()} \hfill \# Create halo in dimension \texttt{i} and commit.
+      \STATE \texttt{MPI\_Type\_Create\_subarray} 
+      and \texttt{MPI\_Type\_commit()} \hfill \# Create halo in dimension \texttt{i} and commit.
       \STATE Restore temporal array sub-size.
     \ENDFOR
   \end{algorithmic}
 \end{algorithm}
-
+Figure \ref{FIG_MPI_3D_exchange_SCHEME} showing the details of communications in 3D Cartesian topology distributed matrices.
+For each process, it has to communicate with all the neighbors from three directions, 
+sending and receiving data from $6$ other processes which means totally $16$ MPI communications each.
 \begin{figure}[htbp]
   \centering
-  \begin{tikzpicture}
+  \begin{tikzpicture}[scale=0.8, transform shape]
     % Draw a grid with steps of 1 cm
     % \draw[help lines, step=1em] (-2em,-2em) grid (20em,20em);
   
@@ -436,10 +472,32 @@ create essential halo datatypes.
       \drawcube{(16em, 14em)}{8}
 
     \end{tikzpicture}  
-  \caption{A 3D MPI Communication Scheme of $8$ processors between $3$ dimension matrices.}
+  \caption{
+    Representation of a 3D MPI Communication Scheme of $4$ among $24$ processes between $3$ dimension sub-arrays.
+    The reddish small cube stands for the memory space stored the ghost data that needed for MPI communications.
+    The bluish small cube stands for the space stored the junk values which are not gonna be used in the entire progress.
+    The source/destination directions show the relationships between local process and other neighbor processes.
+  }
   \label{FIG_MPI_3D_exchange_SCHEME}
 \end{figure}
+\begin{lstlisting}[
+  style=customCpp,
+  caption={Routine for creating sub-array \texttt{MPI\_Datatype} as send buffer.}, 
+  label={LST:mpi_subarray}]
+  MPI_Type_create_subarray( 
+      dimension,                /// Dimension of this array  : NumD
+      array_sizes.data(),       /// shape of local array     : local_shape
+      array_subsizes.data(),    /// shape of sub-array       : N_cpy
+      array_starts.data(),      /// starting coordinates     : {0, 0, ..., 0}
+      MPI_ORDER_C,              /// Array storage order flag : Row major in C/C++
+      value_type,               /// Old MPI Datatype         : get_mpi_type<T>()
+      &sbuf_block);             /// New MPI Datatype
+\end{lstlisting}
 
+Besides that, we could see the figure \ref{FIG_MPI_3D_exchange_SCHEME} shows the 
+bluish cube which stands for the memory space for storing junk values.
+As the sub-array of each process gets smaller, the percentage of junk values goes up which means updating 
+the values in this array is a low-efficient operation.
 
 \subsection{Template Distributed Multi-dimension Matrix Design}\label{SEC:SUB:Distributed_Matrix_Design}
 \subsubsection{Detail Object Design}
@@ -572,19 +630,6 @@ recursively copy contiguous data from local matrix to global matrix exclusively 
 In a matrix with undefined dimension, creating data types for communicating is harder than in a specialized matrix.
 For the none-root processes, they should send their data without ghost values, thus 
 the \texttt{MPI\_Type\_create\_subarray} was used to create a sub-array \texttt{MPI\_Datatype} for sending message to root process.
-\begin{lstlisting}[
-  style=customCpp,
-  caption={Routine for creating sub-array \texttt{MPI\_Datatype} as send buffer.}, 
-  label={LST:mpi_subarray}]
-  MPI_Type_create_subarray( 
-      dimension,                /// Dimension of this array  : NumD
-      array_sizes.data(),       /// shape of local array     : local_shape
-      array_subsizes.data(),    /// shape of sub-array       : N_cpy
-      array_starts.data(),      /// starting coordinates     : {0, 0, ..., 0}
-      MPI_ORDER_C,              /// Array storage order flag : Row major in C/C++
-      value_type,               /// Old MPI Datatype         : get_mpi_type<T>()
-      &sbuf_block);             /// New MPI Datatype
-\end{lstlisting}
 The local arrays have shape $\mathcal{N}_{loc}$, and the sub-arrays have shape $\{N\_{cpy}\}_{d=0}^{D-1}$ determined by above routines 
                                             [Alg. \ref{ALG:SCHEME:Find_LOCAL_SEND_INFO}]
 respectively, the starts indexes are unified as $0$s.
@@ -670,7 +715,8 @@ of oldtype elements onto an N-dimensional grid of logical processes without cons
 
 Due to I have determine the start indexes using lambda function 
                                   [Alg. \ref{ALG:Determine_Start_End_Decomp}],
-the \texttt{MPI\_Type\_create\_subarray} was used for creating newtype for creating file views.
+the MPI type create function 
+\texttt{MPI\_Type\_create\_subarray} was used for creating newtype for creating file views.
 Displacement was the designed for holding size of N-dimension array, and it is read/write from/to root process.
 After the file view created, all processes write data into the file associated with file view collectively.
 Note that the \texttt{MPI\_File\_write\_all} and \texttt{MPI\_File\_read\_all} are collective 
@@ -839,7 +885,8 @@ Moreover, there are mainly three type of boundary conditions, Dirichlet, Von Neu
 of boundary conditions.
 
 In this project, I chose to imply first and second type conditions, which denoted with 
-member variable \texttt{std::array<Bool, 2*NumD> isDirchletBC} and \texttt{std::array<Bool, 2*NumD> isNeumannBC}.
+member variable \texttt{std::array<Bool, 2*NumD> isDirchletBC} and other one for 
+\texttt{std::array<Bool, 2*NumD> isNeumannBC}.
 Similarly to init classes, the \texttt{SetBC} is also a function for apply this boundary condition to PDE objects and the status of setup 
 is stored as a boolean \texttt{isSetUpBC}.
 However, unlike the initial condition, the Von Neumman boundary conditions need to be update during evolving processes.
@@ -880,7 +927,6 @@ Constructor takes template arguments of extents as inputs, and using extents to 
 According to the general setups in section \ref{SEC:Specific_Form}, and CFL rules, the $D$ dimension heat equation has time step size
 \begin{equation}
   \Delta t \leqslant \frac{1}{ 
-    \displaystyle 
     2 \lambda 
     \sum_{i=1}^{D} \frac{1}{\Delta x_i ^2}
   }
@@ -1068,7 +1114,7 @@ In order to collect differences from all threads of MPI processes, the local dif
 by using pragma \texttt{omp critical}, with a \texttt{omp barrier} at the end.
 The boundary condition updates and gathering results or print global difference are set to \texttt{single}.
 \begin{algorithm}
-  \caption{Master-only MPI+OpenMP with non-overlapped Communication/Computation}
+  \caption{Master-only Hybrid with non-overlapped Communication/Computation}
   \label{ALG:Hybrid_0}
   \begin{algorithmic}[1]
     \FOR {iterations}
@@ -1082,50 +1128,66 @@ The boundary condition updates and gathering results or print global difference 
   \end{algorithmic}
 \end{algorithm}
 
-
-
-
-\paragraph{Exchange}
-The exchange method of first hybrid solver is identical with pure MPI exchanger, however, only single thread will call it.
-Such strategy is called Master-Only Hybrid 
-                                                      ,Page 101 in \cite{openmp-hybrid-mpi-openmp}, 
-it can be using \texttt{omp single} for calling MPI communications
-rather than using \texttt{omp master}.
-In general the master-only hybrid has such communication scheme
 \begin{figure}[htbp]
   \centering
-  \begin{tikzpicture}
+  \begin{tikzpicture}[scale=0.8, transform shape]
     \def\drawMPI#1#2{
       \begin{scope}
         \draw[node] (0em, 0em);
       \end{scope}
     }
 
-    \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.5\textwidth]{figure/FIG_Schematic_Hybrid0.pdf}};
-    % \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.58\textwidth]{figure/FIG_Schematic_Hybrid0.pdf}};
+    % \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.5\textwidth]{figure/FIG_Schematic_Hybrid0.pdf}};
+    \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.58\textwidth]{figure/FIG_Schematic_Hybrid0.pdf}};
 
     \begin{scope}[x={(image.south east)},y={(image.north west)}]
 
     % Draw a grid with steps of 1 cm
-    \def\gridsize{20em};
-    \draw[help lines, step=1em] (0,0) grid (\gridsize,\gridsize);
+    % \def\gridsize{1};
+    % \draw[help lines, step=0.1] (0,0) grid (\gridsize,\gridsize);
   
     % Draw axes
-    \draw[thick,->] (0,0) -- (\gridsize,0) node[right] {$x$};
-    \draw[thick,->] (0,0) -- (0,\gridsize) node[above] {$y$};
+    % \draw[thick,->] (0,0) -- (\gridsize,0) node[right] {$x$};
+    % \draw[thick,->] (0,0) -- (0,\gridsize) node[above] {$y$};
+    \node at (0.5, 1.05) {MPI Initialization};
+    \node at (1.2, 0.9) {OpenMP parallel};
+        
+    \node at (1.2, 0.6) {OpenMP single};
+    \node at (0.5, 0.45) {MPI Communication};
+    \node at (1.2, 0.1) {OpenMP single};
 
-    \node at (11em,8.5em) {MPI Communication};
-    \node at (0em,10.5em) {OpenMP single};
-    \node at (0em,1.5em) {OpenMP single};
+    \node at (0.13, 0.2) {Update Grid};
+    \node at (0.46, 0.2) {Update Grid};
+    \node at (0.86, 0.2) {Update Grid};
 
-    \node at (11em,4em) {Update Grid};
-    \node at (11em,13em) {Update Grid};
+    \node at (0.13, 0.7) {Update Grid};
+    \node at (0.46, 0.7) {Update Grid};
+    \node at (0.86, 0.7) {Update Grid};
 
     \end{scope}
   \end{tikzpicture}
-  \caption{Scheme: Master only hybrid strategy}
+  \caption{
+      Schematic view of the master only hybrid strategy with non-overlapping of computation and communication (comm./comp.).
+      Using OpenMP barrier pragma for threads barrier to ensure all grids are updated. 
+      Then applied single for applying MPI communications, exchanging ghost data.
+  }
   \label{FIG:master_only_hybrid}
 \end{figure}
+
+\paragraph{Exchange}
+The exchange method of first hybrid solver is identical with pure MPI exchanger, however, only single thread will call it.
+Such strategy is called Master-Only Hybrid 
+                                                 ,Page 101 in \cite{openmp-hybrid-mpi-openmp}, 
+it can be using \texttt{omp single} for calling MPI communications
+rather than using \texttt{omp master}.
+In general the master-only hybrid has such communication scheme shown in figure \ref{FIG:master_only_hybrid}.
+In the figure, we could clearly see that the details of cooperations between OpenMP and MPI.
+Using OpenMP single is the easiest way and an efficient method for hybrid communications, 
+due to the \texttt{master} requires the root threads ( thread id is 0) available for continue working.
+
+
+
+
 
 
 \subsubsection{Funneled Hybrid Parallel with overlapped comm./comp.}\label{SEC:HYBRID_1}
@@ -1135,7 +1197,7 @@ Due to the inner part of grid is independent with ghost values, thus the update 
 update the bulk and update the edges.
 
 \begin{algorithm}
-  \caption{Funneled Master-only MPI+OpenMPI with overlapped Communication/Computation}
+  \caption{Funneled Master-only Hybirid with overlapped Communication/Computation}
   \label{ALG:Hybrid_1}
   \begin{algorithmic}[1]
     \FOR {iterations}
@@ -1157,7 +1219,7 @@ rather than only take the advantages of shared memory computing.
 
 \begin{figure}[htbp]
   \centering
-  \begin{tikzpicture}
+  \begin{tikzpicture}[scale=0.7, transform shape]
     \def\drawMPI#1#2{
       \begin{scope}
         \draw[node] (0em, 0em);
@@ -1165,41 +1227,54 @@ rather than only take the advantages of shared memory computing.
     }
 
 
-    \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.35\textwidth]{figure/FIG_Schematic_Hybrid1.pdf}};
-    % \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.58\textwidth]{figure/FIG_Schematic_Hybrid1.pdf}};
+    % \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.35\textwidth]{figure/FIG_Schematic_Hybrid1.pdf}};
+    \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.48\textwidth]{figure/FIG_Schematic_Hybrid1.pdf}};
 
     \begin{scope}[x={(image.south east)},y={(image.north west)}]
 
     % Draw a grid with steps of 1 cm
-    \def\gridsize{20em};
-    \draw[help lines, step=1em] (0,0) grid (\gridsize,\gridsize);
+    % \def\gridsize{1};
+    % \draw[help lines, step=0.1] (0,0) grid (\gridsize,\gridsize);
   
-    % Draw axes
-    \draw[thick,->] (0,0) -- (\gridsize,0) node[right] {$x$};
-    \draw[thick,->] (0,0) -- (0,\gridsize) node[above] {$y$};
+    % % Draw axes
+    % \draw[thick,->] (0,0) -- (\gridsize,0) node[right] {$x$};
+    % \draw[thick,->] (0,0) -- (0,\gridsize) node[above] {$y$};
 
-    % \node at (11em,8.5em) {MPI Communication};
-    % \node at (0em,10.5em) {OpenMP single};
-    % \node at (0em,1.5em) {OpenMP single};
+    \node at (0.5, 1) {MPI Initialization};
+    \node at (1.25, 0.9) {OpenMP parallel};
+        
+    \node at (1.25, 0.6) {OpenMP single};
+    \node at (0.5, 0.46) {MPI Communication};
+    \node at (1.25, 0.1) {OpenMP single};
 
-    % \node at (11em,4em) {Update Grid};
-    % \node at (11em,13em) {Update Grid};
+    \node at (0.16, 0.21) {Update Bulk};
+    \node at (0.5, 0.21) {Update Edge};
+    \node at (0.84, 0.21) {Update Bulk};
 
+    \node at (0.16, 0.7) {Update Bulk};
+    \node at (0.5, 0.7) {Update Edge};
+    \node at (0.84, 0.7) {Update Bulk};
+    
     \end{scope}
 
 
   \end{tikzpicture}
-  \caption{Scheme: Master only hybrid strategy with computation/communication overlapping}
+  \caption{
+  Scheme: Master only hybrid strategy with computation/communication overlapping of computation and communication (comm./comp.).
+    The OpenMP threads are separated into two parts, one of which will do the MPI non-blocking communication and the other threads will 
+    update the bulk.
+    Using MPI wait all to ensure all threads are available, then update the edges.
+  }
   \label{FIG:master_only_hybrid_1}
 \end{figure}
 Also, due to the asynchronous communication is not guaranteed by non-blocking MPI communication,
 which means that the implementation of multiple overlapping of communication / computation.
+Besides that, load balancing is a problem as well since the true load of each processes is hidden before we actually run it.
 Thus, applying multiple overlapping hybrid method can be very hard to do even on simple question, and highly hardware dependent.
-% Besides that, load balancing is a problem as well since the true load of each processes is hidden before we actually run it.
-% Thus, it is really hard 
 
 
 \subsection{Physics Informed Neural Networks}
+\subsubsection{General Ideas}
 The ideas of earlier neural networks mainly focus on multiplying matrices and compute the difference between the outputs and the given labels.
 AlexNet introduced the convolution product into neural networks since ImageNet Challenge 2014 
                 \cite{CNN}, 
@@ -1227,14 +1302,16 @@ Moreover, it can produce a validation grid for showing the outputs of trained ne
 \subsubsection{Structure}
 The network has the simplest structure, which is a sequential of multiplication of matrices and inputs plus bias (three hidden layers).
 The activation functions are $\tanh(\cdot)$, and the network loss function is mean square error (MSE).
-Totally, the loss function follows the setting in section \ref{SEC:PINN} which is the sumption of $loss_{PDE}$ and $loss_{NN}$ where 
+Totally, the loss function follows the setting in section \ref{SEC:PINN} which is the summation of $loss_{PDE}$ and $loss_{NN}$ where 
 \begin{equation}
   \begin{cases}
     \displaystyle loss_{PDE} = \frac{\partial^2 \widehat{u}}{\partial x^2} + \frac{\partial^2 \widehat{u}}{\partial y^2} + \frac{\partial^2 \widehat{u}}{\partial z^2}  \\
     \displaystyle loss_{NN} = MSE(\widehat{u}, u)    
   \end{cases}
 \end{equation}
-
+In this case, computing the derivative of a output from a large model is expensive in old days.
+However, with the benefits from GPU parallel and Auto-differentiation \cite{AD}, we are able to compute the derivatives and 
+treat them as regularizer of neural networks. 
 
 
 

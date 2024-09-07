@@ -23,48 +23,14 @@ two types:
 deterministic 
 and stochastic. 
 The mostly widely used stochastic method for solving PDEs is 
-Monte Carlo Method \cite{Monte Carlo Method} which is a popular method in solving PDEs in higher dimension space with 
+Monte Carlo Method \cite{Monte_Carlo_Method} which is a popular method in solving PDEs in higher dimension space with 
 notable complexity.
 
 \subsection{Finite Difference Method}\label{SEC:FDM}
-The Finite Difference Method(FDM) is based on the numerical approximation method in calculus of finite differences.
+The FDM is based on the numerical approximation method in calculus of finite differences.
 The motivation is quiet straightforward which is approximating solutions by finding values satisfied PDEs on a set of 
-prescribed interconnected points within the domain of it. Those points are which referred as nodes, and the set of nodes 
-are so called as a grid of mesh.
-A notable way to approximate derivatives are using 
-Taylor Series expansions.
-Taking 2 dimension Possion Equation as instance, assuming the investigated value as, $\varphi$,
-\begin{equation}\label{EQ_POSSION_2D}
-  \frac{
-    \partial ^ 2 \varphi  
-  }{
-    \partial x ^ 2
-  } +
-  \frac{
-    \partial ^ 2 \varphi  
-  }{
-    \partial y ^ 2
-  }
-  =  f(x,y)
-\end{equation}
-The total amount of nodes is denoted with $N = 15$, which gives the numerical equation which governing 
-equation \ref{EQ_POSSION_2D} 
-shown in 
-equation \ref{EQ_POSSION_2D_10_NODES} and nodes layout as shown in the 
-figure \ref{FIG_POSSION_2D_10_NODES}
-\begin{equation}\label{EQ_POSSION_2D_10_NODES}
-  \frac{
-    \partial ^ 2 \varphi_i
-  }{
-    \partial x_i ^ 2
-  } +
-  \frac{
-    \partial ^ 2 \varphi_i
-  }{
-    \partial y_i ^ 2
-  }
-  =  f(x_i,y_i) = f_i, \:\:\:\:\: i = 1,2,\dots,15
-\end{equation}
+prescribed interconnected points within the domain of it. 
+% \begin{wrapfigure}{r}{0.45\textwidth}
 \begin{figure}[htbp]
   \centering
   % \includegraphics[width=0.5\textwidth]{figure/FIG_POSSION_2D_10_NODES.jpg}
@@ -156,6 +122,43 @@ figure \ref{FIG_POSSION_2D_10_NODES}
   Nodes $11-15$ denote boundary nodes, while nodes $1-10$ denote internal nodes.}
   \label{FIG_POSSION_2D_10_NODES}
 \end{figure}
+% \end{wrapfigure}
+Those points are which referred as nodes, and the set of nodes 
+are so called as a grid of mesh.
+A notable way to approximate derivatives are using 
+Taylor Series expansions.
+Taking 2 dimension Possion Equation as instance, assuming the investigated value as, $\varphi$,
+\begin{equation}\label{EQ_POSSION_2D}
+  \frac{
+    \partial ^ 2 \varphi  
+  }{
+    \partial x ^ 2
+  } +
+  \frac{
+    \partial ^ 2 \varphi  
+  }{
+    \partial y ^ 2
+  }
+  =  f(x,y)
+\end{equation}
+The total amount of nodes is denoted with $N = 15$, which gives the numerical equation which governing 
+equation \ref{EQ_POSSION_2D} 
+shown in 
+equation \ref{EQ_POSSION_2D_10_NODES} and nodes layout as shown in the 
+figure \ref{FIG_POSSION_2D_10_NODES}
+\begin{equation}\label{EQ_POSSION_2D_10_NODES}
+  \frac{
+    \partial ^ 2 \varphi_i
+  }{
+    \partial x_i ^ 2
+  } +
+  \frac{
+    \partial ^ 2 \varphi_i
+  }{
+    \partial y_i ^ 2
+  }
+  =  f(x_i,y_i) = f_i, \:\:\:\:\: i = 1,2,\dots,15
+\end{equation}
 In this case, we only need to find the value of internal nodes which $i$ is ranging from $1$ to $10$.
 Next is aimming to solve this linder system \ref{EQ_POSSION_2D_10_NODES}.
 

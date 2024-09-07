@@ -67,7 +67,7 @@ With given format, and $\alpha = 1$, we have the analytical solution of this equ
 \end{equation}
 In 3 dimension space, similarly, with identical initial condition set up to $0$, coefficient $\alpha = 1$,
 the boundaries are 
-\begin{equation} \label{EQ:Heat3D}
+\begin{equation} 
   u(t,x,y,z) = g(x,y,z) = 
   \begin{cases}
     y+z -2yz        , \:\: &x=0,\\
@@ -79,8 +79,18 @@ the boundaries are
   \end{cases}
   \:\:, t \in \left[0, +\infty\right)
 \end{equation}
+and the equation is 
+\begin{equation} \label{EQ:Heat3D}
+  \frac{\partial u}{\partial t} = \alpha \left(
+    \frac{\partial u^2}{\partial^2 x}
+    +
+    \frac{\partial u^2}{\partial^2 y}
+    +
+    \frac{\partial u^2}{\partial^2 z}
+  \right) (x,y, z) \in \Omega, \: t \in \left[0, +\infty\right) 
+\end{equation}
 In such case, the analytical solution has for form below 
-\begin{equation}
+\begin{equation}\label{EQ_SOLUTION_3D}
   u(t,x,y,z) = x + y + z - 2xy - 2xz - 2yz + 4xyz, \:\:(x,y,z) \in \Omega,\: t \in \left[0, +\infty\right)
 \end{equation}
 

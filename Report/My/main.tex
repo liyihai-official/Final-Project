@@ -11,6 +11,8 @@
 \usepackage{multirow}
 \usepackage{array}
 
+\usepackage{forest}
+
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
@@ -201,5 +203,83 @@ Physics-Informed Neural Networks on CUDA Systems}
 \printbibliography
 
 \appendix
+\section{File Tree}
+\begin{forest}
+for tree={
+    grow=east,            % 树从左往右生长
+    parent anchor=east,   % 父节点的锚点设在右边
+    child anchor=west,    % 子节点的锚点设在左边
+    font=\ttfamily,
+    anchor=west,          % 每个节点相对于其锚点对齐
+    edge path={\noexpand\path[\forestoption{edge}](!u.east)--(.west)\forestoption{edge label};}, % 边的样式
+    inner sep=1pt,        % 内间距
+    l sep=10pt,           % 子节点与父节点之间的水平距离
+    s sep=2pt             % 子节点间的垂直距离
+}
+[Project Root
+    [CMakeLists.txt]
+    [Doxyfile]
+    [README.md]
+    [config.h.in]
+    [include
+        [assert.hpp]
+        [helper.hpp]
+        [mpi
+            [assert.hpp]
+            [environment.hpp]
+            [multiarray.hpp]
+            [topology.hpp]
+            [types.hpp]
+        ]
+        [multiarray
+            [base.hpp]
+            [types.hpp]
+        ]
+        [multiarray.hpp]
+        [pde
+            [Heat.hpp]
+            [details
+                [BoundaryConditions
+                    [BoundaryConditions\_2D.hpp]
+                    [BoundaryConditions\_3D.hpp]
+                ]
+                [Heat\_2D.hpp]
+                [Heat\_3D.hpp]
+                [InitializationsC.hpp]
+            ]
+            [pde.hpp]
+        ]
+        [pinn
+            [dataset.hpp]
+            [helper.hpp]
+            [pinn.hpp]
+            [types.hpp]
+        ]
+        [types.hpp]
+    ]
+    [main1
+        [main1.cpp]
+        [main1\_3d.cpp]
+    ]
+    [main2
+        [datagen.cpp]
+        [main2.cpp]
+        [pred.cpp]
+    ]
+    [src
+        [boundary.m]
+        [helper.cpp]
+        [loadFromBinary.m]
+        [pinn
+            [dataset.cpp]
+            [helper.cpp]
+        ]
+        [saveToBinary.m]
+        [vis2d.m]
+        [vis3d.m]
+        [visdataset.m]
+    ]
+]
+\end{forest}
 
 \end{document}

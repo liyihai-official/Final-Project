@@ -596,35 +596,25 @@ When we tried to represent numbers using arithmetic in binary, decimal or hexade
 or so called as 
 round-off-error.
 
+
 \paragraph{Round-off Error}
 In IEEE-754 \cite{IEEE_754} standards, a $32$-bit floating pointer number, single precision, obligatorily represented with $23$-bit mantissa, 
 $8$-bit exponent and $1$-bit for sign. 
-Where as $64$-bit floating number, double precision, also ubiquitous used, which has $11$-bit exponent and $52$-bit mantissa.
-After almost three decades development, not only single and double precisions (float32, float64) are ubiquitously in use, 
-also more formats such as fp4, fp8, and fp16 etc. Both of them follows the simple form of exponent $k$, sign $n$ and mantissa $N$. 
-\cite{IEEE_754}
-\begin{equation*}
-  2^{k+1-N}n
-\end{equation*}
 Round-off errors are a manifestation of the fact that on a digital computer, which is unavoidable in numerical computations.
 In such case, the precision of the number depends on how many bytes are used to store single number. 
 For instance, a float32 number provides $2^{-23} \approx 1.2\times10^{-7}$, and a double precision number gives $2^{-53} \approx 2.2\times10^{-16}$, 
 such number is called machine $\epsilon$ which is the smallest number the machine can represent with given format.
 
-In numerical methods I investigated, the FDTDs are conventionally using double precision number so that the programs can treat extreamly large and small 
-numbers simultaneously in the same computation, without worring about the round-off errors.
+\paragraph{Truncation Error}
+Truncation error is the other type of error comes from the precision loss of numerical approximations to the derivatives.
+For example, using first order forward difference with stepsize $\Delta$ for approximating the derivative is based on the Taylor Series, 
+and the truncation error is $O(\Delta x^2)$ \cite{GermundNMSCV1P122}.
+
+
+In numerical methods I investigated, the FDTDs are conventionally using double precision number so that the programs can treat extremely large and small 
+numbers simultaneously in the same computation, without worrying about the round-off errors.
 However, as mentioned, fp32 and fp16 are also popular use in scientific computing, especially in machine learning training process. 
-While the lasted training GPUs are integrated compute accelarate unit for low precision floating numbers. \cite{NVIDIA_HB200_PAPER}.
-
-\paragraph{Floating-point Arithmetic}
-The other type loss comes from the arithmetic operations on two numbers $x$, $y$. 
-The standard model holds that 
-\begin{equation}
-  fl(x \:\text{op}\: y) = (x \: \text{op} \: y) (1+\delta), \:\:\: \left|\delta\right| < \epsilon
-\end{equation}
-where the $op$ stands for the four elementary operations: $+, -, \times, /$. \cite{GermundNMSCV1P122}.
-
-
+While the lasted training GPUs are integrated compute accelerate unit for low precision floating numbers. \cite{NVIDIA_HB200_PAPER}.
 
 
 % \subsection{Finite Difference Methods}
