@@ -886,7 +886,7 @@ According to the general setups in section \ref{SEC:Specific_Form}, and CFL rule
   }
 \end{equation}
 Moreover, I chose to use the modified 
-                                          CFL \cite{CFL} 
+                                          CFL \cite{CFL_limitation} 
 shown below 
 \begin{equation}
   \Delta t 
@@ -956,7 +956,7 @@ The MPI-3.x introduced shared memory programming unlike OpenMP library,
 Independent Software Vendor (ISV) and application libraries need not to be thread-safe
 No additional OpenMP overhead and problems. 
 In general, the Parallel Programming Models on Hybrid Platforms have 13 types
-                                              \cite{SUPERsmith}.
+                                              \cite{openmp-hybrid-mpi-openmp}.
 
 % \begin{figure}[htbp]
 %   \centering
@@ -1088,7 +1088,7 @@ The boundary condition updates and gathering results or print global difference 
 \paragraph{Exchange}
 The exchange method of first hybrid solver is identical with pure MPI exchanger, however, only single thread will call it.
 Such strategy is called Master-Only Hybrid 
-                                                      \cite{Master-Only}, 
+                                                      ,Page 101 in \cite{openmp-hybrid-mpi-openmp}, 
 it can be using \texttt{omp single} for calling MPI communications
 rather than using \texttt{omp master}.
 In general the master-only hybrid has such communication scheme

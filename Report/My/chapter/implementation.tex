@@ -41,8 +41,8 @@ The computational topology is critically important when we are programming paral
 Put the strongly speed-dependent data into the slow memory could make entire program slower.
 
 \paragraph{Cluster}
-The cluster we are using for this project is \texttt{Callan} \cite{Callan_TCD} which has 
-$2$ CPUs per compute node, and each CPU has $32$ cores with single thread. 
+The cluster we are using for this project has 
+$2$ sockets per compute node, and each CPU has $24$ cores with hyper-threads. 
 The Non-Uniform Memory Access (NUMA) nodes are layout as following 
 \begin{figure}[htbp]
   \centering
@@ -602,7 +602,7 @@ $8$-bit exponent and $1$-bit for sign.
 Where as $64$-bit floating number, double precision, also ubiquitous used, which has $11$-bit exponent and $52$-bit mantissa.
 After almost three decades development, not only single and double precisions (float32, float64) are ubiquitously in use, 
 also more formats such as fp4, fp8, and fp16 etc. Both of them follows the simple form of exponent $k$, sign $n$ and mantissa $N$. 
-\cite{IEEE_754_p2_eq1}
+\cite{IEEE_754}
 \begin{equation*}
   2^{k+1-N}n
 \end{equation*}
@@ -622,7 +622,7 @@ The standard model holds that
 \begin{equation}
   fl(x \:\text{op}\: y) = (x \: \text{op} \: y) (1+\delta), \:\:\: \left|\delta\right| < \epsilon
 \end{equation}
-where the $op$ stands for the four elementary operations: $+, -, \times, /$. \cite{Germund,NMSC,V1,P112}.
+where the $op$ stands for the four elementary operations: $+, -, \times, /$. \cite{GermundNMSCV1P122}.
 
 
 
