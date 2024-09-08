@@ -41,7 +41,7 @@ switch (opt)
 
   final_project::PINN::dataset dataset;
   torch::Device device { torch::cuda::is_available() ? torch::kCUDA : torch::kCPU };
-  std::mt19937 rde {std::random_device{42}()};
+  std::mt19937 rde {42};
   std::uniform_real_distribution<Float> rng(0.0, 1.0);
 
   /// 2D Boundary Conditions

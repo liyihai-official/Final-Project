@@ -42,7 +42,7 @@ using Double  = final_project::Double;
 using Float   = final_project::Float;
 using size_type = final_project::Dworld;
 
-using maintype  = Double;
+using maintype  = Float;
 
 using BCFunction = std::function<maintype(maintype, maintype, maintype, maintype)>;
 using ICFunction = std::function<maintype(maintype, maintype, maintype)>;
@@ -56,7 +56,7 @@ Integer
   final_project::String filename {""};        // default empty filename (not saving results).
 
   constexpr Integer root_proc {0};
-  constexpr maintype tol {1E-1};
+  constexpr maintype tol {1E-8};
   constexpr size_type nsteps {100'000'000};
   constexpr size_type numDim {3}, nx {NX}, ny {NY}, nz {NZ};
 
@@ -154,10 +154,10 @@ final_project::helper_message(mpi_world);
 
   /// Save if needs
   if (!filename.empty()) obj.SaveToBinary(filename);
-  MPI_Barrier(MPI_COMM_WORLD);
+  // MPI_Barrier(MPI_COMM_WORLD);
   // if (mpi_world.rank() == 0)
   // std::cout << obj.gather << std::endl;
-  final_project::mpi::MPI_SaveToBinary(obj.in, "test.bin");
+  // final_project::mpi::MPI_SaveToBinary(obj.in, "test.bin");
   
   obj.reset();
 

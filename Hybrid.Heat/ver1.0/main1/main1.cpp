@@ -153,7 +153,7 @@ final_project::helper_message(mpi_world);
   // array = std::move(final_project::multi_array::array_base<maintype, 2>(shape));
 
   if (!filename.empty()) obj.SaveToBinary(filename);
-  final_project::mpi::MPI_SaveToBinary(obj.in, "test.bin");
+  // final_project::mpi::MPI_SaveToBinary(obj.in, "test.bin");
   obj.reset();
 
 
