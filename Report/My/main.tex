@@ -167,12 +167,39 @@ Physics-Informed Neural Networks on CUDA Systems}
 \settopmatter{printacmref=false}
 
 
-\begin{abstract}
-  This is the abstract of this project.
+% \begin{abstract}
+%   % This is the abstract of this project.
 
-  \lipsum[2-4]
-\end{abstract}
+%   % \lipsum[2-4]
+%   Finite Difference Methods is a fundamental numerical method for solving partial differential equations.
+%   For the large scale discretized system, the high-performance parallel solver which 
+%   make fully use of the compute resources is still highly required.
+%   作为纯MPI程序，程序之间的交流、同步往往是程序的瓶颈，所以现在更常见的策略是混合并行策略，即
+%   同时考虑信息交流并行和共享内存并行。
+%   另一种GPU并行同样是一种常见的选择，其中更为主流的是PINN作为仿真器来解决物理问题或者通过测试数据来逆向求解物理参数。
+%   本文首先结合C++特性设计了更为安全的、高效的N维矩阵模板类和相应MPI N维笛卡尔拓扑结构交流环境。
+%   对于求解热传导方程提出了3种CPU并行策略，分别实现了纯MPI并行，以及结合OpenMP实现了无计算交流重叠的master-only的并行方式，以及有交流重叠的master-only的并行方式。
+%   构建了解决热传导方程的PINN，并且结合CUDA技术实现了GPU加速训练。
+%   最终对3种CPU并行策略进行Weak/Strong Scaling测试分析在不同节点下的性能差异，以及将时间消耗、最终结果的精确度作为参考，与PINN进行对比。
+
+% \end{abstract}
     
+
+\begin{abstract}
+The Finite Difference Method (FDM) is a fundamental numerical technique for solving partial differential equations (PDEs). For large-scale discretized systems, there remains a strong demand for high-performance parallel solvers that fully utilize computational resources. As a pure MPI program, communication and synchronization between processes often become bottlenecks, leading to the increased adoption of hybrid parallel strategies, which consider both message-passing parallelism and shared memory parallelism.
+
+Another common choice for parallelism is GPU computing, where Physics-Informed Neural Networks (PINNs) have emerged as a mainstream approach for solving physical problems or for inverse solving of physical parameters based on test data. In this paper, we first design a safer and more efficient N-dimensional matrix template class, utilizing C++ features, along with a corresponding MPI N-dimensional Cartesian topology communication environment.
+
+For solving the heat conduction equation, three CPU parallel strategies are proposed: 
+pure MPI parallelism, master-only parallelism without computation/communication overlap using MPI and OpenMP, 
+and master-only parallelism with computation/communication overlap. Additionally, we constructed a PINN to 
+solve the heat conduction equation and employed CUDA technology to implement GPU-accelerated training.
+
+Finally, weak and strong scaling tests are conducted on the three CPU parallel strategies to analyze performance differences across various nodes. 
+The time consumption and accuracy of the final results are compared with those of the PINN as references.
+
+\end{abstract}
+
 % Keywords. The author(s) should pick words that accurately describe
 % the work being presented. Separate the keywords with commas.
 \keywords{
@@ -191,9 +218,8 @@ Physics-Informed Neural Networks on CUDA Systems}
 \include{chapter/problemstatement}
 \include{chapter/methedology}
 \include{chapter/implementation}
-\section{Experiments}
-\section{Conclusion}
-\section{Acknowledgement}
+
+% \section{Acknowledgement}
 \include{chapter/further}
 
 
@@ -202,8 +228,52 @@ Physics-Informed Neural Networks on CUDA Systems}
 
 \printbibliography
 
+% \newpage
 \appendix
-\section{File Tree}
+% \addcontentsline{toc}{section}{Appendix}
+% \section{Appendix}
+\section{Implementation Details}\label{APP:IMPLEMENTATION}
+\begin{table}[htbp]
+  \caption{Configuration of PINN}
+  \label{TAB:BConfiguration_of_PINN}
+  \begin{minipage}{\columnwidth}
+    \begin{center}
+        \begin{tabular}{lc}
+            \toprule
+            \bfseries Module   &  \bfseries value \\
+            \midrule
+            Dimension & $2$, $3$ \\
+            tolerance & $0.01$, $0.0001$ \\
+            Dense & $h$ \\
+            Data type & \texttt{float32} \\
+            Activation Function & $\tanh$ \\
+            Input size & Dimension \\
+            Output size & 1 \\
+            Optimizer & Adam \\
+            learning rate decay & None \\
+            learning rate & 0.001 \\
+            dataset size & $16896$, $2 \times 10^6$ \\
+            max epochs  & $1000 000$ \\
+            batch size & full dataset \\
+            \bottomrule
+        \bottomrule
+      \end{tabular}
+    \end{center}
+    % \bigskip
+    % \footnotesize\emph{Source:} This is source 
+  \end{minipage}
+\end{table}
+The network structure of PINN is shown in the figure \ref{FIG_Schematic_View_PINN}, that is the $h$ is the 
+number of neuraons in each hidden layers.
+The input size of PINN is depending on the dimension of 
+heat equation, as well as the dataset size.
+The Adam optimizer has a learning rate without decay 
+strategy. 
+This is a small model, thus I did not chose to use batch size for 
+these training tasks.
+
+
+\section{File Tree}\label{APP:FOLDER}
 \begin{forest}
 for tree={
     grow=east,            % 树从左往右生长

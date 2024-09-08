@@ -155,9 +155,10 @@ Considering the details of the CPU used for these tests,
   \item It has $4$ NUMA node per CPU and once of which has $12$ CPUs with $2$ threads.
   \item It has \texttt{32KB} L1 data and L1 instruction cache, \texttt{1024KB} L2 cache and \texttt{36608KB} L3 cache.
 \end{itemize}
-The data type for this solver is \texttt{Double} which takes $8$ bytes, and $4096^2$ \texttt{Double} numbers takes 128 \texttt{MB} to store.
-In the case of $4$ MPI processes, each process own a quater of number which uses 32 \texttt{MB} for handling sub-problems.
-On the other hand, the L3 cache is 36608 \texttt{KB} = 35.75 \texttt{MB} which is just bigger than the sub-problem scale 32 \texttt{MB}.
+The data type for this solver is \texttt{Float} which takes $4$ bytes, and $4096^2$ \texttt{Float} numbers takes 64 \texttt{MB} to store.
+In the case of $4$ MPI processes, each process own a quater of number which uses 16 \texttt{MB} for handling sub-problems.
+On the other hand, the L3 cache is 36608 \texttt{KB} = 35.75 \texttt{MB} for 2 NUMA node due to the hyper-thread,
+which is just bigger than the sub-problem scale 16 \texttt{MB}.
 When the problem size gets larger, such as $8096^2$ which takes 128 \texttt{MB} to store the sub-problem. 
 In such case, the L3 case is no longer able to hold it, thus part of the numbers will be stored in the DDR4 memories which is lower bandwidth and higher latency than cache.
 Moreover, due to the CPU enables hyper-threading, a NUMA node actually holds $12$ CPUs, which makes the 
@@ -293,8 +294,8 @@ results are shown in the figure \ref{FIG:Benchmark:Hybrid_Multi_Node}.
 From the figure \ref{FIG:Benchmark:Hybrid_0_Multi_Node} and \ref{FIG:Benchmark:Hybrid_1_Multi_Node},
 we could see that the superlinear speedup appears on the scale $4096^2$ and $8019^2$ which are effected by 
 the previously mentioned two reasons, the high performance local NUMA node shared memory and individual CPU clock cycle.
-More specifically, $8092^2$ \texttt{Double} numbers takes $512$ \texttt{MB} to store, $128$ \texttt{MB} on each node and $32$ \texttt{MB} per NUMA node,
-which just fits the L3 cache size.
+More specifically, $8092^2$ \texttt{Float} numbers takes $256$ \texttt{MB} to store, $64$ \texttt{MB} on each node and $16$ \texttt{MB} per NUMA node,
+which just fits it's L3 cache size.
 
 \begin{figure}[htbp]
   \centering
@@ -392,7 +393,7 @@ Moreover, the overlapping has the most large fraction then the model with no ove
 
 There are some important performance leap forward 
 due to the memory structure mentioned in previous section \ref{SSS:Weak_Scaling:SingleNode}, the L3 cache for single NUMA node 
-just fits the problem with $2048^2$ \texttt{Double} numbers.
+just fits the problem with $2048^2$ \texttt{Float} numbers.
 \begin{itemize}
   \item The first one is the number of CPUs increases from $16$ to $64$, in the case of the problem size is $1024^2$ running on hybrid models, 
   the problem scale of each NUMA node increases from $1024^2$ to $2048^2$ which makes the program requires less cache synchronization 
@@ -404,10 +405,17 @@ Both of the improvements are about $50\%$, these results indicates that the hybr
 also, the overlapping of computation and communication promoted the 
 speedup further.
 
+
+
+
+
+
+
+
 \subsection{Comparison on Dimension}
 \subsubsection{Strong Scaling}
 The figures \ref{FIG:Benchmark:Pure_MPI_Node_3D} show the results of solving 3D heat equation with Dirichlet boundary conditions 
-specified by euqations \ref{EQ:Heat3D}.
+specified by euqations \ref{EQ:Heat3D} in single precision.
 Conventionally, solving a 3D problem is extreamly computational expensive comparing to solve a 2D problem and hard to be parallelized.
 Overall, both of them have great strong sclaing speedups in a reasonable problem size and amount of resources.
 However, considering the size of the problems are common cube of number which is smaller than $1024$, 
@@ -428,7 +436,7 @@ we can barely get solution with fine quality in 3D dimension case.
   }
   \caption{
     Comparison of speedup ratios of strong scaling tests  pure MPI models on $4$ nodes of and $1$ node.
-    The problem sizes are set to $32^3$, $64^3$, $128^3$, $256^3$ and $512^3$ and data type is \texttt{Double}.
+    The problem sizes are set to $32^3$, $64^3$, $128^3$, $256^3$ and $512^3$ with single precision.
   }
   \label{FIG:Benchmark:Pure_MPI_Node_3D}
 \end{figure}
@@ -441,26 +449,30 @@ In this scenario, only the figure \ref{FIG:Benchmark:Pure_MPI_Multi_Node_3D} sho
 superlinear speedup on $8$, $16$ and $32$ CPUs due to the separated nodes has dependent CPU clock whic increase the rate of hitting cache.
 \begin{figure}[htbp]
   \centering
-  \subfigure[Single]{
+  \subfigure[Single Node, Non-overlapping]{
     \includegraphics[width=0.38\textwidth]{figure/FIG_Benchmark_hybrid_0_single_nodes_3D.pdf}
     \label{FIG:Benchmark:FIG_Benchmark_hybrid_0_single_nodes_3D}
   }
   \hspace{0em} 
-  \subfigure[Single]{
+  \subfigure[Single Node, With overlapping]{
     \includegraphics[width=0.38\textwidth]{figure/FIG_Benchmark_hybrid_1_single_nodes_3D.pdf}
     \label{FIG:Benchmark:FIG_Benchmark_hybrid_1_single_nodes_3D}
   }
   \hspace{0em} 
-  \subfigure[caption]{
+  \subfigure[Multi-node, Non-overlapping]{
     \includegraphics[width=0.38\textwidth]{figure/FIG_Benchmark_hybrid_0_multi_nodes_3D.pdf}
     \label{FIG:Benchmark:FIG_Benchmark_hybrid_0_multi_nodes_3D}
   }
   \hspace{0em} 
-  \subfigure[caption]{
+  \subfigure[Multi-node, With overlapping]{
     \includegraphics[width=0.38\textwidth]{figure/FIG_Benchmark_hybrid_1_multi_nodes_3D.pdf}
     \label{FIG:Benchmark:FIG_Benchmark_hybrid_1_multi_nodes_3D}
   }
-  \caption{<caption>}
+  \caption{
+      Comparison of strong scaling speedup ratios of hybrid models on $4$ compute nodes for solving 3D heat euqations.
+      The problem scales are set to the cude of $32$, $64$, $128$, $256$ and $512$ with single precision.
+      The value background is the strong scaling results of figure \ref{FIG:Benchmark:Pure_MPI_Node_3D}.
+    }
   \label{FIG:Benchmark:Hybrid_Single_Four_Node_3D}
 \end{figure}
 
@@ -575,27 +587,44 @@ Which means that the fraction of parallelizable parts in 3D problems are signifi
 
 
 
-
-
-
-
-
-
-
-
-
-
 \subsection{Comparison on Accuracy, with PINN}
 Scalability is important for parallel computing to be effective, so as the quality of results.
 In this section, the major comparison are about comparing the quality of numerical solutions of 
 2D, 3D FDTD solvers and a state-of-art method PINN.
+The scale of memory space, tolerance in settings, converging time / training time and quality of results are considered as metrics in this section.
 
+
+
+\subsubsection{Memory Space}
+The memory space used for solving the problem is critically important, not only because the caching, vectorization problems in CPU parallelization 
+or graphical memory usage in GPU parallelization.
+One of the highlight of neural network is solving same scale problem and getting results the have same quality.
+
+In the FDTD method, the memory space used for ping-pong strategy requires doubled memory space for storing single array.
+For parallelized FDTM, the memory cost of storing juck values and ghost values increases, which is dependent with the size of sub-array in each processes.
+For a 2D problem with scale $NX$ by $NY$ , the memory usage is at least 
+\begin{equation}
+  \frac{(NX+2) \times (NY+2)}{1024^2} \times \texttt{sizeof(maintype)}\:\:\: (\texttt{MB})
+\end{equation}
+
+For the PINN method, the usage of memory is associated with the cost of optimizer and initialization of \texttt{Libtorch} library.
+Besides the part independent with problem itself, the usage majorly for storing the weights of neural networks.
+The other key difference between is that although the module has predefined structure, it can make predictions on various size of grids,
+where the FDTD requires user to specify the scale of problem in advance.
+The structure of PINN I was using is shown in the figure 
+\ref{FIG_Schematic_View_PINN} with a parameter called hidden size denoted with $h$, which is the 
+number of neurons in every hidden layer.
+Thus, for a $N$ dimension PINN with single output, the amount of memory needed for storing the netowrk 
+has formula 
+\begin{equation}
+  \frac{ 2h^2 + (3 + N)h + 1 }{1024^2}\times \texttt{sizeof(maintype)} \:\:\: (\texttt{MB})
+\end{equation}
+and the maintype means the value type used for weights of network.
 
 \subsubsection{Accuracy}
-When we tried to represent numbers using arithmetic in binary, decimal or hexadecimal, truncation always affects the precision of every number, 
-or so called as 
-round-off-error.
-
+In typical numerical method like FDM and FDTD, since the tolerance of the FDTD is the highest precision of the numerical approximations.
+Thus, when we tried to represent numbers using arithmetic in binary, decimal or hexadecimal, truncation always affects the precision of every number, 
+or so called as round-off-error.
 
 \paragraph{Round-off Error}
 In IEEE-754 \cite{IEEE_754} standards, a $32$-bit floating pointer number, single precision, obligatorily represented with $23$-bit mantissa, 
@@ -611,10 +640,90 @@ For example, using first order forward difference with stepsize $\Delta$ for app
 and the truncation error is $O(\Delta x^2)$ \cite{GermundNMSCV1P122}.
 
 
+\paragraph{PINN}
+For the neural network, the round-off and truncation errors are barely mentioned in researches, 
+due to the complexity of network, doing such numerical analysis is hard commonly.
+In stead, the conventional method for evaluation is considering the fitting is over/under, the quality of optimizer, the memory space and the quality of 
+the output of trained model.
+
 In numerical methods I investigated, the FDTDs are conventionally using double precision number so that the programs can treat extremely large and small 
 numbers simultaneously in the same computation, without worrying about the round-off errors.
 However, as mentioned, fp32 and fp16 are also popular use in scientific computing, especially in machine learning training process. 
 While the lasted training GPUs are integrated compute accelerate unit for low precision floating numbers. \cite{NVIDIA_HB200_PAPER}.
+How to define the the hyber-parameters is another deep topic for computer science researching, in this project, 
+the important hyper-parameters are the tolerance $10^{-2}$ and $10^{-4}$, and the $h$ which is the size of hidden layers.
+
+The figures \ref{FIG_PINN_FDTD_TOL} visualize some of the solutions/preridctions produced by FDTD/PINN with 
+grid size $128$ in each dimension.
+Overall, we can see both of them have good performance on approximating the exact solutions.
+Since the tolerance of loss function in PINN model is $10^{-4}$ and the 
+hidden size $h=10$, 
+the predictions of models are fairly well.
+On the other hand, the results of FDTD in the figure \ref{FIG_FDTD_2D_tol_1E_8} and \ref{FIG_FDTD_3D_tol_1E_8} shown that, 
+although the tolerance of FDTD methods 
+are set to $10^{-8}$, the final approximations are still not likely to reach the precision required by user.
+\begin{figure}[htbp]
+  \centering
+  \subfigure[FDTD numerical approximation of 2D Heat Equation, with convergence tolerance $10^{-4}$.]{
+    \includegraphics[width=0.45\textwidth]{figure/FIG_FDTD_2D_tol_1E_8.pdf}
+    \label{FIG_FDTD_2D_tol_1E_8}
+  }
+  \hspace{0em} 
+  \subfigure[FDTD numerical approximation of 3D Heat Equation, with convergence tolerance $10^{-4}$.]{
+    \includegraphics[width=0.45\textwidth]{figure/FIG_FDTD_3D_tol_1E_8.pdf}
+    \label{FIG_FDTD_3D_tol_1E_8}
+  }
+  \hspace{0em} 
+  \subfigure[2D-PINN model's prediction of 2D Heat equation, with training tolerance $10^{-4}$.]{
+    \includegraphics[width=0.45\textwidth]{figure/FIG_PINN_2D_tol_1E_4.pdf}
+    % \label{FIG:Benchmark:FIG_Benchmark_hybrid_0_multi_nodes_3D}
+  }
+  \hspace{0em} 
+  \subfigure[3D-PINN model's prediction of 3D Heat equation, with training tolerance $10^{-4}$.]{
+    \includegraphics[width=0.45\textwidth]{figure/FIG_PINN_3D_tol_1E_4.pdf}
+    % \label{FIG:Benchmark:FIG_Benchmark_hybrid_1_multi_nodes_3D}
+  }
+  \caption{
+    Comparison of Accuracy of numerical approximations and predictions of FDTD and PINN for 2D and 3D heat euqations.
+    The grid size of FDTD models is $128$ in each dimension, and the boundary sample size of PINN is $128$ in each dimension
+    which means the PINN is trained on same amount of data used in FDTD.
+  }
+  \label{FIG_PINN_FDTD_TOL}
+\end{figure}
+
+
+\subsubsection{Training time}
+In order to produce a usable results, the FDTD methods commonly requires many times to converge due to the 
+temporal step size is linearly associated with the square of grid resolution.
+In the other hand, a parallel requires fine-tunning for every cluster system inorder to get a high-efficient scaling, which we 
+investigated in above sections.
+However, the optimal choice is hard to determine in advance as the complexity of problem increases.
+Figure \ref{FIG:Benchmark:TimeTol} shows the results of 
+time spending on training/iterating the 2D and 3D PINN/FDTD models on compute nodes, with different tolerance $10^{-2}$ and $10^{-4}$.
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.45\textwidth]{figure/FIG_Benchmark_Time_Tol.pdf}
+  \caption{
+    Comparison of memory usage of FDTD and PINN attributed by time of trainning/converging time consumption for 
+    both 2 dimension and 3 dimension heat equations with single precision. 
+    The predefined tolerance for training and converging are $10^{-2}$ and $10^{-4}$.
+    FDTD was testing on four compute nodes (384 CPUs), and using pure MPI and non-overlapping hybrid models.
+    The PINN models are trained on single NVIDIA RTX 4090 graphics card.
+  }
+  \label{FIG:Benchmark:TimeTol}
+\end{figure}
+
+Overall, the FDTD models required at least $10$ times more memory to store the results during evolving process.
+Besides that, train the networks are also an efficient approach comparing to iterating matrices of FDTD
+which takes thousands of seconds on $384$ CPUs parallelized systems.
+The tolerance directly shown the quality of the solution that the FDTD model will produce, 
+where the output of PINN is not predictable in advance.
+In this case, the predictions have higher precision than the predefined tolerance, commonly $100$ times 
+more precise.
+
+
+
+
 
 
 % \subsection{Finite Difference Methods}
@@ -625,9 +734,6 @@ While the lasted training GPUs are integrated compute accelerate unit for low pr
 % \subsection{Physics Informed Neural Networks}
 % \subsubsection{CUDA parallel}
 % \subsubsection{Hybrid Parallel}
-
-
-% \subsection{Visualization}
 
 
 % \subsection{Comparison on Boundary Conditions}

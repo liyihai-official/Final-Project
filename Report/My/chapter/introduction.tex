@@ -1,25 +1,35 @@
 \section{Introduction}
-Numerical methods of solving partial differential equations (PDE) have 
-demonstrate far better performance than many other methods such as finite 
-difference methods (FDM) \cite{},
-finite element methods (FEM) \cite{}, 
-Lattice Boltzmann Method (LBM) \cite{}
-and Monte Carlo Method (MC) \cite{}.
-In recent years, researchers in the field of deep learning have mainly focused 
-on how to develop more powerful system architectures and learning methods such 
-as convolution neural networks (CNNs) \cite{}, 
-Transformers \cite{} 
-and Perceivers \cite{} .
-In addition, more researchers have tried to develop more powerful models specifically 
-for numerical simulations. 
-Despite of the relentless progress, modeling and predicting the evolution of nonlinear 
-multiscale systems which has inhomogeneous cascades-scales by using classical analytical 
-or computational tools inevitably encounts severe challanges and comes with prohibitive
-cost and multiple sources of uncertainty.
 
-This project focuses on the promotions on performance gained from the parallel compute systems, 
-in general, the FDMs and Neural Networks (NNs) are evaluated.
-Moreover, it prompted series Message Passing and Shared Memory hybrid parallel strategies using 
-Message Passing Interface (MPI) \cite{MPI}
-and
-Open Multi-processing (OpenMP) \cite{OpenMP}.
+Numerical methods for solving partial differential equations (PDEs) 
+have demonstrated superior performance compared to traditional techniques 
+such as finite difference methods (FDM) \cite{GermundNMSCV1P122}, 
+finite element methods (FEM) \cite{GermundNMSCV1P122}, 
+and Monte Carlo methods (MC) \cite{Monte_Carlo_Method}. 
+In recent years, the field of deep learning has primarily focused on advancing system architectures and learning methodologies, exemplified by 
+convolutional neural networks (CNNs) \cite{CNN} 
+and Transformers \cite{Transformer_PINN}. 
+Furthermore, there has been a growing interest in developing robust models tailored specifically for numerical simulations.
+Despite significant advancements, 
+modeling and predicting the evolution of nonlinear multi-scale systems, 
+which exhibit inhomogeneous cascades of scales, 
+remain formidable challenges when approached using classical analytical or computational methods. 
+These methods often entail substantial computational costs and are subject to multiple sources of uncertainty.
+
+This project centers on optimizing performance through parallel computing frameworks, 
+with a particular emphasis on evaluating both finite difference methods (FDMs) and neural networks (NNs). 
+A template interface for multidimensional arrays was implemented and distributed using the 
+Message Passing Interface (MPI) \cite{MPI} with Cartesian topologies, designed for ease of use by researchers. 
+The template leverages C++ smart pointers to balance efficiency, memory management, safety, and computational accuracy. 
+Additionally, the implementation includes hybrid parallel strategies employing MPI for inter-process communication and 
+Open Multi-Processing (OpenMP) \cite{OpenMP} for shared memory parallelism.
+
+Experimental validation was conducted using a four-node cluster and a GPU-accelerated node. 
+The results confirm that the proposed parallel models are both accurate and high-performing, 
+with Physics-Informed Neural Networks (PINNs) \cite{PINN} achieving the highest performance metrics.
+
+The key contributions of this project are summarized as follows:
+\begin{enumerate}
+\item Utilizing meta-programming techniques, a polymorphic object-oriented framework for multidimensional arrays was developed. On this foundation, an MPI Cartesian topology environment was designed to facilitate array distribution and ghost exchange routines.
+\item Leveraging both message-passing and shared-memory parallelism, three distinct parallel models for FDMs were implemented, tailored to different computational topologies within a cluster.
+\item Utilizing Libtorch and CUDA technologies, PINNs were designed for various PDEs, and GPU acceleration was implemented to speed up the training process.
+\end{enumerate}

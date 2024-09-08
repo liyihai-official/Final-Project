@@ -1,8 +1,92 @@
 \section{Discussion}
+The major part of this project 
+is to implement a efficient FDM PDE solver 
+on parallel systems and validate the 
+quality of the performance on accuracy, scaling.
+Due to the time constrains, 
+as well as the lack of hardware, software and financial support,
+I have not do full profiling of the FDTD and PINN models but only 
+partial analysis using \texttt{gperftools} \cite{gperftools}.
 
 
-\section{Conclusion}
+\subsection{Further Work}
+Though out the FDTD method, 
+various of \texttt{C++} features are used for designed a safer and faster library,
+also a number of MPI concepts have been used along with the \texttt{C++}, \texttt{OpenMP} features
+to designed a fast, efficient and user-friendly implementation.
+Also, a variety of \texttt{C++} concepts and \texttt{Libtorch} concepts are used for implementing 
+a fast PINN solver for PDEs.
+
+However, this project provides precise, efficient and fast PDE solver for cluster environment,
+there are still many things need to do.
+
+
+% \subsection{Memory}
+\paragraph{Memory}
+FDTD is implemented by ping-pong update strategy which is designed for higher cache hit rate.
+However, for some system, the memory is limited resource for storing doubled size of the required solutions.
+In such case, using single matrix to store the grid and updating it using 
+Gauss-Seidel or red-black strategy can leads more memory efficiency.
+
+% \subsection{Workload Management}
+\paragraph{Workload Management}
+Although the current workload is managed by OpenMP \texttt{singe}, \texttt{barrier}, \texttt{critical} and others.
+It's still hard to know that exact workload for each distributed CPUs.
+In general, using \texttt{sections}, \texttt{tasks} can make it better.
+However, in latter version MPI-3.X, it support MPI shared memory programming without 
+the worries of OpenMP threads. 
+Thus, using Hybrid MPI + MPI with shared memory nodes can have better performance.
+
+% \subsection{PDEs}
+\paragraph{PDEs}
+Due to the time constrainment, I had not implement the full weak/strong scaling testing of Von Neumman Boundary Conditions.
+In further work, applying the different type of boundary conditions efficiently is also worth to do.
+Also, the domain of PDE in this project was set to the $[0,1]^d$ in d-dimension space, which is not likely happen in real case.
+Thus, implementing an efficient mesh generator, and mesh-based FDM method is an other work direction.
+
+% \subsection{PINN}
+\paragraph{PINN}
+Implementing neural network in \texttt{C++}
+allows us have better performance.
+Also, parallel training of neural network on GPU is implemented by MPI.
+Thus, using MPI and Libtorch to implement a parallelized neural network training program is also valuable 
+as a comparison for numerical methods.
+
+
+\subsection{Conclusion}
+In this project, the ideas were creating a versatile library which includes 
+a high efficient matrix library that can be used in parallelized environment, 
+different MPI parallel environment such as Cartesian topology, Cylinder topology etc., 
+a generalized user-friendly PDE solver based on FDM algorithm which allows user specifying 
+the initial conditions, the type of boundary conditions and the parallel strategies such a pure MPI or hybrid of MPI/SMP.
+
+The first is to implement of template multi-dimension array object is created with deep features 
+which have direct access to memory.
+Subsequently, a user interface template object of multi-dimension array created for specific features which will be used 
+in latter FDTD and PINN models.
+On the other, an environment of MPI communication object was build for save initializing and finalizing MPI environment.
+Moreover, MPI Cartesian Topology was integrated into a object aligned with other 
+features for distributing template multidimensional array.
+Enhance, defining distributed IO based on template array called \texttt{gather}, MPI-IO is also constructed for 
+parallel IO which is designed for saving/loading large scale problems without communication and saving memory usage.
+
+The FDTD models are implemented in three ways, pure MPI parallelism, master only with no computation / communication overlapping 
+and funneled master only with overlap of communication and computation. 
+Also provide choice of two type of boundary condition, Dirichlet and Von Neumman Boundary Condition.
+A large proportion of this project is to build the library and running weak/strong scaling test to determine the differences between
+three strategies.
+In general, on single node or on single chip, pure MPI has similar performance comparing to OpenMP.
+On multi-nodes, with a reasonable resources allocation, the hybrid strategies have better performance than pure MPI.
+These results also indicate that managing the overload of each processes is difficult.
+
+The neural network is the major role of the state-of-art comparison.
+This project avoid the conventional approach for implementing neural networks using \texttt{Python} by using \texttt{C++}.
+For comparing the performance, efficiency, I constructed 
+a neural network with modified loss function and the training strategy in \texttt{C++} which is called Physics Informed Neural Network.
+
+Overall, this projects provides a polymorphic-library of finite difference methods, 
+a fast and stable parallel FDTD PDE solver with three type parallelization for different scenarios, 
+a comparison between one of the most popular simulation tool, PINN.
 
 
 
-\section{Further Work}
