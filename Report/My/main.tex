@@ -137,10 +137,9 @@
 
 
 \begin{document}
-\title[Final Project]{MAP55640 - 
-Comparative Analysis of Hybrid-Parallel Finite Difference Methods on Multicore Systems 
-and 
-Physics-Informed Neural Networks on CUDA Systems}
+\title[Final Project]{
+Meta-Programming and Hybrid Parallel Strategies for Solving PDEs: An FDM and PINN Comparison
+}
 
 
 \author{Li Yihai}
@@ -153,7 +152,7 @@ Physics-Informed Neural Networks on CUDA Systems}
     \country{Ireland}
 }
 
-\author{Mike Peardon}
+\author{Michael Peardon}
 \authornote{Supervisor of this Final Project}
 \email{mjp@maths.tcd.ie}
 \affiliation{    
@@ -190,20 +189,18 @@ The Finite Difference Method (FDM) is a fundamental numerical technique for solv
 
 Another common choice for parallelism is GPU computing, where Physics-Informed Neural Networks (PINNs) have emerged as a mainstream approach for solving physical problems or for inverse solving of physical parameters based on test data. In this paper, we first design a safer and more efficient N-dimensional matrix template class, utilizing C++ features, along with a corresponding MPI N-dimensional Cartesian topology communication environment.
 
-For solving the heat conduction equation, three CPU parallel strategies are proposed: 
-pure MPI parallelism, master-only parallelism without computation/communication overlap using MPI and OpenMP, 
-and master-only parallelism with computation/communication overlap. Additionally, we constructed a PINN to 
-solve the heat conduction equation and employed CUDA technology to implement GPU-accelerated training.
+For solving the heat conduction equation, three CPU parallel strategies are proposed: pure MPI parallelism, master-only parallelism without compute-communication overlap using MPI and OpenMP, and master-only parallelism with compute-communication overlap. Additionally, we constructed a PINN to solve the heat conduction equation and employed CUDA technology to implement GPU-accelerated training.
 
-Finally, weak and strong scaling tests are conducted on the three CPU parallel strategies to analyze performance differences across various nodes. 
-The time consumption and accuracy of the final results are compared with those of the PINN as references.
-
+Finally, weak and strong scaling tests are conducted on the three CPU parallel strategies to analyze performance differences across various nodes. The time consumption and accuracy of the final results are compared with those of the PINN as references.
+  
 \end{abstract}
 
 % Keywords. The author(s) should pick words that accurately describe
 % the work being presented. Separate the keywords with commas.
 \keywords{
-    Keywords
+  Meta-programming, Polymorphism, RAII, Multi-dimension Array,
+  FDM, FDTD, Hybrid MPI/OpenMP, 
+  Libtorch, CUDA, PINN, C++
 }
 
 %%
@@ -213,14 +210,14 @@ The time consumption and accuracy of the final results are compared with those o
 
 % ------------------------------------------------------------------------------------------------
 
-\include{chapter/introduction}
-\include{chapter/relatedwork}
-\include{chapter/problemstatement}
-\include{chapter/methedology}
-\include{chapter/implementation}
+\input{chapter/introduction}
+\input{chapter/relatedwork}
+\input{chapter/problemstatement}
+\input{chapter/methedology}
+\input{chapter/implementation}
 
 % \section{Acknowledgement}
-\include{chapter/further}
+\input{chapter/further}
 
 
 % \bibliographystyle{ACM-Reference-Format}
