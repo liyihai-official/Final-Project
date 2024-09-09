@@ -513,7 +513,7 @@ MAN_SUBDIR             =
 
 MAN_LINKS              = NO
 
-GENERATE_XML           = NO
+GENERATE_XML           = YES
 
 XML_OUTPUT             = xml
 
