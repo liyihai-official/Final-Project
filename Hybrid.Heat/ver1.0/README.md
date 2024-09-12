@@ -1,4 +1,4 @@
-```
+```shell
 .
 ├── CMakeLists.txt
 ├── Doxyfile
