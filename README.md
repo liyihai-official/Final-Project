@@ -127,7 +127,7 @@ More features are planning to add on version 4.0, including Hybrid MPI/OpenMP pa
     - Add I/O features and visualization programs.
 
 <!-- <img src="MPI.Heat/C++.Heat/ver3.0/Heat_2D.gif" alt="Animated GIF" height="300"> -->
-
+<!-- 
 ---
 #### May, 29-30, 2024
 - Working Directory: 
