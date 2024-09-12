@@ -29,23 +29,42 @@
 │   │   └── pde.hpp
 │   ├── pinn
 │   │   ├── dataset.hpp
-│   │   └── pinn.hpp
+│   │   ├── helper.hpp
+│   │   ├── pinn.hpp
+│   │   └── types.hpp
 │   └── types.hpp
 ├── main1
 │   ├── main1.cpp
 │   └── main1_3d.cpp
 ├── main2
-│   └── main2.cpp
+│   ├── datagen.cpp
+│   ├── main2.cpp
+│   └── pred.cpp
 ├── out
 │   ├── Strong_main1.png
 │   ├── main1.png
-│   └── main2.png
-├── src
-│   ├── helper.cpp
-│   ├── vis2d.m
-│   └── vis3d.m
-└── test
-    └── test.cc
+│   ├── main2.png
+│   ├── main2_3d.png
+│   ├── main2_dataset.png
+│   ├── main3.png
+│   ├── model_3d.pt
+│   ├── output2d.bin
+│   ├── output3d.bin
+│   ├── pred_2d.bin
+│   ├── pred_3d.bin
+│   ├── test.bin
+│   └── test_3d.bin
+└── src
+    ├── boundary.m
+    ├── helper.cpp
+    ├── loadFromBinary.m
+    ├── pinn
+    │   ├── dataset.cpp
+    │   └── helper.cpp
+    ├── saveToBinary.m
+    ├── vis2d.m
+    ├── vis3d.m
+    └── visdataset.m
 
-13 directories, 34 files
+13 directories, 53 files
 ```
