@@ -5,11 +5,13 @@ This is the final project of M.Sc in High Performance Computing program.
 Currently, research is focusing on finding numerical solutions of Partial
 Differential Equations (PDEs), including heat equations.
 
-### Report Note
+The link fo documentation: [Docs](https://liyihai.com/html/index.html)
+
+<!-- ### Report Note
 
 - Two main reasons for using meta-programming techniques:
     - Improved type safety
-    - Improved run-time performance
+    - Improved run-time performance -->
 <!-- $$
 \frac{\partial u}{\partial t} 
 (t,\textbf{x})
