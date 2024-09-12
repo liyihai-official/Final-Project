@@ -33,7 +33,7 @@ $$ -->
 
 
 <!-- <img src="Heat3D/Heat_3D.gif" alt="Animated GIF" height="200"> -->
-## Results
+<!-- ## Results
 
 ### PURE MPI
 ### 2D Heat Equation
@@ -221,4 +221,4 @@ Add more tests,
 
 
 
-
+ -->
