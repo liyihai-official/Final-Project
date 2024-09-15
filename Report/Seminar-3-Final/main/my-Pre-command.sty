@@ -1,0 +1,42 @@
+% mycommands.sty
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{my-Pre-command}[2024/09/14 Custom Commands Package]
+
+% 定义自定义命令
+\def\dis{\mathop{}\!\displaystyle}
+\def\dif{\mathop{}\!\mathrm{d}}
+\def\Tr{\mathop{}\!\mathrm{Trace}}
+\def\Hess{\mathop{}\!\mathrm{Hess}}
+\def\Var{\mathop{}\!\mathrm{Var \:}}
+
+\def\sh{\mathop{}\!\mathrm{sh \:}}
+\def\ch{\mathop{}\!\mathrm{ch \:}}
+\def\thx{\mathop{}\!\mathrm{th \:}}
+\def\arsh{\mathop{}\!\mathrm{arsh \:}}
+\def\arch{\mathop{}\!\mathrm{arch \:}}
+\def\arth{\mathop{}\!\mathrm{arth \:}}
+\def\arccot{\mathop{}\!\mathrm{arccot \:}}
+
+\def\ReLU{\mathop{}\!\mathrm{ReLU}}
+\def\sigmoid{\mathop{}\!\mathrm{sigmoid}}
+
+% 定义新的命令和开关
+\newcommand{\fullorpartial}[2][]{%
+  \ifx\\#1\\%
+    #2%
+  \else%
+    \only<#1>{#2}%
+  \fi%
+}
+
+\newif\ifstepwise
+% \stepwisetrue % 启用逐步显示
+% \stepwisefalse % 禁用逐步显示
+
+\newcommand<>{\steporfull}[1]{%
+  \ifstepwise%
+    \alt#2{#1}{}%
+  \else%
+    #1%
+  \fi%
+}

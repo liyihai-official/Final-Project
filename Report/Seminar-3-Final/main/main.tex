@@ -1,0 +1,863 @@
+% \documentclass[aspectratio=3218]{beamer}
+% \setcounter{tocdepth}{2}
+
+% \AtBeginSection[]
+% {
+%   \begin{frame}<beamer>
+%     \frametitle{Outline}
+%     \tableofcontents[currentsection]
+%   \end{frame}
+% }
+% \setbeamerfont{footnote}{size=\tiny}
+% % 设置 frametitle 的字体大小
+% % \setbeamerfont{frametitle}{size=\huge}
+
+% % 设置 framesubtitle 的字体大小
+% \setbeamerfont{framesubtitle}{size=\large}
+
+% % Theme
+% \usepackage{mathptmx} % 或使用 \usepackage{newtxtext} 包
+% \usepackage{amsmath}  % 如果需要数学字体更改
+% \usefonttheme{serif}
+% \usepackage{mathspec}
+% % 设置字体为新罗马
+% \setmainfont{Times New Roman}
+% \setmathsfont(Digits,Latin){Times New Roman}
+
+% \usetheme{Madrid} % You can choose different themes
+
+% % Packages
+% \usepackage[utf8]{inputenc}
+% \usepackage{graphicx}
+% \usepackage{caption}
+% \usepackage{subcaption}
+% \usepackage{hyperref}
+% \usepackage{booktabs}
+% \usepackage{tikz}
+% \usetikzlibrary{positioning, arrows.meta}
+
+% % 命令定义
+% \def\dis{\mathop{}\!\displaystyle}
+% \def\dif{\mathop{}\!\mathrm{d}}
+% \def\Tr{\mathop{}\!\mathrm{Trace}}
+% \def\Hess{\mathop{}\!\mathrm{Hess}}
+% \def\Var{\mathop{}\!\mathrm{Var \:}}
+
+% \def\sh{\mathop{}\!\mathrm{sh \:}}
+% \def\ch{\mathop{}\!\mathrm{ch \:}}
+% \def\thx{\mathop{}\!\mathrm{th \:}}
+% \def\arsh{\mathop{}\!\mathrm{arsh \:}}
+% \def\arch{\mathop{}\!\mathrm{arch \:}}
+% \def\arth{\mathop{}\!\mathrm{arth \:}}
+% \def\arccot{\mathop{}\!\mathrm{arccot \:}}
+
+% \def\ReLU{\mathop{}\!\mathrm{ReLU}}
+% \def\sigmoid{\mathop{}\!\mathrm{sigmoid}}
+
+% % references
+% \usepackage[style=numeric-comp,backend=biber]{biblatex}
+% \addbibresource{ref.bib} % 指定您的文献数据库文件
+
+
+% \newcommand{\fullorpartial}[2][]{%
+%   \ifx\\#1\\%
+%     #2%
+%   \else%
+%     \only<#1>{#2}%
+%   \fi%
+% }
+
+% % 在导言区定义这个开关
+% \newif\ifstepwise
+% % 启用或禁用逐步显示
+% % \stepwisetrue % 启用逐步显示
+% \stepwisefalse % 禁用逐步显示，取消注释以禁用
+
+% % 定义一个条件命令来根据开关显示内容
+% \newcommand<>{\steporfull}[1]{%
+%   \ifstepwise%
+%     \alt#2{#1}{}%
+%   \else%
+%     #1%
+%   \fi%
+% }
+
+\documentclass{my-Presentation}
+\usepackage{my-Pre-command}
+% Title Page
+
+\title[An FDM and PINN Comparison]{
+  Meta-Programming and Hybrid Parallel Strategies for Solving PDEs: An FDM and PINN Comparison
+  \footnote{full docs: \url{https://liyihai.com/html/index.html}}
+  \footnote{repository: \url{https://github.com/liyihai-official/Final-Project}}
+}
+\subtitle{Seminar Presentation III}
+\author[LI Yihai]{
+  \normalsize
+  LI YIHAI \\[1ex]
+  \small Supervisor: Mike Peardon
+  \vspace*{-.5em}
+}
+\institute{Mathematical Institute \vspace*{-.5em}}
+\date{\today \vspace*{-1em}}
+\titlegraphic{\includegraphics[width=3cm]{logo.png}}
+
+
+
+
+\begin{document}
+
+
+\begin{frame}
+  \titlepage
+  \vspace{-2cm}
+\end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
+\include{chapter/introduction}
+\include{chapter/problemsetup}
+% \section{Related Work}
+% \subsection{Finite Difference Time Domain Method}
+% \subsection{Physics Informed Neural Network}
+
+
+% \section{Problem Setups}
+% \subsection{Continuous Form}
+% \subsection{Discretization}
+
+
+
+
+\section{N-Dimensional Matrix Implementation}
+% \subsection{General Setups}
+% \subsection{Template Multi-dimension Matrix Design}
+
+
+\section{Parallelization of Multi-dimensional Matrices on cartesian Topologies}
+% \subsection{MPI Parallel Environment Design Scheme}
+% \subsection{Template Distributed Multidimensional Matrix Design}
+
+
+\section{PDE Solver Implementation}
+% \subsection{General Setups}
+% \subsection{Parallel Strategies}
+
+
+\section{Experiments}
+
+\section{Discussion}
+
+
+
+% \section{Introduction}
+% % \subsection{Related Research}
+% \begin{frame}
+%   \frametitle{Introduction}
+%   \framesubtitle{Related Researches}
+%   \steporfull<1->{\begin{block}{Numerical Methods for Kolmogorov PDE}
+%   \begin{itemize}
+%     \item \steporfull<1->{Deterministic numerical approximation methods.} 
+%     % (cf., \cite{brennan1978finite}\cite{brennan1977valuation}\cite{han2017overcoming}\cite{kloeden2012numerical})}
+%     \item {Finite elements based approximation methods. }
+%     % (cf., \cite{brenner2007mathematical}\cite{ciarlet2002basic}\cite{zienkiewicz1977finite})}
+%     \item {Random numerical approximation methods based on Monte Carlo methods. }
+%     % (cf., \cite{giles2008multilevel}\cite{graham2013stochastic})}
+%   \end{itemize}
+%   \end{block}}
+%   \steporfull<2->{\begin{block}{Drawbacks}
+%     \begin{itemize}
+%       \item Curse of dimension.
+%       \item Finite region.
+%     \end{itemize}
+%   \end{block}}
+  
+% \end{frame}
+
+% % \subsection{Results}
+% % \begin{frame}
+% %   \frametitle{Introduction}
+% %   \framesubtitle{Results}
+% %   Approximate $u(T,x)$ at $x\in \left[a,b\right]^d$
+% %   \vspace{1em}
+% %   \begin{itemize}
+% %     \item $x$ is vector in $\mathbb{R}^d$.
+% %     \item $d$ is a large positive number.
+% %     \item $x$ is in entire $\left[a,b\right]^d$. 
+% %   \end{itemize}
+% % \end{frame}
+
+
+
+% \begin{frame}
+%     \frametitle{Introduction}
+%     \framesubtitle{Kolmogorove PDE}
+%     \uncover{For $\mathbb{R}^1\owns T>0,\: x\in \mathbb{R}^d, t\in [0,T],\:u(t,x)=u \in \mathbb{R}^1$}
+%     \vspace{1em}
+%     \begin{block}{}
+%       \vspace{0.5em}
+%       \uncover{\begin{equation}
+%         \frac{\partial u}{\partial t} = \frac{1}{2}
+%         \Tr_{\mathbb{R}^d}\left[\sigma(x)\left[\sigma(x)\right]^*\Hess_x u\right] + 
+%         \left< \mu(x), \nabla_xu \right>_{\mathbb{R}^d}
+%       \end{equation}}
+%     \end{block}
+%     \uncover{
+%       \begin{align}
+%         &\mu(x) \in \mathbb{R}^d,\sigma(x)\in \mathbb{R}^{d\times d} \\
+%         &u(0,x) = \phi(x)
+%       \end{align}}
+% \end{frame}
+
+% \section{Algorithm}
+% % \begin{frame}
+% %   \frametitle{Algorithm}
+% %   \framesubtitle{Framework}
+% %   \begin{itemize}
+% %     \item Transform PDE into SDE
+% %     \item Determine function $u(T,x)$ equals to exception $\mathbb{E}\left[\phi(X_{t}^x)\right]$
+% %     \item Equivalent to a minimization problem
+% %     \item Discretization
+% %     \item Deep Neural Network   
+% %   \end{itemize}
+% % \end{frame}
+% \subsection{PDE to SED}
+% \begin{frame}
+%   \frametitle{Algorithm}
+%   \framesubtitle{Transform PDE into SDE}
+%   \begin{itemize}
+%     \item Function $u(t,x)$ satisfies PDE \begin{equation*}
+%       \frac{\partial u}{\partial t} = \frac{1}{2}
+%       \Tr_{\mathbb{R}^d}\left[\sigma(x)\left[\sigma(x)\right]^*\Hess_x u\right] + 
+%       \left< \mu(x), \nabla_xu \right>_{\mathbb{R}^d}
+%     \end{equation*}
+%     \item Stochastic Process 
+%     $X_t^x$ satisfies SDE
+%     \begin{equation}
+%       \dis X_t^x = x + \int_{0}^{t}\mu(X^x_s)ds + \int_{0}^{t}\sigma(X_s^x)dW_s
+%       \label{SDE}
+%     \end{equation}
+%     \item Feynman-Kac Formula: 
+%     \begin{align}
+%       % &\frac{\partial u(t,x)}{\partial t} + \Hess_x u(t,x) + \mu(x) u(t,x) = 0 \\
+%       % &\phi(x) = u(0,x) \\
+%       &u(t, x) = \mathbb{E}\left[ e^{ \dis -\int_t^T \mu(X_s^x) \, \dif s} \phi(X_T^x)  \right]
+%     \end{align}
+%     % \begin{equation}
+%     %   \mathbb{E} \left[ \left( \int_{t}^{T} e^{\dis -\int_{t}^{t}V(X_s^x,s)\dif s} f(X_\tau^x,\tau)\dif \tau \right) + e^{\dis -\int_{t}^{T}V(X_\tau^x,\tau)  \dif \tau} \phi
+%     %   (X_T^x) \right]
+%     % \end{equation}
+%     % \item Solution: \begin{equation}
+%     %   u(T,x) = \mathbb{E}\left[ \phi \left( X_t^x \right)\right]
+%     % \end{equation}
+%   \end{itemize}
+
+
+  
+
+
+%   % \vspace{2em}
+%   % \begin{columns}[T] % The [T] option aligns the column's content at the top
+
+%   %   \begin{column}{.36\textwidth} % Left column and width
+%   %     % Content of the left column
+%   %     PDE
+%   %     \begin{itemize}
+%   %       \item Point A
+%   %       \item Point B
+%   %     \end{itemize}
+%   %   \end{column}
+%   %       % Add a vertical line here
+%   %   \hspace*{.04\textwidth} % Spacing to push the line a bit right of the column
+%   %   \vline{}
+%   %   \begin{column}{.6\textwidth} % Right column and width
+%   %     % Content of the right column
+%   %     SDE
+%   %     \begin{itemize}
+%   %       \item $\dis X_t^x = x + \int_{0}^{t}\mu(X^x_s)ds + \int_{0}^{t}\sigma(X_s^x)dW_s$
+%   %       \item $\mathbb{E}\left[\phi(X_{t}^x)\right]$
+%   %     \end{itemize}
+%   %   \end{column}
+
+%   %   \end{columns}
+% \end{frame}
+
+% \begin{frame}
+%   % \frametitle{Algorithm}
+%   % \framesubtitle{Exception}
+%   \begin{itemize}
+%     \item With Stochastic Differential Equation:
+%     \begin{equation*}
+%       \dis X_t^x = x + \int_{0}^{t}\mu(X^x_s)ds + \int_{0}^{t}\sigma(X_s^x)dW_s 
+%       % \label{SDE}
+%     \end{equation*}
+%     \vspace{1em}
+%     \item Have the result:
+%     \begin{align}
+%       u(T,x) &= \mathbb{E}\left[ e^{ \dis -\int_T^T \mu(X_s^x) \, \dif s} \phi(X_T^x)  \right]\\
+%           &= \mathbb{E}\left[ \phi \left( X_T^x \right)\right]
+%     \end{align}
+%     % \begin{equation}
+%     %   u(T,x) = \mathbb{E}\left[ \phi \left( X_t^x \right)\right]
+%     % \end{equation}
+%   \end{itemize}
+% \end{frame}
+
+% \subsection{Minimization}
+% % \begin{frame}
+% %   \frametitle{Algorithm}
+% %   \framesubtitle{Minimization}
+% %   $u(T,x) = \mathbb{E}\left[ \phi \left( X_t^x \right)\right]$
+
+% % \end{frame}
+% \begin{frame}
+%   \frametitle{Algorithm}
+%   \framesubtitle{Minimization}
+%   \steporfull<1->{\begin{block}{Proposition 2.7}
+%     Stochastic process $X_t^x$ satisfies equation (\ref{SDE})\begin{equation*}
+%       \dis X_t^x = x + \int_{0}^{t}\mu(X^x_s)ds + \int_{0}^{t}\sigma(X_s^x)dW_s
+%     \end{equation*}
+%     $x\in \mathbb{R}^d$ satisfies Kolmogorov PDE 
+%   \end{block}}
+
+%   \steporfull<2->{\begin{block}{Conclusion}
+%     Unique $\exists U: [a,b]^d\rightarrow \mathbb{R}$, s.t.
+%     \begin{equation}
+%        \mathbb{E}\left[ \left| \phi(X_T^x) - U(\xi) \right|^2 \right] = \inf_{v \in C([a,b]^d,\mathbb{R})} \mathbb{E}\left[ \left| \phi(X_T^x) - v(\xi) \right|^2 \right]
+%     \end{equation}
+%     It holds that $U(x) = u(T,x)$, $\forall x\in [a,b]^d$.
+%   \end{block}}
+% \end{frame}
+
+% % \begin{frame}
+% %   \frametitle{Algorithm}
+% %   \framesubtitle{Minimization}
+% %   In order to find 
+% %   \begin{equation*}
+% %     u(T,x) = \mathbb{E}\left[\phi(X_{t}^x)\right]
+% %   \end{equation*}
+% %   \vspace{2em}
+
+% %   Only determine the function $v$
+% %   \begin{equation}
+% %     v \in C\left(\left[a,b\right]^d,\mathbb{R}\right)
+% %   \end{equation}
+  
+% %   To minimize 
+% %   \begin{equation}
+% %     \mathbb{E}\left[ \left| \phi(X_T^x) - v(\xi) \right|^2 \right]
+% %   \end{equation}
+
+% % \end{frame}
+% \begin{frame}
+%   \frametitle{Algorithm}
+%   \framesubtitle{Minimization}
+%   Extend 
+%   \begin{equation*}
+%     \mathbb{E}\left[ \phi \left( X_T^x \right)\right]
+%   \end{equation*}
+%   Minimize 
+%   \begin{equation}
+%     % \inf_{v \in C([a,b]^d,\mathbb{R})} 
+%     \mathbb{E}\left[ \left| \phi(X_T^x) - v(x) \right|^2 \right] \,, v \in C\left([a,b]^d,\mathbb{R}\right)
+%   \end{equation}
+%   To get 
+%   \begin{equation}
+%     \mathbb{E}\left[ \left| \phi(X_T^x) - u(T,x) \right|^2 \right]
+%     \label{minimization}
+%   \end{equation}
+%   % $\mathbb{E}\left[ \left| \phi(X_T^x) - u(T,x) \right|^2 \right] = \inf_{v \in C([a,b]^d,\mathbb{R})} \mathbb{E}\left[ \left| \phi(X_T^x) - v(x) \right|^2 \right]$
+  
+
+% \end{frame}
+
+
+% \subsection{Discretization}
+% \begin{frame}
+%   \frametitle{Algorithm}
+%   \framesubtitle{Discretization}
+%   The Continues Stochastic Process
+%   \begin{equation*}
+%     \dis X_t^x = x + \int_{0}^{t}\mu(X^x_s)ds + \int_{0}^{t}\sigma(X_s^x)dW_s
+%   \end{equation*}
+%   Let
+%   \begin{equation}
+%     0=t_0 < t_1 < \dots < t_N = T
+%   \end{equation}  
+%   Discretized Stochastic Process of $\mathbb{X}_t^x$
+%   \begin{equation}
+%     \mathbb{X}_{t_{n+1}}^x = \mathbb{X}_{t_n}^x + \int_{t_n}^{t_{n+1}} \mu(\mathbb{X}_s^x) \, \dif s + \int_{t_n}^{t_{n+1}} \sigma(\mathbb{X}_s^x) \, \dif W_s
+%   \end{equation}
+% \end{frame}
+
+
+% \begin{frame}
+%   % Discretized Stochastic Process of $\mathbb{X}_t^x$
+%   % \begin{equation*}
+%   %   \mathbb{X}_{t_{n+1}}^x = \mathbb{X}_{t_n}^x + \int_{t_n}^{t_{n+1}} \mu(\mathbb{X}_s^x) \, \dif s + \int_{t_n}^{t_{n+1}} \sigma(\mathbb{X}_s^x) \, \dif W_s
+%   % \end{equation*}
+%   Approximate to 
+%   \begin{equation}
+%     \mathbb{X}_{t_{n+1}}^x \approx \mathbb{X}_{t_n}^x + (t_{n+1}-t_n) \mu(\mathbb{X}_s^x) + (t_{n+1}-t_n) \sigma(\mathbb{X}_s^x) 
+%   \end{equation}
+%   \vspace{1em}
+
+%   Let a new Discretized Stochastic Process $\texttt{X}_n^x$ satisfies
+%   \begin{equation}
+%     \texttt{X}_{n+1}^x = \texttt{X}_{n}^x + (t_{n+1}-t_n) \mu(\texttt{X}_s^x) + (t_{n+1}-t_n) \sigma(\texttt{X}_s^x)   
+%   \end{equation}
+%   New minimization problem 
+%   \begin{equation}
+%     \mathbb{E}\left[ \left| \phi(X_T^x) - u(T,x) \right|^2 \right] 
+%     \steporfull<2->{\longrightarrow 
+%     \mathbb{E}\left[ \left| \phi(\texttt{X}_T^x) - u(T,x) \right|^2 \right]}
+%     \label{new-minimization}
+%   \end{equation}
+% \end{frame}
+
+% \begin{frame}
+%   \frametitle{Algorithm}
+%   \framesubtitle{Convergence}
+%   \begin{block}{Theorem 2.8 (Strong Convergence)}
+%     \vspace{0.5em}
+
+%     There $\exists C \in (0,\infty)$ such that $\forall N \in \mathbb{N}$, holds that under $p$-norm
+%     \begin{equation}
+%       \sup_{n \in \{0,1,...,N\}} \left( E\left[ \left\| \mathbb{X}_{t_n^N}^x - \texttt{X}_n^N \right\|^p \right] \right)^{1/p} \leq C \left( \max_{n \in \{0,1,...,N-1\}} |t_{n+1} - t_n| \right)^{1/2}
+%     \end{equation}
+
+%     \vspace{1em}
+%     \steporfull<2->{This means $\forall N \in \mathbb{N}$ holds that 
+%     \begin{equation}
+%       \lim_{N \to +\infty} \texttt{X}_{n}^{N} = \mathbb{X}_{t_{n}^N}^x = X_{T}^x
+%     \end{equation}}
+%     \vspace{0.5em}
+%   \end{block}
+% \end{frame}
+
+% \subsection{Deep Neural Network}
+
+% \begin{frame}
+%   \frametitle{Algorithm}
+%   \framesubtitle{Deep Neural Network (DNN)}
+%   For Single Neuron, it takes $x\in \mathbb{R}^d$ as input, $A^{\theta}_{d,d}\in \mathbb{R}^{d\times d}$ and $b\in \mathbb{R}^d$ as parameters matrix.
+%   \vspace{1em}
+
+%   The output $y$ is 
+%   \begin{equation}
+%     y = \left[\begin{matrix}
+%       A^{\theta}_{d,d} \mid b
+%     \end{matrix} \right]
+%     \left[\begin{matrix} x \\
+%      1
+%   \end{matrix}\right]
+%   \end{equation}
+% \begin{figure}[htbp]
+%   \centering
+%     \begin{tikzpicture}[
+%       % Define styles
+%       neuron/.style={circle, draw, fill=blue!20, minimum size=1cm},
+%       arrow/.style={-Stealth},
+%       output/.style={circle, draw, fill=green!20, minimum size=1cm} % 假设输出样式与神经元样式不同
+%   ]
+
+%       % Neuron
+%       \node[neuron] (neuron) at (2,0) {Neuron};
+
+%       % Input
+%       \node[left=1cm of neuron] (input) {Input};
+%       \draw[arrow] (input) -- (neuron);
+
+%       % Output
+%       \node[output] (output) at (5,0) {Output}; % 使用 output 样式
+%       \draw[arrow] (neuron) -- (output);
+
+%       % Activation Function
+%       \draw[arrow] (output) -- (6.5,0) node[right] {Activation Function};
+
+%   \end{tikzpicture}
+%   \caption{Single Neuron Demonstration}
+%   \label{<label>}
+% \end{figure}
+% \end{frame}
+
+% \begin{frame}
+%   \frametitle{Algorithm}
+%   \framesubtitle{Deep Neural Network (DNN)}
+%   Activation Function $L_d(x)$
+%   \begin{align*}
+%          & \sigmoid(x) = \frac{1}{1+e^{-x}}  \\ \\
+%         % &= \left(\frac{1}{1+e^{-x_1}},\frac{1}{1+e^{-x_2}},\dots,\frac{1}{1+e^{-x_d}}\right) \\
+%         &  \ReLU (x) = \max \{0,x\} \vspace{2em} \\ \\
+%         &  \tanh (x) 
+%   \end{align*}
+% \end{frame}
+
+
+% \begin{frame}
+%   % \begin{figure}[htbp]
+%   %   \centering
+    
+%   %   \includegraphics[width = 0.6\textwidth]{fig2.png}
+%   %   \caption{Sigmoid Function when $x$ is 1 dimension}
+%   %   \label{<label>}
+%   % \end{figure}
+
+%   \begin{figure}
+%     \centering
+%     % 第一个图像
+%     \begin{minipage}{.33\textwidth}
+%       \centering
+%       \caption{$\sigmoid(x)$}
+%     \includegraphics[width = \textwidth]{fig2.png}
+%     % \caption{Sigmoid Function when $x$ is 1 dimension}
+%     \end{minipage}%
+%     \hfill
+%     % 第二个图像
+%     \begin{minipage}{.33\textwidth}
+%       \centering
+%       \caption{$\tanh (x)$}
+%       \includegraphics[width = \textwidth]{fig2-1.png}
+%       % \caption{Sigmoid Function when $x$ is 1 dimension}
+%     \end{minipage}%
+%     \hfill
+%     % 第三个图像
+%     \begin{minipage}{.33\textwidth}
+%       \centering
+%       \caption{$\ReLU (x)$}
+%       \includegraphics[width = \textwidth]{fig2-2.png}
+%     \end{minipage}
+%     \caption{Activation Functions when $x$ is 1 dimension}
+%   \end{figure}
+% \end{frame}
+
+% \begin{frame}
+%   \frametitle{Algorithm}
+%   \framesubtitle{Deep Neural Network (DNN)}
+%   Architecture is Fully Connected Network
+%   \begin{figure}[htbp]
+%     \centering
+%     \begin{tikzpicture}[
+%       % Define styles
+%       neuron/.style={circle,draw,minimum size=1cm},
+%       input/.style={neuron, fill=green!50},
+%       hidden/.style={neuron, fill=blue!50},
+%       output/.style={neuron, fill=red!50},
+%       arrow/.style={->,>=stealth}
+%     ]
+  
+%     % Input Layer
+%     \node[input] (Input) at (0,-2) {Input};
+  
+%     % Hidden Layer 1
+%     \node[hidden] (Hidden11) at (2,0) {H1-1};
+%     \node[hidden] (Hidden12) at (2,-2) {H1-2};
+%     \node[hidden] (Hidden13) at (2,-4) {H1-3};
+  
+%     % Hidden Layer 2
+%     \node[hidden] (Hidden21) at (4,0) {H2-1};
+%     \node[hidden] (Hidden22) at (4,-2) {H2-2};
+%     \node[hidden] (Hidden23) at (4,-4) {H2-3};
+  
+%     % Hidden Layer 3
+%     \node[hidden] (Hidden31) at (6,0) {H3-1};
+%     \node[hidden] (Hidden32) at (6,-2) {H3-2};
+%     \node[hidden] (Hidden33) at (6,-4) {H3-3};
+  
+%     % Output Layer
+%     \node[output] (Output) at (8,-2) {Output};
+  
+%     % Connect neurons Input-Hidden Layer 1
+%     \foreach \i in {1,2,3}
+%         \draw[arrow] (Input) -- (Hidden1\i);
+  
+%     % Connect neurons Hidden Layer 1-Hidden Layer 2
+%     \foreach \i in {1,2,3}
+%         \foreach \j in {1,2,3}
+%             \draw[arrow] (Hidden1\i) -- (Hidden2\j);
+  
+%     % Connect neurons Hidden Layer 2-Hidden Layer 3
+%     \foreach \i in {1,2,3}
+%         \foreach \j in {1,2,3}
+%             \draw[arrow] (Hidden2\i) -- (Hidden3\j);
+  
+%     % Connect neurons Hidden Layer 3-Output
+%     \foreach \i in {1,2,3}
+%         \draw[arrow] (Hidden3\i) -- (Output);
+  
+%     \end{tikzpicture}
+%     \caption{FCN with 4 layers (3 hidden layers)}
+%     \label{<label>}
+% \end{figure}
+% \end{frame}
+
+
+% \begin{frame}
+%   \frametitle{Algorithm}
+%   \framesubtitle{Architecture of DNN}
+%   \begin{itemize}
+%     % \item Parameters are $\theta$
+%     % \item Architecture is Fully Connected Network (FCN) with $s$ layers.
+%     % \item Activation function $L$ is 
+%     % \begin{equation}
+%     %   L_d(x) = \frac{1}{1+e^{-x}}
+%     % \end{equation}
+%     \item Equation of model with $s$ layers
+%     \begin{equation}
+%       \mathbb{U}(\theta, x) = \left[ \left(A^{\theta,(s-1)d(d+1)}_{d,1} \circ L_d\right) \dots  \left(\circ A^{\theta,d(d+1)}_{d,d}  \circ L_d\right) \circ A^{\theta,0}_{d,d} \right] (x)
+%     \end{equation}
+%     \item Approximation method represented as 
+%     \begin{equation}
+%       \mathbb{U}(\theta, x) \approx u(T,x)
+%     \end{equation}
+
+%   \end{itemize}
+% \end{frame}
+
+% \begin{frame}
+%   \frametitle{Algorithm}
+%   \framesubtitle{Framework }
+%   \begin{itemize}
+%     \item Transform PDE to get SDE: $\dis X_t^x = x + \int_{0}^{t}\mu(X^x_s)ds + \int_{0}^{t}\sigma(X_s^x)dW_s $
+%     \item Determine $u(T,x) = \mathbb{E}\left[\phi(X_{t}^x)\right]$
+%     \item Equivalent to a minimization problem $\mathbb{E}\left[ \left| \phi(X_T^x) - v(\xi) \right|^2 \right]$
+%     \item Discretize $X_t^{x}$ to get $\texttt{X}_n^N$
+%     \item Deep Neural Network to get $\mathbb{U}(\theta,x) \approx U(T,x)$ 
+%   \end{itemize}
+% \end{frame}
+
+
+
+% \section{Examples}
+% \begin{frame}
+%   \frametitle{Examples}
+%   \begin{itemize}
+%     \item Heat Equation
+%     \begin{equation}
+%       \frac{\partial u(t,x) }{\partial t} = \Delta_x u(t,x)
+%     \end{equation}
+%     \item Stochastic Lorenz Equation
+%     \begin{equation}
+%       \begin{aligned}
+%       \left( \frac{\partial u}{\partial t} \right)(t, x) &= \frac{\beta^2}{2} (\Delta_x u)(t, x)
+%        + \alpha_1(x_2 - x_1)\left( \frac{\partial u}{\partial x_1} \right)(t, x) \\
+%       &\quad + (\alpha_2 x_1 - x_2 - x_1 x_3)\left( \frac{\partial u}{\partial x_2} \right)(t, x) \\
+%       &\quad + (x_1 x_2 - \alpha_3 x_3)\left( \frac{\partial u}{\partial x_3} \right)(t, x).
+%       \end{aligned}
+%       \end{equation}
+%   \end{itemize}
+% \end{frame}
+
+% \begin{frame}
+%   \begin{itemize}
+%     \item Heston Model
+%     \begin{equation}
+%       \begin{aligned}
+%       &\left( 
+%         \frac{\partial u}{\partial t} 
+%       \right)(t, x) 
+%       = \sum_{i=1}^{\delta} 
+%           \left[ 
+%             \alpha x_{2i-1} 
+%             \left( 
+%               \frac{\partial u}{\partial x_{2i-1}} 
+%             \right)(t, x) 
+%           + \kappa(\theta - x_{2i}) 
+%             \left( 
+%               \frac{\partial u}{\partial x_{2i}} 
+%             \right)(t, x) 
+%           \right] \\
+%       & + \sum_{i=1}^{\delta} 
+%       \left[
+%         \frac{|x_{2i}|}{2} 
+%         \left( 
+%             |x_{2i-1}|^2 \left( \frac{\partial^2 u}{\partial x_{2i-1}^2} \right)(t, x) 
+%           + 2x_{2i-1}\beta\rho \left( \frac{\partial^2 u}{\partial x_{2i-1} \partial x_{2i}} \right)(t, x)
+%         \right)
+%       \right] \\
+%       & + \sum_{i=1}^{\delta} |x_{2i-1}|^2\beta^2 \left( \frac{\partial^2 u}{\partial x_{2i}^2} \right)(t, x) 
+%       \end{aligned}
+%     \end{equation}
+%   \end{itemize}
+% \end{frame}
+
+
+
+% \begin{frame}
+%   \frametitle{Heat Equation}
+%   \framesubtitle{Solution}
+%   For $x \in \mathbb{R}^d$, $t\in [0,T]$
+%   \begin{equation}
+%     \frac{\partial u(t,x) }{\partial t} = \Delta_x u(t,x)
+%   \end{equation}
+%   Solution
+%   \begin{equation}
+%     u(t,x) = ||x||^2_{\mathbb{R}^d} + td
+%   \end{equation}
+% \end{frame}
+
+% \begin{frame}
+%   \frametitle{Heat Equation}
+%   \framesubtitle{Hyperparameters}
+%   \begin{itemize}
+%     \item Adam Optimizer
+%     \item Learning Rate $10^{-3}$
+%     \item  Loss function (Equation \ref{new-minimization})
+%     \begin{equation}
+%       l(\Theta_m) = \mathbb{E}\left[ |\phi(\texttt{X}_N^x) - \mathbb{U}(\Theta_m,x)|^2 \right]
+%     \end{equation}
+%     \item Batch size 8192
+%   \end{itemize}
+
+  
+
+% \end{frame}
+% \begin{frame}
+%   \frametitle{Heat Equation}
+%   \framesubtitle{Relative error}
+%   Calculate Relative Errors 
+%   % \begin{equation}
+%   %   \int_{[0,1]^d} \left| \nu(T, x) - U_{\Theta_m,1,S_m}(x) \right| \, dx
+%   % \end{equation}
+%   % \begin{equation}
+%   %   \left( \int_{[0,1]^d} \left| \nu(T, x) - U_{\Theta_m,1,S_m}(x) \right|^2 \, dx \right)^{1/2}
+%   % \end{equation}
+%   % \begin{equation}
+%   %   \sup_{x \in [0,1]^d} \left| \nu(T, x) - U_{\Theta_m,1,S_m}(x) \right|
+%   % \end{equation}
+    
+    
+    
+%   \begin{align}
+%     L^1\left(\lambda_{[0,1]^{d}} ; \mathbb{R}\right) &= \int_{[0,1]^d} \left| u(T, x) - \mathbb{U}(x,\Theta_m) \right| \, \dif x \\
+%     L^2\left(\lambda_{[0,1]^{d}}; \mathbb{R}\right) &=\sqrt{ \int_{[0,1]^d} \left| u(T, x) - \mathbb{U}(x,\Theta_m) \right|^2 \, \dif x } \\
+%     L^{\infty}\left(\lambda_{[0,1]^{d}}; \mathbb{R}\right) &=\sup_{x \in [0,1]^d} \left| \frac{u(T, x) -\mathbb{U}(x,\Theta_m)}{u(T,x)} \right|
+%   \end{align}
+% \end{frame}
+
+% \begin{frame}
+%   \frametitle{Relative Approximation Errors}
+%   % \framesubtitle{Heat Equation}
+%   \begin{figure}
+%   \centering
+%   \includegraphics[width=0.8\linewidth]{Screenshot 2023-11-10 at 10.30.47.png}% Adjust the size as needed
+%   \caption{Image caption (adapted from Author, Year)}
+%   \label{fig:image_label}
+%   \end{figure}
+
+% \end{frame}
+
+% \begin{frame}
+%   \frametitle{Relative Approximation Errors}
+%   \framesubtitle{Heat Equation}
+%   % 使用resizebox来调整表格到幻灯片宽度
+%   \begin{table}[ht]
+%   \scriptsize
+%   \resizebox{\textwidth}{!}{%
+%   \begin{tabular}{@{}p{1.2cm}|p{2.1cm}|p{2.1cm}|p{2.1cm}|p{1.2cm}@{}}
+%   \toprule
+%   Number of steps & Relative \(L^1(\lambda_{[0,1]^d}; \mathbb{R}) \)-error & Relative \( L^2(\lambda_{[0,1]^d}; \mathbb{R}) \)-error & Relative \( L^\infty(\lambda_{[0,1]^d}; \mathbb{R}) \)-error & Mean runtime in seconds \\ \midrule
+%   0 & 0.998253 & 0.998254 & 1.003524 & 0.5 \\
+%   10000 & 0.957464 & 0.957536 & 0.993083 & 44.6 \\
+%   50000 & 0.786743 & 0.786806 & 0.828184 & 220.8 \\
+%   100000 & 0.574013 & 0.574060 & 0.605283 & 440.8 \\
+%   150000 & 0.361564 & 0.361594 & 0.384105 & 661.0 \\
+%   200000 & 0.150346 & 0.150362 & 0.164140 & 880.8 \\
+%   500000 & 0.000882 & 0.001112 & 0.007360 & 2200.7 \\
+%   750000 & 0.000822 & 0.001036 & 0.007423 & 3300.6 \\
+%   \bottomrule
+%   \end{tabular}%
+%   }
+%   \caption{Approximate presentations of the relative approximation errors}
+% \label{your_label_here}
+% \end{table}
+% \end{frame}
+
+
+
+
+% % \begin{frame}
+% %   \frametitle{Table of Contents}
+% %   \tableofcontents
+% % \end{frame}
+
+% % \section{Introduction}
+% % \begin{frame}
+% %   \frametitle{Introduction}
+% %   % Add your introduction content here
+% % \end{frame}
+
+% % \section{Theoretical Framework and Assumptions}
+% % \begin{frame}
+% %   \frametitle{Theoretical Framework and Assumptions}
+% %   % Add content about theoretical framework and assumptions here
+% % \end{frame}
+
+% % \section{Key Algorithms and Methods}
+% % \begin{frame}
+% %   \frametitle{Key Algorithms and Methods}
+% %   % Add content about algorithms and methods here
+% % \end{frame}
+
+% % \section{Numerical Simulations and Python Code}
+% % \begin{frame}
+% %   \frametitle{Numerical Simulations and Python Code}
+% %   % Add content about numerical simulations and Python code here
+% % \end{frame}
+
+% % \section{Error Calculation and Analysis}
+% % \begin{frame}
+% %   \frametitle{Error Calculation and Analysis}
+% %   % Add content about error calculation and analysis here
+% % \end{frame}
+
+% % \section{Case Studies and Practical Applications}
+% % \begin{frame}
+% %   \frametitle{Case Studies and Practical Applications}
+% %   % Add content about case studies and practical applications here
+% % \end{frame}
+
+% \section{Conclusion}
+% \begin{frame}
+%   \frametitle{Conclusion}
+%   Propose an algorithm to approximate Kolmogorov PDE
+
+%   which aims to overcome:\vspace{1em}
+%   \begin{itemize}
+%     \item Curse of Dimensionality\vspace{1em}
+%     \item Finite Region\vspace{1em}
+%   \end{itemize}
+% \end{frame}
+
+% \section{Future Research Directions}
+% \begin{frame}
+%   \frametitle{Future Research Directions}
+%   \begin{itemize}
+%     \item \steporfull<1-> {Reproduce the Algorithm\vspace{1em}}
+%     \item \steporfull<2-> {Compare to Exited Numerical Method \vspace{1em}}
+%     \item \steporfull<3-> {Conditioning \& Sensitivity \vspace{1em}}
+%     \item \steporfull<4-> {Different Structure\vspace{1em}}
+%     \item \steporfull<5-> {Different Training Strategy\vspace{1em}}
+%   \end{itemize}
+  
+
+% \end{frame}
+
+\begin{frame}
+  \frametitle{Closing Remarks}
+  \centering
+  {\Large Thank you for your attention!}\\
+  \vspace{2em}
+  {\large Any questions?}
+\end{frame}
+
+
+% \begin{frame}[allowframebreaks]
+%   \frametitle{References}
+%   \printbibliography
+% \end{frame}
+
+\end{document}
+

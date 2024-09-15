@@ -1,26 +1,5 @@
 \section{Problem Setups}
 
-\begin{frame}
-  \frametitle{Statement}
-  \framesubtitle{Challanges \& Objectives}
-  \begin{block}{Challanges of Nonlinear Multi-Scale Systems}
-    \begin{enumerate}
-      \item Difficulty in modeling and predicting inhomogeneous cascades of scales.
-      \item High computational costs and uncertainties in classical methods.
-    \end{enumerate}    
-  \end{block}
-
-  \begin{block}{Project Objectives}
-    \begin{enumerate}
-      \item Implement FDTD and PINN in \texttt{C++/C}.
-      \item Implement FDTD hybrid parallel version using \texttt{MPI/OpenMP}.
-      \item Implement PINN GPU parallel version using \texttt{Libtorch/CUDA}.
-      \item Optimize performance through parallel computing frameworks.
-      \item Evaluate the efficiency and accuracy of FDTDs and PINNs.
-    \end{enumerate}
-  \end{block}
-\end{frame}
-
 
 \begin{frame}
   \frametitle{General Form of problem}
@@ -37,7 +16,6 @@
   \end{block}
 
 
-
   \begin{block}{Boundary Conditions}
     The Dirichlet and Von Neurmann boundary conditions are formed as 
     \begin{equation}
@@ -49,6 +27,8 @@
     where $\vec{n}$ is the normal vector on $\overline{\Omega}$ the boundary of domain $\Omega$.
   \end{block}
 \end{frame}
+
+
 
 \begin{frame}
   \frametitle{Heat Equation}
@@ -104,6 +84,40 @@
     \end{align}
   \end{block}
 \end{frame}
+
+
+
+
+
+
+\begin{frame}
+  \frametitle{Statement}
+  \framesubtitle{Challanges \& Objectives}
+  \begin{block}{Challanges of Nonlinear Multi-Scale Systems}
+    \begin{enumerate}
+      \item Difficulty in modeling and predicting inhomogeneous cascades of scales.
+      \item High computational costs and uncertainties in classical methods.
+    \end{enumerate}    
+  \end{block}
+
+  \begin{block}{Project Objectives}
+    \begin{enumerate}
+      \item Implement FDTD and PINN in \texttt{C++/C}.
+      \item Implement FDTD hybrid parallel version using \texttt{MPI/OpenMP}.
+      \item Implement PINN GPU parallel version using \texttt{Libtorch/CUDA}.
+      \item Optimize performance through parallel computing frameworks.
+      \item Evaluate the efficiency and accuracy of FDTDs and PINNs.
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Highlights}
+  
+\end{frame}
+
+
 
 % \subsection{Continuous Form}
 % \subsection{Discretization}
