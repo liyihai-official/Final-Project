@@ -13,7 +13,9 @@
 {
   \begin{frame}<beamer>
     \frametitle{Outline}
-    \tableofcontents[currentsection]
+    \begin{multicols}{2}
+      \tableofcontents[currentsection]
+    \end{multicols}
   \end{frame}
 }
 
@@ -41,6 +43,7 @@
 \RequirePackage{tikz}
 \usetikzlibrary{positioning, arrows.meta}
 
+\RequirePackage{multicol}
 % 设置参考文献样式
 \RequirePackage[style=numeric-comp,backend=biber]{biblatex}
 % 注意：\addbibresource 需要在主文档中使用

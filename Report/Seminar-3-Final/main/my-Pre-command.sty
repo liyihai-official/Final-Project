@@ -29,6 +29,7 @@
   \fi%
 }
 
+
 \newif\ifstepwise
 % \stepwisetrue % 启用逐步显示
 % \stepwisefalse % 禁用逐步显示
@@ -40,3 +41,32 @@
     #1%
   \fi%
 }
+
+% Configure the appearance of the title page.
+% \renewcommand{\maketitle}{%
+%   \begin{titlepage}
+%     \begin{figure}
+%     \centering
+%       \includegraphics[width=.8\textwidth]{logo.png}
+%     \end{figure}
+%       \begin{center}
+%         {\huge\@title{}}\\
+%         \vspace{3cm}
+%         {\LARGE In partial fulfillment of \hpcmsc@thesis{}}\\
+%         {\LARGE in the \hpcmsc@school{}}\\
+%       \end{center}
+%       \vfill
+%       \begin{tabular}[b]{p{0.33\textwidth}l}
+%         Name: & \@author\\%
+%         Student ID: & \hpcmsc@studentID\\%
+%         Supervision: & 
+%         \hpcmsc@firstsupervisor\\%
+%           &\hpcmsc@secondsupervisor\\%
+%           &\hpcmsc@supervisornote\\%
+%         Date of Submission: 
+%         & \hpcmsc@submissiondate\\%
+%         Project Code: 
+%         & \url{\hpcmsc@codelink}
+%       \end{tabular}
+%   \end{titlepage}
+% }

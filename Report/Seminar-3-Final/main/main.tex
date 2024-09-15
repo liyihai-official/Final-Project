@@ -1,89 +1,6 @@
-% \documentclass[aspectratio=3218]{beamer}
-% \setcounter{tocdepth}{2}
-
-% \AtBeginSection[]
-% {
-%   \begin{frame}<beamer>
-%     \frametitle{Outline}
-%     \tableofcontents[currentsection]
-%   \end{frame}
-% }
-% \setbeamerfont{footnote}{size=\tiny}
-% % 设置 frametitle 的字体大小
-% % \setbeamerfont{frametitle}{size=\huge}
-
-% % 设置 framesubtitle 的字体大小
-% \setbeamerfont{framesubtitle}{size=\large}
-
-% % Theme
-% \usepackage{mathptmx} % 或使用 \usepackage{newtxtext} 包
-% \usepackage{amsmath}  % 如果需要数学字体更改
-% \usefonttheme{serif}
-% \usepackage{mathspec}
-% % 设置字体为新罗马
-% \setmainfont{Times New Roman}
-% \setmathsfont(Digits,Latin){Times New Roman}
-
-% \usetheme{Madrid} % You can choose different themes
-
-% % Packages
-% \usepackage[utf8]{inputenc}
-% \usepackage{graphicx}
-% \usepackage{caption}
-% \usepackage{subcaption}
-% \usepackage{hyperref}
-% \usepackage{booktabs}
-% \usepackage{tikz}
-% \usetikzlibrary{positioning, arrows.meta}
-
-% % 命令定义
-% \def\dis{\mathop{}\!\displaystyle}
-% \def\dif{\mathop{}\!\mathrm{d}}
-% \def\Tr{\mathop{}\!\mathrm{Trace}}
-% \def\Hess{\mathop{}\!\mathrm{Hess}}
-% \def\Var{\mathop{}\!\mathrm{Var \:}}
-
-% \def\sh{\mathop{}\!\mathrm{sh \:}}
-% \def\ch{\mathop{}\!\mathrm{ch \:}}
-% \def\thx{\mathop{}\!\mathrm{th \:}}
-% \def\arsh{\mathop{}\!\mathrm{arsh \:}}
-% \def\arch{\mathop{}\!\mathrm{arch \:}}
-% \def\arth{\mathop{}\!\mathrm{arth \:}}
-% \def\arccot{\mathop{}\!\mathrm{arccot \:}}
-
-% \def\ReLU{\mathop{}\!\mathrm{ReLU}}
-% \def\sigmoid{\mathop{}\!\mathrm{sigmoid}}
-
-% % references
-% \usepackage[style=numeric-comp,backend=biber]{biblatex}
-% \addbibresource{ref.bib} % 指定您的文献数据库文件
-
-
-% \newcommand{\fullorpartial}[2][]{%
-%   \ifx\\#1\\%
-%     #2%
-%   \else%
-%     \only<#1>{#2}%
-%   \fi%
-% }
-
-% % 在导言区定义这个开关
-% \newif\ifstepwise
-% % 启用或禁用逐步显示
-% % \stepwisetrue % 启用逐步显示
-% \stepwisefalse % 禁用逐步显示，取消注释以禁用
-
-% % 定义一个条件命令来根据开关显示内容
-% \newcommand<>{\steporfull}[1]{%
-%   \ifstepwise%
-%     \alt#2{#1}{}%
-%   \else%
-%     #1%
-%   \fi%
-% }
-
 \documentclass{my-Presentation}
 \usepackage{my-Pre-command}
+
 % Title Page
 
 \title[An FDM and PINN Comparison]{
@@ -95,14 +12,14 @@
 \author[LI Yihai]{
   \normalsize
   LI YIHAI \\[1ex]
-  \small Supervisor: Mike Peardon
   \vspace*{-.5em}
 }
-\institute{Mathematical Institute \vspace*{-.5em}}
+\institute[Mathematics Institute]{
+  Student ID: 23345919 \\[1ex]
+  Supervision: Michael Peardon
+}
 \date{\today \vspace*{-1em}}
 \titlegraphic{\includegraphics[width=3cm]{logo.png}}
-
-
 
 
 \begin{document}
@@ -110,15 +27,18 @@
 
 \begin{frame}
   \titlepage
-  \vspace{-2cm}
 \end{frame}
 
 \begin{frame}{Outline}
-  \tableofcontents
+  % \tableofcontents[columns=2]
+  \begin{multicols}{2}
+    \tableofcontents
+  \end{multicols}
 \end{frame}
 
 \include{chapter/introduction}
 \include{chapter/problemsetup}
+\include{chapter/methodology}
 % \section{Related Work}
 % \subsection{Finite Difference Time Domain Method}
 % \subsection{Physics Informed Neural Network}
@@ -129,24 +49,8 @@
 % \subsection{Discretization}
 
 
-
-
-\section{N-Dimensional Matrix Implementation}
-% \subsection{General Setups}
-% \subsection{Template Multi-dimension Matrix Design}
-
-
-\section{Parallelization of Multi-dimensional Matrices on cartesian Topologies}
-% \subsection{MPI Parallel Environment Design Scheme}
-% \subsection{Template Distributed Multidimensional Matrix Design}
-
-
-\section{PDE Solver Implementation}
-% \subsection{General Setups}
-% \subsection{Parallel Strategies}
-
-
 \section{Experiments}
+
 
 \section{Discussion}
 
