@@ -259,10 +259,74 @@
   \frametitle{N-dimension PDE solvers}
   \framesubtitle{Challanges}
   \begin{enumerate}
-    \item 
+    \item PDE solver of Heat Equations in different dimension space have similar parameters and features, type-field solution lead to code redundancy.
+    \item Applying MPI communications between local arrays, avoiding overhead.
+    \item Three type of strategies:
+    \begin{enumerate}
+      \item Pure MPI parallel
+      \item Master-only, no overlapping hybrid parallel.
+      \item Master-only, communication/computation overlapping hybrid parallel.
+    \end{enumerate}
   \end{enumerate}
-  
+\end{frame}
 
+
+\begin{frame}
+  \frametitle{N-dimension PDE solvers}
+  \framesubtitle{Solutions}
+  \begin{enumerate}
+    \item Create an abstract Heat base class of Heat Equation, and overriding functions in derived class on every dimension.
+  \end{enumerate}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{N-dimension PDE solvers}
+  \framesubtitle{Solutions}
+  \begin{enumerate}
+    \setcounter{enumi}{1}
+    \item MPI communications are implemented in blocking and non-blocking ways using \texttt{MPI\_Sendrecv} and \texttt{MPI\_Isend}/\texttt{MPI\_Irecv}.
+  \end{enumerate}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{N-dimension PDE solvers}
+  \framesubtitle{Solutions}
+  \begin{enumerate}
+    \setcounter{enumi}{2}
+    \item Three type of strategies
+    \begin{enumerate}
+      \item Pure MPI parallel
+    \end{enumerate}
+  \end{enumerate}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{N-dimension PDE solvers}
+  \framesubtitle{Solutions}
+  \begin{enumerate}
+    \setcounter{enumi}{2}
+    \item Three type of strategies
+    \begin{enumerate}
+      \setcounter{enumi}{1}
+      \item Master-only, no overlapping hybrid parallel.
+    \end{enumerate}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \frametitle{N-dimension PDE solvers}
+  \framesubtitle{Solutions}
+  \begin{enumerate}
+    \setcounter{enumi}{2}
+    \item Three type of strategies
+    \begin{enumerate}
+      \setcounter{enumi}{2}
+      \item Master-only, communication/computation overlapping hybrid parallel.
+    \end{enumerate}
+  \end{enumerate}
 \end{frame}
 
 % % \subsection{General Setups}
