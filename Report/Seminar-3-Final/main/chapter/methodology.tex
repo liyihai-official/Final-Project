@@ -219,8 +219,8 @@
   \frametitle{Parallelization of N-dimension Arrays}
   \framesubtitle{MPI Topology - Solution}
   \begin{enumerate}
-    \item An MPI Topology class defines the distribution details of N-dimension array and creating Ghost MPI datatype 
-    for communication.
+    \item An MPI Topology class defines the distribution details of N-dimension array.
+    \item Using \texttt{MPI\_Type\_create\_subarray} for creating Ghost MPI datatype for communication.
     \item Cartesian array has members Topology class and N-dimension array class, to ensure they are closely located on memory.
     \item The external functions provide gather-based I/O and MPI I/O for handling different scenarios.
     \item User interface class unified features for both topology and array classes.
@@ -233,8 +233,34 @@
 \section{Implementations}
 \subsection{PDE Solvers}
 \begin{frame}
-  \frametitle{}
+  \frametitle{N-dimension Boundary and Initial Conditions}
+  \framesubtitle{Challanges}
+  \begin{enumerate}
+    \item Mathematical function needs be discretized and distributed as well.
+    \item Need to access the data.
+    \item Initial and Dirichlet boundary conditions only applies once.
+    \item Von Neumann boundary condition participates the evolving process in FDM.
+  \end{enumerate}
+\end{frame}
 
+
+\begin{frame}
+  \frametitle{N-dimension Boundary and Initial Conditions}
+  \framesubtitle{Solution}
+  \begin{enumerate}
+    \item Use lambda function to construct classes.
+    \item Creating external classes for each conditions as the friend classes of PDE solver classes.
+    \item Set Bool vectors help to determine the status of conditions and type of boundary conditions.
+  \end{enumerate}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{N-dimension PDE solvers}
+  \framesubtitle{Challanges}
+  \begin{enumerate}
+    \item 
+  \end{enumerate}
   
 
 \end{frame}
