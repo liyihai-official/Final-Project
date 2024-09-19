@@ -265,7 +265,7 @@
     \begin{enumerate}
       \item Pure MPI parallel
       \item Master-only, no overlapping hybrid parallel.
-      \item Master-only, communication/computation overlapping hybrid parallel.
+      \item Master-only, communication/computation (comm./comp.) overlapping hybrid parallel.
     \end{enumerate}
   \end{enumerate}
 \end{frame}
@@ -274,6 +274,7 @@
 \begin{frame}
   \frametitle{N-dimension PDE solvers}
   \framesubtitle{Solutions}
+  \texttt{virtual} function is resolved at run-time, and only lose up to about 25\% efficiency in terms of the function call mechanism, 
   \begin{enumerate}
     \item Create an abstract Heat base class of Heat Equation, and overriding functions in derived class on every dimension.
   \end{enumerate}
@@ -324,7 +325,7 @@
     \item Three type of strategies
     \begin{enumerate}
       \setcounter{enumi}{2}
-      \item Master-only, communication/computation overlapping hybrid parallel.
+      \item Master-only, comm./comp. overlapping hybrid parallel.
     \end{enumerate}
   \end{enumerate}
 \end{frame}
@@ -335,8 +336,27 @@
 
 \subsection{PINN Model}
 \begin{frame}
-  \frametitle{}
+  \frametitle{PINN Model}
+  \framesubtitle{Challanges}
+  For neural network implementations, there are some issues in practice:\\
+  \texttt{Python} has many easy-use libraries such as \texttt{Pytorch}, \texttt{Tensorflow} and \texttt{Caffe}.
+  \begin{enumerate}
+    \item Interpret language Python is significant slower than compile language C/C++
+    \item Worse resource management than C/C++
+    \item Lower security in parallel program.
+  \end{enumerate}
+\end{frame}
 
-  
+
+
+\begin{frame}
+  \frametitle{PINN Model}
+  \framesubtitle{Solution}
+  For getting higher performance and better safety, I chose to use
+  \begin{enumerate}
+    \item Pytorch C++ API: Libtorch.
+  \end{enumerate}
+  to reproduce the Python version of PINN.
+
 
 \end{frame}
