@@ -272,21 +272,99 @@
 
 \begin{frame}
   \frametitle{3D Space Heat Equation}
-  \framesubtitle{Weak Scaling - MPI/OpenMP Hybrid, Single Node}
+  \framesubtitle{Strong Scaling - MPI/OpenMP Hybrid, Single Node}
 
 
-  
+
+  \begin{figure}
+    \centering
+    \begin{subfigure}{0.42\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{figure/FIG_Benchmark_hybrid_0_single_nodes_3D.pdf}
+      \caption{Non-overlapping}
+      \label{FIG:Benchmark:FIG_Benchmark_hybrid_0_single_nodes_3D}      
+    \end{subfigure}
+    % \hfill
+    \begin{subfigure}{0.42\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{figure/FIG_Benchmark_hybrid_1_single_nodes_3D.pdf}
+      \caption{With overlapping}
+      \label{FIG:Benchmark:FIG_Benchmark_hybrid_1_single_nodes_3D}
+    \end{subfigure}
+    % \caption{
+      % Comparison of speedup ratios of strong scaling tests  pure MPI models on $4$ nodes of and $1$ node.
+      % The problem sizes are set to $32^3$, $64^3$, $128^3$, $256^3$ and $512^3$ with single precision.
+    % }
+    \label{FIG:Benchmark:Hybrid_Single_Node_3D}
+  \end{figure}
 
 \end{frame}
 
 
+
+
+
+
+% \begin{figure}[htbp]
+%   \centering
+%   \subfigure[Single Node, Non-overlapping]{
+%     \includegraphics[width=0.38\textwidth]{figure/FIG_Benchmark_hybrid_0_single_nodes_3D.pdf}
+%     \label{FIG:Benchmark:FIG_Benchmark_hybrid_0_single_nodes_3D}
+%   }
+%   \hspace{0em} 
+%   \subfigure[Single Node, With overlapping]{
+%     \includegraphics[width=0.38\textwidth]{figure/FIG_Benchmark_hybrid_1_single_nodes_3D.pdf}
+%     \label{FIG:Benchmark:FIG_Benchmark_hybrid_1_single_nodes_3D}
+%   }
+%   \hspace{0em} 
+%   \subfigure[Multi-node, Non-overlapping]{
+%     \includegraphics[width=0.38\textwidth]{figure/FIG_Benchmark_hybrid_0_multi_nodes_3D.pdf}
+%     \label{FIG:Benchmark:FIG_Benchmark_hybrid_0_multi_nodes_3D}
+%   }
+%   \hspace{0em} 
+%   \subfigure[Multi-node, With overlapping]{
+%     \includegraphics[width=0.38\textwidth]{figure/FIG_Benchmark_hybrid_1_multi_nodes_3D.pdf}
+%     \label{FIG:Benchmark:FIG_Benchmark_hybrid_1_multi_nodes_3D}
+%   }
+%   \caption{
+%       Comparison of strong scaling speedup ratios of hybrid models on $4$ compute nodes for solving 3D heat euqations.
+%       The problem scales are set to the cude of $32$, $64$, $128$, $256$ and $512$ with single precision.
+%       The value background is the strong scaling results of figure \ref{FIG:Benchmark:Pure_MPI_Node_3D}.
+%     }
+%   \label{FIG:Benchmark:Hybrid_Single_Four_Node_3D}
+% \end{figure}
+
+
+
 \begin{frame}
   \frametitle{3D Space Heat Equation}
-  \framesubtitle{Weak Scaling - MPI/OpenMP Hybrid, Four Nodes}
+  \framesubtitle{Strong Scaling - MPI/OpenMP Hybrid, Four Nodes}
   
 
   
+  \begin{figure}
+    \centering
+    \begin{subfigure}{0.42\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{figure/FIG_Benchmark_hybrid_0_multi_nodes_3D.pdf}
+      \caption{Non-overlapping}
+      \label{FIG:Benchmark:FIG_Benchmark_hybrid_0_multi_nodes_3D}
+    \end{subfigure}
+    % \hfill
+    \begin{subfigure}{0.42\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{figure/FIG_Benchmark_hybrid_1_multi_nodes_3D.pdf}
+      \caption{With overlapping}
+      \label{FIG:Benchmark:FIG_Benchmark_hybrid_1_multi_nodes_3D}
+    \end{subfigure}
+    % \caption{
+      % Comparison of speedup ratios of strong scaling tests  pure MPI models on $4$ nodes of and $1$ node.
+      % The problem sizes are set to $32^3$, $64^3$, $128^3$, $256^3$ and $512^3$ with single precision.
+    % }
+    \label{FIG:Benchmark:Hybrid_Four_Node_3D}
+  \end{figure}
 
+  
 \end{frame}
 
 
@@ -295,6 +373,36 @@
   \frametitle{3D Space Heat Equation}
   \framesubtitle{Weak Scaling}
 
+
+  % \begin{table}[htbp]
+    % \caption{Weak Scaling of 3D Heat Equation}
+  %   \label{TAB:Benchmark:Weak_3D_AllModels}
+  %   \begin{minipage}{\columnwidth}
+      \begin{center}
+        \footnotesize % overleaf
+        \begin{tabular}{p{2.5cm} p{1cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1cm} p{1cm}}
+          \toprule
+          \multirow{2}{*}{\bfseries Strategy} & \multirow{2}{*}{\bfseries Size} & \multicolumn{3}{c}{\bfseries  Number of CPUs}    & \multirow{2}{*}{\bfseries $f_p(\%)$}  & \multirow{2}{*}{\bfseries $f_p(\%)_{\text{Multi-node}}$}\\
+                        &                      & \bfseries 8     & \bfseries 64        & \bfseries 64$_{\text{Multi-node}}$   &  &  &         \\
+          \midrule
+          \bfseries Pure MPI      & \multirow{3}{*}{$32^3$}       & 5.243  & 26.405              &  9.078                     & 41.6 & 14.2 \\
+          \bfseries No Overlap    &                               & 2.124  & 13.386              &  8.094                     & 21.0 &  12.7\\
+          \bfseries With Overlap  &                               & 2.014  & 13.884              &  9.586                     & 21.8 & 39.7 \\
+          \midrule
+          \bfseries Pure MPI      & \multirow{3}{*}{$64^3$}       & 7.937  & 32.034              &  30.106                    & 50.8 & 47.1 \\
+          \bfseries No Overlap    &                               & 5.393  & 20.007              &  33.460                    & 31.8 & 52.3 \\
+          \bfseries With Overlap  &                               & 5.200  & 19.558              &  35.254                    & 31.1 & 31.6 \\
+          \midrule
+          \bfseries Pure MPI      & \multirow{3}{*}{$128^3$}      & 3.513  & 24.239              &  25.428                    & 38.0 & 39.7 \\
+          \bfseries No Overlap    &                               & 3.303  & 15.235              &  35.254                    & 24.1 & 55.1 \\
+          \bfseries With Overlap  &                               & 3.187  & 15.107              &  20.096                    & 23.9 & 31.4 \\
+          \bottomrule
+        \end{tabular}
+      \end{center}
+      % \bigskip
+      % \footnotesize\emph{Source:} This is source 
+  %   \end{minipage}
+  % \end{table}
   
 
 \end{frame}
@@ -306,14 +414,27 @@
 
 \subsection{With PINN on accuracy}
 \begin{frame}
-  \frametitle{Memory Usage v.s. Time }
+  \frametitle{PINN v.s. FDTD}
+  \framesubtitle{Memory Usage v.s. Time}
 
   
-
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figure/FIG_Benchmark_Time_Tol.pdf}
+    \caption{
+      % Comparison of memory usage of FDTD and PINN attributed by time of trainning/converging time consumption for 
+      % both 2 dimension and 3 dimension heat equations with single precision. 
+      % The predefined tolerance for training and converging are $10^{-2}$ and $10^{-4}$.
+      % FDTD was testing on four compute nodes (384 CPUs), and using pure MPI and non-overlapping hybrid models.
+      % The PINN models are trained on single NVIDIA RTX 4090 graphics card.
+    }
+    \label{FIG:Benchmark:TimeTol}
+  \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Accuracy}
+  \frametitle{PINN v.s. FDTD}
+  \framesubtitle{Accuracy}
 
   
 
