@@ -37,12 +37,12 @@
 \RequirePackage[utf8]{inputenc}
 \RequirePackage{graphicx}
 \RequirePackage{caption}
-\RequirePackage{subcaption}
+\RequirePackage{subcaption, wrapfig, color}
 \RequirePackage{hyperref}
 \RequirePackage{booktabs}
 \RequirePackage{tikz}
 \usetikzlibrary{positioning, arrows.meta}
-
+\RequirePackage{booktabs, multirow}
 \RequirePackage{multicol}
 % 设置参考文献样式
 \RequirePackage[style=numeric-comp,backend=biber]{biblatex}

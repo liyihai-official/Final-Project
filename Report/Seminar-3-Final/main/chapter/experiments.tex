@@ -9,9 +9,32 @@
   Non-unified Memory Access (NUMA) node Topology:
   \begin{figure}[htbp]
     \centering
-    
-    \caption{<caption>}
-    \label{<label>}
+    \begin{tikzpicture}[scale=0.6, transform shape]
+      % \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.5\textwidth]{figure/FIG_Topology_9242.pdf}};
+      \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=0.58\textwidth]{figure/FIG_Topology_9242.pdf}};     /// overleaf
+      \begin{scope}[x={(image.south east)},y={(image.north west)}]
+          % \draw[help lines, step=1em] (-1em,-1em) grid (30em,20em);    
+          % % Draw axes
+          % \draw[dashed,->] (-1em,0) -- (30em,0) node[right] {x};
+          % \draw[dashed,->] (0,-1em) -- (0,20em) node[above] {y};
+  
+        \node at (12em,18em) {$2$ $Scokets$};
+  
+        \node at (4.5em,1em) {$DDR4$};
+        \node at (19.5em,1em) {$DDR4$};
+  
+        \node at (4.5em, 15em) {$DDR4$};
+        \node at (19.5em,15em) {$DDR4$};
+  
+        \node at (12em,13em) {Hyper-threads};
+        \node at (12em,5.5em) {Hyper-threads};
+  
+        \node at (12em,11em) {$48$ $CPUS$};
+        \node at (12em,3.5em) {$48$ $CPUS$};
+      \end{scope}
+    \end{tikzpicture}
+    \caption{NUMA topology of single node on Cluster}
+    \label{FIG_Topology_Callan}
   \end{figure}
 
 
@@ -21,15 +44,129 @@
 
 \begin{frame}
   \frametitle{Single Node Scaling Tests}
-  \framesubtitle{Strong Scaling}
+  \framesubtitle{Strong Scaling - pure MPI}
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.56\textwidth]{figure/FIG_Benchmark_pure_mpi.pdf}
+    \label{FIG:Benchmark:PURE_MPI}
+  \end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+  \frametitle{Single Node Scaling Tests}
+  \framesubtitle{Strong Scaling - MPI/OpenMP Hybrid}
+  \begin{figure}
+    \centering
+    \begin{subfigure}{0.41\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{figure/FIG_Benchmark_hybrid_0.pdf}
+      \caption{No overlapping comm./comp.}
+      \label{FIG:Benchmark:Hybrid_0}
+    \end{subfigure}
+    % \hfill
+    \begin{subfigure}{0.41\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{figure/FIG_Benchmark_hybrid_1.pdf}
+      \caption{With overlapping comm./comp.}
+      \label{FIG:Benchmark:Hybrid_1}
+    \end{subfigure}
+    % \caption{
+    %   Comparison of speedup ratios of strong scaling tests of master-only parallelized program with overlapping and no overlapping of computation and communication.  
+    %   The vague background is the results of pure MPI parallelization from Figure \ref{FIG:Benchmark:PURE_MPI}, and the problem scales are identical as well.
+    %   The number of threads are set to $1$, $2$, $4$, $8$, $16$, and $24$, 
+    %   tasks per CPU are $1$, $2$ and $4$.
+    % }
+    \label{FIG:Benchmark:Hybrid}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Single Node Scaling Tests}
+  \framesubtitle{Weak Scaling}
+
+  \begin{center}
+    % \captionof{table}{Weak Scaling on Single Node of 2D Heat Equation}  % Use captionof to replace table environment
+    \label{TAB:Benchmark:Weak_PURE_MPI}
+    \footnotesize
+    \begin{tabular}{p{3cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1cm}}
+      \toprule
+      \multirow{2}{*}{\bfseries Strategy}     & \multirow{2}{*}{\bfseries Size} & \multicolumn{3}{c}{\bfseries Number of CPUs}   & \multirow{2}{*}{\bfseries $f_p(\%)$}  \\
+                                    &                                  & \bfseries 4   & \bfseries 16   & \bfseries 64  &                                       \\
+      \midrule
+      \bfseries Pure MPI      & \multirow{3}{*}{$512^2$}      & 4.006  & 12.497  & 47.849                                         & 75.1 \\
+      \bfseries No Overlap    &                               & 2.876  & 11.206  & 42.754                                         & 67.0 \\
+      \bfseries With Overlap  &                               & 3.173  & 10.818  & 42.282                                         & 66.2 \\
+      \midrule
+      \bfseries Pure MPI      & \multirow{3}{*}{$1024^2$}     & 3.838  & 9.304   & 33.707                                         & 53.2  \\
+      \bfseries No Overlap    &                               & 3.947  & 12.995  & 33.447                                         & 54.1 \\
+      \bfseries With Overlap  &                               & 4.024  & 12.932  & 33.361                                         &  54.0 \\
+      \midrule
+      \bfseries Pure MPI      & \multirow{3}{*}{$2048^2$}     & 2.376  & 8.245   & 31.203                                         &  49.0\\
+      \bfseries No Overlap    &                               & 3.874  & 8.972   & 31.510                                         &  49.8 \\
+      \bfseries With Overlap  &                               & 3.740  & 8.989   & 31.430                                         &  49.7 \\
+      \midrule
+      \bfseries Pure MPI      & \multirow{3}{*}{$4096^2$}     & 3.543  & 8.245   & 31.203                                         &  77.5\\
+      \bfseries No Overlap    &                               & 3.953  & 13.799  & 49.515                                         &  78.0\\
+      \bfseries With Overlap  &                               & 3.948  & 13.800  & 49.989                                         &  78.7 \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+
+
+
+
+
+\subsection{On Multi-node}
+\begin{frame}
+  \frametitle{Multi-node Scaling Tests}
+  \framesubtitle{Strong Scaling - pure MPI}
 
   \begin{figure}[htbp]
     \centering
-    
-    \caption{<caption>}
-    \label{<label>}
+    \includegraphics[width=0.55\textwidth]{figure/FIG_Benchmark_pure_mpi_multi_nodes.pdf}
+    \caption{
+      Comparison of speedup ratios of strong scaling tests of pure MPI parallelized program. 
+      The investigated problem scales are the power of $2$, exponents ranging from $9$ to $15$.
+      The number of CPUs are also set as power of $2$, with additional numbers $96$, $192$ and $384$ matched the topologies of CPU.
+    }
+    \label{FIG:Benchmark:PURE_MPI_Multi_Node}
   \end{figure}
+\end{frame}
 
+
+
+\begin{frame}
+  \frametitle{Single Node Scaling Tests}
+  \framesubtitle{Strong Scaling - MPI/OpenMP Hybrid}
+  \begin{figure}
+    \centering
+    \begin{subfigure}{0.47\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{figure/FIG_Benchmark_hybrid_0_multi_nodes.pdf}
+      \caption{No overlapping comm./comp.}
+      \label{FIG:Benchmark:Hybrid_0_Multi_Node}
+    \end{subfigure}
+    % \hfill
+    \begin{subfigure}{0.47\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{figure/FIG_Benchmark_hybrid_1_multi_nodes.pdf}
+      \caption{With overlapping comm./comp.}
+      \label{FIG:Benchmark:Hybrid_1_Multi_Node}
+    \end{subfigure}
+    % \caption{
+      % Comparison of speedup ratios of strong scaling tests on $4$ nodes of 
+      % mater-only parallelized program with overlapping and no overlapping of computation and communication.  
+      % The vague background is the results of pure MPI parallelization from figure 
+      % \ref{FIG:Benchmark:PURE_MPI_Multi_Node} and problems sclaes are identical as well.
+      % The number of threads are set to $1$, $2$, $4$, $8$, $16$, and $24$, 
+      % tasks per CPU are $1$, $2$ and $4$.
+    % }
+    \label{FIG:Benchmark:Hybrid_Multi_Node}
+  \end{figure}
 \end{frame}
 
 
@@ -37,35 +174,146 @@
   \frametitle{Single Node Scaling Tests}
   \framesubtitle{Weak Scaling}
 
-  \begin{figure}[htbp]
-    \centering
-    
-    \caption{<caption>}
-    \label{<label>}
-  \end{figure}
+  % \begin{table}[htbp]
+  %   \caption{Weak Scaling on Multi-node of 2D Heat Equation}
+  %   \label{TAB:Benchmark:Weak_PURE_MPI_Multi_Node}
+  %   \begin{minipage}{\columnwidth}
+  %     \begin{center}
+  %       \footnotesize % overleaf
+  %       \begin{tabular}{>{\bfseries}p{3cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1cm}}
+  %         \toprule
+  %         \multirow{2}{*}{Strategy}     & \multirow{2}{*}{\bfseries Size} & \multicolumn{4}{c}{\bfseries  Number of CPUs}   & \multirow{2}{*}{\bfseries $f_p(\%)$}  \\
+  %                                       &                                 & \bfseries 4   & \bfseries 16   & \bfseries 64  & \bfseries 256  &                        \\
+  %         \midrule
+  %         Pure MPI      & \multirow{3}{*}{$512^2$}      & 3.300  & 10.379  & 26.000   & 124.375                                    & 48.2 \\
+  %         No Overlap    &                               &   -    &  8.094  & 25.931   & 127.648                                    & 49.3 \\
+  %         With Overlap  &                               &   -    &  8.386  & 27.126   & 116.951                                    & 45.5 \\
+  %         \midrule
+  %         Pure MPI      & \multirow{3}{*}{$1024^2$}     & 3.848  & 13.037  & 30.143   &   -                                        & 49.3 \\
+  %         No Overlap    &                               &   -    & 13.702  & 44.040   &   -                                        & 69.8 \\
+  %         With Overlap  &                               &   -    & 13.834  & 44.090   &   -                                        & 69.9 \\
+  %         \midrule
+  %         Pure MPI      & \multirow{3}{*}{$2048^2$}     & 3.787  & 9.172   & 32.013   &   -                                        & 50.6 \\
+  %         No Overlap    &                               &   -    & 13.936  & 34.368   &   -                                        & 55.7 \\
+  %         With Overlap  &                               &   -    & 14.274  & 34.414   &   -                                        & 55.9 \\
+  %         \midrule
+  %         Pure MPI      & \multirow{3}{*}{$4096^2$}     & 3.884  & 13.859  & 51.041   &   -                                        & 80.2 \\
+  %         No Overlap    &                               &   -    & 15.315  & 53.157   &   -                                        & 83.8 \\
+  %         With Overlap  &                               &   -    & 15.294  & 53.401   &   -                                        & 84.2 \\
+  %         \bottomrule
+  %       \end{tabular}
+  %     \end{center}
+  %     % \bigskip
+  %     % \footnotesize\emph{Source:} This is source 
+  %   \end{minipage}
+  % \end{table}
 
+
+  \begin{center}
+    % \caption{Weak Scaling on Multi-node of 2D Heat Equation}  % Use captionof to replace table environment
+    \label{TAB:Benchmark:Weak_PURE_MPI_Multi_Node}
+    \footnotesize
+    \begin{tabular}{p{3cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1cm}}
+      \toprule
+      \multirow{2}{*}{\bfseries Strategy}     & \multirow{2}{*}{\bfseries Size} & \multicolumn{4}{c}{\bfseries  Number of CPUs}   & \multirow{2}{*}{\bfseries $f_p(\%)$}  \\
+                                    &                                 & \bfseries 4   & \bfseries 16   & \bfseries 64  & \bfseries 256  &                        \\
+      \midrule
+      \bfseries Pure MPI      & \multirow{3}{*}{$512^2$}      & 3.300  & 10.379  & 26.000   & 124.375                                    & 48.2 \\
+      \bfseries No Overlap    &                               &   -    &  8.094  & 25.931   & 127.648                                    & 49.3 \\
+      \bfseries With Overlap  &                               &   -    &  8.386  & 27.126   & 116.951                                    & 45.5 \\
+      \midrule
+      \bfseries Pure MPI      & \multirow{3}{*}{$1024^2$}     & 3.848  & 13.037  & 30.143   &   -                                        & 49.3 \\
+      \bfseries No Overlap    &                               &   -    & 13.702  & 44.040   &   -                                        & 69.8 \\
+      \bfseries With Overlap  &                               &   -    & 13.834  & 44.090   &   -                                        & 69.9 \\
+      \midrule
+      \bfseries Pure MPI      & \multirow{3}{*}{$2048^2$}     & 3.787  & 9.172   & 32.013   &   -                                        & 50.6 \\
+      \bfseries No Overlap    &                               &   -    & 13.936  & 34.368   &   -                                        & 55.7 \\
+      \bfseries With Overlap  &                               &   -    & 14.274  & 34.414   &   -                                        & 55.9 \\
+      \midrule
+      \bfseries Pure MPI      & \multirow{3}{*}{$4096^2$}     & 3.884  & 13.859  & 51.041   &   -                                        & 80.2 \\
+      \bfseries No Overlap    &                               &   -    & 15.315  & 53.157   &   -                                        & 83.8 \\
+      \bfseries With Overlap  &                               &   -    & 15.294  & 53.401   &   -                                        & 84.2 \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
 \end{frame}
 
-
-\subsection{On Multi-node}
-\begin{frame}
-  \frametitle{}
-
-  
-
-\end{frame}
 
 \subsection{On Different Dimensions}
 \begin{frame}
-  \frametitle{}
+  \frametitle{3D Space Heat Equation}
+  \framesubtitle{Strong Scaling - pure MPI}
+  
+  \begin{figure}
+    \centering
+    \begin{subfigure}{0.42\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{figure/FIG_Benchmark_pure_mpi_3D.pdf}
+      \caption{Single node}
+      \label{FIG:Benchmark:Pure_MPI_Single_Node_3D}
+    \end{subfigure}
+    % \hfill
+    \begin{subfigure}{0.42\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{figure/FIG_Benchmark_pure_mpi_3D_multi_nodes.pdf}
+      \caption{Four nodes}
+      \label{FIG:Benchmark:Pure_MPI_Multi_Node_3D}
+    \end{subfigure}
+    % \caption{
+      % Comparison of speedup ratios of strong scaling tests  pure MPI models on $4$ nodes of and $1$ node.
+      % The problem sizes are set to $32^3$, $64^3$, $128^3$, $256^3$ and $512^3$ with single precision.
+    % }
+    \label{FIG:Benchmark:Pure_MPI_Node_3D}
+  \end{figure}
+  
+\end{frame}
+
+
+
+\begin{frame}
+  \frametitle{3D Space Heat Equation}
+  \framesubtitle{Weak Scaling - MPI/OpenMP Hybrid, Single Node}
+
 
   
 
 \end{frame}
 
+
+\begin{frame}
+  \frametitle{3D Space Heat Equation}
+  \framesubtitle{Weak Scaling - MPI/OpenMP Hybrid, Four Nodes}
+  
+
+  
+
+\end{frame}
+
+
+
+\begin{frame}
+  \frametitle{3D Space Heat Equation}
+  \framesubtitle{Weak Scaling}
+
+  
+
+\end{frame}
+
+
+
+
+
+
 \subsection{With PINN on accuracy}
 \begin{frame}
-  \frametitle{}
+  \frametitle{Memory Usage v.s. Time }
+
+  
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Accuracy}
 
   
 
