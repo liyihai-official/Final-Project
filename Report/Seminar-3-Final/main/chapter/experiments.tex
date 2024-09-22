@@ -413,9 +413,36 @@
 
 
 \subsection{With PINN on accuracy}
+
+
 \begin{frame}
   \frametitle{PINN v.s. FDTD}
-  \framesubtitle{Memory Usage v.s. Time}
+  \framesubtitle{Accuracy}
+
+  \begin{table}
+    \caption{Mean Square Error of Results}
+    \begin{center}
+      \footnotesize
+      \begin{tabular}{p{1.5cm} p{1.5cm} p{1.5cm}}
+        \toprule
+        \bfseries Method  & \bfseries Heat 2D      & \bfseries Heat 3D         \\
+        \midrule 
+        \bfseries FDTD    & 1.7287  & 953.84 \\
+        \bfseries PINN    & 13.37   & 24.896 \\
+        \bottomrule 
+        \multicolumn{3}{l}{Tolerance: $10^{-4}$} \\
+      \end{tabular}
+    \end{center}
+  \end{table}
+
+
+  
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{PINN v.s. FDTD}
+  \framesubtitle{Memory Usage v.s. Time of Convergence}
 
   
   \begin{figure}[htbp]
@@ -432,10 +459,3 @@
   \end{figure}
 \end{frame}
 
-\begin{frame}
-  \frametitle{PINN v.s. FDTD}
-  \framesubtitle{Accuracy}
-
-  
-
-\end{frame}

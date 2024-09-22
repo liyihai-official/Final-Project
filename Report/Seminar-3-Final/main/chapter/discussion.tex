@@ -4,16 +4,49 @@
 
 \begin{frame}
   \frametitle{Conclusion}
+  \framesubtitle{Finite Difference Time Domain Method}
+  For 2D and 3D Thermal Conduction PDE systems \\
+  I implemented the FDTD methods in fined region with three parallel models:
+  \begin{itemize}
+    \item Pure MPI model 
+    \begin{enumerate}
+      \item had best performance on single compute node overall.
+      \item speedup ratio quickly drop on multi-node.
+    \end{enumerate}
+    \item MPI/OpenMP Hybrid models 
+    \begin{enumerate}
+      \item had lower performance in general.
+      \item can make more use of the advantage of L3 cache.
+      \item superliner speedup in certain scenario.
+    \end{enumerate}
+  \end{itemize}
 
-  
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Conclusion}
+  \framesubtitle{Physics Informed Neural Network}
+  For 2D and 3D Thermal Conduction PDE systems \\
+  I implemented PINN models and trained on generated datasets, comparing with FDTD, the PINN 
+  \begin{enumerate}
+    \item had identical or higher accuracy.
+    \item had less memory usage.
+    \item took shorter time to get the predictions(results).
+    \item had more flexibility on producing the results.
+  \end{enumerate}
+
 
 \end{frame}
 
 
 \section{Further Research Directions}
 \begin{frame}
-  \frametitle{<title>}
-
-  
-
+  \frametitle{Further Research Directions}
+  \begin{itemize}
+    \item Resource Management
+    \item Workload Management
+    \item MPI/CUDA Hybrid parallel of FDTD/PINN
+    \item Other PDE Systems
+  \end{itemize}
 \end{frame}
