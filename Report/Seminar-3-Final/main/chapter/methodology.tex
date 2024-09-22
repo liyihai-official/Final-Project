@@ -101,35 +101,39 @@
   \frametitle{N-dimension Matrix}
   \framesubtitle{Solution}
   \begin{itemize}
-    \item An external small \texttt{\_\_multi\_array\_shape} object defines the routines for accessing the elements.
-    \item Smart pointer, ensure memory's contiguous layout and safety.
     \item Separate into two detail and user interface objects adhering RAII rules.
+    \steporfull<2->{
+      \item An external small \texttt{\_\_multi\_array\_shape} object defines the routines for accessing the elements.
+    }
+    \steporfull<3->{
+      \item Smart pointer, ensure memory's contiguous layout and safety.
+    }
   \end{itemize}
 
 
-  % 插入图
   \begin{figure}[htbp]
     \centering
     \begin{tikzpicture}[scale=0.7, transform shape]
       % \draw[help lines, step=1] (-10,-2) grid (10,2);    
       % % Draw axes
       % \draw[dashed,->] (-10,0) -- (10,0) node[right] {x};
-      % \draw[dashed,->] (0,-2) -- (0,2) node[above] {y};
-      
+      % \draw[dashed,->] (0,-2) -- (0,2) node[above] {y};      
   
       \draw[dashed] (-2, 2) rectangle (11, -1);
       \node at (4.5, 2) [above] {Heap}; 
 
       \draw[thick, fill=red!30] (-1, 1) rectangle (10, 0);
-      \node at (4.5, 0) [below] {detail Class: \texttt{\_\_array<\_\_T, \_\_NumD}};
+      \node at (4.5, 0) [below] {detail Class: \texttt{\_\_array<\_\_T, \_\_NumD>}};
 
-      \draw[thick, fill=blue!30] (0, 1) rectangle (2, 0);
-      \node at (1, 1) [above] {\texttt{\_\_multi\_array\_shape}};
-      \draw[thick, fill=blue!30] (4, 1) rectangle (9, 0);
-      \node at (6.5,1) [above] {\texttt{std::unique\_ptr<value\_type[]>}}; 
+      \steporfull<2->{
+        \draw[thick, fill=blue!30] (0, 1) rectangle (2, 0);
+        \node at (1, 1) [above] {\texttt{\_\_multi\_array\_shape}};
+        \draw[thick, fill=blue!30] (4, 1) rectangle (9, 0);
+        \node at (6.5,1) [above] {\texttt{std::unique\_ptr<value\_type[]>}}; 
+      }
       \draw[help lines, step=1] (-1.5, 1) grid (10.5, 0);    
 
-
+      
       
       
       \node at (-3.5, 3) [below] {Stack}; 
@@ -142,8 +146,11 @@
 
 
       \draw[thick, fill=red!30] (-4, 2) rectangle (-3, -2);
-      \draw[thick, fill=blue!30] (-4, 0) rectangle (-3, -1);
-      \node at (-4.5, -0.5) [left] {\texttt{std::unique\_ptr}}; 
+
+      \steporfull<3->{
+        \draw[thick, fill=green!30] (-4, 0) rectangle (-3, -1);
+        \node at (-4.5, -0.5) [left] {\texttt{std::unique\_ptr}}; 
+      }
       \draw[help lines, step=1] (-4, 2.5) grid (-3, -2.5);    
 
 
@@ -152,16 +159,17 @@
 
       \node at (-3.5, -2.5) [below] {User interface Class:};
       \node at (-3.5, -3) [below] {\texttt{array\_base<T, NumD>}};
-      \draw[thick, ->] (-3, -0.5) 
-        .. controls (-2, 0.5) and (-1, 0.5) .. (-1, 0.5);
-
+      \steporfull<3->{
+        \draw[thick, ->] (-3, -0.5) 
+          .. controls (-2, 0.5) and (-1, 0.5) .. (-1, 0.5);
+      }
       
 
     \end{tikzpicture}
 
     \captionsetup{width=0.8\textwidth}
     \caption{
-      The solution of N-dimension Matrix, using detail Class, user interface Class and a shape management structure.
+      The solution of N-dimension Matrix, using detail Class, user interface Class \steporfull<2->{and a shape management structure.}
     }
     \label{<label>}
   \end{figure}
@@ -185,11 +193,13 @@
       \item only provide limited useful features for latter PDE solvers.
       \item lead to lower performance than low-level OpenMPI. \vspace*{1em}
     \end{enumerate}
-    \item I developed an environment class for MPI 
-    \begin{enumerate}
-      \item better resource management than raw MPI.
-      \item provides basic features exclusively for this project.
-    \end{enumerate}
+    \steporfull<2->{
+      \item I developed an environment class for MPI 
+      \begin{enumerate}
+        \item better resource management than raw MPI.
+        \item provides basic features exclusively for this project.
+      \end{enumerate}
+    }
   \end{itemize}
   
   \vspace*{1em}\hspace*{1em}
@@ -220,13 +230,210 @@
   \framesubtitle{MPI Topology - Solution}
   \begin{enumerate}
     \item An MPI Topology class defines the distribution details of N-dimension array.
+  \end{enumerate}
+  \begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[scale=0.8, transform shape]
+      % \draw[help lines, step=1em] (0,0) grid (12em, 10em);
+      % \draw[dashed, ->] (0,0) -- (12em, 0) node[right] {$x$};
+      % \draw[dashed, ->] (0,0) -- (0, 10em) node[above] {$y$};
+      
+      \def\xsize{2};
+      \def\ysize{3};
+      \def\zsize{4};
+    
+      \begin{scope}[shift={(0em, 0em)}, x={(2em,-0.25em)},y={(0em,2em)}, , z={(-1.25em,-0.5em)}]
+      % \draw[help lines, step=1em] (0,0,0) grid (0.5em, 0.5em, 0);
+      \draw[thick, ->] (0,3.5,-0.2em) -- (7, 3.5, -2) node[above] {$dim_2$};
+      \draw[thick, ->] (0,3.5,-0.2em) -- (0, -2, -2) node[below] {$dim_1$};
+      \draw[thick, ->] (0,3.5,-0.2em) -- (0, 3.5, 3.5) node[above] {$dim_0$};
+  
+    \foreach \y in {0, 1, ..., \ysize}
+    {
+      \node at (\y/\ysize * \ysize,0.4 + \xsize, -6) {$\y$};
+  
+      \pgfmathsetmacro{\pid}{int(\y + \zsize)}
+      \node at (\y/\ysize * \ysize,0.4 + \xsize - 1, -6) {$\pid$};
+  
+      \pgfmathsetmacro{\pidd}{int(\y + 2 * \zsize)}
+      \node at (\y/\ysize * \ysize,0.4 + \xsize - 2, -6) {$\pidd$};
+    }
+        
+        % Draw the front face
+        \fill[blue!20] (0,0,0) -- (0,\ysize,0) -- (\zsize, \ysize,0) -- (\zsize,0,0) -- cycle;
+        % Draw the top face
+        \fill[blue!40] (0,\ysize,0) -- (0,\ysize,-\xsize) -- (\zsize, \ysize, -\xsize) -- (\zsize, \ysize,0) -- cycle;
+        % Draw the right face
+        \fill[blue!60] (\zsize,0,0) -- (\zsize,0,-\xsize) -- (\zsize, \ysize, -\xsize) -- (\zsize, \ysize,0) -- cycle;
+  
+    
+        \foreach \x in {0,1, ..., \xsize}
+        {
+          \draw[black] (0, \ysize, -\x/\xsize * \xsize) -- (\zsize, \ysize, -\x/\xsize * \xsize);
+          \draw[black] (\zsize,0,-\x/\xsize * \xsize) -- (\zsize, \ysize,-\x/\xsize * \xsize);
+        }
+    
+        \foreach \y in {0, 1, ..., \ysize}
+        {
+          \draw[black] (0,\y/\ysize * \ysize,0) -- (\zsize,\y/\ysize * \ysize,0);
+          \draw[black] (\zsize,\y/\ysize * \ysize,0) -- (\zsize,\y/\ysize * \ysize,-\xsize);
+        }
+    
+        \foreach \z in {0, 1, ..., \zsize}
+        {
+          \draw[black] (\z/\zsize * \zsize,\ysize,0) -- (\z/\zsize * \zsize,\ysize,-\xsize);
+          \draw[black] (\z/\zsize * \zsize,0,0) -- (\z/\zsize * \zsize,\ysize,0);
+        }
+  
+        \foreach \y in {0, 1, ..., \ysize}
+        {
+          \pgfmathsetmacro{\pid}{int(\y + 12)}
+          \node at (\y/\ysize * \ysize + 0.4,0.4 + \xsize, 0) {$\pid$};
+  
+          \pgfmathsetmacro{\pidd}{int(\y + \zsize + 12)}
+          \node at (\y/\ysize * \ysize + 0.4,0.4 + \xsize - 1, 0) {$\pidd$};
+  
+          \pgfmathsetmacro{\piddd}{int(\y + 2 * \zsize + 12)}
+          \node at (\y/\ysize * \ysize + 0.4,0.4 + \xsize - 2, 0) {$\piddd$};
+        }
+      \end{scope}
+    \end{tikzpicture}
+    \caption{
+          The Schematic representation of the MPI Cartesian topology scheme of $24$ processors on $3$ dimension space, 
+          which has a $2\times 3\times 4$ grid of processes 
+      }
+    \label{FIG_MPI_TOPOLOGY_24_PROCS}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Parallelization of N-dimension Arrays}
+  \framesubtitle{MPI Topology - Solution}
+  \begin{enumerate}
+    \setcounter{enumi}{1}
     \item Using \texttt{MPI\_Type\_create\_subarray} for creating Ghost MPI datatype for communication.
+  \end{enumerate}
+
+  \begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[scale=0.8, transform shape]
+      % Draw a grid with steps of 1 cm
+      % \draw[help lines, step=1em] (-2em,-2em) grid (20em,20em);
+    
+      % Draw axes
+      % \draw[dashed,->] (-2em,0) -- (20em,0) node[right] {x};
+      % \draw[dashed,->] (0,-2em) -- (0,20em) node[above] {y};
+    
+      % Draw the first cube at (0,0) with size 8
+      \drawcube{(0em, 0em)}{8}
+      \drawcube{(16em, 0em)}{8}
+
+    \end{tikzpicture}  
+    \caption{
+      Representation of a 3D MPI Communication Scheme of $2$ among $24$ processes between $3$ dimension sub-arrays.
+    }
+    \label{FIG_MPI_3D_exchange_SCHEME}
+  \end{figure}
+
+
+\end{frame}
+
+
+
+
+
+\begin{frame}
+  \frametitle{Parallelization of N-dimension Arrays}
+  \framesubtitle{MPI Topology - Solution}
+  \begin{enumerate}
+    \setcounter{enumi}{2}
     \item Cartesian array has members Topology class and N-dimension array class, to ensure they are closely located on memory.
     \item The external functions provide gather-based I/O and MPI I/O for handling different scenarios.
+    \begin{itemize}
+      \item gather-based function is designed for small scale problem, \\it collects all data included with the boundaries to the root process, and use the I/O of N-dimension array.
+      \item MPI I/O function is designed for handling large scale problem, \\it only collects the internal bulk without boundary.
+    \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+
+
+
+
+
+\begin{frame}
+  \frametitle{Parallelization of N-dimension Arrays}
+  \framesubtitle{MPI Topology - Solution}
+  \begin{enumerate}
+    \setcounter{enumi}{4}
     \item User interface class unified features for both topology and array classes.
     \item Separate into two detail and user interface objects adhering RAII rules.
   \end{enumerate}
 \end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

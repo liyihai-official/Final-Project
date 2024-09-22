@@ -31,7 +31,7 @@
 
 
 \newif\ifstepwise
-% \stepwisetrue % 启用逐步显示
+\stepwisetrue % 启用逐步显示
 % \stepwisefalse % 禁用逐步显示
 
 \newcommand<>{\steporfull}[1]{%
@@ -70,3 +70,42 @@
 %       \end{tabular}
 %   \end{titlepage}
 % }
+
+
+\newcommand{\drawcube}[2]{
+  \begin{scope}[shift={#1}, x={(0.8em,-0.1em)}, y={(0em,0.8em)}, z={(0.4em,0.20em)}]
+    \def\size{#2}
+    
+    % 绘制箭头和立方体
+    \draw[thick,->] (-2em, 4em) -- (1em, 3.5em) node[pos=0, above] {$source$} node[pos=0.5, above] {} node[pos=1, above] {};
+    \draw[thick,->] (5em, 2em) -- (5em, -2em) node[pos=0, above] {} node[pos=0.5, left] {} node[pos=1, below] {$dest$};
+    \draw[thick,->] (12em, 7em) -- (3em, 3em) node[pos=0, above] {$source$} node[pos=0.5, above] {} node[pos=1, above] {};
+    
+    % 绘制立方体各个面
+    \fill[blue!20] (0,0,0) -- (0,\size,0) -- (\size, \size,0) -- (\size,0,0) -- cycle;
+    \fill[blue!40] (0,\size,0) -- (0,\size,\size) -- (\size, \size, \size) -- (\size, \size,0) -- cycle;
+    \fill[blue!60] (\size,0,0) -- (\size,0,\size) -- (\size, \size, \size) -- (\size, \size,0) -- cycle;
+    
+    \fill[red!30] (1,1,0) -- (1,\size-1,0) -- (\size-1, \size-1,0) -- (\size-1,1,0) -- cycle;
+    \fill[red!40] (1,\size,1) -- (1,\size,\size-1) -- (\size-1, \size, \size-1) -- (\size-1, \size,1) -- cycle;
+    \fill[red!45] (\size,1,1) -- (\size,1,\size-1) -- (\size, \size-1, \size-1) -- (\size, \size-1,1) -- cycle;
+    
+    % 绘制箭头
+    \draw[thick,->] (8em, 3em) -- (11em, 2.5em) node[pos=0, above] {} node[pos=0.5, above] {} node[pos=1, above] {$dest$};
+    \draw[thick,->] (5em, 9em) -- (5em, 7em) node[pos=0, above] {$source$} node[pos=0.5, left] {} node[pos=1, below] {};
+    \draw[thick,->] (3em, 3em) -- (-2em, 1em) node[pos=0, above] {} node[pos=0.5, above] {} node[pos=1, above] {$dest$};
+    
+    % 绘制网格
+    \foreach \x in {0,1,...,\size} 
+    {
+      \draw[black] (\x,0,0) -- (\x,\size,0);
+      \draw[black] (0,\x,0) -- (\size,\x,0);
+
+      \draw[black] (\size,\x,0) -- (\size,\x,\size);
+      \draw[black] (\size,0,\x) -- (\size, \size,\x);
+
+      \draw[black] (\x,\size,0) -- (\x,\size,\size);
+      \draw[black] (0,\size,\x) -- (\size, \size,\x);
+    }
+  \end{scope}
+}
