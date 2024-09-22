@@ -217,11 +217,13 @@
   \framesubtitle{MPI Topology - Challanges}
   
   Distributed N-dimension arrays are created based on MPI N-dimension Cartesian topology.
-  \begin{enumerate}
-    \item Ghost communication is required in overlapping of MPI communication and local computation.
-    \item Parallel I/O is needed for debugging and storing results.
-    \item Topology information will be frequently used in PDE solver.
-  \end{enumerate}
+  \steporfull<2->{
+    \begin{enumerate}
+      \item Ghost communication is required in overlapping of MPI communication and local computation.
+      \item Parallel I/O is needed for debugging and storing results.
+      \item Topology information will be frequently used in PDE solver.
+    \end{enumerate}
+  }
 \end{frame}
 
 
