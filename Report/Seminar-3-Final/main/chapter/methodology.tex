@@ -524,9 +524,9 @@
   \frametitle{N-dimension Boundary and Initial Conditions}
   \framesubtitle{Solution}
   \begin{enumerate}
-    \item Use lambda function to construct classes.
-    \item Creating external classes for each conditions as the friend classes of PDE solver classes.
-    \item Set Bool vectors help to determine the status of conditions and type of boundary conditions.
+    \item Use \texttt{lambda} function to construct classes.
+    \item Creating external classes for each conditions as the \texttt{friend} classes of PDE solver classes.
+    \item Set \texttt{Bool} vectors help to determine the status of conditions and type of boundary conditions.
   \end{enumerate}
 \end{frame}
 
@@ -535,14 +535,79 @@
   \frametitle{N-dimension PDE solvers}
   \framesubtitle{Challanges}
   \begin{enumerate}
-    \item PDE solver of Heat Equations in different dimension space have similar parameters and features, type-field solution lead to code redundancy.
+    \item PDE solver of Heat Equations in different dimension space have similar parameters and features, \\but type-field solution lead to code redundancy.
     \item Applying MPI communications between local arrays, avoiding overhead.
+    \steporfull<2->{
     \item Three type of strategies:
-    \begin{enumerate}
-      \item Pure MPI parallel
-      \item Master-only, no overlapping hybrid parallel.
-      \item Master-only, communication/computation (comm./comp.) overlapping hybrid parallel.
-    \end{enumerate}
+      \begin{enumerate}
+        \item Pure MPI parallel
+        \item Master-only, no overlapping hybrid parallel.
+        \item Master-only, communication/computation (comm./comp.) overlapping hybrid parallel.
+      \end{enumerate}
+    }
+  \end{enumerate}
+\end{frame}
+
+
+
+\begin{frame}
+  \frametitle{N-dimension PDE solvers}
+  \framesubtitle{Solutions}
+  \texttt{virtual} function is resolved at run-time though \texttt{vtable}, and only lose up to about 25\% efficiency in terms of the function call mechanism, 
+  \begin{enumerate}
+    \item Create an abstract Heat base class of Heat Equation, and \texttt{override} functions in derived class on every dimension.
+  \end{enumerate}
+  \begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[scale=0.7, transform shape]
+      % \draw[help lines, step=1] (-10,-2) grid (10,2);    
+      % % Draw axes
+      % \draw[dashed,->] (-10,0) -- (10,0) node[right] {x};
+      % \draw[dashed,->] (0,-2) -- (0,2) node[above] {y};      
+
+
+      \node at (-5.5, 2) [] {Abstract \texttt{class}};
+      \draw[thick] (-7.2, 1.5) rectangle (-3.8, -2.5);
+      \node at (-5.5, 1) [] {\texttt{Heat\_Base}};
+      \node at (-5.5, 0) [] {Parameters};
+      \node at (-5.5, -1) [] {\texttt{virtual} exchanges};
+      \node at (-5.5, -2) [] {\texttt{virtual} updates};
+      \draw[thick] (-7.2, 1.5) rectangle (-3.8, 0.5);
+
+      
+      \node at (3.5, 2.5) [] {Derived \texttt{class}};
+      \draw[thick] (1, 2) rectangle (6, -3);
+      \node at (3.5, 1.5) [] {\texttt{Heat\_<NumD>D}};
+      \node at (3.5, 0.5) [] {other features};
+      \node at (3.5, -0.5) [] {exchanges \texttt{override final}};
+      \node at (3.5, -1.5) [] {updates \texttt{override final}};
+      \node at (3.5, -2.5) [] {PDE solvers};
+      \draw[thick] (1, 2) rectangle (6, 1);
+
+      \draw[thick, ->] (1, 1.5) 
+        .. controls (0, 2) and (-2.5, 1.5) .. (-3.8, 1);
+      
+      \node at (-1.2, 1.8) [above] {inherit from};
+      \node at (-1.2, 0.8) [above] {\texttt{protected}};
+
+    \end{tikzpicture}
+    \caption{Abstract inheritance scheme representation.}
+    \label{<label>}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{N-dimension PDE solvers}
+  \framesubtitle{Solutions}
+  The MPI Remote Memory Access (MPI-RMA) operations require hardware support to gain the benefits, \\so:
+  \begin{enumerate}
+    \setcounter{enumi}{1}
+    \item MPI communications are implemented in 
+    \begin{itemize}
+      \item non-blocking using \texttt{MPI\_Isend}/\texttt{MPI\_Irecv}.
+      \item blocking using \texttt{MPI\_Sendrecv} 
+    \end{itemize}
   \end{enumerate}
 \end{frame}
 
@@ -555,25 +620,6 @@
     \tableofcontents[currentsection, sectionstyle=show/hide, subsectionstyle=show/shaded, subsubsectionstyle=show/shaded, hideothersubsections]
     \endgroup
 \end{frame}
-\begin{frame}
-  \frametitle{N-dimension PDE solvers}
-  \framesubtitle{Solutions}
-  \texttt{virtual} function is resolved at run-time, and only lose up to about 25\% efficiency in terms of the function call mechanism, 
-  \begin{enumerate}
-    \item Create an abstract Heat base class of Heat Equation, and overriding functions in derived class on every dimension.
-  \end{enumerate}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{N-dimension PDE solvers}
-  \framesubtitle{Solutions}
-  \begin{enumerate}
-    \setcounter{enumi}{1}
-    \item MPI communications are implemented in blocking and non-blocking ways using \texttt{MPI\_Sendrecv} and \texttt{MPI\_Isend}/\texttt{MPI\_Irecv}.
-  \end{enumerate}
-\end{frame}
-
 
 \begin{frame}
   \frametitle{N-dimension PDE solvers}
@@ -585,6 +631,68 @@
       \item Pure MPI parallel
     \end{enumerate}
   \end{enumerate}
+
+  \begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[scale=0.55, transform shape]
+      % \draw[help lines, step=1] (0, -5) grid (11, 5);    
+      % % Draw axes
+      % \draw[dashed,->] (0,0) -- (11,0) node[right] {x};
+      % \draw[dashed,->] (0,-4) -- (0,4) node[above] {y};      
+      
+      % \draw[thick] (1, 4.8) rectangle (11, 4);
+      \node at (6, 4.4) [] {MPI Initialization};
+
+      \draw[thick, fill=red!30] (1, 1.4) rectangle (11, 0.4);
+      \node at (6, 0.9) [] {MPI Communications: \texttt{MPI\_Isend/MPI\_Irecv}};
+
+      \draw[thick, fill=red!30] (1, -0.6) rectangle (11, -1.4);
+      \node at (6, -1) [] {\texttt{MPI\_Allreduce}};
+
+      \draw[thick, fill=green!30] (1, 3) rectangle (3, 2.4);
+      \draw[thick, fill=green!30] (4, 3) rectangle (6, 2.4);
+      \draw[thick, fill=green!30] (9, 3) rectangle (11, 2.4);
+
+      \draw[thick, fill=green!30] (1, -2.4) rectangle (3, -3);
+      \draw[thick, fill=green!30] (4, -2.4) rectangle (6, -3);
+      \draw[thick, fill=green!30] (9, -2.4) rectangle (11, -3);
+
+    
+      \foreach \x in {2, 5, 10}
+      {
+        \draw[thick, ->] (\x, 4) -- (\x, 3);
+        \node at (\x, 2.7) [] {update};
+
+        \draw[thick, ->] (\x, 2.4) -- (\x, 1.4);
+
+        \draw[thick, ->] (\x, 0.4) -- (\x, -0.6);
+
+        \draw[thick, ->] (\x, -1.4) -- (\x, -2.4);
+
+        \draw[thick, ->] (\x, -3) -- (\x, -4.5);
+        \node at (\x, -2.7) [] {switch};
+      }
+      % \draw[thick, ->] (5.5, -3.4) -- node [midway, right] {\texttt{break}} (5.5, -4.8);
+      \node at (6, -4.1) [] {\texttt{break}};
+
+
+      \foreach \y in {2.7, -2.7}
+      {
+        \node at (7.5, \y) [] {$\cdots\cdots$};
+      }
+
+      
+
+      \draw[thick, dashed] (0, 3.5) rectangle (12, -3.6);
+      \node at (12, 0.2) [right] {\texttt{while}};
+      \node at (12, -0.2) [right] {not converge};
+      
+    \end{tikzpicture}
+
+    \caption{Scheme Representation flow chart of Pure MPI model}
+    \label{<label>}
+  \end{figure}
+
 \end{frame}
 
 
