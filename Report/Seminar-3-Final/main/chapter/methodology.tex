@@ -634,7 +634,7 @@
 
   \begin{figure}[htbp]
     \centering
-    \begin{tikzpicture}[scale=0.55, transform shape]
+    \begin{tikzpicture}[scale=0.6, transform shape]
       % \draw[help lines, step=1] (0, -5) grid (11, 5);    
       % % Draw axes
       % \draw[dashed,->] (0,0) -- (11,0) node[right] {x};
@@ -689,7 +689,7 @@
       
     \end{tikzpicture}
 
-    \caption{Scheme Representation flow chart of Pure MPI model}
+    \caption{Scheme Representation: flow chart of Pure MPI model}
     \label{<label>}
   \end{figure}
 
@@ -708,6 +708,73 @@
       \item Master-only, no overlapping hybrid parallel.
     \end{enumerate}
   \end{enumerate}
+
+  \begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[scale=0.6, transform shape]
+      % \draw[help lines, step=1] (0, -5) grid (11, 5);    
+      % % Draw axes
+      % \draw[dashed,->] (0,0) -- (13,0) node[right] {x};
+      % \draw[dashed,->] (0,-4) -- (0,4) node[above] {y};      
+
+      % \draw[thick] (1, 4.8) rectangle (13, 4);
+      \node at (7, 4.4) [] {MPI Initialization};
+
+      \draw[thick, fill=red!30] (1, 0.4) rectangle (13, -0.6);
+      \node at (7, -0.1) [] {MPI Communications: \texttt{MPI\_Isend/MPI\_Irecv}};
+
+      \draw[thick, fill=green!30] (1, 2) rectangle (4, 1.4);
+      \draw[thick, fill=green!30] (5, 2) rectangle (8, 1.4);
+      \draw[thick, fill=green!30] (10, 2) rectangle (13, 1.4);
+
+
+      \draw[thick, fill=green!30] (1, -2.4) rectangle (4, -3);
+      \draw[thick, fill=green!30] (5, -2.4) rectangle (8, -3);
+      \draw[thick, fill=green!30] (10, -2.4) rectangle (13, -3);
+
+      \foreach \x in {2.5, 6.5, 11.5}
+      {
+        \draw[thick, ->] (\x, 4) -- (\x, 2);
+        \node at (\x, 1.7) [] {update};
+        \node at (\x, -2.7) [] {update};
+
+        \draw[thick, ->] (\x, 1.4) -- (\x, 0.4);
+
+        \draw[thick, ->] (\x, -3) -- (\x, -4);
+      }
+      
+
+      \foreach \x in {1.2, 1.8, 2.5, 3.2, 3.8}
+      {
+        \draw[thick, ->] (2, 3) -| (\x, 2);
+        \draw[thick, ->] (\x, -0.6) -- (\x, -2.4);
+      }
+
+      \foreach \x in {5.2, 5.8, 6.5, 7.2, 7.8}
+      {
+        \draw[thick, ->] (6.5, 3) -| (\x, 2);
+        \draw[thick, ->] (\x, -0.6) -- (\x, -2.4);
+      }
+
+      \foreach \x in {10.2, 10.8, 11.5, 12.2, 12.8}
+      {
+        \draw[thick, ->] (11.5, 3) -| (\x, 2);
+        \draw[thick, ->] (\x, -0.6) -- (\x, -2.4);
+      }
+
+      \foreach \y in {1.7, -2.7}
+      {
+        \node at (9, \y) [] {$\cdots\cdots$};
+      }
+
+      \node at (13, 3)    [right] {\texttt{omp parallel}};
+      \node at (13, 1.7)  [right] {\texttt{omp parallel for}};
+      \node at (13, 1)    [right] {\texttt{omp single}};
+      \node at (13, -2.7) [right] {\texttt{omp parallel for}};
+      \node at (13, -3.5) [right] {\texttt{omp single}};
+    \end{tikzpicture}
+    \caption{Scheme Representation: flow chart of Hybrid model, with no overlapping}
+  \end{figure}
 \end{frame}
 
 
@@ -723,6 +790,73 @@
       \item Master-only, comm./comp. overlapping hybrid parallel.
     \end{enumerate}
   \end{enumerate}
+
+  \begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[scale=0.6, transform shape]
+      \draw[help lines, step=1] (0, -5) grid (11, 5);    
+      % Draw axes
+      \draw[dashed,->] (0,0) -- (13,0) node[right] {x};
+      \draw[dashed,->] (0,-4) -- (0,4) node[above] {y};      
+
+      % \draw[thick] (1, 4.8) rectangle (13, 4);
+      \node at (7, 4.4) [] {MPI Initialization};
+
+      % \draw[thick, fill=red!30] (1, 0.4) rectangle (13, -0.6);
+      % \node at (7, -0.1) [] {MPI Communications: \texttt{MPI\_Isend/MPI\_Irecv}};
+
+      % \draw[thick, fill=green!30] (1, 2) rectangle (4, 1.4);
+      % \draw[thick, fill=green!30] (5, 2) rectangle (8, 1.4);
+      % \draw[thick, fill=green!30] (10, 2) rectangle (13, 1.4);
+
+
+      % \draw[thick, fill=green!30] (1, -2.4) rectangle (4, -3);
+      % \draw[thick, fill=green!30] (5, -2.4) rectangle (8, -3);
+      % \draw[thick, fill=green!30] (10, -2.4) rectangle (13, -3);
+
+      % \foreach \x in {2.5, 6.5, 11.5}
+      % {
+      %   \draw[thick, ->] (\x, 4) -- (\x, 2);
+      %   \node at (\x, 1.7) [] {update};
+      %   \node at (\x, -2.7) [] {update};
+
+      %   \draw[thick, ->] (\x, 1.4) -- (\x, 0.4);
+
+      %   \draw[thick, ->] (\x, -3) -- (\x, -4);
+      % }
+      
+
+      % \foreach \x in {1.2, 1.8, 2.5, 3.2, 3.8}
+      % {
+      %   \draw[thick, ->] (2, 3) -| (\x, 2);
+      %   \draw[thick, ->] (\x, -0.6) -- (\x, -2.4);
+      % }
+
+      % \foreach \x in {5.2, 5.8, 6.5, 7.2, 7.8}
+      % {
+      %   \draw[thick, ->] (6.5, 3) -| (\x, 2);
+      %   \draw[thick, ->] (\x, -0.6) -- (\x, -2.4);
+      % }
+
+      % \foreach \x in {10.2, 10.8, 11.5, 12.2, 12.8}
+      % {
+      %   \draw[thick, ->] (11.5, 3) -| (\x, 2);
+      %   \draw[thick, ->] (\x, -0.6) -- (\x, -2.4);
+      % }
+
+      % \foreach \y in {1.7, -2.7}
+      % {
+      %   \node at (9, \y) [] {$\cdots\cdots$};
+      % }
+
+      % \node at (13, 3)    [right] {\texttt{omp parallel}};
+      % \node at (13, 1.7)  [right] {\texttt{omp parallel for}};
+      % \node at (13, 1)    [right] {\texttt{omp single}};
+      % \node at (13, -2.7) [right] {\texttt{omp parallel for}};
+      % \node at (13, -3.5) [right] {\texttt{omp single}};
+    \end{tikzpicture}
+    \caption{Scheme Representation: flow chart of Hybrid model, with no overlapping}
+  \end{figure}
 \end{frame}
 
 % % \subsection{General Setups}
