@@ -779,6 +779,8 @@
 
 
 \subsubsection{Master-only, with overlapping}
+
+
 \begin{frame}
   \frametitle{N-dimension PDE solvers}
   \framesubtitle{Solutions}
@@ -794,70 +796,140 @@
   \begin{figure}[htbp]
     \centering
     \begin{tikzpicture}[scale=0.6, transform shape]
-      \draw[help lines, step=1] (0, -5) grid (11, 5);    
-      % Draw axes
-      \draw[dashed,->] (0,0) -- (13,0) node[right] {x};
-      \draw[dashed,->] (0,-4) -- (0,4) node[above] {y};      
+      % \draw[help lines, step=1] (0, -1) grid (15, 8);    
+      % % Draw axes
+      % \draw[dashed,->] (0,0) -- (15,0) node[right] {x};
+      % \draw[dashed,->] (0,-1) -- (0,4) node[above] {y};      
+      
+      \draw[fill=green!20] (0, 6) rectangle (8, 0);
+      \draw[fill=yellow!30] (1, 5) rectangle (7, 1);
+      \draw[fill=red!40] (1, 6) rectangle (7, 5);
+      \draw[fill=red!40] (1, 1) rectangle (7, 0);
+      \draw[fill=red!40] (0, 5) rectangle (1, 1);
+      \draw[fill=red!40] (7, 5) rectangle (8, 1);
+      \draw[fill=blue!30] (2, 4) rectangle (6, 2);
+      
+      \draw[help lines, step=1] (0, 6) grid (8, 0);
+      \draw[step=1] (1, 5) grid (7, 1);
 
-      % \draw[thick] (1, 4.8) rectangle (13, 4);
-      \node at (7, 4.4) [] {MPI Initialization};
-
-      % \draw[thick, fill=red!30] (1, 0.4) rectangle (13, -0.6);
-      % \node at (7, -0.1) [] {MPI Communications: \texttt{MPI\_Isend/MPI\_Irecv}};
-
-      % \draw[thick, fill=green!30] (1, 2) rectangle (4, 1.4);
-      % \draw[thick, fill=green!30] (5, 2) rectangle (8, 1.4);
-      % \draw[thick, fill=green!30] (10, 2) rectangle (13, 1.4);
-
-
-      % \draw[thick, fill=green!30] (1, -2.4) rectangle (4, -3);
-      % \draw[thick, fill=green!30] (5, -2.4) rectangle (8, -3);
-      % \draw[thick, fill=green!30] (10, -2.4) rectangle (13, -3);
-
-      % \foreach \x in {2.5, 6.5, 11.5}
-      % {
-      %   \draw[thick, ->] (\x, 4) -- (\x, 2);
-      %   \node at (\x, 1.7) [] {update};
-      %   \node at (\x, -2.7) [] {update};
-
-      %   \draw[thick, ->] (\x, 1.4) -- (\x, 0.4);
-
-      %   \draw[thick, ->] (\x, -3) -- (\x, -4);
-      % }
+      \draw[fill=green!20]  (10, 5.8) rectangle (11, 5.5);
+      \draw[fill=yellow!30] (10, 5.2) rectangle (11, 4.9);
+      \draw[fill=red!40]    (10, 4.6) rectangle (11, 4.3);
+      \draw[fill=blue!30]   (10, 4)   rectangle (11, 3.7);
+      % \foreach \y in {5.65, 5.05, 4.45, 3.85}
+      \node at (11, 5.65) [right] {Junk Values};
+      \node at (11, 5.05) [right] {Edge Values};
+      \node at (11, 4.45) [right] {Ghost Values};
+      \node at (11, 3.85) [right] {Bulk Values};
+      
       
 
-      % \foreach \x in {1.2, 1.8, 2.5, 3.2, 3.8}
-      % {
-      %   \draw[thick, ->] (2, 3) -| (\x, 2);
-      %   \draw[thick, ->] (\x, -0.6) -- (\x, -2.4);
-      % }
 
-      % \foreach \x in {5.2, 5.8, 6.5, 7.2, 7.8}
-      % {
-      %   \draw[thick, ->] (6.5, 3) -| (\x, 2);
-      %   \draw[thick, ->] (\x, -0.6) -- (\x, -2.4);
-      % }
+    \end{tikzpicture}
+    \caption{Scheme Representation: Grid 2D, type of values}
+  \end{figure}
+\end{frame}
 
-      % \foreach \x in {10.2, 10.8, 11.5, 12.2, 12.8}
-      % {
-      %   \draw[thick, ->] (11.5, 3) -| (\x, 2);
-      %   \draw[thick, ->] (\x, -0.6) -- (\x, -2.4);
-      % }
+
+\begin{frame}
+  \frametitle{N-dimension PDE solvers}
+  \framesubtitle{Solutions}
+  \begin{enumerate}
+    \setcounter{enumi}{2}
+    \item Three type of strategies
+    \begin{enumerate}
+      \setcounter{enumi}{2}
+      \item Master-only, comm./comp. overlapping hybrid parallel.
+    \end{enumerate}
+  \end{enumerate}
+
+  \begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[scale=0.6, transform shape]
+      % \draw[help lines, step=1] (0, -5) grid (15, 5);    
+      % % Draw axes
+      % \draw[dashed,->] (0,0) -- (15,0) node[right] {x};
+      % \draw[dashed,->] (0,-4) -- (0,4) node[above] {y};      
+
+      % \draw[thick] (1, 4.3) rectangle (13, 3.5);
+      \node at (7, 3.8) [] {MPI Initialization};
+
+      \draw[thick, fill=red!30] (1, -1.4) rectangle (13, -2);
+      \node at (7, -1.7) [] {MPI Communications: \texttt{MPI\_Waitall}};
+
+
+      \draw[thick, fill=green!30] (1, 0.2) rectangle (4, -0.6);
+      \draw[thick, fill=green!30] (5, 0.2) rectangle (8, -0.6);
+      \draw[thick, fill=green!30] (10, 0.2) rectangle (13, -0.6);
+      
+
+      \draw[thick, fill=green!30] (1, -2.8) rectangle (4, -3.5);
+      \draw[thick, fill=green!30] (5, -2.8) rectangle (8, -3.5);
+      \draw[thick, fill=green!30] (10, -2.8) rectangle (13, -3.5);
+
+
+      \foreach \x in {2.5, 6.5, 11.5}
+      {
+        \draw[thick, ->] (\x, 3.5) -- (\x, 0.2);
+        \node at (\x, -0.2) [] {update \texttt{bulk}};
+        \node at (\x, -3.15) [] {update \texttt{edges}};
+
+        \draw[thick, ->] (\x, -3.5) -- (\x, -4.5);
+      }
+      
+
+      \foreach \x in {1.2, 1.8, 2.5, 3.2, 3.8}
+      {
+        \draw[thick, ->] (2, 2.8) -| (\x, 0.2);
+        \draw[thick, ->] (\x, -0.6) -- (\x, -1.4);
+        \draw[thick, ->] (\x, -2) -- (\x, -2.8);
+      }
+
+
+      \foreach \x in {5.2, 5.8, 6.5, 7.2, 7.8}
+      {
+        \draw[thick, ->] (6.5, 2.8) -| (\x, 0.2);
+        \draw[thick, ->] (\x, -0.6) -- (\x, -1.4);
+        \draw[thick, ->] (\x, -2) -- (\x, -2.8);
+      }
+
+      \foreach \x in {10.2, 10.8, 11.5, 12.2, 12.8}
+      {
+        \draw[thick, ->] (11.5, 2.8) -| (\x, 0.2);
+        \draw[thick, ->] (\x, -0.6) -- (\x, -1.4);
+        \draw[thick, ->] (\x, -2) -- (\x, -2.8);
+      }
+
+      \draw[thick, fill=red!30] (1.4, 2) rectangle (2.3, 1.1);
+      \draw[thick, fill=red!30] (6, 2.2) rectangle (6.9, 1.4);
+      \draw[thick, fill=red!30] (11.6, 1.5) rectangle (12.6, 0.8);
+
 
       % \foreach \y in {1.7, -2.7}
       % {
       %   \node at (9, \y) [] {$\cdots\cdots$};
       % }
+      % \node at (13, 4.5)  [above] {};
+      \node at (13, 3)    [right] {\texttt{omp parallel}};
+      
+      \node at (13.5, 1.5)  [right] {\texttt{omp single} \&};
+      \node at (13.5, 1.1)  [right] {{\textcolor{red}{\ttfamily{MPI\_Isend/Irecv}}}};
 
-      % \node at (13, 3)    [right] {\texttt{omp parallel}};
-      % \node at (13, 1.7)  [right] {\texttt{omp parallel for}};
+      \node at (13.5, -0.1)  [right] {\texttt{omp parallel for}};
       % \node at (13, 1)    [right] {\texttt{omp single}};
-      % \node at (13, -2.7) [right] {\texttt{omp parallel for}};
-      % \node at (13, -3.5) [right] {\texttt{omp single}};
+      \node at (13, -3.1) [right] {\texttt{omp parallel for}};
+      \node at (13, -4) [right] {\texttt{omp single}};
+      
+
+      \draw[dashed] (0.5, 2.5) rectangle (13.5, -2.4);
+      \node at (0.5, 0.5) [left] {\bfseries comp./comm.};
+      \node at (0.4, 0)   [left] {\bfseries overlapping};
+
     \end{tikzpicture}
-    \caption{Scheme Representation: flow chart of Hybrid model, with no overlapping}
+    \caption{Scheme Representation: flow chart of Hybrid model, with comp./comm. overlapping}
   \end{figure}
 \end{frame}
+
 
 % % \subsection{General Setups}
 % % \subsection{Parallel Strategies}
@@ -870,13 +942,15 @@
 \begin{frame}
   \frametitle{PINN Model}
   \framesubtitle{Challanges}
-  For neural network implementations, there are some issues in practice:\\
-  \texttt{Python} has many easy-use libraries such as \texttt{Pytorch}, \texttt{Tensorflow} and \texttt{Caffe}.
-  \begin{enumerate}
-    \item Interpret language Python is significant slower than compile language C/C++
-    \item Worse resource management than C/C++
-    \item Lower security in parallel program.
-  \end{enumerate}
+  \texttt{Python} has many easy-use libraries such as \texttt{Pytorch}, \texttt{Tensorflow} and \texttt{Caffe}.\\
+  \steporfull<2->{
+    For neural network implementations, there are some issues in practice:\\
+    \begin{enumerate}
+      \item Interpret language \texttt{Python} is significant slower than compile language \texttt{C/C++}
+      \item Worse resource management than \texttt{C/C++}
+      \item Lower security in parallel program.
+    \end{enumerate}
+  }
 \end{frame}
 
 
@@ -886,7 +960,7 @@
   \framesubtitle{Solution}
   For getting higher performance and better safety, I chose to use
   \begin{enumerate}
-    \item Pytorch C++ API: Libtorch.
+    \item Pytorch C++ API: \texttt{Libtorch}.
   \end{enumerate}
   to reproduce the Python version of PINN.
 

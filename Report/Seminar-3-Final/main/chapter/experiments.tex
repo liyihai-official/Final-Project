@@ -1,5 +1,37 @@
 
 \section{Experiments}
+\begin{frame}
+  \frametitle{Hardware}
+
+  \begin{block}{CPU cluster}
+    Each node has a: \ttfamily{Intel(R) Xeon(R) Platinum 9242 CPU \@2.30Ghz, with 96 CPU(s)}
+    \begin{table}
+      \caption{Part outputs of \ttfamily{lscpu}}
+      \begin{center}
+        \footnotesize
+        \begin{tabular}{p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm}} 
+          \toprule
+          \bfseries Attribute & \ttfamily{NUMA}& \ttfamily{L1d}      & \ttfamily{L1i}   & \ttfamily{L2} & \ttfamily{L3}      \\
+          \midrule 
+          \bfseries Values    & 4 & 32KB            & 32KB           &  1MB  &  35.75MB \\
+          \bottomrule 
+        \end{tabular}
+      \end{center}
+    \end{table}
+  \end{block}
+
+  \begin{block}{GPU cluster}
+    Each node has a
+    \begin{itemize}
+      \item \ttfamily{AMD Ryzen 9700X3D, with 12 CPU(s)}
+      \item \ttfamily{NVIDIA RTX 4090, 24GB}
+    \end{itemize}
+    
+    
+  \end{block}
+
+\end{frame}
+
 \subsection{On Single Node}
 \begin{frame}
   \frametitle{Single Node Scaling Tests}
