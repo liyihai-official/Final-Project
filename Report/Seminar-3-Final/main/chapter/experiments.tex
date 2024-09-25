@@ -4,41 +4,9 @@
   \frametitle{Hardware}
 
   \begin{block}{CPU cluster}
-    Each node has a: \ttfamily{Intel(R) Xeon(R) Platinum 9242 CPU \@2.30Ghz, with 96 CPU(s)}
-    \begin{table}
-      \caption{Part outputs of \ttfamily{lscpu}}
-      \begin{center}
-        \footnotesize
-        \begin{tabular}{p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm} p{1.5cm}} 
-          \toprule
-          \bfseries Attribute & \ttfamily{NUMA}& \ttfamily{L1d}      & \ttfamily{L1i}   & \ttfamily{L2} & \ttfamily{L3}      \\
-          \midrule 
-          \bfseries Values    & 4 & 32KB            & 32KB           &  1MB  &  35.75MB \\
-          \bottomrule 
-        \end{tabular}
-      \end{center}
-    \end{table}
+    Each node has a: \ttfamily{Intel(R) Xeon(R) Platinum 9242 CPU \@2.30Ghz \\
+    with $96$ CPU(s)}, $4$ Non-unified Memory Access (NUMA) nodes and 35.75MB L3 cache.
   \end{block}
-
-  \begin{block}{GPU cluster}
-    Each node has a
-    \begin{itemize}
-      \item \ttfamily{AMD Ryzen 9700X3D, with 12 CPU(s)}
-      \item \ttfamily{NVIDIA RTX 4090, 24GB}
-    \end{itemize}
-    
-    
-  \end{block}
-
-\end{frame}
-
-\subsection{On Single Node}
-\begin{frame}
-  \frametitle{Single Node Scaling Tests}
-  2D Heat Equation\\
-  Single Precision \\
-  Problem Size: $512^2, 1024^2, 2048^2, 4096^2, 8192^2, 16384^2, 32768^2$ \\
-  Non-unified Memory Access (NUMA) node Topology:
   \begin{figure}[htbp]
     \centering
     \begin{tikzpicture}[scale=0.6, transform shape]
@@ -69,6 +37,29 @@
     \label{FIG_Topology_Callan}
   \end{figure}
 
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Hardware}
+  \begin{block}{GPU cluster}
+    Each node has a
+    \begin{itemize}
+      \item AMD Ryzen 7, 7800 X3D, with 16 CPU(s)
+      \item NVIDIA RTX 4090, 24GB
+    \end{itemize}
+  \end{block}
+
+\end{frame}
+
+\subsection{On Single Node}
+\begin{frame}
+  \frametitle{Single Node Scaling Tests}
+  2D Heat Equation\\
+  Single Precision \\
+  Problem Size: $512^2, 1024^2, 2048^2, 4096^2, 8192^2, 16384^2, 32768^2$ \\
+
+
 
 
 \end{frame}
@@ -76,7 +67,7 @@
 
 \begin{frame}
   \frametitle{Single Node Scaling Tests}
-  \framesubtitle{Strong Scaling - pure MPI}
+  \framesubtitle{Strong Scaling - Pure MPI}
   \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.56\textwidth]{figure/FIG_Benchmark_pure_mpi.pdf}
@@ -152,10 +143,13 @@
 
 
 
+
+
+
 \subsection{On Multi-node}
 \begin{frame}
   \frametitle{Multi-node Scaling Tests}
-  \framesubtitle{Strong Scaling - pure MPI}
+  \framesubtitle{Strong Scaling - Pure MPI}
 
   \begin{figure}[htbp]
     \centering
@@ -172,7 +166,7 @@
 
 
 \begin{frame}
-  \frametitle{Single Node Scaling Tests}
+  \frametitle{Multi-node Scaling Tests}
   \framesubtitle{Strong Scaling - MPI/OpenMP Hybrid}
   \begin{figure}
     \centering
@@ -203,7 +197,7 @@
 
 
 \begin{frame}
-  \frametitle{Single Node Scaling Tests}
+  \frametitle{Multi-node Scaling Tests}
   \framesubtitle{Weak Scaling}
 
   % \begin{table}[htbp]
