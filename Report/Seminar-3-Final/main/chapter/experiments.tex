@@ -1,11 +1,25 @@
 
 \section{Experiments}
+
+
+\begin{frame}
+  \frametitle{Hardware}
+  \begin{block}{GPU cluster}
+    Each node has a
+    \begin{itemize}
+      \item AMD Ryzen 7, 7800 X3D, with 16 CPU(s)
+      \item NVIDIA RTX 4090, 24GB
+    \end{itemize}
+  \end{block}
+
+\end{frame}
+
 \begin{frame}
   \frametitle{Hardware}
 
   \begin{block}{CPU cluster}
     Each node has a: \ttfamily{Intel(R) Xeon(R) Platinum 9242 CPU \@2.30Ghz \\
-    with $96$ CPU(s)}, $4$ Non-unified Memory Access (NUMA) nodes and 35.75MB L3 cache.
+    with $96$ CPU(s)}, $4$ Non-unified Memory Access (NUMA) nodes, 1MB L2 cache, 35.75MB L3 cache.
   \end{block}
   \begin{figure}[htbp]
     \centering
@@ -40,24 +54,18 @@
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{Hardware}
-  \begin{block}{GPU cluster}
-    Each node has a
-    \begin{itemize}
-      \item AMD Ryzen 7, 7800 X3D, with 16 CPU(s)
-      \item NVIDIA RTX 4090, 24GB
-    \end{itemize}
-  \end{block}
-
-\end{frame}
-
 \subsection{On Single Node}
 \begin{frame}
   \frametitle{Single Node Scaling Tests}
-  2D Heat Equation\\
-  Single Precision \\
-  Problem Size: $512^2, 1024^2, 2048^2, 4096^2, 8192^2, 16384^2, 32768^2$ \\
+  \begin{itemize}
+    \item 2D Heat Equation
+    \item Single Precision 
+    \item Problem Size: $512^2, 1024^2, 2048^2, 4096^2, 8192^2, 16384^2, 32768^2$
+    \item Run $5$ times for each test, remove the max/mini-mum values, use the average of left $3$.
+  \end{itemize}
+  
+  
+  
 
 
 
@@ -446,7 +454,7 @@
   \framesubtitle{Accuracy}
 
   \begin{table}
-    \caption{Mean Square Error of Results}
+    \caption{Mean Square Error (MSE) of Approximations, Tolerance: $10^{-4}$}
     \begin{center}
       \footnotesize
       \begin{tabular}{p{1.5cm} p{1.5cm} p{1.5cm}}
@@ -456,13 +464,32 @@
         \bfseries FDTD    & 1.7287  & 953.84 \\
         \bfseries PINN    & 13.37   & 24.896 \\
         \bottomrule 
-        \multicolumn{3}{l}{Tolerance: $10^{-4}$} \\
       \end{tabular}
     \end{center}
   \end{table}
 
 
-  
+  \begin{figure}
+    \centering
+    \begin{subfigure}{0.42\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{figure/FIG_FDTD_3D_tol_1E_8.pdf}
+      % \caption{Non-overlapping}
+      % \label{FIG:Benchmark:FIG_Benchmark_hybrid_0_multi_nodes_3D}
+    \end{subfigure}
+    % \hfill
+    \begin{subfigure}{0.42\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{figure/FIG_PINN_3D_tol_1E_4.pdf}
+      % \caption{With overlapping}
+      % \label{FIG:Benchmark:FIG_Benchmark_hybrid_1_multi_nodes_3D}
+    \end{subfigure}
+    % \caption{
+      % Comparison of speedup ratios of strong scaling tests  pure MPI models on $4$ nodes of and $1$ node.
+      % The problem sizes are set to $32^3$, $64^3$, $128^3$, $256^3$ and $512^3$ with single precision.
+    % }
+    % \label{FIG:Benchmark:Hybrid_Four_Node_3D}
+  \end{figure}
 
 \end{frame}
 
@@ -473,14 +500,15 @@
   
   \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.45\textwidth]{figure/FIG_Benchmark_Time_Tol.pdf}
-    \caption{
+    \includegraphics[width=0.55\textwidth]{figure/FIG_Benchmark_Time_Tol.pdf}
+    % \caption{
+    %   Comparison of memory usage and time consumption of FDTD and PINN.
       % Comparison of memory usage of FDTD and PINN attributed by time of trainning/converging time consumption for 
       % both 2 dimension and 3 dimension heat equations with single precision. 
       % The predefined tolerance for training and converging are $10^{-2}$ and $10^{-4}$.
       % FDTD was testing on four compute nodes (384 CPUs), and using pure MPI and non-overlapping hybrid models.
       % The PINN models are trained on single NVIDIA RTX 4090 graphics card.
-    }
+    % }
     \label{FIG:Benchmark:TimeTol}
   \end{figure}
 \end{frame}
